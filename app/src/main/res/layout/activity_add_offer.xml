@@ -36,8 +36,7 @@
             <com.github.chrisbanes.photoview.PhotoView
                 android:id="@+id/iv_offer"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:maxHeight="@dimen/dimen_150dp"
+                android:layout_height="@dimen/dimen_150dp"
                 android:scaleType="fitXY"
                 android:src="@drawable/ic_upload_image" />
 

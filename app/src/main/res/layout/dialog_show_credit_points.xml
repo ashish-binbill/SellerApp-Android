@@ -38,6 +38,7 @@
                 android:lineSpacingExtra="7sp"
                 android:fontFamily="sans-serif-medium"
                 android:layout_marginTop="@dimen/dimen_40dp"
+                android:layout_marginBottom="@dimen/dimen_40dp"
                 android:text="@string/no_credit"
                 android:visibility="gone"
                 android:layout_gravity="center_horizontal"

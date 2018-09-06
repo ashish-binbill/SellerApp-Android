@@ -79,7 +79,7 @@ public class AddAssistedServiceActivity extends BaseActivity implements OptionLi
     AppButton btn_submit;
 
     @ViewById
-    LinearLayout btn_submit_progress;
+    LinearLayout btn_submit_progress, upload_image_layout;
 
     @ViewById
     FrameLayout container, frame_camera;
@@ -132,6 +132,7 @@ public class AddAssistedServiceActivity extends BaseActivity implements OptionLi
 
         et_price.setVisibility(View.GONE);
         et_type_of_service.setVisibility(View.GONE);
+        upload_image_layout.setVisibility(View.GONE);
 
         if (userModel.getProfileImage() != null) {
 
