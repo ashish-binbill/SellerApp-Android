@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_white"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical"
+    tools:context="com.binbill.seller.Offers.PublishOfferToUserActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        app:elevation="@dimen/dimen_10dp">
+
+        <include layout="@layout/app_toolbar" />
+    </android.support.design.widget.AppBarLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/sl_pull_to_refresh"
+        android:layout_width="match_parent"
+        android:layout_above="@+id/btn_publish"
+        android:layout_height="wrap_content">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:background="@color/off_white"
+            android:layout_height="wrap_content">
+
+            <include layout="@layout/layout_shimmer_holder" />
+
+            <include layout="@layout/layout_no_data" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_user_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dimen_10dp"
+                android:layout_weight="1"
+                android:visibility="visible" />
+
+        </FrameLayout>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+    <com.binbill.seller.CustomViews.AppButton
+        android:id="@id/btn_publish"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_55dp"
+        android:layout_marginBottom="@dimen/dimen_20dp"
+        android:layout_marginLeft="@dimen/dimen_40dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginRight="@dimen/dimen_40dp"
+        android:text="@string/publish" />
+
+    <LinearLayout
+        android:id="@+id/btn_publish_progress"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_55dp"
+        android:layout_marginBottom="@dimen/dimen_20dp"
+        android:layout_marginLeft="@dimen/dimen_40dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginRight="@dimen/dimen_40dp"
+        android:background="@drawable/rounded_button"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:id="@+id/progress"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:backgroundTint="@color/color_white"
+            android:foregroundGravity="center"
+            android:gravity="center"
+            android:indeterminate="true"
+            android:indeterminateTint="@color/color_white"
+            android:indeterminateTintMode="src_in"
+            android:secondaryProgress="@color/color_white" />
+
+    </LinearLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>

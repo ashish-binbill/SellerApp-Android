@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#009ee5</color>
+    <color name="colorPrimaryDark">#009ee5</color>
+    <color name="colorAccent">#ff732e</color>
+
+    <color name="appColor">#ff732e</color>
+    <color name="color_white">#FFFFFF</color>
+    <color name="color_black">#000000</color>
+
+    <color name="light_grey">#d7d7d7</color>
+    <color name="text_44">#444444</color>
+    <color name="color_white_40">#40FFFFFF</color>
+    <color name="hint_color">#99444444</color>
+    <color name="dark_grey">#939393</color>
+
+    <color name="grey_underline">#c6c6c6</color>
+    <color name="grey_expandable_header">#f7f7f7</color>
+    <color name="divider">#e5e5e5</color>
+    <color name="border_grey">#d9d9d9</color>
+    <color name="blue_bg_color">#eef8fd</color>
+    <color name="navigation_grey">#9d9d9d</color>
+    <color name="f2f2f2">#f2f2f2</color>
+    <color name="afafaf">#99afafaf</color>
+    <color name="color_999999">#999999</color>
+    <color name="color_b7b7b7">#b7b7b7</color>
+    <color name="off_white">#f9f9f9</color>
+    <color name="color_ababab">#ababab</color>
+    <color name="status_red">#FF0000</color>
+    <color name="status_green">#00FF00</color>
+    <color name="status_blue">#0000FF</color>
+    <color name="status_light_blue">#009EE5</color>
+    <color name="status_orange">#FF732E</color>
+    <color name="status_yellow">#FFFF00</color>
+</resources>

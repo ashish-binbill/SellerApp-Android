@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "468078305759",
+    "firebase_url": "https://binbill-sellerapp.firebaseio.com",
+    "project_id": "binbill-sellerapp",
+    "storage_bucket": "binbill-sellerapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:468078305759:android:a14b3e82908c547e",
+        "android_client_info": {
+          "package_name": "com.binbill.seller"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "468078305759-fjf6b90bgfdtpps49l0negll24u0b0kr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.binbill.seller",
+            "certificate_hash": "b964de07956a606862922ab8c6e2a92dcd35078b"
+          }
+        },
+        {
+          "client_id": "468078305759-nes12hkphbqde725k4otdkf693j0iapv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-zyzNc80-S_HFKbBrfF37lbqYCrAEveE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "468078305759-nes12hkphbqde725k4otdkf693j0iapv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

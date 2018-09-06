@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/no_data_layout"
+    android:layout_width="match_parent"
+    android:padding="@dimen/dimen_20dp"
+    android:orientation="vertical"
+    android:gravity="top"
+    android:visibility="gone"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/iv_no_data_image"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="@dimen/dimen_30dp"
+        android:src="@drawable/ic_uhh_ohh"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/tv_no_data"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:lineSpacingExtra="7sp"
+        android:fontFamily="sans-serif-medium"
+        android:layout_marginTop="@dimen/dimen_40dp"
+        android:layout_gravity="center"
+        android:text="You have not added any Customers as yet. Please add Customers."
+        android:textColor="@color/text_44"
+        android:textSize="@dimen/dimen_16dp" />
+
+    <com.binbill.seller.CustomViews.AppButton
+        android:id="@+id/btn_no_data"
+        android:layout_width="match_parent"
+        android:text="@string/add_customer"
+        android:layout_marginTop="@dimen/dimen_40dp"
+        android:layout_marginLeft="@dimen/dimen_40dp"
+        android:layout_gravity="center"
+        android:layout_marginRight="@dimen/dimen_40dp"
+        android:layout_height="@dimen/dimen_50dp" />
+
+</LinearLayout>

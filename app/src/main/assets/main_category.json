@@ -1,0 +1,48 @@
+{
+  "main_category":[
+    {
+      "id":"1",
+      "name":"Kirana/Provision Store/ Supermarket/Fruit & Vegetables/Pan Bidi"
+    },
+    {
+      "id":"2",
+      "name":"Pharmacy/Medical/Cosmetics"
+    },
+    {
+      "id":"3",
+      "name":"Fashion - Footwear, Eyewear"
+    },
+    {
+      "id":"4",
+      "name":"Electronics - Repair & AM"
+    },
+    {
+      "id":"5",
+      "name":"Electrical - Repair"
+    },
+    {
+      "id":"6",
+      "name":"Automobiles & Automobile Parts & Accessories"
+    },
+    {
+      "id":"7",
+      "name":"Furniture & Hardware, Home Decor, Paints"
+    },
+    {
+      "id":"8",
+      "name":"Services - Spa & Saloon, Professional Services, Other Services"
+    },
+    {
+      "id":"9",
+      "name":"Food & Restaurant"
+    },
+    {
+      "id":"10",
+      "name":"Authorised Service Center"
+    },
+    {
+      "id":"11",
+      "name":"Others"
+    }
+  ]
+}

@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_white"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical"
+    tools:context="com.binbill.seller.Offers.AddOfferActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        app:elevation="@dimen/dimen_10dp">
+
+        <include layout="@layout/app_toolbar" />
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:id="@+id/scroll_view"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="@dimen/dimen_20dp">
+
+            <com.github.chrisbanes.photoview.PhotoView
+                android:id="@+id/iv_offer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxHeight="@dimen/dimen_150dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_upload_image" />
+
+            <TextView
+                android:id="@+id/tv_upload_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_10dp"
+                android:gravity="center_horizontal"
+                android:lineSpacingExtra="1sp"
+                android:layout_gravity="center"
+                android:drawablePadding="@dimen/dimen_10dp"
+                android:text="@string/upload_offer_image"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/dimen_14dp" />
+
+
+            <TextView
+                android:id="@+id/tv_select_from_template"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_12dp"
+                android:gravity="center_horizontal"
+                android:lineSpacingExtra="3.5sp"
+                android:text="@string/select_from_default"
+                android:textColor="@color/afafaf"
+                android:textSize="@dimen/dimen_12dp" />
+
+            <EditText
+                android:id="@+id/et_offer_name"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_55dp"
+                android:layout_marginTop="@dimen/dimen_25dp"
+                android:background="@drawable/edittext_bg"
+                android:hint="@string/offer_name"
+                android:inputType="text"
+                android:lineSpacingExtra="-1sp"
+                android:paddingLeft="@dimen/dimen_12dp"
+                android:paddingRight="@dimen/dimen_12dp"
+                android:textColor="@color/text_44"
+                android:textColorHint="@color/hint_color"
+                android:textSize="@dimen/dimen_15dp" />
+
+            <TextView
+                android:id="@+id/tv_error_offer_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_5dp"
+                android:layout_marginTop="@dimen/dimen_5dp"
+                android:fontFamily="sans-serif"
+                android:text=""
+                android:layout_gravity="left"
+                android:textColor="@android:color/holo_red_light"
+                android:textSize="@dimen/dimen_10dp"
+                android:textStyle="normal"
+                android:visibility="gone" />
+
+            <EditText
+                android:id="@+id/et_offer_description"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_120dp"
+                android:layout_marginTop="@dimen/dimen_25dp"
+                android:background="@drawable/edittext_bg"
+                android:gravity="top"
+                android:hint="@string/offer_description"
+                android:lineSpacingExtra="-1sp"
+                android:maxLines="10"
+                android:paddingLeft="@dimen/dimen_12dp"
+                android:paddingRight="@dimen/dimen_12dp"
+                android:paddingTop="@dimen/dimen_10dp"
+                android:inputType="textMultiLine"
+                android:textColor="@color/text_44"
+                android:textColorHint="@color/hint_color"
+                android:textSize="@dimen/dimen_15dp" />
+
+            <TextView
+                android:id="@+id/tv_error_offer_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_5dp"
+                android:layout_marginTop="@dimen/dimen_5dp"
+                android:fontFamily="sans-serif"
+                android:scrollHorizontally="false"
+                android:scrollbars="vertical"
+                android:text=""
+                android:layout_gravity="left"
+                android:textColor="@android:color/holo_red_light"
+                android:textSize="@dimen/dimen_10dp"
+                android:textStyle="normal"
+                android:visibility="gone" />
+
+            <EditText
+                android:id="@+id/et_expiry_date"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_55dp"
+                android:layout_marginTop="@dimen/dimen_25dp"
+                android:background="@drawable/edittext_bg"
+                android:drawableRight="@drawable/ic_calendar"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:hint="@string/expiry_date"
+                android:inputType="text"
+                android:lineSpacingExtra="-1sp"
+                android:paddingLeft="@dimen/dimen_12dp"
+                android:paddingRight="@dimen/dimen_12dp"
+                android:textColor="@color/text_44"
+                android:textColorHint="@color/hint_color"
+                android:textSize="@dimen/dimen_15dp" />
+
+            <TextView
+                android:id="@+id/tv_error_offer_expiry"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_5dp"
+                android:layout_marginTop="@dimen/dimen_5dp"
+                android:fontFamily="sans-serif"
+                android:text=""
+                android:layout_gravity="left"
+                android:textColor="@android:color/holo_red_light"
+                android:textSize="@dimen/dimen_10dp"
+                android:textStyle="normal"
+                android:visibility="gone" />
+
+            <com.binbill.seller.CustomViews.AppButton
+                android:id="@+id/btn_submit"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_55dp"
+                android:layout_marginBottom="@dimen/dimen_10dp"
+                android:layout_marginTop="@dimen/dimen_30dp"
+                android:lineSpacingExtra="-5.5sp"
+                android:text="@string/next"
+                android:textColor="@color/color_white"
+                android:textSize="@dimen/dimen_20dp"
+                android:visibility="visible" />
+
+            <LinearLayout
+                android:id="@+id/btn_submit_progress"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_55dp"
+                android:layout_below="@id/et_mobile"
+                android:layout_marginTop="@dimen/dimen_20dp"
+                android:background="@drawable/rounded_button"
+                android:gravity="center"
+                android:visibility="gone">
+
+                <ProgressBar
+                    android:id="@+id/progress"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center"
+                    android:backgroundTint="@color/color_white"
+                    android:foregroundGravity="center"
+                    android:gravity="center"
+                    android:indeterminate="true"
+                    android:indeterminateTint="@color/color_white"
+                    android:indeterminateTintMode="src_in"
+                    android:secondaryProgress="@color/color_white" />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+    </android.support.v4.widget.NestedScrollView>
+</LinearLayout>

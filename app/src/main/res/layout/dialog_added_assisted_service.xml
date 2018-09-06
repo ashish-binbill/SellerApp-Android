@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="@dimen/dimen_20dp"
+    android:background="@color/color_white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_40dp"
+        android:background="@color/colorAccent"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/dimen_10dp"
+        android:paddingRight="@dimen/dimen_10dp">
+
+        <TextView
+            android:id="@+id/header"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:drawableRight="@drawable/ic_cancel_white"
+            android:gravity="center_vertical"
+            android:text="@string/create_offer"
+            android:textColor="@color/color_white"
+            android:textSize="@dimen/dimen_12dp" />
+
+    </LinearLayout>
+
+    <Spinner
+        android:id="@+id/et_type_of_service"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_55dp"
+        android:layout_marginTop="@dimen/dimen_15dp"
+        android:drawableRight="@drawable/ic_dropdown"
+        android:fontFamily="sans-serif"
+        android:background="@drawable/edittext_bg_spinner"
+        android:hint="@string/type_of_service"
+        android:gravity="center_vertical"
+        android:layout_marginRight="@dimen/dimen_20dp"
+        android:layout_marginLeft="@dimen/dimen_20dp"
+        android:textColor="@color/text_44"
+        android:prompt="@string/type_of_service"
+        android:paddingRight="@dimen/dimen_12dp"
+        android:paddingLeft="@dimen/dimen_12dp"
+        android:textColorHint="@color/hint_color"
+        android:textSize="@dimen/dimen_15dp" />
+
+    <EditText
+        android:id="@+id/et_price"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_55dp"
+        android:layout_marginTop="@dimen/dimen_15dp"
+        android:background="@drawable/edittext_bg"
+        android:hint="@string/price"
+        android:inputType="number"
+        android:lineSpacingExtra="-1sp"
+        android:paddingLeft="@dimen/dimen_12dp"
+        android:layout_marginRight="@dimen/dimen_20dp"
+        android:layout_marginLeft="@dimen/dimen_20dp"
+        android:paddingRight="@dimen/dimen_12dp"
+        android:textColor="@color/text_44"
+        android:textColorHint="@color/hint_color"
+        android:textSize="@dimen/dimen_15dp" />
+
+    <com.binbill.seller.CustomViews.AppButton
+        android:id="@+id/btn_submit"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_55dp"
+        android:layout_marginTop="@dimen/dimen_20dp"
+        android:lineSpacingExtra="-5.5sp"
+        android:text="@string/save"
+        android:layout_marginRight="@dimen/dimen_20dp"
+        android:layout_marginLeft="@dimen/dimen_20dp"
+        android:textColor="@color/color_white"
+        android:textSize="@dimen/dimen_20dp"
+        android:gravity="center"
+        android:visibility="visible" />
+
+    <LinearLayout
+        android:id="@+id/btn_submit_progress"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_55dp"
+        android:layout_marginRight="@dimen/dimen_30dp"
+        android:layout_marginLeft="@dimen/dimen_30dp"
+        android:layout_marginTop="@dimen/dimen_20dp"
+        android:background="@drawable/rounded_button"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:id="@+id/progress"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:backgroundTint="@color/color_white"
+            android:foregroundGravity="center"
+            android:gravity="center"
+            android:indeterminate="true"
+            android:indeterminateTint="@color/color_white"
+            android:indeterminateTintMode="src_in"
+            android:secondaryProgress="@color/color_white" />
+
+    </LinearLayout>
+</LinearLayout>

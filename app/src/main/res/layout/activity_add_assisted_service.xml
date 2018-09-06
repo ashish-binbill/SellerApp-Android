@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_white"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical"
+    tools:context="com.binbill.seller.Offers.AddOfferActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        app:elevation="@dimen/dimen_10dp">
+
+        <include layout="@layout/app_toolbar" />
+    </android.support.design.widget.AppBarLayout>
+
+    <FrameLayout
+        android:id="@+id/container"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="@dimen/dimen_20dp">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center">
+
+               <include layout="@layout/layout_no_user_image"
+                   android:id="@+id/profile_pic"
+                   android:layout_width="@dimen/dimen_120dp"
+                   android:layout_gravity="center"
+                   android:layout_height="@dimen/dimen_120dp"/>
+
+                <FrameLayout
+                    android:id="@+id/frame_camera"
+                    android:layout_width="@dimen/dimen_40dp"
+                    android:layout_height="@dimen/dimen_40dp"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="@dimen/dimen_40dp"
+                    android:layout_marginTop="@dimen/dimen_40dp"
+                    android:background="@drawable/circle_bg_grey">
+
+                    <ImageView
+                        android:id="@+id/iv_sub_image"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_camera" />
+
+                </FrameLayout>
+
+            </FrameLayout>
+
+            <com.nex3z.flowlayout.FlowLayout
+                android:id="@+id/fl_tag_layout"
+                android:layout_width="match_parent"
+                android:visibility="gone"
+                android:layout_marginLeft="@dimen/dimen_40dp"
+                android:layout_marginRight="@dimen/dimen_40dp"
+                android:layout_marginTop="@dimen/dimen_15dp"
+                android:layout_height="wrap_content"
+                app:flChildSpacing="@dimen/dimen_10dp"
+                app:flRowSpacing="@dimen/dimen_5dp" />
+
+            <EditText
+                android:id="@+id/et_service_guide"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_55dp"
+                android:layout_marginTop="@dimen/dimen_25dp"
+                android:background="@drawable/edittext_bg"
+                android:hint="@string/name_of_service"
+                android:inputType="text"
+                android:lineSpacingExtra="-1sp"
+                android:paddingLeft="@dimen/dimen_12dp"
+                android:paddingRight="@dimen/dimen_12dp"
+                android:textColor="@color/text_44"
+                android:textColorHint="@color/hint_color"
+                android:textSize="@dimen/dimen_15dp" />
+
+            <com.binbill.seller.CustomViews.PrefixEditText
+                android:id="@+id/et_mobile"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_55dp"
+                android:layout_below="@id/iv_binbill"
+                android:paddingLeft="@dimen/dimen_12dp"
+                android:layout_marginTop="@dimen/dimen_15dp"
+                android:background="@drawable/edittext_bg"
+                android:textColor="@color/text_44"
+                android:textSize="@dimen/dimen_15dp"
+                android:maxLength="10"
+                android:inputType="phone"
+                android:hint="@string/mobile_number"
+                android:textColorHint="@color/hint_color"
+                android:lineSpacingExtra="-1sp"
+                android:drawableRight="@drawable/ic_mobile"
+                android:paddingRight="@dimen/dimen_12dp" />
+
+            <TextView
+                android:id="@+id/tv_error_mobile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_5dp"
+                android:fontFamily="sans-serif"
+                android:layout_below="@id/et_mobile"
+                android:textColor="@android:color/holo_red_light"
+                android:textSize="@dimen/dimen_10dp"
+                android:layout_gravity="left"
+                android:textStyle="normal"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:id="@+id/upload_image_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_15dp"
+                android:layout_below="@id/tv_error_pincode"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/et_adhar_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/dimen_55dp"
+                    android:background="@drawable/edittext_bg"
+                    android:hint="@string/upload_adhar"
+                    android:inputType="text"
+                    android:layout_weight="1"
+                    android:focusableInTouchMode="false"
+                    android:focusable="false"
+                    android:lineSpacingExtra="-1sp"
+                    android:drawableRight="@drawable/ic_camera"
+                    android:paddingLeft="@dimen/dimen_12dp"
+                    android:paddingRight="@dimen/dimen_12dp"
+                    android:textColor="@color/text_44"
+                    android:textColorHint="@color/hint_color"
+                    android:textSize="@dimen/dimen_15dp" />
+
+                <TextView
+                    android:id="@+id/view_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    android:visibility="gone"
+                    android:paddingLeft="@dimen/dimen_10dp"
+                    android:paddingRight="@dimen/dimen_10dp"
+                    android:text="@string/view"
+                    android:textAllCaps="true"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/dimen_14dp" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/image_count"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="left"
+                android:layout_marginTop="@dimen/dimen_5dp"
+                android:layout_below="@id/upload_image_layout"
+                android:paddingLeft="@dimen/dimen_10dp"
+                android:paddingRight="@dimen/dimen_10dp"
+                android:text=""
+                android:textAllCaps="true"
+                android:visibility="gone"
+                android:textColor="@color/colorAccent"
+                android:textSize="@dimen/dimen_12dp" />
+
+            <TextView
+                android:id="@+id/tv_error_upload_adhar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_5dp"
+                android:fontFamily="sans-serif"
+                android:layout_below="@id/et_mobile"
+                android:layout_gravity="left"
+                android:textColor="@android:color/holo_red_light"
+                android:textSize="@dimen/dimen_10dp"
+                android:textStyle="normal"
+                android:visibility="gone" />
+
+            <EditText
+                android:id="@+id/et_type_of_service"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_55dp"
+                android:layout_marginTop="@dimen/dimen_15dp"
+                android:background="@drawable/edittext_bg"
+                android:hint="@string/type_of_service"
+                android:inputType="text"
+                android:focusableInTouchMode="false"
+                android:focusable="false"
+                android:lineSpacingExtra="-1sp"
+                android:drawableRight="@drawable/ic_dropdown"
+                android:paddingLeft="@dimen/dimen_12dp"
+                android:paddingRight="@dimen/dimen_12dp"
+                android:textColor="@color/text_44"
+                android:textColorHint="@color/hint_color"
+                android:textSize="@dimen/dimen_15dp" />
+
+            <EditText
+                android:id="@+id/et_price"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_55dp"
+                android:layout_marginTop="@dimen/dimen_15dp"
+                android:background="@drawable/edittext_bg"
+                android:hint="@string/price"
+                android:inputType="number"
+                android:lineSpacingExtra="-1sp"
+                android:paddingLeft="@dimen/dimen_12dp"
+                android:paddingRight="@dimen/dimen_12dp"
+                android:textColor="@color/text_44"
+                android:textColorHint="@color/hint_color"
+                android:textSize="@dimen/dimen_15dp" />
+
+            <com.binbill.seller.CustomViews.AppButton
+                android:id="@+id/btn_submit"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_55dp"
+                android:layout_marginTop="@dimen/dimen_20dp"
+                android:lineSpacingExtra="-5.5sp"
+                android:text="@string/save"
+                android:textColor="@color/color_white"
+                android:textSize="@dimen/dimen_20dp"
+                android:visibility="visible" />
+
+            <LinearLayout
+                android:id="@+id/btn_submit_progress"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_55dp"
+                android:layout_below="@id/et_mobile"
+                android:layout_marginTop="@dimen/dimen_20dp"
+                android:background="@drawable/rounded_button"
+                android:gravity="center"
+                android:visibility="gone">
+
+                <ProgressBar
+                    android:id="@+id/progress"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center"
+                    android:backgroundTint="@color/color_white"
+                    android:foregroundGravity="center"
+                    android:gravity="center"
+                    android:indeterminate="true"
+                    android:indeterminateTint="@color/color_white"
+                    android:indeterminateTintMode="src_in"
+                    android:secondaryProgress="@color/color_white" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+</LinearLayout>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ImageView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/iv_banner"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dimen_120dp"
+    android:layout_margin="@dimen/dimen_10dp"
+    android:scaleType="fitXY"
+    android:src="@drawable/offer_banner_3" />

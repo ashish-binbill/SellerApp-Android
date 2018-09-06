@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_white">
+
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:visibility="visible"
+        android:layout_height="match_parent">
+
+
+        <ImageView
+            android:id="@+id/splash_1"
+            android:layout_width="match_parent"
+            android:src="@drawable/splash_1"
+            android:visibility="visible"
+            android:scaleType="fitXY"
+            android:layout_height="match_parent" />
+
+        <ImageView
+            android:id="@+id/splash_2"
+            android:layout_width="match_parent"
+            android:src="@drawable/splash_2"
+            android:visibility="visible"
+            android:scaleType="fitXY"
+            android:layout_height="match_parent" />
+
+
+        <ImageView
+            android:id="@+id/splash_3"
+            android:layout_width="match_parent"
+            android:src="@drawable/splash_3"
+            android:visibility="visible"
+            android:layout_height="match_parent" />
+
+    </FrameLayout>
+
+    <ImageView
+        android:id="@+id/binBill_0"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/splash_graphic_1"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <ImageView
+        android:id="@+id/binBill_1"
+        android:layout_centerInParent="true"
+        android:src="@drawable/splash_01"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <ImageView
+        android:id="@+id/binBill_2"
+        android:layout_centerInParent="true"
+        android:src="@drawable/splash_02"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <ImageView
+        android:id="@+id/binBill_3"
+        android:layout_alignParentBottom="true"
+        android:src="@drawable/splash_graphic"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+</RelativeLayout>

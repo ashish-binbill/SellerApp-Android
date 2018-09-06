@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/dimen_80dp"
+    android:layout_height="@dimen/dimen_80dp"
+    android:background="@drawable/circle_bg_black"
+    android:visibility="visible">
+
+    <ImageView
+        android:id="@+id/iv_user_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:layout_margin="@dimen/dimen_15dp"
+        android:src="@drawable/ic_checked" />
+</RelativeLayout>
+

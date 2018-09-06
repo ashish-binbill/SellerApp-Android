@@ -1,0 +1,108 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/off_white"
+    android:orientation="vertical"
+    tools:context="com.binbill.seller.Customer.CreditsFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/dimen_20dp"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_total_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+            android:lineSpacingExtra="1sp"
+            android:text="Total Credits : "
+            android:textColor="@color/text_44"
+            android:textSize="@dimen/dimen_18dp" />
+
+        <TextView
+            android:id="@+id/tv_total_credits"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:fontFamily="sans-serif-bold"
+            android:gravity="center_horizontal"
+            android:lineSpacingExtra="1sp"
+            android:text="2250"
+            android:textColor="@color/text_44"
+            android:textSize="@dimen/dimen_18dp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/sl_pull_to_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/off_white">
+
+            <include layout="@layout/layout_shimmer_holder" />
+
+            <include
+                layout="@layout/layout_no_data"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/dimen_40dp" />
+
+            <RelativeLayout
+                android:id="@+id/rl_recycler_data"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingBottom="@dimen/dimen_20dp">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv_credits_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_above="@+id/ll_user_action"
+                    android:padding="@dimen/dimen_20dp"
+                    android:paddingBottom="@dimen/dimen_10dp" />
+
+                <LinearLayout
+                    android:id="@id/ll_user_action"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="@dimen/dimen_20dp"
+                    android:layout_marginRight="@dimen/dimen_20dp"
+                    android:orientation="horizontal">
+
+                    <com.binbill.seller.CustomViews.AppButton
+                        android:id="@+id/btn_settle_credit"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/dimen_55dp"
+                        android:layout_marginRight="@dimen/dimen_2dp"
+                        android:layout_weight="1"
+                        android:text="@string/settle_credit"
+                        android:textSize="@dimen/dimen_16dp" />
+
+                    <com.binbill.seller.CustomViews.AppButton
+                        android:id="@+id/btn_add_credit"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/dimen_55dp"
+                        android:layout_marginLeft="@dimen/dimen_2dp"
+                        android:layout_weight="1"
+                        android:text="@string/add_credit"
+                        android:textSize="@dimen/dimen_16dp" />
+
+                </LinearLayout>
+            </RelativeLayout>
+        </FrameLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+
+</LinearLayout>

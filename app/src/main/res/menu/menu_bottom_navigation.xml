@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_home"
+        android:icon="@drawable/ic_dashboard"
+        android:checked="true"
+        android:title="@string/dashboard" />
+    <item
+        android:id="@+id/action_verification"
+        android:icon="@drawable/ic_verification"
+        android:title="@string/verification" />
+    <item
+        android:id="@+id/action_chat"
+        android:icon="@drawable/ic_chat"
+        android:title="@string/chat" />
+    <item
+        android:id="@+id/action_customers"
+        android:icon="@drawable/ic_customers"
+        android:title="@string/my_customers" />
+    <item
+        android:id="@+id/action_assisted"
+        android:icon="@drawable/ic_assisted"
+        android:title="@string/assisted_services" />
+</menu>

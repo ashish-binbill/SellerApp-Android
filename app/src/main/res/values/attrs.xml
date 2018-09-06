@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="PrefixEditText">
+        <attr name="prefix_string" format="string" />
+    </declare-styleable>
+
+    <declare-styleable name="OtpView">
+        <attr name="android:inputType" />
+        <attr name="android:textColor" />
+        <attr name="text_background_color" format="color" />
+        <attr name="otp" format="string" />
+        <attr name="length" format="integer" />
+        <attr name="width" format="dimension" />
+        <attr name="height" format="dimension" />
+        <attr name="space" format="dimension" />
+        <attr name="space_left" format="dimension" />
+        <attr name="space_right" format="dimension" />
+        <attr name="space_top" format="dimension" />
+        <attr name="space_bottom" format="dimension" />
+        <attr name="background_drawable" format="dimension" />
+        <attr name="otpTextSize" format="dimension" />
+        <attr name="hint_color" format="color" />
+        <attr name="hint" format="string" />
+    </declare-styleable>
+</resources>
