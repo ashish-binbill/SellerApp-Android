@@ -601,7 +601,7 @@ public class RetrofitHelper {
         RetrofitApiInterface apiService =
                 RetrofitHelper.getClient(mContext).create(RetrofitApiInterface.class);
 
-        Call<JsonObject> call = apiService.fetchOrders(AppSession.getInstance(mContext).getSellerId());
+        Call<JsonObject> call = apiService.fetchCompletedOrders(AppSession.getInstance(mContext).getSellerId());
         call.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
