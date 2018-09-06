@@ -129,7 +129,6 @@ public class AddOfferActivity extends BaseActivity implements BottomSheetHelper.
 
         picasso.load(Constants.BASE_URL + "offer/" + offer.getOfferId() + "/images/0")
                 .config(Bitmap.Config.RGB_565)
-                .fit().centerCrop()
                 .into(iv_offer);
 
         et_offer_name.setText(offer.getOfferTitle());
