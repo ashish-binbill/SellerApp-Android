@@ -34,7 +34,37 @@ public class OrderItem implements Serializable {
     @SerializedName("item_availability")
     boolean itemAvailability;
 
-    public class OrderSKU implements Serializable{
+    @SerializedName("sku_measurement")
+    OrderSKU orderSKU;
+
+    transient OrderSKU updatedSKUMeasurement;
+    transient boolean updateItemAvailable = true;
+
+    public boolean isUpdateItemAvailable() {
+        return updateItemAvailable;
+    }
+
+    public void setUpdateItemAvailable(boolean isIt) {
+        updateItemAvailable = isIt;
+    }
+
+    public OrderSKU getUpdatedSKUMeasurement() {
+        return updatedSKUMeasurement;
+    }
+
+    public void setUpdatedSKUMeasurement(OrderSKU updatedSKUMeasurement) {
+        this.updatedSKUMeasurement = updatedSKUMeasurement;
+    }
+
+    public void setItemAvailability(boolean itemAvailability) {
+        this.itemAvailability = itemAvailability;
+    }
+
+    public OrderSKU getOrderSKU() {
+        return orderSKU;
+    }
+
+    public class OrderSKU implements Serializable {
 
         @SerializedName("id")
         String skuId;

@@ -124,6 +124,12 @@ public interface RetrofitApiInterface {
     @GET(Constants.FETCH_ORDERS)
     Call<JsonObject> fetchOrders(@Path(value = "seller_id", encoded = true) String sellerId);
 
+    @GET(Constants.FETCH_COMPLETED_ORDERS)
+    Call<JsonObject> fetchCompletedOrders(@Path(value = "seller_id", encoded = true) String sellerId);
+
     @GET(Constants.FETCH_ORDERS_BY_ID)
     Call<JsonObject> fetchOrderById(@Path(value = "seller_id", encoded = true) String sellerId, @Path(value = "id", encoded = true) String jobId);
+
+    @GET(Constants.FETCH_SKU_BY_ID)
+    Call<JsonObject> fetchSKUById(@Path(value = "sku_id", encoded = true) String skuID);
 }

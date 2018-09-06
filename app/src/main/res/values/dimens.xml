@@ -43,5 +43,6 @@
     <dimen name="dimen_200dp">200dp</dimen>
     <dimen name="dimen_400dp">400dp</dimen>
     <dimen name="dimen_17dp">17dp</dimen>
+    <dimen name="dimen_11dp">11dp</dimen>
 
 </resources>

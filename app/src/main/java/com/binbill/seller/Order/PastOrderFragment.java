@@ -14,8 +14,6 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.binbill.seller.APIHelper.ApiHelper;
-import com.binbill.seller.AppSession;
 import com.binbill.seller.BaseActivity;
 import com.binbill.seller.CustomViews.AppButton;
 import com.binbill.seller.Customer.AddCustomerActivity_;
@@ -35,7 +33,7 @@ import java.util.ArrayList;
  * Created by shruti.vig on 9/6/18.
  */
 
-public class PastOrderFragment  extends Fragment implements OrderAdapter.OrderSelectedInterface{
+public class PastOrderFragment extends Fragment implements OrderAdapter.OrderSelectedInterface {
 
     private RecyclerView orderListView;
     private LinearLayout shimmerview, noDataLayout;
@@ -44,6 +42,7 @@ public class PastOrderFragment  extends Fragment implements OrderAdapter.OrderSe
     private int ADD_CREDIT = 1;
     private int ADD_POINTS = 2;
     private OrderAdapter mAdapter;
+    private ArrayList<Order> orderList;
 
 
     public PastOrderFragment() {
@@ -70,7 +69,7 @@ public class PastOrderFragment  extends Fragment implements OrderAdapter.OrderSe
     @Override
     public void onResume() {
         super.onResume();
-        ApiHelper.fetchOrders(getActivity());
+        fetchOrders();
     }
 
     @Override
@@ -114,7 +113,11 @@ public class PastOrderFragment  extends Fragment implements OrderAdapter.OrderSe
     }
 
     private void fetchOrders() {
-        ApiHelper.fetchOrders(getActivity(), new RetrofitHelper.RetrofitCallback() {
+        orderListView.setVisibility(View.GONE);
+        shimmerview.setVisibility(View.VISIBLE);
+        noDataLayout.setVisibility(View.GONE);
+
+        new RetrofitHelper(getActivity()).fetchCompletedOrders(new RetrofitHelper.RetrofitCallback() {
             @Override
             public void onResponse(String response) {
 
@@ -126,8 +129,7 @@ public class PastOrderFragment  extends Fragment implements OrderAdapter.OrderSe
                             Type classType = new TypeToken<ArrayList<Order>>() {
                             }.getType();
 
-                            ArrayList<Order> userList = new Gson().fromJson(userArray.toString(), classType);
-                            AppSession.getInstance(getActivity()).setOrderList(userList);
+                            orderList = new Gson().fromJson(userArray.toString(), classType);
                             handleResponse();
                         }
                     } else {
@@ -163,7 +165,6 @@ public class PastOrderFragment  extends Fragment implements OrderAdapter.OrderSe
     }
 
     private void handleResponse() {
-        ArrayList<Order> orderList = AppSession.getInstance(getActivity()).getOrderList();
         if (orderList != null && orderList.size() > 0) {
             setUpData(orderList);
         } else {
@@ -180,7 +181,7 @@ public class PastOrderFragment  extends Fragment implements OrderAdapter.OrderSe
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         orderListView.setLayoutManager(llm);
-        mAdapter = new OrderAdapter(mOrderList);
+        mAdapter = new OrderAdapter(mOrderList, this);
         orderListView.setAdapter(mAdapter);
 
         orderListView.setVisibility(View.VISIBLE);

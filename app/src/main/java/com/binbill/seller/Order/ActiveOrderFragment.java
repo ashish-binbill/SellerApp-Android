@@ -179,7 +179,7 @@ public class ActiveOrderFragment extends Fragment implements OrderAdapter.OrderS
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         orderListView.setLayoutManager(llm);
-        mAdapter = new OrderAdapter(mOrderList);
+        mAdapter = new OrderAdapter(mOrderList, this);
         orderListView.setAdapter(mAdapter);
 
         orderListView.setVisibility(View.VISIBLE);

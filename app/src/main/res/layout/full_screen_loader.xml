@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/just_sec_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:background="#66FFFFFF"
+    android:orientation="vertical"
+    android:visibility="gone">
+
+    <ProgressBar
+        android:id="@+id/progress_sec"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:backgroundTint="@color/colorPrimary"
+        android:foregroundGravity="center"
+        android:gravity="center"
+        android:indeterminate="true"
+        android:indeterminateTint="@color/colorPrimary"
+        android:indeterminateTintMode="src_in"
+        android:secondaryProgress="@color/colorPrimary" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/progress_sec"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="@dimen/dimen_30dp"
+        android:fontFamily="sans-serif-bold"
+        android:gravity="center_horizontal"
+        android:text="Just a sec.."
+        android:textColor="@color/text_77"
+        android:textSize="@dimen/dimen_20dp"
+        android:textStyle="normal" />
+</RelativeLayout>
+

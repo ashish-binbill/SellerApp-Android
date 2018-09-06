@@ -1,14 +1,20 @@
 package com.binbill.seller.Order;
 
+import android.app.AlertDialog;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -16,6 +22,8 @@ import android.widget.TextView;
 
 import com.binbill.seller.BaseActivity;
 import com.binbill.seller.Constants;
+import com.binbill.seller.CustomViews.AppButton;
+import com.binbill.seller.CustomViews.AppButtonGreyed;
 import com.binbill.seller.Model.UserModel;
 import com.binbill.seller.R;
 import com.binbill.seller.Retrofit.RetrofitHelper;
@@ -30,11 +38,13 @@ import com.squareup.picasso.Picasso;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 
 import okhttp3.Authenticator;
 import okhttp3.OkHttpClient;
@@ -47,7 +57,7 @@ import okhttp3.Route;
  */
 
 @EActivity(R.layout.activity_order_details)
-public class OrderDetailsActivity extends BaseActivity {
+public class OrderDetailsActivity extends BaseActivity implements OrderShoppingListAdapter.OrderItemSelectedInterface, OrderSKUAdapter.OrderSKUInterface {
 
     @ViewById
     Toolbar toolbar;
@@ -56,7 +66,9 @@ public class OrderDetailsActivity extends BaseActivity {
     TextView toolbarText;
 
     @ViewById
-    LinearLayout ll_user_layout;
+    TextView tv_address, tv_date, tv_name;
+    @ViewById
+    ImageView iv_user_image;
 
     @ViewById
     RecyclerView rv_shopping_list;
@@ -65,14 +77,34 @@ public class OrderDetailsActivity extends BaseActivity {
     LinearLayout shimmer_view_container;
     private Order orderDetails;
 
+    @ViewById
+    RelativeLayout just_sec_layout;
+
+    @ViewById
+    AppButton btn_accept;
+
+    @ViewById
+    AppButtonGreyed btn_decline;
+
+    String orderId;
+    private OrderShoppingListAdapter mAdapter;
+    private AlertDialog mSKUDialog;
+
     @AfterViews
     public void setUpView() {
         setUpToolbar();
 
-        if (getIntent() != null && getIntent().hasExtra(Constants.ORDER_ID))
-            makeFetchOrderDetailsApiCall(getIntent().getStringExtra(Constants.ORDER_ID));
-        else
+        if (getIntent() != null && getIntent().hasExtra(Constants.ORDER_ID)) {
+            orderId = getIntent().getStringExtra(Constants.ORDER_ID);
+        } else
             finish();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (orderId != null)
+            makeFetchOrderDetailsApiCall(orderId);
     }
 
     private void makeFetchOrderDetailsApiCall(String orderId) {
@@ -93,6 +125,9 @@ public class OrderDetailsActivity extends BaseActivity {
 
                             orderDetails = new Gson().fromJson(orderJson.toString(), classType);
                             handleResponse();
+
+                            rv_shopping_list.setVisibility(View.VISIBLE);
+                            shimmer_view_container.setVisibility(View.GONE);
                         }
                     } else {
                         rv_shopping_list.setVisibility(View.GONE);
@@ -124,6 +159,7 @@ public class OrderDetailsActivity extends BaseActivity {
     private void handleResponse() {
         if (orderDetails != null) {
             setUpData();
+//            initialiseUpdatedDataArray();
         } else {
             rv_shopping_list.setVisibility(View.GONE);
             shimmer_view_container.setVisibility(View.GONE);
@@ -136,36 +172,29 @@ public class OrderDetailsActivity extends BaseActivity {
     private void setUpData() {
         setUpUserLayout();
 
+        rv_shopping_list.setHasFixedSize(true);
+        LinearLayoutManager llm = new LinearLayoutManager(this);
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        rv_shopping_list.setLayoutManager(llm);
+        mAdapter = new OrderShoppingListAdapter(orderDetails.getOrderItems(), this);
+        rv_shopping_list.setAdapter(mAdapter);
+
     }
 
     private void setUpUserLayout() {
 
         if (orderDetails != null) {
-            LayoutInflater inflater = LayoutInflater.from(this);
-            LinearLayout view = (LinearLayout) inflater.inflate(R.layout.row_order_item, null);
-
-            TextView mUserName = (TextView) view.findViewById(R.id.tv_name);
-            final ImageView userImage = (ImageView) view.findViewById(R.id.iv_user_image);
-            TextView mAddress = (TextView) view.findViewById(R.id.tv_address);
-            TextView mItemCount = (TextView) view.findViewById(R.id.tv_item_count);
-            TextView mDate = (TextView) view.findViewById(R.id.tv_date);
-            ImageView mStatusColor = (ImageView) view.findViewById(R.id.iv_status_color);
-            TextView mStatus = (TextView) view.findViewById(R.id.tv_status);
-
-            mStatusColor.setVisibility(View.GONE);
-            mStatus.setVisibility(View.GONE);
             if (orderDetails.getUser() != null) {
                 UserModel userModel = orderDetails.getUser();
 
                 if (!Utility.isEmpty(userModel.getUserName()))
-                    mUserName.setText(userModel.getUserName());
+                    tv_name.setText(userModel.getUserName());
                 else if (!Utility.isEmpty(userModel.getUserEmail()))
-                    mUserName.setText(userModel.getUserEmail());
+                    tv_name.setText(userModel.getUserEmail());
                 else
-                    mUserName.setText(userModel.getUserMobile());
+                    tv_name.setText(userModel.getUserMobile());
 
-                //TODO
-//            mAddress.setText(userModel.getad);
+                tv_address.setText(orderDetails.getUserAddress());
 
                 if (userModel.getUserId() != null) {
 
@@ -185,22 +214,22 @@ public class OrderDetailsActivity extends BaseActivity {
                             RelativeLayout.LayoutParams.MATCH_PARENT
                     );
                     params.setMargins(0, 0, 0, 0);
-                    userImage.setLayoutParams(params);
+                    iv_user_image.setLayoutParams(params);
 
-                    userImage.setScaleType(ImageView.ScaleType.FIT_XY);
+                    iv_user_image.setScaleType(ImageView.ScaleType.FIT_XY);
 
                     Picasso picasso = new Picasso.Builder(this)
                             .downloader(new OkHttp3Downloader(okHttpClient))
                             .build();
                     picasso.load(Constants.BASE_URL + "customer/" + userModel.getUserId() + "/images")
                             .config(Bitmap.Config.RGB_565)
-                            .into(userImage, new Callback() {
+                            .into(iv_user_image, new Callback() {
                                 @Override
                                 public void onSuccess() {
-                                    Bitmap imageBitmap = ((BitmapDrawable) userImage.getDrawable()).getBitmap();
+                                    Bitmap imageBitmap = ((BitmapDrawable) iv_user_image.getDrawable()).getBitmap();
                                     RoundedBitmapDrawable imageDrawable = RoundedBitmapDrawableFactory.create(getResources(), imageBitmap);
                                     imageDrawable.setCircular(true);
-                                    userImage.setImageDrawable(imageDrawable);
+                                    iv_user_image.setImageDrawable(imageDrawable);
                                 }
 
                                 @Override
@@ -212,20 +241,14 @@ public class OrderDetailsActivity extends BaseActivity {
 
                                     int margins = Utility.convertDPtoPx(OrderDetailsActivity.this, 15);
                                     params.setMargins(margins, margins, margins, margins);
-                                    userImage.setLayoutParams(params);
+                                    iv_user_image.setLayoutParams(params);
 
-                                    userImage.setImageDrawable(ContextCompat.getDrawable(OrderDetailsActivity.this, R.drawable.ic_user));
+                                    iv_user_image.setImageDrawable(ContextCompat.getDrawable(OrderDetailsActivity.this, R.drawable.ic_user));
                                 }
                             });
                 }
             }
-            if (orderDetails.getOrderItems() != null)
-                mItemCount.setText(orderDetails.getOrderItems().size() + "");
-            else
-                mItemCount.setText("0");
-            mDate.setText(Utility.getFormattedDate(9, orderDetails.getOrderCreationDate(), 0));
-
-            ll_user_layout.addView(view);
+            tv_date.setText(Utility.getFormattedDate(9, orderDetails.getOrderCreationDate(), 0));
         }
     }
 
@@ -238,4 +261,109 @@ public class OrderDetailsActivity extends BaseActivity {
     }
 
 
+    @Override
+    public void onOrderItemQuantitySelected(int pos) {
+        if (orderDetails != null && orderDetails.getOrderItems() != null &&
+                orderDetails.getOrderItems().size() > 0) {
+            final OrderItem orderItem = orderDetails.getOrderItems().get(pos);
+
+            just_sec_layout.setVisibility(View.VISIBLE);
+            new RetrofitHelper(this).fetchMeasurementsByID(orderItem.getOrderSKU().getSkuId(), new RetrofitHelper.RetrofitCallback() {
+                        @Override
+                        public void onResponse(String response) {
+                            just_sec_layout.setVisibility(View.GONE);
+                            try {
+                                JSONObject jsonObject = new JSONObject(response);
+                                if (jsonObject.getBoolean("status")) {
+                                    if (jsonObject.optJSONArray("result") != null) {
+                                        JSONArray orderJson = jsonObject.getJSONArray("result");
+                                        Type classType = new TypeToken<ArrayList<OrderItem.OrderSKU>>() {
+                                        }.getType();
+
+                                        ArrayList<OrderItem.OrderSKU> skuOptions = new Gson().fromJson(orderJson.toString(), classType);
+                                        invokeSkuPopUp(skuOptions, orderItem.getItemId());
+
+
+                                    }
+                                } else {
+                                    showSnackBar(getString(R.string.something_went_wrong));
+
+                                }
+                            } catch (JSONException e) {
+
+                                showSnackBar(getString(R.string.something_went_wrong));
+                            }
+
+                        }
+
+                        @Override
+                        public void onErrorResponse() {
+                            just_sec_layout.setVisibility(View.GONE);
+                            showSnackBar(getString(R.string.something_went_wrong));
+                        }
+                    }
+            );
+
+
+        }
+    }
+
+    private void invokeSkuPopUp(ArrayList<OrderItem.OrderSKU> skuList, String itemId) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.dialog_show_available_sku, null);
+
+        Rect displayRectangle = new Rect();
+        Window window = getWindow();
+        window.getDecorView().getWindowVisibleDisplayFrame(displayRectangle);
+
+        dialogView.setMinimumWidth((int) (displayRectangle.width() * 0.9f));
+
+        builder.setView(dialogView);
+        builder.setCancelable(false);
+
+        mSKUDialog = builder.create();
+        mSKUDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        mSKUDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        RecyclerView recyclerView = (RecyclerView) dialogView.findViewById(R.id.rv_list);
+        OrderSKUAdapter mAdapter = null;
+        if (skuList != null && skuList.size() > 0) {
+            recyclerView.setHasFixedSize(true);
+            LinearLayoutManager llm = new LinearLayoutManager(this);
+            llm.setOrientation(LinearLayoutManager.VERTICAL);
+            recyclerView.setLayoutManager(llm);
+            mAdapter = new OrderSKUAdapter(skuList, this, itemId);
+            recyclerView.setAdapter(mAdapter);
+        } else {
+            mSKUDialog.dismiss();
+        }
+
+        TextView headerTitle = (TextView) dialogView.findViewById(R.id.header);
+        headerTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mSKUDialog.dismiss();
+            }
+        });
+
+        mSKUDialog.show();
+    }
+
+    @Override
+    public void onSKUSelected(OrderItem.OrderSKU sku, String itemId) {
+
+        ArrayList<OrderItem> itemList = orderDetails.getOrderItems();
+        for (OrderItem item : itemList) {
+            if (item.getItemId().equalsIgnoreCase(itemId))
+                item.setUpdatedSKUMeasurement(sku);
+        }
+
+        if (mAdapter != null) {
+            mAdapter.refreshEvents();
+        }
+
+        if (mSKUDialog != null)
+            mSKUDialog.dismiss();
+    }
 }

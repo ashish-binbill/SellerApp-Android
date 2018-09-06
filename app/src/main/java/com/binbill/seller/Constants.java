@@ -40,8 +40,10 @@ public class Constants {
     public static final String LINK_POINTS_WITH_JOB = "seller/{seller_id}/users/{customer_id}/points/{point_id}/jobs/{job_id}";
     public static final String FETCH_USER_TRANSACTIONS = "sellers/{seller_id}/users/{customer_id}/transactions";
     public static final String FETCH_SELLER_DETAILS = "sellers/{seller_id}/details";
-    public static final String FETCH_ORDERS = "sellers/{seller_id}/orders";
+    public static final String FETCH_ORDERS = "sellers/{seller_id}/orders/active";
+    public static final String FETCH_COMPLETED_ORDERS = "sellers/{seller_id}/orders";
     public static final String FETCH_ORDERS_BY_ID = "sellers/{seller_id}/orders/{id}";
+    public static final String FETCH_SKU_BY_ID = "skus/{sku_id}/measurements";
 
     public static final int PERMISSION_READ_SMS = 100;
     public static final int PERMISSION_CAMERA = 101;

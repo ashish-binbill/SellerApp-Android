@@ -61,9 +61,11 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
     private ArrayList<Order> mList;
+    private OrderSelectedInterface listener;
 
-    public OrderAdapter(ArrayList<Order> list) {
+    public OrderAdapter(ArrayList<Order> list, OrderSelectedInterface listObject) {
         this.mList = list;
+        this.listener = listObject;
     }
 
     @Override
@@ -96,6 +98,8 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             else
                 orderHolder.mUserName.setText(userModel.getUserMobile());
         }
+
+        orderHolder.mAddress.setText(model.getUserAddress());
 
 
         ArrayList<OrderItem> itemList = model.getOrderItems();
@@ -186,6 +190,14 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         }
                     });
         }
+
+        orderHolder.mRootCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (listener != null)
+                    listener.onOrderSelected(position);
+            }
+        });
     }
 }
 

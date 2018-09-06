@@ -23,22 +23,17 @@ import com.binbill.seller.AppSession;
 import com.binbill.seller.AssistedService.AddAssistedServiceActivity_;
 import com.binbill.seller.AssistedService.AdditionalServiceDialogFragment;
 import com.binbill.seller.BaseActivity;
-import com.binbill.seller.Constants;
+import com.binbill.seller.BinBillSeller;
 import com.binbill.seller.CustomViews.YesNoDialogFragment;
 import com.binbill.seller.Customer.AddCustomerActivity_;
-import com.binbill.seller.Order.ActiveOrderFragment;
 import com.binbill.seller.R;
 import com.binbill.seller.Registration.RegistrationResolver;
 import com.binbill.seller.Retrofit.RetrofitHelper;
-import com.binbill.seller.SharedPref;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
 
-import java.net.URISyntaxException;
-
-import io.socket.client.IO;
 import io.socket.emitter.Emitter;
 
 @EActivity(R.layout.activity_dashboard)
@@ -70,7 +65,6 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
 
     @AfterViews
     public void setUpView() {
-        connectSocket();
         setUpNavigationView();
         setUpListener();
         makeSellerProfileApiCall();
@@ -90,30 +84,6 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
         });
     }
 
-    io.socket.client.Socket mSocket;
-
-    private void connectSocket() {
-        IO.Options opts = new IO.Options();
-        try {
-            String authToken = SharedPref.getString(DashboardActivity.this, SharedPref.AUTH_TOKEN);
-            opts.query = "token=" + authToken;
-            mSocket = IO.socket(Constants.BASE_URL, opts);
-            mSocket.connect();
-
-            mSocket.on("order-placed", onServer);
-
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private Emitter.Listener onServer = new Emitter.Listener() {
-        @Override
-        public void call(Object... args) {
-            Log.d("SHRUTI", "CONNECTED");
-        }
-    };
-
     private void setUpListener() {
 
         TextView manageCategory = nav_view.findViewById(R.id.tv_manage_category);
@@ -131,13 +101,6 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(DashboardActivity.this, ProfileActivity_.class));
-            }
-        });
-
-        iv_socket.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mSocket.emit("init", AppSession.getInstance(DashboardActivity.this).getSellerId());
             }
         });
 

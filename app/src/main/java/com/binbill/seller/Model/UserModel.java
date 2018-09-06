@@ -10,24 +10,6 @@ import java.io.Serializable;
 
 public class UserModel implements Serializable {
 
-    /**
-     * "id": 27774,
-     "name": "Pramjeet",
-     "mobile_no": "8750568036",
-     "email": null,
-     "email_verified": false,
-     "email_secret": null,
-     "location": null,
-     "latitude": null,
-     "longitude": null,
-     "image_name": "active-27774-1535711045036.jpeg",
-     "gender": null,
-     "imageUrl": "/consumer/27774/images/1535711045036",
-     "wallet_value": 0,
-     "addresses": [],
-     "hasPin": false
-     */
-
     @SerializedName("name")
     String userName;
 

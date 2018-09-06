@@ -24,6 +24,9 @@ public class Order implements Serializable {
     @SerializedName("status_type")
     int orderStatus;
 
+    @SerializedName("user_address_id")
+    String userAddress;
+
     @SerializedName("user")
     UserModel user;
 
@@ -59,5 +62,9 @@ public class Order implements Serializable {
 
     public int getOrderStatus() {
         return orderStatus;
+    }
+
+    public String getUserAddress() {
+        return userAddress;
     }
 }

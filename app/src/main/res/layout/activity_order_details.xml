@@ -1,62 +1,182 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/app_bar_layout"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:theme="@style/AppTheme.AppBarOverlay"
-        app:elevation="@dimen/dimen_10dp">
-
-        <include layout="@layout/app_toolbar" />
-    </android.support.design.widget.AppBarLayout>
-
-    <include layout="@layout/layout_shimmer_holder" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <TextView
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/app_bar_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center_horizontal"
-            android:padding="@dimen/dimen_15dp"
-            android:text="New Order"
-            android:textColor="@color/status_red"
-            android:textSize="@dimen/dimen_16dp" />
+            android:background="@android:color/transparent"
+            android:theme="@style/AppTheme.AppBarOverlay"
+            app:elevation="@dimen/dimen_10dp">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dimen_1dp"
-            android:background="@color/border_grey" />
+            <include layout="@layout/app_toolbar" />
+        </android.support.design.widget.AppBarLayout>
 
-        <android.support.v7.widget.CardView
+        <include
+            layout="@layout/layout_shimmer_holder"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/dimen_1dp">
+            android:layout_height="match_parent"
+            android:layout_below="@id/app_bar_layout" />
+
+        <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
             <LinearLayout
-                android:id="@+id/ll_user_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical" />
-        </android.support.v7.widget.CardView>
+                android:paddingBottom="@dimen/dimen_60dp"
+                android:orientation="vertical">
 
+                <LinearLayout
+                    android:id="@+id/ll_upper_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/app_bar_layout"
+                    android:background="@color/color_white"
+                    android:orientation="vertical">
 
-    </LinearLayout>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center_horizontal"
+                        android:padding="@dimen/dimen_10dp"
+                        android:text="New Order"
+                        android:textColor="@color/status_red"
+                        android:textSize="@dimen/dimen_16dp" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_shopping_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/color_white" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dimen_1dp"
+                        android:background="@color/border_grey" />
 
-</LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/color_white"
+                        android:orientation="horizontal"
+                        android:paddingBottom="@dimen/dimen_10dp"
+                        android:paddingLeft="@dimen/dimen_15dp"
+                        android:paddingRight="@dimen/dimen_15dp"
+                        android:paddingTop="@dimen/dimen_15dp">
+
+                        <include
+                            android:id="@+id/rl_user_image"
+                            layout="@layout/layout_no_user_image" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/dimen_20dp"
+                            android:layout_toRightOf="@id/rl_user_image"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/tv_name"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginRight="@dimen/dimen_10dp"
+                                android:layout_weight="1"
+                                android:fontFamily="sans-serif-medium"
+                                android:lineSpacingExtra="2sp"
+                                android:text=""
+                                android:textColor="@color/text_44"
+                                android:textSize="@dimen/dimen_14dp" />
+
+                            <TextView
+                                android:id="@+id/tv_address"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/dimen_10dp"
+                                android:lineSpacingExtra="3sp"
+                                android:text=""
+                                android:textColor="@color/text_44"
+                                android:textSize="@dimen/dimen_12dp" />
+
+                            <TextView
+                                android:id="@+id/tv_date"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/dimen_7dp"
+                                android:lineSpacingExtra="7.5sp"
+                                android:text=""
+                                android:textColor="@color/text_44"
+                                android:textSize="@dimen/dimen_12dp" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/dimen_10dp"
+                        android:layout_marginLeft="@dimen/dimen_25dp"
+                        android:text="@string/shopping_list"
+                        android:textColor="@color/text_77"
+                        android:textSize="@dimen/dimen_9dp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dimen_1dp"
+                        android:layout_alignParentBottom="true"
+                        android:background="@color/border_grey" />
+
+                </LinearLayout>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv_shopping_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                    android:background="@color/color_white" />
+            </LinearLayout>
+
+        </android.support.v4.widget.NestedScrollView>
+
+        <LinearLayout
+            android:id="@id/ll_user_action"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/dimen_10dp"
+            android:layout_marginLeft="@dimen/dimen_10dp"
+            android:layout_marginRight="@dimen/dimen_10dp"
+            android:orientation="horizontal">
+
+            <com.binbill.seller.CustomViews.AppButtonGreyed
+                android:id="@+id/btn_decline"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/dimen_55dp"
+                android:layout_marginRight="@dimen/dimen_2dp"
+                android:layout_weight="1"
+                android:text="@string/decline"
+                android:textSize="@dimen/dimen_16dp"
+                android:visibility="visible" />
+
+            <com.binbill.seller.CustomViews.AppButton
+                android:id="@+id/btn_accept"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/dimen_55dp"
+                android:layout_marginLeft="@dimen/dimen_2dp"
+                android:layout_weight="1"
+                android:text="@string/accept"
+                android:textSize="@dimen/dimen_16dp" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <include layout="@layout/full_screen_loader" />
+
+</FrameLayout>

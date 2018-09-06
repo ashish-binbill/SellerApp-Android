@@ -4,10 +4,15 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 
 import org.aviran.cookiebar2.CookieBar;
+
+import java.util.Arrays;
+
+import io.socket.emitter.Emitter;
 
 public class BaseActivity extends AppCompatActivity {
 
@@ -44,6 +49,23 @@ public class BaseActivity extends AppCompatActivity {
             }
         }, 3000);
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        connectSocket();
+    }
+
+    private void connectSocket() {
+        BinBillSeller.getSocket(this).on("order-placed", SOCKET_EVENT_ORDER_PLACED);
+    }
+
+    private Emitter.Listener SOCKET_EVENT_ORDER_PLACED = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            Log.d("SHRUTI", "CONNECTED " + Arrays.toString(args));
+        }
+    };
 }
 
 
