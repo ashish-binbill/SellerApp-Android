@@ -92,7 +92,7 @@ public class AssistedServiceFragment extends Fragment implements AssistedService
     @Override
     public void onResume() {
         super.onResume();
-        ApiHelper.fetchAllAssistedServices(getActivity());
+        fetchAssistedService();
     }
 
     public void showSearchView() {

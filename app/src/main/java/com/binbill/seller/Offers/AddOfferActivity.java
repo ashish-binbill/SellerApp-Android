@@ -146,9 +146,11 @@ public class AddOfferActivity extends BaseActivity implements BottomSheetHelper.
         et_expiry_date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new DatePickerDialog(AddOfferActivity.this, datePicker, mCalendar
+                DatePickerDialog datePickerDialog = new DatePickerDialog(AddOfferActivity.this, datePickerListener, mCalendar
                         .get(Calendar.YEAR), mCalendar.get(Calendar.MONTH),
-                        mCalendar.get(Calendar.DAY_OF_MONTH)).show();
+                        mCalendar.get(Calendar.DAY_OF_MONTH));
+                datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+                datePickerDialog.show();
             }
         });
 
@@ -437,7 +439,7 @@ public class AddOfferActivity extends BaseActivity implements BottomSheetHelper.
         });
     }
 
-    DatePickerDialog.OnDateSetListener datePicker = new DatePickerDialog.OnDateSetListener() {
+    DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
 
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear,
