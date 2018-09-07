@@ -225,4 +225,9 @@
     <string name="accept">Accept</string>
     <string name="select_available">Select Available Option</string>
     <string name="no_data_in_verification_fragment">You don\'t have any Verifications pending!</string>
+    <string name="send_for_approval">Send for Approval</string>
+    <string name="quantity">Quantity</string>
+    <string name="string_order_rejected">Offer Rejected Successfully</string>
+    <string name="waiting_for_approval">Waiting for approval</string>
+    >
 </resources>

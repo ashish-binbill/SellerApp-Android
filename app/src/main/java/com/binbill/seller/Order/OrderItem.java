@@ -37,8 +37,19 @@ public class OrderItem implements Serializable {
     @SerializedName("sku_measurement")
     OrderSKU orderSKU;
 
+    @SerializedName("selling_price")
+    String updatedPrice;
+
     transient OrderSKU updatedSKUMeasurement;
     transient boolean updateItemAvailable = true;
+
+    public String getUpdatedPrice() {
+        return updatedPrice;
+    }
+
+    public void setUpdatedPrice(String updatedPrice) {
+        this.updatedPrice = updatedPrice;
+    }
 
     public boolean isUpdateItemAvailable() {
         return updateItemAvailable;
@@ -58,6 +69,10 @@ public class OrderItem implements Serializable {
 
     public void setItemAvailability(boolean itemAvailability) {
         this.itemAvailability = itemAvailability;
+    }
+
+    public void setOrderSKU(OrderSKU orderSKU) {
+        this.orderSKU = orderSKU;
     }
 
     public OrderSKU getOrderSKU() {
@@ -89,6 +104,10 @@ public class OrderItem implements Serializable {
 
         @SerializedName("measurement_acronym")
         String skuMeasurementAcronym;
+
+        public void setSkuMrp(String skuMrp) {
+            this.skuMrp = skuMrp;
+        }
 
         public String getSkuId() {
             return skuId;

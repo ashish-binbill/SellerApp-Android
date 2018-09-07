@@ -87,6 +87,8 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         final OrderHolder orderHolder = (OrderHolder) holder;
         final Order model = mList.get(position);
 
+
+
         UserModel userModel = model.getUser();
 
         if (userModel != null) {
@@ -115,7 +117,10 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         switch (model.getOrderStatus()) {
             case Constants.STATUS_NEW_ORDER:
                 ViewCompat.setBackgroundTintList(orderHolder.mStatusColor, ContextCompat.getColorStateList(orderHolder.mStatusColor.getContext(), R.color.status_light_blue));
-                orderHolder.mStatus.setText(orderHolder.mStatus.getContext().getString(R.string.new_order));
+                if (model.isModified())
+                    orderHolder.mStatus.setText(orderHolder.mStatusColor.getContext().getString(R.string.waiting_for_approval));
+                else
+                    orderHolder.mStatus.setText(orderHolder.mStatus.getContext().getString(R.string.new_order));
                 break;
             case Constants.STATUS_COMPLETE:
                 ViewCompat.setBackgroundTintList(orderHolder.mStatusColor, ContextCompat.getColorStateList(orderHolder.mStatusColor.getContext(), R.color.status_green));
