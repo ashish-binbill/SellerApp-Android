@@ -251,7 +251,7 @@ public class AssistedServiceFragment extends Fragment implements AssistedService
 
     public void onOptionSelected(boolean isProceed) {
         if (isProceed) {
-            makeDeleteOfferApiCall();
+            makeDeleteAssistedServiceApiCall();
         } else {
             /**
              * do nothing
@@ -259,7 +259,7 @@ public class AssistedServiceFragment extends Fragment implements AssistedService
         }
     }
 
-    private void makeDeleteOfferApiCall() {
+    private void makeDeleteAssistedServiceApiCall() {
         new RetrofitHelper(getActivity()).deleteAssistedService(mAssistedServiceIdToDelete, new RetrofitHelper.RetrofitCallback() {
             @Override
             public void onResponse(String response) {
@@ -282,7 +282,7 @@ public class AssistedServiceFragment extends Fragment implements AssistedService
             @Override
             public void onResponse(String response) {
                 invokeSuccessDialog();
-                mAdapter.notifyDataSetChanged();
+                fetchAssistedService();
             }
 
             @Override

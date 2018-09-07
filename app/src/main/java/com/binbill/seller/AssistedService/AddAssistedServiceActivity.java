@@ -33,6 +33,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.binbill.seller.APIHelper.ApiHelper;
 import com.binbill.seller.AppSession;
 import com.binbill.seller.BaseActivity;
 import com.binbill.seller.Constants;
@@ -43,6 +44,8 @@ import com.binbill.seller.Registration.OptionListFragment;
 import com.binbill.seller.Retrofit.RetrofitHelper;
 import com.binbill.seller.SharedPref;
 import com.binbill.seller.Utility;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.nex3z.flowlayout.FlowLayout;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.OkHttp3Downloader;
@@ -56,6 +59,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 import okhttp3.Authenticator;
@@ -82,7 +86,7 @@ public class AddAssistedServiceActivity extends BaseActivity implements OptionLi
     LinearLayout btn_submit_progress, upload_image_layout;
 
     @ViewById
-    FrameLayout container, frame_camera;
+    FrameLayout container, frame_cross;
 
     @ViewById
     RelativeLayout profile_pic;
@@ -127,6 +131,7 @@ public class AddAssistedServiceActivity extends BaseActivity implements OptionLi
         mType = Constants.EDIT_ASSISTED_SERVICES;
 
         mAssistedServiceId = userModel.getId();
+        ArrayList<AssistedUserModel.ServiceType> serviceTypes = userModel.getServiceTypes();
         et_mobile.setText(userModel.getMobile());
         et_service_guide.setText(userModel.getName());
 
@@ -185,19 +190,30 @@ public class AddAssistedServiceActivity extends BaseActivity implements OptionLi
                         }
                     });
         }
+        createEditServiceLayout(serviceTypes);
+    }
 
+    private void createEditServiceLayout(ArrayList<AssistedUserModel.ServiceType> serviceTypes) {
         fl_tag_layout.setVisibility(View.VISIBLE);
-        if (fl_tag_layout.getChildCount() > 0)
+        int noOfTags = fl_tag_layout.getChildCount();
+        if (noOfTags > 0)
             fl_tag_layout.removeAllViews();
-        ArrayList<AssistedUserModel.ServiceType> serviceTypes = userModel.getServiceTypes();
+
         if (serviceTypes != null) {
+            int noOfServices = serviceTypes.size();
             for (AssistedUserModel.ServiceType serviceType : serviceTypes) {
                 LayoutInflater inflater = LayoutInflater.from(this);
                 FrameLayout inflatedLayout = (FrameLayout) inflater.inflate(R.layout.item_tag_view_edit, null, false);
                 TextView textView = (TextView) inflatedLayout.findViewById(R.id.tv_text);
+                FrameLayout frameCross = (FrameLayout) inflatedLayout.findViewById(R.id.frame_cross);
                 if (serviceType.getPrice() != null)
                     textView.setText(serviceType.getServiceType() + " ( Rs " + serviceType.getPrice().getValue() + " )");
+                textView.setTag(serviceType);
+                textView.setOnClickListener(mTagClickListener);
                 fl_tag_layout.addView(inflatedLayout);
+                if (noOfServices == 1) {
+                    frameCross.setVisibility(View.GONE);
+                }
             }
         }
 
@@ -550,7 +566,6 @@ public class AddAssistedServiceActivity extends BaseActivity implements OptionLi
             @Override
             public void onResponse(String response) {
 
-                frame_camera.setVisibility(View.GONE);
                 showSnackBar("Upload Success");
 
                 String uriString = Utility.getPath(AddAssistedServiceActivity.this, fileUri);
@@ -685,4 +700,29 @@ public class AddAssistedServiceActivity extends BaseActivity implements OptionLi
 
         enableDisableVerifyButton();
     }
+
+    View.OnClickListener mTagClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            final AssistedUserModel userModel = (AssistedUserModel) getIntent().getSerializableExtra(Constants.EDIT_ASSISTED_SERVICES);
+            final AssistedUserModel.ServiceType serviceType = (AssistedUserModel.ServiceType) view.getTag();
+            final String serviceTypeId = serviceType.getId();
+            String userId = userModel.getId();
+            new RetrofitHelper(AddAssistedServiceActivity.this).deleteAssistedServiceTag(userId, serviceTypeId, new RetrofitHelper.RetrofitCallback() {
+                @Override
+                public void onResponse(String response) {
+                    /*fetchAssistedService();*/
+                    ArrayList<AssistedUserModel.ServiceType> serviceTypes = userModel.getServiceTypes();
+                    serviceTypes.remove(serviceType);
+                    createEditServiceLayout(serviceTypes);
+                }
+
+                @Override
+                public void onErrorResponse() {
+                    AddAssistedServiceActivity.this.showSnackBar(getString(R.string.something_went_wrong));
+                }
+            });
+
+        }
+    };
 }

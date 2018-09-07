@@ -86,6 +86,9 @@ public interface RetrofitApiInterface {
     @POST(Constants.ADD_ASSISTED_SERVICE)
     Call<JsonObject> addAssistedService(@Path(value = "seller_id", encoded = true) String identifier, @Path(value = "id", encoded = true) String assistedId, @Body HashMap<String, String> body);
 
+    @DELETE(Constants.DELETE_ASSISTED_SERVICE_TAG)
+    Call<JsonObject> deleteAssistedServiceTag(@Path(value = "seller_id", encoded = true) String selledId, @Path(value = "user_id", encoded = true) String userId, @Path(value = "service_type_id", encoded = true) String serviceTypeId);
+
     @DELETE(Constants.ASSISTED_SERVICE_BY_ID)
     Call<JsonObject> deleteAssistedService(@Path(value = "seller_id", encoded = true) String identifier, @Path(value = "id", encoded = true) String assistedServiceId);
 

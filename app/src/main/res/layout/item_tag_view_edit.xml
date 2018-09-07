@@ -15,12 +15,12 @@
         android:paddingLeft="@dimen/dimen_8dp"
         android:paddingRight="@dimen/dimen_8dp"
         android:paddingTop="@dimen/dimen_5dp"
-        android:text=""
+        android:text="dsdsdsdsdsdsdsd"
         android:textColor="@color/color_white"
         android:textSize="@dimen/dimen_8dp" />
 
     <FrameLayout
-        android:id="@+id/frame_camera"
+        android:id="@+id/frame_cross"
         android:layout_width="@dimen/dimen_20dp"
         android:layout_height="@dimen/dimen_20dp"
         android:layout_gravity="end"
