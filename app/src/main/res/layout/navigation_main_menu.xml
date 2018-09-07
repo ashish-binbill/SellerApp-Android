@@ -59,7 +59,8 @@
                 android:lineSpacingExtra="13.5sp"
                 android:text="@string/manage_sku"
                 android:textColor="@color/text_44"
-                android:textSize="@dimen/dimen_14dp" />
+                android:textSize="@dimen/dimen_14dp"
+                android:visibility="gone"/>
         </LinearLayout>
 
         <TextView

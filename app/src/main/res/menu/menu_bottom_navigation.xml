@@ -11,8 +11,8 @@
         android:title="@string/verification" />
     <item
         android:id="@+id/action_chat"
-        android:icon="@drawable/ic_chat"
-        android:title="@string/chat" />
+        android:icon="@drawable/ic_orders"
+        android:title="@string/orders" />
     <item
         android:id="@+id/action_customers"
         android:icon="@drawable/ic_customers"

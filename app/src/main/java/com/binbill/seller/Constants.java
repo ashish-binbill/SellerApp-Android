@@ -30,6 +30,7 @@ public class Constants {
     public static final String ASSISTED_SERVICE_BY_ID = "sellers/{seller_id}/assisted/{id}";
     public static final String LINK_USER_WITH_SELLER = "sellers/{seller_id}/users/{id}";
     public static final String ADD_ASSISTED_SERVICE = "sellers/{seller_id}/assisted/{id}/types";
+    public static final String DELETE_ASSISTED_SERVICE_TAG = "/sellers/{seller_id}/assisted/{user_id}/types/{service_type_id}";
     public static final String FETCH_SELLER_CREDITS = "sellers/{seller_id}/users/{customer_id}/credits";
     public static final String ADD_SETTLE_CREDIT = "sellers/{seller_id}/credits";
     public static final String FETCH_SELLER_POINTS = "sellers/{seller_id}/users/{customer_id}/points";
