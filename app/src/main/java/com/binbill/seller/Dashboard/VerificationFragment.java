@@ -217,6 +217,7 @@ public class VerificationFragment extends Fragment implements VerificationAdapte
             linkButton.setVisibility(View.VISIBLE);
         } else {
             noData.setVisibility(View.VISIBLE);
+            noData.setText(getString(R.string.no_data_in_verification_fragment));
             recyclerView.setVisibility(View.GONE);
             linkButton.setVisibility(View.GONE);
         }
