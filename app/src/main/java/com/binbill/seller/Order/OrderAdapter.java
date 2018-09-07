@@ -87,6 +87,8 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         final OrderHolder orderHolder = (OrderHolder) holder;
         final Order model = mList.get(position);
 
+
+
         UserModel userModel = model.getUser();
 
         if (userModel != null) {
