@@ -69,7 +69,7 @@ public class ActiveOrderFragment extends Fragment implements OrderAdapter.OrderS
     @Override
     public void onResume() {
         super.onResume();
-        ApiHelper.fetchOrders(getActivity());
+        fetchOrders();
     }
 
     @Override

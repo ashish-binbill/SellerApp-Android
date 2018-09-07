@@ -132,4 +132,16 @@ public interface RetrofitApiInterface {
 
     @GET(Constants.FETCH_SKU_BY_ID)
     Call<JsonObject> fetchSKUById(@Path(value = "sku_id", encoded = true) String skuID);
+
+    @PUT(Constants.SEND_ORDER_FOR_APPROVAL)
+    Call<JsonObject> sendOrderForApproval(@Path(value = "seller_id", encoded = true) String sellerId, @Path(value = "order_id", encoded = true) String orderId, @Body HashMap<String, String> body);
+
+    @PUT(Constants.SEND_ORDER_ACCEPTANCE)
+    Call<JsonObject> sendOrderAccepted(@Path(value = "seller_id", encoded = true) String sellerId, @Path(value = "order_id", encoded = true) String orderId, @Body HashMap<String, String> body);
+
+    @PUT(Constants.SEND_ORDER_REJECTED)
+    Call<JsonObject> sendOrderRejected(@Path(value = "seller_id", encoded = true) String sellerId, @Path(value = "order_id", encoded = true) String orderId, @Body HashMap<String, String> body);
+
+    @PUT(Constants.SEND_ORDER_OUT_FOR_DELIVERY)
+    Call<JsonObject> sendOrderForDelivery(@Path(value = "seller_id", encoded = true) String sellerId, @Path(value = "order_id", encoded = true) String orderId, @Body HashMap<String, String> body);
 }

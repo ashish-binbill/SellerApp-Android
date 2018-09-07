@@ -30,11 +30,18 @@ public class Order implements Serializable {
     @SerializedName("user")
     UserModel user;
 
+    @SerializedName("is_modified")
+    boolean modified;
+
     @SerializedName("order_details")
     ArrayList<OrderItem> orderItems;
 
     @SerializedName("created_at")
     String orderCreationDate;
+
+    public boolean isModified() {
+        return modified;
+    }
 
     public String getOrderCreationDate() {
         return orderCreationDate;

@@ -44,6 +44,10 @@ public class Constants {
     public static final String FETCH_COMPLETED_ORDERS = "sellers/{seller_id}/orders";
     public static final String FETCH_ORDERS_BY_ID = "sellers/{seller_id}/orders/{id}";
     public static final String FETCH_SKU_BY_ID = "skus/{sku_id}/measurements";
+    public static final String SEND_ORDER_FOR_APPROVAL = "sellers/{seller_id}/orders/{order_id}/modify";
+    public static final String SEND_ORDER_ACCEPTANCE = "sellers/{seller_id}/orders/{order_id}/approve";
+    public static final String SEND_ORDER_REJECTED = "sellers/{seller_id}/orders/{order_id}/reject";
+    public static final String SEND_ORDER_OUT_FOR_DELIVERY = "sellers/{seller_id}/orders/{order_id}/outfordelivery";
 
     public static final int PERMISSION_READ_SMS = 100;
     public static final int PERMISSION_CAMERA = 101;

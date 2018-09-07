@@ -663,6 +663,109 @@ public class RetrofitHelper {
         });
     }
 
+    public void sendOrderModificationCall(String orderId, String userId, String list, final RetrofitCallback retrofitCallback) {
+        RetrofitApiInterface apiService =
+                RetrofitHelper.getClient(mContext).create(RetrofitApiInterface.class);
+
+        HashMap<String, String> map = new HashMap<>();
+        map.put("order_details", list);
+        map.put("user_id", userId);
+
+        Call<JsonObject> call = apiService.sendOrderForApproval(AppSession.getInstance(mContext).getSellerId(), orderId, map);
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (response.isSuccessful()) {
+                    JsonObject body = response.body();
+                    retrofitCallback.onResponse(body.toString());
+                } else
+                    retrofitCallback.onErrorResponse();
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable throwable) {
+                retrofitCallback.onErrorResponse();
+            }
+        });
+    }
+
+    public void sendOrderOutForDeliveryCall(String orderID, String userId, String list, final RetrofitCallback retrofitCallback) {
+        RetrofitApiInterface apiService =
+                RetrofitHelper.getClient(mContext).create(RetrofitApiInterface.class);
+
+        HashMap<String, String> map = new HashMap<>();
+        map.put("order_details", list);
+        map.put("user_id", userId);
+
+        Call<JsonObject> call = apiService.sendOrderForDelivery(AppSession.getInstance(mContext).getSellerId(), orderID, map);
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (response.isSuccessful()) {
+                    JsonObject body = response.body();
+                    retrofitCallback.onResponse(body.toString());
+                } else
+                    retrofitCallback.onErrorResponse();
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable throwable) {
+                retrofitCallback.onErrorResponse();
+            }
+        });
+    }
+
+    public void sendOrderApprovalCall(String orderID, String userId, String list, final RetrofitCallback retrofitCallback) {
+        RetrofitApiInterface apiService =
+                RetrofitHelper.getClient(mContext).create(RetrofitApiInterface.class);
+
+        HashMap<String, String> map = new HashMap<>();
+        map.put("order_details", list);
+        map.put("user_id", userId);
+
+        Call<JsonObject> call = apiService.sendOrderAccepted(AppSession.getInstance(mContext).getSellerId(), orderID, map);
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (response.isSuccessful()) {
+                    JsonObject body = response.body();
+                    retrofitCallback.onResponse(body.toString());
+                } else
+                    retrofitCallback.onErrorResponse();
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable throwable) {
+                retrofitCallback.onErrorResponse();
+            }
+        });
+    }
+
+    public void sendOrderDeclineCall(String orderID, String userId, final RetrofitCallback retrofitCallback) {
+        RetrofitApiInterface apiService =
+                RetrofitHelper.getClient(mContext).create(RetrofitApiInterface.class);
+
+        HashMap<String, String> map = new HashMap<>();
+        map.put("user_id", userId);
+
+        Call<JsonObject> call = apiService.sendOrderRejected(AppSession.getInstance(mContext).getSellerId(), orderID, map);
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (response.isSuccessful()) {
+                    JsonObject body = response.body();
+                    retrofitCallback.onResponse(body.toString());
+                } else
+                    retrofitCallback.onErrorResponse();
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable throwable) {
+                retrofitCallback.onErrorResponse();
+            }
+        });
+    }
+
     public void fetchBrandsFromCategories(String categories, final RetrofitCallback retrofitCallback) {
         RetrofitApiInterface apiService =
                 RetrofitHelper.getClient(mContext).create(RetrofitApiInterface.class);
