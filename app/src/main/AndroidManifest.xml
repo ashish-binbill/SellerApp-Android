@@ -115,10 +115,10 @@
         <activity
             android:name=".Dashboard.ProfileActivity_"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".Order.OrderDetailsActivity_"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".Order.SelectDeliveryAgentActivity"></activity>
     </application>
 
 </manifest>

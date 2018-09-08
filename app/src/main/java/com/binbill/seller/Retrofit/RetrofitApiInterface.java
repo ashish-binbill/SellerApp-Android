@@ -147,4 +147,7 @@ public interface RetrofitApiInterface {
 
     @PUT(Constants.SEND_ORDER_OUT_FOR_DELIVERY)
     Call<JsonObject> sendOrderForDelivery(@Path(value = "seller_id", encoded = true) String sellerId, @Path(value = "order_id", encoded = true) String orderId, @Body HashMap<String, String> body);
+
+    @GET(Constants.GET_DELIVERY_BOYS)
+    Call<JsonObject> getDeliveryBoys(@Path(value = "seller_id", encoded = true) String sellerId);
 }

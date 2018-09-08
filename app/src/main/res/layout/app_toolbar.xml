@@ -43,15 +43,18 @@
             android:paddingRight="@dimen/dimen_10dp"
             android:src="@drawable/ic_notify_bell" />
 
-        <ImageView
-            android:id="@+id/iv_socket"
-            android:layout_width="@dimen/dimen_40dp"
+        <TextView
+            android:id="@+id/iv_skip"
+            android:layout_width="wrap_content"
             android:layout_height="@dimen/dimen_40dp"
             android:foregroundGravity="right"
             android:visibility="gone"
+            android:text="@string/skip"
+            android:textSize="@dimen/dimen_15dp"
+            android:layout_marginRight="@dimen/dimen_20dp"
+            android:textColor="@color/color_white"
             android:paddingLeft="@dimen/dimen_10dp"
-            android:paddingRight="@dimen/dimen_10dp"
-            android:src="@android:drawable/ic_btn_speak_now" />
+            android:paddingRight="@dimen/dimen_10dp" />
 
     </LinearLayout>
 

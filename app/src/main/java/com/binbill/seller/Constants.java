@@ -49,6 +49,7 @@ public class Constants {
     public static final String SEND_ORDER_ACCEPTANCE = "sellers/{seller_id}/orders/{order_id}/approve";
     public static final String SEND_ORDER_REJECTED = "sellers/{seller_id}/orders/{order_id}/reject";
     public static final String SEND_ORDER_OUT_FOR_DELIVERY = "sellers/{seller_id}/orders/{order_id}/outfordelivery";
+    public static final String GET_DELIVERY_BOYS = "sellers/2457/delivery";
 
     public static final int PERMISSION_READ_SMS = 100;
     public static final int PERMISSION_CAMERA = 101;
