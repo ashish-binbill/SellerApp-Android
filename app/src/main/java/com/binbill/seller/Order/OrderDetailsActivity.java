@@ -1,6 +1,7 @@
 package com.binbill.seller.Order;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Rect;
@@ -184,11 +185,6 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                     if (orderItem.getUpdatedSKUMeasurement() != null)
                         orderItem.setOrderSKU(orderItem.getUpdatedSKUMeasurement());
                     orderItem.setItemAvailability(orderItem.isUpdateItemAvailable());
-
-                    if (!Utility.isEmpty(orderItem.getUpdatedPrice())) {
-                        OrderItem.OrderSKU sku = orderItem.getOrderSKU();
-                        sku.setSkuMrp(orderItem.getUpdatedPrice());
-                    }
                 }
                 if (textOnButton.equalsIgnoreCase(getString(R.string.send_for_approval))) {
                     /**
@@ -252,16 +248,43 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
 
                 } else if (textOnButton.equalsIgnoreCase(getString(R.string.out_for_delivery))) {
                     /**
-                     * Approval call
+                     * Out for delivery call
                      */
 
+                    Intent intent = new Intent(OrderDetailsActivity.this, SelectDeliveryAgentActivity_.class);
+                    startActivityForResult(intent, Constants.INTENT_CALL_SELECT_DELIVERY_AGENT);
+
+                }
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == Constants.INTENT_CALL_SELECT_DELIVERY_AGENT) {
+            if (resultCode == RESULT_OK) {
+
+                ArrayList<OrderItem> updatedList = mAdapter.getUpdatedOrderList();
+                for (OrderItem orderItem : updatedList) {
+                    if (orderItem.getUpdatedSKUMeasurement() != null)
+                        orderItem.setOrderSKU(orderItem.getUpdatedSKUMeasurement());
+                    orderItem.setItemAvailability(orderItem.isUpdateItemAvailable());
+                }
+
+                try {
                     Gson gson = new Gson();
                     Type type = new TypeToken<List<OrderItem>>() {
                     }.getType();
                     String json = gson.toJson(updatedList, type);
 
+                    Intent intent = data;
+                    JSONObject jsonObject = new JSONObject(json);
+                    if (intent.hasExtra(Constants.DELIVERY_AGENT_ID)) {
+                        jsonObject.put("delivery_user_id", intent.getStringExtra(Constants.DELIVERY_AGENT_ID));
+                    }
 
-                    new RetrofitHelper(OrderDetailsActivity.this).sendOrderOutForDeliveryCall(orderDetails.getOrderId(), orderDetails.getUserId(), json, new RetrofitHelper.RetrofitCallback() {
+
+                    new RetrofitHelper(OrderDetailsActivity.this).sendOrderOutForDeliveryCall(orderDetails.getOrderId(), orderDetails.getUserId(), jsonObject.toString(), new RetrofitHelper.RetrofitCallback() {
                         @Override
                         public void onResponse(String response) {
                             btn_accept.setVisibility(View.VISIBLE);
@@ -280,9 +303,12 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                         }
                     });
 
+                } catch (JSONException e) {
+
                 }
+
             }
-        });
+        }
     }
 
     private void makeDeclineOrderCall() {

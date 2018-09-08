@@ -53,6 +53,7 @@ public class Constants {
 
     public static final int PERMISSION_READ_SMS = 100;
     public static final int PERMISSION_CAMERA = 101;
+    public static final int INTENT_CALL_SELECT_DELIVERY_AGENT = 1;
 
     public static final Pattern PAN_PATTERN = Pattern.compile("[A-Z]{5}[0-9]{4}[A-Z]{1}");
     public static final Pattern ZIP_CODE_PATTERN = Pattern.compile("[1-9][0-9]{5}");
@@ -125,4 +126,5 @@ public class Constants {
     public static final int STATUS_REJECTED = 18;
     public static final int STATUS_OUT_FOR_DELIVERY = 19;
     public static final String ORDER_ID = "ORDER_ID";
+    public static final String DELIVERY_AGENT_ID = "DELIVERY_AGENT_ID";
 }

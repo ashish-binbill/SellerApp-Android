@@ -23,24 +23,81 @@
             android:orientation="horizontal"
             android:padding="@dimen/dimen_12dp">
 
+            <include layout="@layout/layout_no_user_image" />
+
             <LinearLayout
+                android:id="@+id/ll_info_layout"
                 android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_30dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
                 android:orientation="vertical"
-                android:gravity="center_horizontal"
-                android:layout_height="wrap_content">
+                android:paddingRight="@dimen/dimen_35dp">
 
-                <include layout="@layout/layout_no_user_image" />
 
-                <android.support.v7.widget.AppCompatRatingBar
-                    android:id="@+id/rb_rating"
-                    style="?android:attr/ratingBarStyleSmall"
+                <TextView
+                    android:id="@+id/tv_user_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="Arya Stark"
+                    android:textColor="@color/text_44"
+                    android:textSize="@dimen/dimen_16dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dimen_10dp"
-                    android:isIndicator="true"
-                    android:max="5"
-                    android:rating="3"
-                    android:theme="@style/RatingBar" />
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/iv_assign_color"
+                        android:layout_width="@dimen/dimen_15dp"
+                        android:layout_height="@dimen/dimen_15dp"
+                        android:layout_gravity="center"
+                        android:layout_marginRight="@dimen/dimen_7dp"
+                        android:background="@drawable/circle_bg_grey"
+                        android:backgroundTint="@color/status_red" />
+
+                    <TextView
+                        android:id="@+id/iv_assign_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="@string/tasks_already_assigned"
+                        android:textColor="@color/status_red"
+                        android:textSize="@dimen/dimen_11dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimen_20dp"
+                    android:orientation="horizontal">
+
+                    <android.support.v7.widget.AppCompatRatingBar
+                        android:id="@+id/rb_rating"
+                        style="?android:attr/ratingBarStyleSmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:isIndicator="true"
+                        android:max="5"
+                        android:rating="3"
+                        android:theme="@style/RatingBar" />
+
+                    <TextView
+                        android:id="@+id/tv_rating"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dimen_5dp"
+                        android:gravity="center_horizontal"
+                        android:text="@string/rating_value"
+                        android:textColor="@color/color_b7b7b7"
+                        android:textSize="@dimen/dimen_10dp" />
+
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/tv_reviews"
@@ -55,53 +112,10 @@
 
             </LinearLayout>
 
-            <LinearLayout
+            <ImageView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dimen_15dp"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:orientation="vertical"
-                android:paddingRight="@dimen/dimen_35dp">
-
-                <TextView
-                    android:id="@+id/tv_user_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-medium"
-                    android:text="Arya Stark"
-                    android:textColor="@color/text_44"
-                    android:textSize="@dimen/dimen_16dp" />
-
-                <TextView
-                    android:id="@+id/tv_user_transactions"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimen_8dp"
-                    android:text="45 Transaction"
-                    android:textColor="@color/text_44"
-                    android:textSize="11sp" />
-
-                <TextView
-                    android:id="@+id/tv_user_address"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimen_12dp"
-                    android:text="B-350, Spaze IT Tech Park, Sector - 49, Gurugram"
-                    android:textColor="@color/text_44"
-                    android:textSize="11sp" />
-
-                <com.binbill.seller.CustomViews.AppButton
-                    android:id="@+id/add_customer"
-                    android:layout_width="@dimen/dimen_120dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimen_20dp"
-                    android:paddingLeft="@dimen/dimen_10dp"
-                    android:paddingRight="@dimen/dimen_10dp"
-                    android:text="@string/add_user"
-                    android:visibility="gone" />
-
-            </LinearLayout>
+                android:src="@drawable/ic_call_orange"
+                android:layout_height="wrap_content" />
 
         </LinearLayout>
 

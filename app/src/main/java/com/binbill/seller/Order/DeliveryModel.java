@@ -1,60 +1,17 @@
 package com.binbill.seller.Order;
 
 import com.binbill.seller.AssistedService.AssistedUserModel;
+import com.binbill.seller.Model.FileItem;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * Created by shruti.vig on 9/8/18.
  */
 
 public class DeliveryModel implements Serializable {
-    /**
-     * {
-     * "id": 17,
-     * "name": "Mr Sagar Chauhan",
-     * "mobile_no": "9873179584",
-     * "reviews": [
-     * {
-     * "ratings": 4,
-     * "feedback": "We are testing you.",
-     * "updated_by": 27774
-     * }
-     * ],
-     * "document_details": [
-     * {
-     * "type": "3",
-     * "index": "xytbc2pfi4",
-     * "file_name": "4-xytbc2pfi4.jpg",
-     * "file_type": "jpg",
-     * "image_type": "",
-     * "updated_by": 4
-     * }
-     * ],
-     * "profile_image_detail": {
-     * "type": "5",
-     * "index": "v5ibtrj024",
-     * "file_name": "4-v5ibtrj024.jpg",
-     * "file_type": "jpg",
-     * "image_type": "",
-     * "updated_by": 4
-     * },
-     * "service_types": [
-     * {
-     * "service_type_id": 0,
-     * "seller_id": 2457,
-     * "price": {
-     * "value": 50,
-     * "price_type": 1
-     * },
-     * "id": 19,
-     * "service_type": "Delivery Boy"
-     * }
-     * ],
-     * "rating": 4
-     * }
-     */
 
     @SerializedName("id")
     String deliveryBoyId;
@@ -68,8 +25,16 @@ public class DeliveryModel implements Serializable {
     @SerializedName("rating")
     String rating;
 
+    @SerializedName("order_counts")
+    String orderCount;
+
+    @SerializedName("profile_image_detail")
+    FileItem profileImage;
+
+    transient boolean selected;
+
     @SerializedName("reviews")
-    AssistedUserModel.Review reviews;
+    ArrayList<AssistedUserModel.Review> reviews;
 
     public String getDeliveryBoyId() {
         return deliveryBoyId;
@@ -87,7 +52,23 @@ public class DeliveryModel implements Serializable {
         return rating;
     }
 
-    public AssistedUserModel.Review getReviews() {
+    public ArrayList<AssistedUserModel.Review> getReviews() {
         return reviews;
+    }
+
+    public String getOrderCount() {
+        return orderCount;
+    }
+
+    public FileItem getProfileImage() {
+        return profileImage;
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
     }
 }

@@ -232,5 +232,10 @@
     <string name="assign_delivery_boy">Assign Delivery Boy</string>
     <string name="skip">Skip</string>
     <string name="no_delivery_boys">You have not added any delivery boys</string>
+    <string name="tasks_already_assigned">%1$s tasks already assigned</string>
+    <string name="rating_value">(%1$s)</string>
+    <string name="no_task_assigned">No task assigned</string>
+    <string name="confirm">Confirm</string>
+    <string name="please_select_boy">Please select a delivery boy.</string>
     >
 </resources>
