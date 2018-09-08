@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
@@ -122,15 +123,9 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
     }
 
     private void connectSocket() {
+        BinBillSeller.getSocket(this).connect();
         BinBillSeller.getSocket(this).on("order-placed", SOCKET_EVENT_ORDER_PLACED);
-        BinBillSeller.getSocket(this).on("order-status-changed", SOCKET_EVENT_ORDER_STATUS_CHANGED);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-
-        BinBillSeller.getSocket(this).disconnect();
+        BinBillSeller.getSocket(this).on("order-status-change", SOCKET_EVENT_ORDER_STATUS_CHANGED);
     }
 
     private Emitter.Listener SOCKET_EVENT_ORDER_PLACED = new Emitter.Listener() {
@@ -140,8 +135,8 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
 
             Type classType = new TypeToken<Order>() {
             }.getType();
-            Order mOrderDetails = new Gson().fromJson(args.toString(), classType);
-            if (orderId.equalsIgnoreCase(orderDetails.getOrderId())) {
+            Order mOrderDetails = new Gson().fromJson(args[0].toString(), classType);
+            if (orderId.equalsIgnoreCase(mOrderDetails.getOrderId())) {
                 orderDetails = mOrderDetails;
                 handleResponse();
             }
@@ -155,8 +150,8 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
             Type classType = new TypeToken<Order>() {
             }.getType();
 
-            Order mOrderDetails = new Gson().fromJson(args.toString(), classType);
-            if (orderId.equalsIgnoreCase(orderDetails.getOrderId())) {
+            Order mOrderDetails = new Gson().fromJson(args[0].toString(), classType);
+            if (orderId.equalsIgnoreCase(mOrderDetails.getOrderId())) {
                 orderDetails = mOrderDetails;
                 handleResponse();
             }
@@ -271,42 +266,36 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                     orderItem.setItemAvailability(orderItem.isUpdateItemAvailable());
                 }
 
-                try {
-                    Gson gson = new Gson();
-                    Type type = new TypeToken<List<OrderItem>>() {
-                    }.getType();
-                    String json = gson.toJson(updatedList, type);
 
-                    Intent intent = data;
-                    JSONObject jsonObject = new JSONObject(json);
-                    if (intent.hasExtra(Constants.DELIVERY_AGENT_ID)) {
-                        jsonObject.put("delivery_user_id", intent.getStringExtra(Constants.DELIVERY_AGENT_ID));
-                    }
+                Gson gson = new Gson();
+                Type type = new TypeToken<List<OrderItem>>() {
+                }.getType();
+                String json = gson.toJson(updatedList, type);
 
-
-                    new RetrofitHelper(OrderDetailsActivity.this).sendOrderOutForDeliveryCall(orderDetails.getOrderId(), orderDetails.getUserId(), jsonObject.toString(), new RetrofitHelper.RetrofitCallback() {
-                        @Override
-                        public void onResponse(String response) {
-                            btn_accept.setVisibility(View.VISIBLE);
-                            btn_accept_progress.setVisibility(View.GONE);
-                            handleApiResponse(response);
-                        }
-
-                        @Override
-                        public void onErrorResponse() {
-                            btn_accept.setVisibility(View.GONE);
-                            btn_accept_progress.setVisibility(View.VISIBLE);
-                            shimmer_view_container.setVisibility(View.GONE);
-
-                            showSnackBar(getString(R.string.something_went_wrong));
-                            finish();
-                        }
-                    });
-
-                } catch (JSONException e) {
-
+                Intent intent = data;
+                String deliveryId = "";
+                if (intent != null && intent.hasExtra(Constants.DELIVERY_AGENT_ID)) {
+                    deliveryId = intent.getStringExtra(Constants.DELIVERY_AGENT_ID);
                 }
 
+                new RetrofitHelper(OrderDetailsActivity.this).sendOrderOutForDeliveryCall(orderDetails.getOrderId(), orderDetails.getUserId(), json, deliveryId, new RetrofitHelper.RetrofitCallback() {
+                    @Override
+                    public void onResponse(String response) {
+                        btn_accept.setVisibility(View.VISIBLE);
+                        btn_accept_progress.setVisibility(View.GONE);
+                        handleApiResponse(response);
+                    }
+
+                    @Override
+                    public void onErrorResponse() {
+                        btn_accept.setVisibility(View.GONE);
+                        btn_accept_progress.setVisibility(View.VISIBLE);
+                        shimmer_view_container.setVisibility(View.GONE);
+
+                        showSnackBar(getString(R.string.something_went_wrong));
+                        finish();
+                    }
+                });
             }
         }
     }
@@ -442,7 +431,7 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
     }
 
     private void handleResponse() {
-        if (orderDetails != null) {
+        if (orderDetails != null && orderDetails.getOrderItems() != null) {
             initialiseUpdatedDataArray(orderDetails.getOrderItems().size());
             setUpData();
         } else {
@@ -470,6 +459,13 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
 
         nested_scroll_view.fullScroll(View.FOCUS_UP);
         nested_scroll_view.smoothScrollTo(0, 0);
+
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                rv_shopping_list.scrollTo(0, 0);
+            }
+        });
 
     }
 

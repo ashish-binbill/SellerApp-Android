@@ -74,18 +74,18 @@ public class ActiveOrderFragment extends Fragment implements OrderAdapter.OrderS
     public void onResume() {
         super.onResume();
         fetchOrders();
+//        connectSocket();
     }
 
     private void connectSocket() {
+        BinBillSeller.getSocket(getActivity()).connect();
         BinBillSeller.getSocket(getActivity()).on("order-placed", SOCKET_EVENT_ORDER_PLACED);
-        BinBillSeller.getSocket(getActivity()).on("order-status-changed", SOCKET_EVENT_ORDER_STATUS_CHANGED);
+        BinBillSeller.getSocket(getActivity()).on("order-status-change", SOCKET_EVENT_ORDER_STATUS_CHANGED);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-
-        BinBillSeller.getSocket(getActivity()).disconnect();
     }
 
     private Emitter.Listener SOCKET_EVENT_ORDER_PLACED = new Emitter.Listener() {
@@ -102,6 +102,14 @@ public class ActiveOrderFragment extends Fragment implements OrderAdapter.OrderS
         }
     };
 
+    @Override
+    public void setMenuVisibility(final boolean visible) {
+        if (visible) {
+            connectSocket();
+        }
+
+        super.setMenuVisibility(visible);
+    }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {

@@ -229,7 +229,7 @@
     <string name="quantity">Quantity</string>
     <string name="string_order_rejected">Offer Rejected Successfully</string>
     <string name="waiting_for_approval">Waiting for approval</string>
-    <string name="assign_delivery_boy">Assign Delivery Boy</string>
+    <string name="assign_delivery_boy">Assign Delivery</string>
     <string name="skip">Skip</string>
     <string name="no_delivery_boys">You have not added any delivery boys</string>
     <string name="tasks_already_assigned">%1$s tasks already assigned</string>

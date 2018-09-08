@@ -87,10 +87,13 @@ public class AddOfferActivity extends BaseActivity implements BottomSheetHelper.
     PhotoView iv_offer;
 
     Calendar mCalendar = Calendar.getInstance();
-    private JSONArray fileDetailsJson = new JSONArray();;
+    private JSONArray fileDetailsJson = new JSONArray();
+    ;
     private String mOfferId;
     private ArrayList<String> bottomSheetItems;
     private Uri cameraFileUri;
+    private int EDIT_OFFER = 1;
+    private int mType = 0;
 
     @AfterViews
     public void setUpView() {
@@ -107,6 +110,7 @@ public class AddOfferActivity extends BaseActivity implements BottomSheetHelper.
         setUpListener();
 
         if (getIntent().hasExtra(Constants.OFFER_ITEM)) {
+            mType = EDIT_OFFER;
             setUpData((OfferItem) getIntent().getSerializableExtra(Constants.OFFER_ITEM));
         }
     }
@@ -397,7 +401,13 @@ public class AddOfferActivity extends BaseActivity implements BottomSheetHelper.
         String description = et_offer_description.getText().toString();
         String expiry = et_expiry_date.getText().toString();
 
-        new RetrofitHelper(this).addOfferFromSeller(title, description, expiry, fileDetailsJson.toString(), mOfferId, new RetrofitHelper.RetrofitCallback() {
+        /**
+         * In case of edit offer, remove fileDetailsJson
+         */
+        if (mType == EDIT_OFFER)
+            fileDetailsJson = null;
+
+        new RetrofitHelper(this).addOfferFromSeller(title, description, expiry, fileDetailsJson == null ? null : fileDetailsJson.toString(), mOfferId, new RetrofitHelper.RetrofitCallback() {
             @Override
             public void onResponse(String response) {
 

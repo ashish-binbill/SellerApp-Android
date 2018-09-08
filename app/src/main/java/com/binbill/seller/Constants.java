@@ -37,6 +37,7 @@ public class Constants {
     public static final String ADD_SETTLE_POINTS = "sellers/{seller_id}/points";
     public static final String FETCH_JOBS_FOR_VERIFICATION = "sellers/{seller_id}/cashbacks";
     public static final String APPROVE_JOB = "sellers/{seller_id}/cashbacks/{id}/approve";
+    public static final String REJECT_JOB = "sellers/{seller_id}/cashbacks/{id}/reject";
     public static final String LINK_CREDIT_WITH_JOB = "seller/{seller_id}/users/{customer_id}/credits/{credit_id}/jobs/{job_id}";
     public static final String LINK_POINTS_WITH_JOB = "seller/{seller_id}/users/{customer_id}/points/{point_id}/jobs/{job_id}";
     public static final String FETCH_USER_TRANSACTIONS = "sellers/{seller_id}/users/{customer_id}/transactions";
@@ -127,4 +128,5 @@ public class Constants {
     public static final int STATUS_OUT_FOR_DELIVERY = 19;
     public static final String ORDER_ID = "ORDER_ID";
     public static final String DELIVERY_AGENT_ID = "DELIVERY_AGENT_ID";
+
 }

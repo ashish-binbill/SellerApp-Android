@@ -689,13 +689,15 @@ public class RetrofitHelper {
         });
     }
 
-    public void sendOrderOutForDeliveryCall(String orderID, String userId, String list, final RetrofitCallback retrofitCallback) {
+    public void sendOrderOutForDeliveryCall(String orderID, String userId, String list, String deliveryId, final RetrofitCallback retrofitCallback) {
         RetrofitApiInterface apiService =
                 RetrofitHelper.getClient(mContext).create(RetrofitApiInterface.class);
 
         HashMap<String, String> map = new HashMap<>();
         map.put("order_details", list);
         map.put("user_id", userId);
+        if (!Utility.isEmpty(deliveryId))
+            map.put("delivery_user_id", deliveryId);
 
         Call<JsonObject> call = apiService.sendOrderForDelivery(AppSession.getInstance(mContext).getSellerId(), orderID, map);
         call.enqueue(new Callback<JsonObject>() {
@@ -826,12 +828,14 @@ public class RetrofitHelper {
         if (offerId != null && !Utility.isEmpty(offerId))
             offerObject.put("id", offerId);
 
-        String jsonFormattedString = "";
-        try {
-            jsonFormattedString = new JSONTokener(fileUploadDetails).nextValue().toString();
-            offerObject.put("document_details", jsonFormattedString);
-        } catch (JSONException e) {
-            e.printStackTrace();
+        if (!Utility.isEmpty(fileUploadDetails)) {
+            String jsonFormattedString = "";
+            try {
+                jsonFormattedString = new JSONTokener(fileUploadDetails).nextValue().toString();
+                offerObject.put("document_details", jsonFormattedString);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
         offerObject.put("end_date", expiry);
 
@@ -924,6 +928,30 @@ public class RetrofitHelper {
                 RetrofitHelper.getClient(mContext).create(RetrofitApiInterface.class);
 
         Call<JsonObject> call = apiService.approveJobForVerification(AppSession.getInstance(mContext).getSellerId(), jobId);
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (response.isSuccessful()) {
+                    JsonObject body = response.body();
+                    retrofitCallback.onResponse(body.toString());
+                } else
+                    retrofitCallback.onErrorResponse();
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable throwable) {
+                retrofitCallback.onErrorResponse();
+            }
+        });
+    }
+
+    public void rejectJobForVerification(String jobId, String rejectId, final RetrofitCallback retrofitCallback) {
+        RetrofitApiInterface apiService =
+                RetrofitHelper.getClient(mContext).create(RetrofitApiInterface.class);
+        HashMap<String, String> map = new HashMap<>();
+        map.put("reason_id", rejectId);
+
+        Call<JsonObject> call = apiService.rejectJobForVerification(AppSession.getInstance(mContext).getSellerId(), jobId, map);
         call.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
@@ -1107,7 +1135,7 @@ public class RetrofitHelper {
         RetrofitApiInterface apiService =
                 RetrofitHelper.getClient(mContext).create(RetrofitApiInterface.class);
 
-        Call<JsonObject> call = apiService.deleteAssistedServiceTag(AppSession.getInstance(mContext).getSellerId(),userId,serviceTypeId);
+        Call<JsonObject> call = apiService.deleteAssistedServiceTag(AppSession.getInstance(mContext).getSellerId(), userId, serviceTypeId);
         call.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {

@@ -33,7 +33,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.binbill.seller.APIHelper.ApiHelper;
 import com.binbill.seller.AppSession;
 import com.binbill.seller.BaseActivity;
 import com.binbill.seller.Constants;
@@ -44,8 +43,6 @@ import com.binbill.seller.Registration.OptionListFragment;
 import com.binbill.seller.Retrofit.RetrofitHelper;
 import com.binbill.seller.SharedPref;
 import com.binbill.seller.Utility;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.nex3z.flowlayout.FlowLayout;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.OkHttp3Downloader;
@@ -59,7 +56,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 import okhttp3.Authenticator;
@@ -350,6 +346,10 @@ public class AddAssistedServiceActivity extends BaseActivity implements OptionLi
         String price = et_price.getText().toString();
 
         if (mType.equalsIgnoreCase(Constants.EDIT_ASSISTED_SERVICES)) {
+            /**
+             * Make profileImageDetails null in case of edit
+             */
+            fileDetailsJsonProfile = null;
             new RetrofitHelper(this).createAssistedService(name, mobile, mAssistedServiceId, fileDetailsJson == null ? "" : fileDetailsJson.toString(), fileDetailsJsonProfile == null ? "" : fileDetailsJsonProfile.toString(),
                     new RetrofitHelper.RetrofitCallback() {
                         @Override

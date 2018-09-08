@@ -110,6 +110,9 @@ public interface RetrofitApiInterface {
     @PUT(Constants.APPROVE_JOB)
     Call<JsonObject> approveJobForVerification(@Path(value = "seller_id", encoded = true) String identifier, @Path(value = "id", encoded = true) String jobId);
 
+    @PUT(Constants.REJECT_JOB)
+    Call<JsonObject> rejectJobForVerification(@Path(value = "seller_id", encoded = true) String identifier, @Path(value = "id", encoded = true) String jobId, @Body HashMap<String, String> body);
+
     @PUT(Constants.LINK_CREDIT_WITH_JOB)
     Call<JsonObject> linkCreditWithJob(@Path(value = "seller_id", encoded = true) String sellerId, @Path(value = "customer_id", encoded = true) String customerId,
                                        @Path(value = "credit_id", encoded = true) String creditId, @Path(value = "job_id", encoded = true) String jobId);

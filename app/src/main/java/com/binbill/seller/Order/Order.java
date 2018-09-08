@@ -39,6 +39,13 @@ public class Order implements Serializable {
     @SerializedName("created_at")
     String orderCreationDate;
 
+    @SerializedName("user_address_detail")
+    String address;
+
+    public String getAddress() {
+        return address;
+    }
+
     public boolean isModified() {
         return modified;
     }

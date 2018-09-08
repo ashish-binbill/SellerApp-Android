@@ -34,7 +34,7 @@ public class ProfileModel implements Serializable {
     @SerializedName("is_onboarded")
     boolean onboarded;
 
-    @SerializedName("address")
+    @SerializedName("address_detail")
     String address;
 
     @SerializedName("latitude")

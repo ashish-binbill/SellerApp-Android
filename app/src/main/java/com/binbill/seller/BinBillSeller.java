@@ -27,8 +27,6 @@ public class BinBillSeller extends Application {
 
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
-
-        getSocket(getApplicationContext()).connect();
     }
 
     public static Socket getSocket(Context context) {
@@ -39,7 +37,7 @@ public class BinBillSeller extends Application {
                 String authToken = SharedPref.getString(context, SharedPref.AUTH_TOKEN);
                 opts.query = "token=" + authToken;
                 mSocket = IO.socket(Constants.BASE_URL, opts);
-
+                mSocket.connect();
             } catch (URISyntaxException e) {
                 throw new RuntimeException(e);
             }

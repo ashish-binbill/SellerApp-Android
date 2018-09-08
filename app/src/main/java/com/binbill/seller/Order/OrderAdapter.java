@@ -88,7 +88,6 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         final Order model = mList.get(position);
 
 
-
         UserModel userModel = model.getUser();
 
         if (userModel != null) {
@@ -101,7 +100,7 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 orderHolder.mUserName.setText(userModel.getUserMobile());
         }
 
-        orderHolder.mAddress.setText(model.getUserAddress());
+        orderHolder.mAddress.setText(model.getAddress());
 
 
         ArrayList<OrderItem> itemList = model.getOrderItems();
