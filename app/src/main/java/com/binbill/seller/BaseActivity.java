@@ -53,19 +53,7 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        connectSocket();
     }
-
-    private void connectSocket() {
-        BinBillSeller.getSocket(this).on("order-placed", SOCKET_EVENT_ORDER_PLACED);
-    }
-
-    private Emitter.Listener SOCKET_EVENT_ORDER_PLACED = new Emitter.Listener() {
-        @Override
-        public void call(Object... args) {
-            Log.d("SHRUTI", "CONNECTED " + Arrays.toString(args));
-        }
-    };
 }
 
 

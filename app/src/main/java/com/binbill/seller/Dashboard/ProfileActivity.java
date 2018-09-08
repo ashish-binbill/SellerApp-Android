@@ -1,7 +1,6 @@
 package com.binbill.seller.Dashboard;
 
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
 
@@ -19,9 +18,14 @@ public class ProfileActivity extends AppCompatActivity {
 
     @ViewById(R.id.toolbar_text)
     TextView toolbarText;
+    private ProfileModel profileDetails;
 
     @AfterViews
     public void initiateViews() {
+
+        profileDetails = AppSession.getInstance(this).getSellerProfile();
+        if (profileDetails == null)
+            onBackPressed();
         setUpToolbar();
         setUpListeners();
     }
@@ -33,6 +37,7 @@ public class ProfileActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("");
         toolbarText.setText(getString(R.string.profile));
     }
+
     private void setUpListeners() {
     }
 

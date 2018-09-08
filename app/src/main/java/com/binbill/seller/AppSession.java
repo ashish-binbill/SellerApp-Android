@@ -3,6 +3,7 @@ package com.binbill.seller;
 import android.content.Context;
 
 import com.binbill.seller.AssistedService.AssistedUserModel;
+import com.binbill.seller.Dashboard.ProfileModel;
 import com.binbill.seller.Model.BusinessDetailsModel;
 import com.binbill.seller.Model.DashboardModel;
 import com.binbill.seller.Model.FMCGHeaderModel;
@@ -58,6 +59,7 @@ public class AppSession {
         private ArrayList<VerificationModel> jobVerificationList;
         private ArrayList<RejectReasonModel> rejectReasonList;
         private ArrayList<Order> orderList;
+        private ProfileModel profile;
 
         private void setSellerId(String id) {
             this.sellerId = id;
@@ -178,6 +180,23 @@ public class AppSession {
         private void setOrderList(ArrayList<Order> list) {
             this.orderList = list;
         }
+
+
+        private ProfileModel getSellerProfile() {
+            return profile;
+        }
+
+        private void setSellerProfile(ProfileModel list) {
+            this.profile = list;
+        }
+    }
+
+    public ProfileModel getSellerProfile() {
+        return mAppSessionData.getSellerProfile();
+    }
+
+    public void setSellerProfile(ProfileModel model) {
+        mAppSessionData.setSellerProfile(model);
     }
 
     public ArrayList<Order> getOrderList() {

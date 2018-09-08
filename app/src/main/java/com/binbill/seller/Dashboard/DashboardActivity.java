@@ -26,13 +26,21 @@ import com.binbill.seller.BaseActivity;
 import com.binbill.seller.BinBillSeller;
 import com.binbill.seller.CustomViews.YesNoDialogFragment;
 import com.binbill.seller.Customer.AddCustomerActivity_;
+import com.binbill.seller.Model.DashboardModel;
 import com.binbill.seller.R;
 import com.binbill.seller.Registration.RegistrationResolver;
 import com.binbill.seller.Retrofit.RetrofitHelper;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.lang.reflect.Type;
+import java.util.Arrays;
 
 import io.socket.emitter.Emitter;
 
@@ -74,7 +82,20 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
         new RetrofitHelper(this).getSellerDetails(new RetrofitHelper.RetrofitCallback() {
             @Override
             public void onResponse(String response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    if (jsonObject.getBoolean("status")) {
 
+                        JSONObject profileJson = jsonObject.getJSONObject("result");
+                        Type classType = new TypeToken<ProfileModel>() {
+                        }.getType();
+
+                        ProfileModel profileModel = new Gson().fromJson(profileJson.toString(), classType);
+                        AppSession.getInstance(DashboardActivity.this).setSellerProfile(profileModel);
+                    }
+                } catch (JSONException e) {
+
+                }
             }
 
             @Override

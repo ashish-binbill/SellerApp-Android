@@ -89,6 +89,8 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
 
         if (!Utility.isEmpty(model.getUpdatedPrice()))
             orderHolder.mItemPrice.setText(model.getUpdatedPrice());
+        else
+            orderHolder.mItemPrice.setText("");
 
         if (model.isUpdateItemAvailable()) {
             orderHolder.mItemAvailability.setTag("1");

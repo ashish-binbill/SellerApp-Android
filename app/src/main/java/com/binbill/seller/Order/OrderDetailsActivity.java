@@ -9,9 +9,11 @@ import android.graphics.drawable.ColorDrawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -23,6 +25,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.binbill.seller.BaseActivity;
+import com.binbill.seller.BinBillSeller;
 import com.binbill.seller.Constants;
 import com.binbill.seller.CustomViews.AppButton;
 import com.binbill.seller.CustomViews.AppButtonGreyed;
@@ -49,6 +52,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.socket.emitter.Emitter;
 import okhttp3.Authenticator;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -93,6 +97,9 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
     FrameLayout frame_decline;
 
     @ViewById
+    NestedScrollView nested_scroll_view;
+
+    @ViewById
     ProgressBar btn_accept_progress, btn_decline_progress;
 
     String orderId;
@@ -110,7 +117,51 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
             finish();
 
         setUpListener();
+        connectSocket();
     }
+
+    private void connectSocket() {
+        BinBillSeller.getSocket(this).on("order-placed", SOCKET_EVENT_ORDER_PLACED);
+        BinBillSeller.getSocket(this).on("order-status-changed", SOCKET_EVENT_ORDER_STATUS_CHANGED);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        BinBillSeller.getSocket(this).disconnect();
+    }
+
+    private Emitter.Listener SOCKET_EVENT_ORDER_PLACED = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            Log.d("SHRUTI", "order-placed" + args.toString());
+
+            Type classType = new TypeToken<Order>() {
+            }.getType();
+            Order mOrderDetails = new Gson().fromJson(args.toString(), classType);
+            if (orderId.equalsIgnoreCase(orderDetails.getOrderId())) {
+                orderDetails = mOrderDetails;
+                handleResponse();
+            }
+        }
+    };
+
+    private Emitter.Listener SOCKET_EVENT_ORDER_STATUS_CHANGED = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            Log.d("SHRUTI", "order-status-change" + args.toString());
+            Type classType = new TypeToken<Order>() {
+            }.getType();
+
+            Order mOrderDetails = new Gson().fromJson(args.toString(), classType);
+            if (orderId.equalsIgnoreCase(orderDetails.getOrderId())) {
+                orderDetails = mOrderDetails;
+                handleResponse();
+            }
+
+        }
+    };
 
     private void setUpListener() {
         btn_decline.setOnClickListener(new View.OnClickListener() {
@@ -169,7 +220,7 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                     });
 
 
-                } else if(textOnButton.equalsIgnoreCase(getString(R.string.accept))){
+                } else if (textOnButton.equalsIgnoreCase(getString(R.string.accept))) {
                     /**
                      * Approval call
                      */
@@ -199,7 +250,7 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                         }
                     });
 
-                }else if(textOnButton.equalsIgnoreCase(getString(R.string.out_for_delivery))){
+                } else if (textOnButton.equalsIgnoreCase(getString(R.string.out_for_delivery))) {
                     /**
                      * Approval call
                      */
@@ -391,6 +442,9 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
         mAdapter = new OrderShoppingListAdapter(orderDetails.getOrderItems(), this, mUpdateStateArray, orderDetails.getOrderStatus(), orderDetails.isModified());
         rv_shopping_list.setAdapter(mAdapter);
 
+        nested_scroll_view.fullScroll(View.FOCUS_UP);
+        nested_scroll_view.smoothScrollTo(0, 0);
+
     }
 
     public void changeButtonStateToApproval(int state) {
@@ -426,7 +480,7 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                     if (orderDetails.isModified()) {
                         tv_order_status.setText(getString(R.string.waiting_for_approval));
                         changeButtonStateToApproval(3);
-                    }else {
+                    } else {
                         tv_order_status.setText(getString(R.string.new_order));
                         changeButtonStateToApproval(1);
                     }

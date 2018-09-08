@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 import com.binbill.seller.APIHelper.ApiHelper;
 import com.binbill.seller.AppSession;
 import com.binbill.seller.BaseActivity;
+import com.binbill.seller.BinBillSeller;
 import com.binbill.seller.Constants;
 import com.binbill.seller.CustomViews.AppButton;
 import com.binbill.seller.Customer.AddCustomerActivity_;
@@ -31,6 +33,8 @@ import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+
+import io.socket.emitter.Emitter;
 
 /**
  * Created by shruti.vig on 9/5/18.
@@ -71,6 +75,33 @@ public class ActiveOrderFragment extends Fragment implements OrderAdapter.OrderS
         super.onResume();
         fetchOrders();
     }
+
+    private void connectSocket() {
+        BinBillSeller.getSocket(getActivity()).on("order-placed", SOCKET_EVENT_ORDER_PLACED);
+        BinBillSeller.getSocket(getActivity()).on("order-status-changed", SOCKET_EVENT_ORDER_STATUS_CHANGED);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        BinBillSeller.getSocket(getActivity()).disconnect();
+    }
+
+    private Emitter.Listener SOCKET_EVENT_ORDER_PLACED = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            fetchOrders();
+        }
+    };
+
+    private Emitter.Listener SOCKET_EVENT_ORDER_STATUS_CHANGED = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            fetchOrders();
+        }
+    };
+
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
