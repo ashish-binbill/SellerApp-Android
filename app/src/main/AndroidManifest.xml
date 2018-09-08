@@ -118,7 +118,9 @@
         <activity
             android:name=".Order.OrderDetailsActivity_"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Order.SelectDeliveryAgentActivity"></activity>
+        <activity
+            android:name=".Order.SelectDeliveryAgentActivity_"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

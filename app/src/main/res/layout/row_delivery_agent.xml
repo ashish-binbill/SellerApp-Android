@@ -113,6 +113,8 @@
             </LinearLayout>
 
             <ImageView
+                android:id="@+id/iv_call"
+                android:padding="@dimen/dimen_10dp"
                 android:layout_width="wrap_content"
                 android:src="@drawable/ic_call_orange"
                 android:layout_height="wrap_content" />

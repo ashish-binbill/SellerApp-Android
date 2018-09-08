@@ -55,7 +55,7 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
     TextView toolbarText;
 
     @ViewById
-    ImageView iv_notification, iv_search, iv_socket;
+    ImageView iv_notification, iv_search;
 
     @ViewById
     FrameLayout container;
