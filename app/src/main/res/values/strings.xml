@@ -237,5 +237,6 @@
     <string name="no_task_assigned">No task assigned</string>
     <string name="confirm">Confirm</string>
     <string name="please_select_boy">Please select a delivery boy.</string>
+    <string name="reviews_string">Reviews</string>
     >
 </resources>

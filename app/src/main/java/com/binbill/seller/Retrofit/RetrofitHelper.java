@@ -1420,5 +1420,37 @@ public class RetrofitHelper {
         new LongOperation(callback).execute(requestURL, charset, filesToUpload, authToken);
     }
 
+    public void updateAssistedProfileImage(Context context, String assistedId, Uri fileUri, RetrofitCallback callback) {
+        ArrayList<File> filesToUpload = new ArrayList<>();
+        final String charset = "UTF-8";
+
+        final String requestURL = Constants.BASE_URL + "assisted/" + assistedId + "/profile/0";
+
+        String[] proj = {MediaStore.Images.Media.DATA};
+
+        String uriString = Utility.getPath(mContext, fileUri);
+
+        try {
+            if (uriString != null) {
+                File myFile = new File(uriString);
+                Log.d("SHRUTI", "fILE: " + uriString + " " + Integer.parseInt(String.valueOf(myFile.length() / 1024)));
+                myFile = new Compressor(context)
+                        .setMaxWidth(640)
+                        .setMaxHeight(480)
+                        .setQuality(75)
+                        .setCompressFormat(Bitmap.CompressFormat.JPEG)
+                        .compressToFile(myFile, "BinBill_" + System.currentTimeMillis());
+                filesToUpload.add(myFile);
+            } else {
+                Toast.makeText(mContext, "Cannot upload file!", Toast.LENGTH_SHORT).show();
+            }
+        } catch (IOException e) {
+            Toast.makeText(mContext, "Cannot upload file!", Toast.LENGTH_SHORT).show();
+        }
+
+        final String authToken = SharedPref.getString(context, SharedPref.AUTH_TOKEN);
+        new LongOperation(callback).execute(requestURL, charset, filesToUpload, authToken);
+    }
+
 
 }

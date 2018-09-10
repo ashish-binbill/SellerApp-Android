@@ -293,7 +293,7 @@ public class AddOfferActivity extends BaseActivity implements BottomSheetHelper.
                                     .fit().centerCrop()
                                     .into(iv_offer);
 
-                            processImageResponse(response);
+//                            processImageResponse(response);
                         }
 
                         @Override
@@ -357,7 +357,7 @@ public class AddOfferActivity extends BaseActivity implements BottomSheetHelper.
                                     .fit().centerCrop()
                                     .into(iv_offer);
 
-                            processImageResponse(response);
+//                            processImageResponse(response);
                         }
 
                         @Override

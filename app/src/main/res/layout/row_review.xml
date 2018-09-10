@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/dimen_10dp">
+
+    <TextView
+        android:id="@+id/tv_review_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Too good ... ha ah aha ha"
+        android:textColor="@color/text_44"
+        android:textSize="@dimen/dimen_14dp" />
+
+    <android.support.v7.widget.AppCompatRatingBar
+        android:id="@+id/rb_rating"
+        style="?android:attr/ratingBarStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_10dp"
+        android:isIndicator="true"
+        android:max="5"
+        android:rating="3"
+        android:theme="@style/RatingBar" />
+
+    <View
+        android:layout_width="@dimen/dimen_200dp"
+        android:layout_height="@dimen/dimen_1dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/dimen_10dp"
+        android:background="@color/divider" />
+
+</LinearLayout>
