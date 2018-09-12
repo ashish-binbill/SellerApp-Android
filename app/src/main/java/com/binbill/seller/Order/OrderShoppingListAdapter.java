@@ -139,6 +139,8 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
         if (model.getUpdatedSKUMeasurement() != null) {
             boolean updateState = false;
             OrderItem.OrderSKU sku = model.getUpdatedSKUMeasurement();
+
+
             orderHolder.mAvailableQuantity.setText(sku.getSkuMeasurementValue() + " " + sku.getSkuMeasurementAcronym());
 
             OrderItem.OrderSKU requestedSku = model.getOrderSKU();
@@ -189,7 +191,7 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
         if (mStatus == Constants.STATUS_CANCEL || mStatus == Constants.STATUS_COMPLETE ||
                 mStatus == Constants.STATUS_OUT_FOR_DELIVERY || mStatus == Constants.STATUS_REJECTED) {
 
-            if(Utility.isEmpty(orderHolder.mItemPrice.getText().toString()))
+            if (Utility.isEmpty(orderHolder.mItemPrice.getText().toString()))
                 orderHolder.mItemPrice.setVisibility(View.GONE);
             else
                 orderHolder.mItemPrice.setVisibility(View.VISIBLE);
@@ -212,7 +214,12 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
         }
 
         if (mStatus != Constants.STATUS_NEW_ORDER || orderModified) {
-            orderHolder.mItemAvailability.setVisibility(View.GONE);
+
+            if (orderModified && mStatus == Constants.STATUS_NEW_ORDER) {
+                orderHolder.mItemAvailability.setVisibility(View.VISIBLE);
+                orderHolder.mItemAvailability.setEnabled(false);
+            } else
+                orderHolder.mItemAvailability.setVisibility(View.GONE);
             orderHolder.mAvailableQuantity.setVisibility(View.GONE);
 
             orderHolder.mDivider.setVisibility(View.GONE);

@@ -105,7 +105,7 @@ public class PastOrderFragment extends Fragment implements OrderAdapter.OrderSel
     @Override
     public void setMenuVisibility(final boolean visible) {
         if (visible) {
-            connectSocket();
+//            connectSocket();
         }
 
         super.setMenuVisibility(visible);

@@ -22,7 +22,7 @@ public class FMCGChildModel implements Serializable {
 
     transient boolean userSelected;
 
-    public FMCGChildModel(String nameString, boolean selected) {
+    public FMCGChildModel(String nameString, String id, boolean selected) {
         this.name = nameString;
         this.userSelected = selected;
     }

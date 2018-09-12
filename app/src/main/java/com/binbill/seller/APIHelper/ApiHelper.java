@@ -7,6 +7,7 @@ import com.binbill.seller.AppSession;
 import com.binbill.seller.AssistedService.AssistedUserModel;
 import com.binbill.seller.Model.DashboardModel;
 import com.binbill.seller.Model.UserModel;
+import com.binbill.seller.Model.UserRegistrationDetails;
 import com.binbill.seller.Order.Order;
 import com.binbill.seller.Retrofit.RetrofitHelper;
 import com.binbill.seller.Verification.RejectReasonModel;
@@ -20,6 +21,7 @@ import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by shruti.vig on 8/28/18.
@@ -186,8 +188,8 @@ public class ApiHelper {
                             Type classType = new TypeToken<ArrayList<Order>>() {
                             }.getType();
 
-                            ArrayList<Order> verificationList = new Gson().fromJson(userArray.toString(), classType);
-                            AppSession.getInstance(context).setOrderList(verificationList);
+                            ArrayList<Order> orderList = new Gson().fromJson(userArray.toString(), classType);
+                            AppSession.getInstance(context).setOrderList(orderList);
                         }
                     }
                 } catch (JSONException e) {
@@ -204,5 +206,56 @@ public class ApiHelper {
 
     public static void fetchOrders(final Context context, RetrofitHelper.RetrofitCallback retrofitCallback) {
         new RetrofitHelper(context).fetchOrders(retrofitCallback);
+    }
+
+    public static void getUserSelectedCategories(final Context context) {
+        new RetrofitHelper(context).fetchSellerCategories(new RetrofitHelper.RetrofitCallback() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    if (jsonObject.getBoolean("status")) {
+                        if (jsonObject.optJSONArray("result") != null) {
+                            JSONArray categoryArray = jsonObject.getJSONArray("result");
+                            parseAndSaveUserCategories(context, categoryArray);
+                        }
+                    }
+                } catch (JSONException e) {
+
+                }
+            }
+
+            @Override
+            public void onErrorResponse() {
+
+            }
+        });
+    }
+
+    public static void parseAndSaveUserCategories(Context context, JSONArray categoryArray) {
+
+        HashMap<String, ArrayList<String>> map = new HashMap<>();
+
+        try {
+            for (int i = 0; i < categoryArray.length(); i++) {
+                JSONObject categoryObject = categoryArray.getJSONObject(i);
+                String categoryId = categoryObject.getString("sub_category_id");
+                ArrayList<String> list = map.get(categoryId);
+                if (list != null)
+                    list.add(categoryObject.getString("category_4_id"));
+                else {
+                    list = new ArrayList<>();
+                    list.add(categoryObject.getString("category_4_id"));
+                }
+
+                map.put(categoryId, list);
+            }
+
+            UserRegistrationDetails userRegistrationDetails = AppSession.getInstance(context).getUserRegistrationDetails();
+            userRegistrationDetails.setFmcgCategoriesSelected(map);
+        } catch (JSONException e) {
+
+        }
+
     }
 }

@@ -40,7 +40,9 @@ public class OrderItem implements Serializable {
     @SerializedName("selling_price")
     String updatedPrice;
 
-    transient OrderSKU updatedSKUMeasurement;
+    @SerializedName("updated_measurement")
+    OrderSKU updatedSKUMeasurement;
+
     transient boolean updateItemAvailable = true;
 
     public String getUpdatedPrice() {

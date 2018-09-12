@@ -127,6 +127,9 @@ public interface RetrofitApiInterface {
     @GET(Constants.FETCH_SELLER_DETAILS)
     Call<JsonObject> getSellerDetails(@Path(value = "seller_id", encoded = true) String sellerId);
 
+    @PUT(Constants.SAVE_CATEGORIES_FOR_SELLER)
+    Call<JsonObject> saveSellerCategories(@Path(value = "seller_id", encoded = true) String sellerId,  @Body HashMap<String, String> body);
+
     @GET(Constants.FETCH_ORDERS)
     Call<JsonObject> fetchOrders(@Path(value = "seller_id", encoded = true) String sellerId);
 
@@ -153,4 +156,7 @@ public interface RetrofitApiInterface {
 
     @GET(Constants.GET_DELIVERY_BOYS)
     Call<JsonObject> getDeliveryBoys(@Path(value = "seller_id", encoded = true) String sellerId);
+
+    @GET(Constants.GET_SELLER_CATEGORIES)
+    Call<JsonObject> fetchSellerCategories(@Path(value = "seller_id", encoded = true) String sellerId);
 }

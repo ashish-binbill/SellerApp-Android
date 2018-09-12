@@ -227,7 +227,7 @@
     <string name="no_data_in_verification_fragment">You don\'t have any Verifications pending!</string>
     <string name="send_for_approval">Send for Approval</string>
     <string name="quantity">Quantity</string>
-    <string name="string_order_rejected">Offer Rejected Successfully</string>
+    <string name="string_order_rejected">Order Rejected Successfully</string>
     <string name="waiting_for_approval">Waiting for approval</string>
     <string name="assign_delivery_boy">Assign Delivery</string>
     <string name="skip">Skip</string>
@@ -238,5 +238,7 @@
     <string name="confirm">Confirm</string>
     <string name="please_select_boy">Please select a delivery boy.</string>
     <string name="reviews_string">Reviews</string>
+    <string name="details_saved_successfully">Details saved successfully</string>
+    <string name="auto_reading_your_otp">Auto reading your OTP</string>
     >
 </resources>

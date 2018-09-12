@@ -40,6 +40,7 @@
         android:layout_marginLeft="@dimen/dimen_20dp"
         android:textColor="@color/text_44"
         android:prompt="@string/type_of_service"
+        android:popupBackground="@color/color_white"
         android:paddingRight="@dimen/dimen_12dp"
         android:paddingLeft="@dimen/dimen_12dp"
         android:textColorHint="@color/hint_color"

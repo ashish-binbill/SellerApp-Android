@@ -2,6 +2,8 @@ package com.binbill.seller.Dashboard;
 
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
@@ -9,29 +11,36 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.binbill.seller.APIHelper.ApiHelper;
 import com.binbill.seller.AppSession;
 import com.binbill.seller.AssistedService.AddAssistedServiceActivity_;
 import com.binbill.seller.AssistedService.AdditionalServiceDialogFragment;
 import com.binbill.seller.BaseActivity;
-import com.binbill.seller.BinBillSeller;
+import com.binbill.seller.Constants;
 import com.binbill.seller.CustomViews.YesNoDialogFragment;
 import com.binbill.seller.Customer.AddCustomerActivity_;
-import com.binbill.seller.Model.DashboardModel;
+import com.binbill.seller.Login.LoginActivity_;
 import com.binbill.seller.R;
 import com.binbill.seller.Registration.RegistrationResolver;
 import com.binbill.seller.Retrofit.RetrofitHelper;
+import com.binbill.seller.SharedPref;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.OkHttp3Downloader;
+import com.squareup.picasso.Picasso;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
@@ -39,10 +48,14 @@ import org.androidannotations.annotations.ViewById;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
-import java.util.Arrays;
 
-import io.socket.emitter.Emitter;
+import okhttp3.Authenticator;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.Route;
 
 @EActivity(R.layout.activity_dashboard)
 public class DashboardActivity extends BaseActivity implements YesNoDialogFragment.YesNoClickInterface,
@@ -67,6 +80,15 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
     NavigationView nav_view;
 
     @ViewById
+    TextView tv_shop_name, tv_shop_number;
+
+    @ViewById
+    ImageView iv_user_image;
+
+    @ViewById
+    RelativeLayout just_sec_layout;
+
+    @ViewById
     BottomNavigationView bottom_navigation;
     private AssistedServiceFragment assistedServiceFragment;
     private MyCustomerFragment myCustomerFragment;
@@ -76,6 +98,7 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
         setUpNavigationView();
         setUpListener();
         makeSellerProfileApiCall();
+        ApiHelper.getUserSelectedCategories(this);
     }
 
     private void makeSellerProfileApiCall() {
@@ -92,6 +115,8 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
 
                         ProfileModel profileModel = new Gson().fromJson(profileJson.toString(), classType);
                         AppSession.getInstance(DashboardActivity.this).setSellerProfile(profileModel);
+
+                        setUpHamburger();
                     }
                 } catch (JSONException e) {
 
@@ -105,6 +130,52 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
         });
     }
 
+    private void setUpHamburger() {
+
+        ProfileModel model = AppSession.getInstance(this).getSellerProfile();
+        final String authToken = SharedPref.getString(this, SharedPref.AUTH_TOKEN);
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .authenticator(new Authenticator() {
+                    @Override
+                    public Request authenticate(Route route, Response response) throws IOException {
+                        return response.request().newBuilder()
+                                .header("Authorization", authToken)
+                                .build();
+                    }
+                }).build();
+
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.MATCH_PARENT,
+                RelativeLayout.LayoutParams.MATCH_PARENT
+        );
+        params.setMargins(0, 0, 0, 0);
+        iv_user_image.setLayoutParams(params);
+
+        Picasso picasso = new Picasso.Builder(this)
+                .downloader(new OkHttp3Downloader(okHttpClient))
+                .build();
+        picasso.load(Constants.BASE_URL + "customer/" + model.getId() + "/images")
+                .config(Bitmap.Config.RGB_565)
+                .into(iv_user_image, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        Bitmap imageBitmap = ((BitmapDrawable) iv_user_image.getDrawable()).getBitmap();
+                        RoundedBitmapDrawable imageDrawable = RoundedBitmapDrawableFactory.create(getResources(), imageBitmap);
+                        imageDrawable.setCircular(true);
+                        imageDrawable.setCornerRadius(Math.max(imageBitmap.getWidth(), imageBitmap.getHeight()) / 2.0f);
+                        iv_user_image.setImageDrawable(imageDrawable);
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+
+                    }
+                });
+
+        tv_shop_name.setText(model.getName());
+        tv_shop_number.setText(model.getContactNo());
+    }
+
     private void setUpListener() {
 
         TextView manageCategory = nav_view.findViewById(R.id.tv_manage_category);
@@ -114,6 +185,32 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
                 Intent intent = RegistrationResolver.getNextIntent(DashboardActivity.this, 4);
                 if (intent != null)
                     startActivity(intent);
+            }
+        });
+
+        TextView manageBrands = nav_view.findViewById(R.id.tv_manage_brands);
+        manageBrands.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = RegistrationResolver.getNextIntent(DashboardActivity.this, 5);
+                if (intent != null)
+                    startActivity(intent);
+            }
+        });
+
+        TextView logout = nav_view.findViewById(R.id.tv_logout);
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                just_sec_layout.setVisibility(View.VISIBLE);
+                SharedPref.clearSharedPreferences(DashboardActivity.this);
+                AppSession.setInstanceToNull();
+
+                Intent intent = new Intent(DashboardActivity.this, LoginActivity_.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
+
             }
         });
 

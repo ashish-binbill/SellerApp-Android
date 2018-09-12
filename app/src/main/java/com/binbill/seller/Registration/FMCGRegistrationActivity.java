@@ -1,7 +1,5 @@
 package com.binbill.seller.Registration;
 
-import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
@@ -10,8 +8,10 @@ import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.binbill.seller.APIHelper.ApiHelper;
 import com.binbill.seller.Adapter.FMCGExpandableAdapter;
 import com.binbill.seller.AppSession;
+import com.binbill.seller.BaseActivity;
 import com.binbill.seller.Constants;
 import com.binbill.seller.CustomViews.AppButton;
 import com.binbill.seller.Model.FMCGChildModel;
@@ -26,6 +26,9 @@ import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.InstanceState;
 import org.androidannotations.annotations.ViewById;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,7 +38,7 @@ import java.util.List;
 import java.util.Map;
 
 @EActivity(R.layout.activity_fmcg_registration)
-public class FMCGRegistrationActivity extends AppCompatActivity {
+public class FMCGRegistrationActivity extends BaseActivity {
 
     @ViewById
     AppButton btn_submit;
@@ -82,7 +85,7 @@ public class FMCGRegistrationActivity extends AppCompatActivity {
                 title.setText(getString(R.string.select_services_you_provide));
                 break;
             case Constants.SERVICE_CATEGORY:
-                expandableListDetail = getServicesCategoryData(userRegistrationDetails);
+                expandableListDetail = getServicesCategoryData();
                 title.setText(getString(R.string.select_services_categories));
                 break;
             case Constants.SERVICE_BRAND:
@@ -90,14 +93,12 @@ public class FMCGRegistrationActivity extends AppCompatActivity {
                 title.setText(getString(R.string.select_brand_you_select));
                 break;
             case Constants.FMCG_BRANDS:
-//                expandableListDetail = getFMCGBrandsData(userRegistrationDetails);
-
                 makeFMCGBrandCall();
                 title.setText(getString(R.string.select_brand_you_select));
                 break;
         }
 
-        if(expandableListDetail != null) {
+        if (expandableListDetail != null) {
             expandableListTitle = new ArrayList<FMCGHeaderModel>(expandableListDetail.keySet());
 
             fmcgExpandableAdapter = new FMCGExpandableAdapter(this, expandableListTitle, expandableListDetail);
@@ -109,23 +110,68 @@ public class FMCGRegistrationActivity extends AppCompatActivity {
     private void makeFMCGBrandCall() {
         if (userRegistrationDetails != null) {
             HashMap<String, ArrayList<String>> fmcgCategoriesSelected = userRegistrationDetails.getFmcgCategoriesSelected();
-            String commaSeparatedCategories = TextUtils.join(",", fmcgCategoriesSelected.keySet());
+            String commaSeparatedSubCategories = "";
+            Iterator it = fmcgCategoriesSelected.entrySet().iterator();
+            while (it.hasNext()) {
+                Map.Entry pair = (Map.Entry) it.next();
+                if (Utility.isEmpty(commaSeparatedSubCategories))
+                    commaSeparatedSubCategories = TextUtils.join(", ", (ArrayList<String>) pair.getValue());
+                else
+                    commaSeparatedSubCategories = commaSeparatedSubCategories + ", " + TextUtils.join(", ", (ArrayList<String>) pair.getValue());
+            }
+//            String commaSeparatedCategories = TextUtils.join(",", fmcgCategoriesSelected.keySet());
 
-            new RetrofitHelper(this).fetchBrandsFromCategories(commaSeparatedCategories, new RetrofitHelper.RetrofitCallback() {
+            new RetrofitHelper(this).fetchBrandsFromCategories(commaSeparatedSubCategories, new RetrofitHelper.RetrofitCallback() {
                 @Override
                 public void onResponse(String response) {
                     Log.d("SHRUTI", "data : " + response);
+
+                    LinkedHashMap<FMCGHeaderModel, List<FMCGChildModel>> map = new LinkedHashMap<>();
+                    try {
+                        JSONObject responseObject = new JSONObject(response);
+                        JSONArray resultArray = responseObject.getJSONArray("result");
+
+                        for (int i = 0; i < resultArray.length(); i++) {
+                            JSONObject object = resultArray.getJSONObject(i);
+                            FMCGHeaderModel model = new FMCGHeaderModel(object.getString("category_name"), object.getString("category_id"), false);
+
+                            ArrayList<FMCGChildModel> childList = new ArrayList<>();
+                            JSONArray brandNames = object.optJSONArray("brands");
+                            if (brandNames != null && brandNames.length() > 0) {
+                                for (int j = 0; j < brandNames.length(); j++) {
+                                    JSONObject brandObject = brandNames.getJSONObject(j);
+                                    FMCGChildModel childModel = new FMCGChildModel(brandObject.getString("brandName"), brandObject.getString("id"), false);
+                                    childList.add(childModel);
+                                }
+                                map.put(model, (List) childList);
+                            }
+                        }
+
+                        expandableListDetail = map;
+
+                        if (expandableListDetail != null) {
+                            expandableListTitle = new ArrayList<FMCGHeaderModel>(expandableListDetail.keySet());
+
+                            fmcgExpandableAdapter = new FMCGExpandableAdapter(FMCGRegistrationActivity.this, expandableListTitle, expandableListDetail);
+                            expandable_list.setAdapter(fmcgExpandableAdapter);
+                        }
+
+                    } catch (JSONException e) {
+
+                        showSnackBar(getString(R.string.something_went_wrong));
+                        finish();
+                    }
 
                 }
 
                 @Override
                 public void onErrorResponse() {
-
+                    showSnackBar(getString(R.string.something_went_wrong));
+                    finish();
                 }
             });
         }
     }
-
 
     private void setUpListeners() {
         expandable_list.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
@@ -157,6 +203,8 @@ public class FMCGRegistrationActivity extends AppCompatActivity {
                     expandable_list.collapseGroup(prevExpandPosition[0]);
                 }
                 prevExpandPosition[0] = groupPosition;
+
+                expandable_list.setSelectedGroup(groupPosition);
 
                 fmcgExpandableAdapter.notifyDataSetChanged();
             }
@@ -192,21 +240,69 @@ public class FMCGRegistrationActivity extends AppCompatActivity {
             btn_submit.setVisibility(View.GONE);
             btn_submit_progress.setVisibility(View.VISIBLE);
 
+            saveDataInUserRegistrationModel();
             makeUploadDataToServerCall();
-
         }
     }
 
     private void makeUploadDataToServerCall() {
+        JSONArray mapArray = new JSONArray();
+        try {
+            if (userRegistrationDetails != null) {
+                HashMap<String, ArrayList<String>> fmcgCategoriesSelected = userRegistrationDetails.getFmcgCategoriesSelected();
+                Iterator it = fmcgCategoriesSelected.entrySet().iterator();
+                while (it.hasNext()) {
+                    Map.Entry pair = (Map.Entry) it.next();
+                    ArrayList<FMCGChildModel> childList = (ArrayList<FMCGChildModel>) pair.getValue();
+                    JSONObject childObject = new JSONObject();
+                    childObject.put("provider_type_id", 1);
+                    childObject.put("sub_category_id", pair.getKey());
+                    childObject.put("category_4_id", new JSONArray(childList));
+                    mapArray.put(childObject);
+                }
+            }
+        } catch (JSONException e) {
 
-        saveDataInUserRegistrationModel();
-        int registrationIndex = getIntent().getIntExtra(Constants.REGISTRATION_INDEX, -1);
-        Intent intent = RegistrationResolver.getNextIntent(this, registrationIndex);
-        if (intent != null)
-            startActivity(intent);
+        }
 
-        btn_submit.setVisibility(View.VISIBLE);
-        btn_submit_progress.setVisibility(View.GONE);
+        new RetrofitHelper(this).saveCategoriesForSeller(mapArray, new RetrofitHelper.RetrofitCallback() {
+            @Override
+            public void onResponse(String response) {
+                btn_submit.setVisibility(View.VISIBLE);
+                btn_submit_progress.setVisibility(View.GONE);
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    if (jsonObject.optBoolean("status")) {
+
+                        JSONArray array = jsonObject.getJSONArray("seller_provider_types");
+                        ApiHelper.parseAndSaveUserCategories(FMCGRegistrationActivity.this, array);
+
+                        showSnackBar(getString(R.string.details_saved_successfully));
+
+                        new android.os.Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                onBackPressed();
+                            }
+                        }, 1000);
+                    } else {
+                        showSnackBar(getString(R.string.something_went_wrong));
+                    }
+
+                } catch (JSONException e) {
+                    showSnackBar(getString(R.string.something_went_wrong));
+                }
+
+            }
+
+            @Override
+            public void onErrorResponse() {
+                btn_submit.setVisibility(View.VISIBLE);
+                btn_submit_progress.setVisibility(View.GONE);
+
+                showSnackBar(getString(R.string.something_went_wrong));
+            }
+        });
     }
 
     private void saveDataInUserRegistrationModel() {
@@ -263,8 +359,42 @@ public class FMCGRegistrationActivity extends AppCompatActivity {
         return false;
     }
 
-
     public LinkedHashMap<FMCGHeaderModel, List<FMCGChildModel>> getFmcgData() {
+
+        HashMap<String, ArrayList<String>> selectedList = AppSession.getInstance(this).getUserRegistrationDetails().getFmcgCategoriesSelected();
+
+        LinkedHashMap<FMCGHeaderModel, List<FMCGChildModel>> expandableListDetail = new LinkedHashMap<FMCGHeaderModel, List<FMCGChildModel>>();
+        ArrayList<FMCGHeaderModel> categories = AppSession.getInstance(this).getCategories();
+        for (FMCGHeaderModel model : categories) {
+            if (model.getSubCategories() != null && model.getSubCategories().size() > 0) {
+
+                ArrayList<FMCGChildModel> updatedSubCategories = new ArrayList<>();
+
+                if (selectedList != null && selectedList.containsKey(model.getId())) {
+                    ArrayList<String> selectedSubCat = selectedList.get(model.getId());
+                    for (FMCGChildModel subCat : model.getSubCategories()) {
+                        if (selectedSubCat.contains(subCat.getId()))
+                            subCat.setUserSelected(true);
+
+                        updatedSubCategories.add(subCat);
+                    }
+                } else
+                    updatedSubCategories = model.getSubCategories();
+
+                boolean isSelectAll = true;
+                for (FMCGChildModel subCat : updatedSubCategories) {
+                    if (!subCat.isUserSelected())
+                        isSelectAll = false;
+                }
+
+                model.setShowSelectAll(isSelectAll);
+                expandableListDetail.put(model, updatedSubCategories);
+            }
+        }
+        return expandableListDetail;
+    }
+
+    public LinkedHashMap<FMCGHeaderModel, List<FMCGChildModel>> getServicesCategoryData() {
         LinkedHashMap<FMCGHeaderModel, List<FMCGChildModel>> expandableListDetail = new LinkedHashMap<FMCGHeaderModel, List<FMCGChildModel>>();
         ArrayList<FMCGHeaderModel> categories = AppSession.getInstance(this).getCategories();
         for (FMCGHeaderModel model : categories) {
@@ -274,108 +404,7 @@ public class FMCGRegistrationActivity extends AppCompatActivity {
         return expandableListDetail;
     }
 
-    public static LinkedHashMap<FMCGHeaderModel, List<FMCGChildModel>> getServicesCategoryData(UserRegistrationDetails userRegistrationDetails) {
-        LinkedHashMap<FMCGHeaderModel, List<FMCGChildModel>> expandableListDetail = new LinkedHashMap<FMCGHeaderModel, List<FMCGChildModel>>();
-
-        List<FMCGChildModel> data1 = new ArrayList<FMCGChildModel>();
-        data1.add(new FMCGChildModel("Mobile", false));
-        data1.add(new FMCGChildModel("TV", false));
-        data1.add(new FMCGChildModel("Washing Machine", false));
-        data1.add(new FMCGChildModel("Laptop", false));
-        data1.add(new FMCGChildModel("Fridge", false));
-        data1.add(new FMCGChildModel("Bed", false));
-        data1.add(new FMCGChildModel("Car", false));
-        data1.add(new FMCGChildModel("Fan", false));
-
-        List<FMCGChildModel> data2 = new ArrayList<FMCGChildModel>();
-        data2.add(new FMCGChildModel("Mobile", false));
-        data2.add(new FMCGChildModel("TV", false));
-        data2.add(new FMCGChildModel("Washing Machine", false));
-        data2.add(new FMCGChildModel("Laptop", false));
-
-        List<FMCGChildModel> data3 = new ArrayList<FMCGChildModel>();
-        data3.add(new FMCGChildModel("Mobile", false));
-        data3.add(new FMCGChildModel("TV", false));
-        data3.add(new FMCGChildModel("Washing Machine", false));
-        data3.add(new FMCGChildModel("Laptop", false));
-        data3.add(new FMCGChildModel("Fan", false));
-
-        if (userRegistrationDetails != null) {
-            ArrayList<String> autoEEServices = userRegistrationDetails.getAutoEEServices();
-
-            if (autoEEServices.contains(Constants.ELECTRONICS))
-                expandableListDetail.put(new FMCGHeaderModel("Sell Electronics", false), data1);
-            if (autoEEServices.contains(Constants.ACCESSORIES))
-                expandableListDetail.put(new FMCGHeaderModel("Sell Accessories", false), data2);
-            if (autoEEServices.contains(Constants.INSURANCE))
-                expandableListDetail.put(new FMCGHeaderModel("Insurance", false), data3);
-            if (autoEEServices.contains(Constants.AMC))
-                expandableListDetail.put(new FMCGHeaderModel("AMC", false), data1);
-            if (autoEEServices.contains(Constants.REPAIR))
-                expandableListDetail.put(new FMCGHeaderModel("Repair", false), data2);
-        }
-        return expandableListDetail;
-    }
-
     public static LinkedHashMap<FMCGHeaderModel, List<FMCGChildModel>> getServicesBrandData(UserRegistrationDetails userRegistrationDetails) {
-        LinkedHashMap<FMCGHeaderModel, List<FMCGChildModel>> expandableListDetail = new LinkedHashMap<FMCGHeaderModel, List<FMCGChildModel>>();
-
-        List<FMCGChildModel> data1 = new ArrayList<FMCGChildModel>();
-        data1.add(new FMCGChildModel("MI", false));
-        data1.add(new FMCGChildModel("Lenovo", false));
-        data1.add(new FMCGChildModel("Samsung", false));
-        data1.add(new FMCGChildModel("VIVO", false));
-        data1.add(new FMCGChildModel("OnePlus", false));
-        data1.add(new FMCGChildModel("IPhone", false));
-        data1.add(new FMCGChildModel("OPPO", false));
-        data1.add(new FMCGChildModel("HTC", false));
-
-        List<FMCGChildModel> data2 = new ArrayList<FMCGChildModel>();
-        data2.add(new FMCGChildModel("Samsung", false));
-        data2.add(new FMCGChildModel("LG", false));
-        data2.add(new FMCGChildModel("Sony", false));
-        data2.add(new FMCGChildModel("TLC", false));
-
-        List<FMCGChildModel> data3 = new ArrayList<FMCGChildModel>();
-        data3.add(new FMCGChildModel("LG", false));
-        data3.add(new FMCGChildModel("SAMSUNG", false));
-        data3.add(new FMCGChildModel("Philips", false));
-        data3.add(new FMCGChildModel("C-Company", false));
-        data3.add(new FMCGChildModel("D-Company", false));
-
-        if (userRegistrationDetails != null) {
-            HashMap<String, ArrayList<String>> nonASCCategories = userRegistrationDetails.getNonASCCategoriesSelected();
-            Iterator it = nonASCCategories.entrySet().iterator();
-            while (it.hasNext()) {
-                Map.Entry pair = (Map.Entry) it.next();
-                String key = (String) pair.getKey();
-
-                if (key.contains("Mobile"))
-                    expandableListDetail.put(new FMCGHeaderModel("Mobile", false), data1);
-                if (key.contains("TV"))
-                    expandableListDetail.put(new FMCGHeaderModel("TV", false), data2);
-                if (key.contains("Washing Machine"))
-                    expandableListDetail.put(new FMCGHeaderModel("Washing Machine", false), data3);
-                if (key.contains("Fridge"))
-                    expandableListDetail.put(new FMCGHeaderModel("Fridge", false), data1);
-                if (key.contains("Laptop"))
-                    expandableListDetail.put(new FMCGHeaderModel("Laptop", false), data2);
-                if (key.contains("Bed"))
-                    expandableListDetail.put(new FMCGHeaderModel("Bed", false), data1);
-                if (key.contains("Car"))
-                    expandableListDetail.put(new FMCGHeaderModel("Car", false), data2);
-                if (key.contains("Fan"))
-                    expandableListDetail.put(new FMCGHeaderModel("Fan", false), data2);
-
-            }
-        }
-        return expandableListDetail;
-    }
-
-    private LinkedHashMap<FMCGHeaderModel, List<FMCGChildModel>> getFMCGBrandsData(UserRegistrationDetails userRegistrationDetails) {
-
-        LinkedHashMap<FMCGHeaderModel, List<FMCGChildModel>> expandableListDetail = new LinkedHashMap<FMCGHeaderModel, List<FMCGChildModel>>();
-
-        return expandableListDetail;
+        return null;
     }
 }

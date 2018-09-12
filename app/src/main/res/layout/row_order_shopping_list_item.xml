@@ -5,10 +5,10 @@
     android:layout_height="wrap_content"
     android:background="@color/color_white"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/dimen_10dp"
+    android:paddingBottom="@dimen/dimen_5dp"
     android:paddingLeft="@dimen/dimen_20dp"
     android:paddingRight="@dimen/dimen_20dp"
-    android:paddingTop="@dimen/dimen_10dp">
+    android:paddingTop="@dimen/dimen_5dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -52,7 +52,7 @@
         android:id="@+id/et_item_price"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/dimen_30dp"
-        android:layout_marginTop="@dimen/dimen_20dp"
+        android:layout_marginTop="@dimen/dimen_10dp"
         android:background="@drawable/edittext_bg"
         android:hint="@string/add_price"
         android:inputType="numberDecimal"
@@ -67,7 +67,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dimen_15dp"
+        android:layout_marginTop="@dimen/dimen_7dp"
         android:orientation="horizontal">
 
         <TextView
@@ -104,7 +104,7 @@
         android:id="@+id/v_divider"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen_1dp"
-        android:layout_marginTop="@dimen/dimen_20dp"
+        android:layout_marginTop="@dimen/dimen_10dp"
         android:background="@color/border_grey" />
 </LinearLayout>
 

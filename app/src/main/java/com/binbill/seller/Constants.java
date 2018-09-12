@@ -51,6 +51,8 @@ public class Constants {
     public static final String SEND_ORDER_REJECTED = "sellers/{seller_id}/orders/{order_id}/reject";
     public static final String SEND_ORDER_OUT_FOR_DELIVERY = "sellers/{seller_id}/orders/{order_id}/outfordelivery";
     public static final String GET_DELIVERY_BOYS = "sellers/{seller_id}/delivery";
+    public static final String SAVE_CATEGORIES_FOR_SELLER = "sellers/{seller_id}/providers";
+    public static final String GET_SELLER_CATEGORIES = "sellers/{seller_id}/categories";
 
     public static final int PERMISSION_READ_SMS = 100;
     public static final int PERMISSION_CAMERA = 101;
@@ -128,5 +130,6 @@ public class Constants {
     public static final int STATUS_OUT_FOR_DELIVERY = 19;
     public static final String ORDER_ID = "ORDER_ID";
     public static final String DELIVERY_AGENT_ID = "DELIVERY_AGENT_ID";
-
+    public static final String ORDER_TYPE_FMCG = "1";
+    public static final String ORDER_TYPE_SERVICE = "2";
 }

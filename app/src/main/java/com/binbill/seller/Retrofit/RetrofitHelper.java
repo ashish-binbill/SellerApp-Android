@@ -597,6 +597,28 @@ public class RetrofitHelper {
         });
     }
 
+    public void fetchSellerCategories(final RetrofitCallback retrofitCallback) {
+        RetrofitApiInterface apiService =
+                RetrofitHelper.getClient(mContext).create(RetrofitApiInterface.class);
+
+        Call<JsonObject> call = apiService.fetchSellerCategories(AppSession.getInstance(mContext).getSellerId());
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (response.isSuccessful()) {
+                    JsonObject body = response.body();
+                    retrofitCallback.onResponse(body.toString());
+                } else
+                    retrofitCallback.onErrorResponse();
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable throwable) {
+                retrofitCallback.onErrorResponse();
+            }
+        });
+    }
+
     public void fetchCompletedOrders(final RetrofitCallback retrofitCallback) {
         RetrofitApiInterface apiService =
                 RetrofitHelper.getClient(mContext).create(RetrofitApiInterface.class);
@@ -1275,6 +1297,31 @@ public class RetrofitHelper {
                 RetrofitHelper.getClient(mContext).create(RetrofitApiInterface.class);
 
         Call<JsonObject> call = apiService.linkPointsWithJob(AppSession.getInstance(mContext).getSellerId(), userId, creditId, jobId);
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (response.isSuccessful()) {
+                    JsonObject body = response.body();
+                    retrofitCallback.onResponse(body.toString());
+                } else
+                    retrofitCallback.onErrorResponse();
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable throwable) {
+                retrofitCallback.onErrorResponse();
+            }
+        });
+    }
+
+    public void saveCategoriesForSeller(JSONArray mapArray, final RetrofitCallback retrofitCallback) {
+        RetrofitApiInterface apiService =
+                RetrofitHelper.getClient(mContext).create(RetrofitApiInterface.class);
+
+        HashMap<String, String> map = new HashMap<>();
+        map.put("provider_type_detail", mapArray.toString());
+
+        Call<JsonObject> call = apiService.saveSellerCategories(AppSession.getInstance(mContext).getSellerId(), map);
         call.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
