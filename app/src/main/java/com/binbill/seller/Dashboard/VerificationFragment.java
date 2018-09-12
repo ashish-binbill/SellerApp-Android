@@ -244,17 +244,8 @@ public class VerificationFragment extends Fragment implements VerificationAdapte
 
                     if (!Utility.isEmpty(rejectId)) {
                         linkButtonProgress.setVisibility(View.VISIBLE);
-                        linkButton.setVisibility(View.GONE);
-//                    if (type == LINK_CREDIT) {
-//                        makeLinkCreditApiCall(userId, creditId, jobId);
-//                        if (dialog != null)
-//                            dialog.dismiss();
-//                    } else if (type == LINK_POINTS) {
-//                        makeLinkPointsApiCall(userId, creditId, jobId);
-//                        if (dialog != null)
-//                            dialog.dismiss();
-//                    }
-                        // TODO
+                        rejectObject(jobId, rejectId);
+                        dialog.dismiss();
                     }
                 }
             });
@@ -262,6 +253,34 @@ public class VerificationFragment extends Fragment implements VerificationAdapte
 
 
         dialog.show();
+    }
+
+    private void rejectObject(String jobId, String rejectId) {
+        new RetrofitHelper(getActivity()).rejectJobForVerification(jobId, rejectId, new RetrofitHelper.RetrofitCallback() {
+            @Override
+            public void onResponse(String response) {
+
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    if (jsonObject.optBoolean("status")) {
+                        fetchJobsForVerification();
+                    } else {
+                        mAdapter.notifyDataSetChanged();
+                        ((BaseActivity) getActivity()).showSnackBar(getString(R.string.something_went_wrong));
+                    }
+
+                } catch (JSONException e) {
+                    mAdapter.notifyDataSetChanged();
+                    ((BaseActivity) getActivity()).showSnackBar(getString(R.string.something_went_wrong));
+                }
+            }
+
+            @Override
+            public void onErrorResponse() {
+                mAdapter.notifyDataSetChanged();
+                ((BaseActivity) getActivity()).showSnackBar(getString(R.string.something_went_wrong));
+            }
+        });
     }
 
     private void invokeFetchCreditPoints(final int type, final String userId, final String jobId) {
@@ -283,13 +302,16 @@ public class VerificationFragment extends Fragment implements VerificationAdapte
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         TextView headerTitle = (TextView) dialogView.findViewById(R.id.header);
-        if (type == LINK_CREDIT)
+        TextView noData = (TextView) dialogView.findViewById(R.id.tv_no_data);
+        if (type == LINK_CREDIT) {
             headerTitle.setText(getString(R.string.link_credits));
-        else if (type == LINK_POINTS)
+            noData.setText(getString(R.string.no_credit));
+        }else if (type == LINK_POINTS) {
             headerTitle.setText(getString(R.string.link_points));
+            noData.setText(getString(R.string.no_points));
+        }
 
         RecyclerView recyclerView = (RecyclerView) dialogView.findViewById(R.id.rv_credit_points);
-        TextView noData = (TextView) dialogView.findViewById(R.id.tv_no_data);
         final AppButton linkButton = (AppButton) dialogView.findViewById(R.id.btn_link);
         final LinearLayout linkButtonProgress = (LinearLayout) dialogView.findViewById(R.id.btn_link_progress);
         LinkCreditPointsAdapter mAdapter = null;
@@ -531,7 +553,7 @@ public class VerificationFragment extends Fragment implements VerificationAdapte
     @Override
     public void onAccept(int pos) {
         VerificationModel verificationModel = jobList.get(pos);
-        new RetrofitHelper(getActivity()).approveJobForVerification(verificationModel.getJobId(), new RetrofitHelper.RetrofitCallback() {
+        new RetrofitHelper(getActivity()).approveJobForVerification(verificationModel.getCashbackId(), new RetrofitHelper.RetrofitCallback() {
             @Override
             public void onResponse(String response) {
 
@@ -561,6 +583,6 @@ public class VerificationFragment extends Fragment implements VerificationAdapte
     @Override
     public void onReject(int pos) {
         VerificationModel verificationModel = jobList.get(pos);
-        invokeRejectReasonDialog(verificationModel.getUserId(), verificationModel.getJobId());
+        invokeRejectReasonDialog(verificationModel.getUserId(), verificationModel.getCashbackId());
     }
 }

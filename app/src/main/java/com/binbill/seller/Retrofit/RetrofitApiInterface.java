@@ -110,6 +110,9 @@ public interface RetrofitApiInterface {
     @PUT(Constants.APPROVE_JOB)
     Call<JsonObject> approveJobForVerification(@Path(value = "seller_id", encoded = true) String identifier, @Path(value = "id", encoded = true) String jobId);
 
+    @PUT(Constants.REJECT_JOB)
+    Call<JsonObject> rejectJobForVerification(@Path(value = "seller_id", encoded = true) String identifier, @Path(value = "id", encoded = true) String jobId, @Body HashMap<String, String> body);
+
     @PUT(Constants.LINK_CREDIT_WITH_JOB)
     Call<JsonObject> linkCreditWithJob(@Path(value = "seller_id", encoded = true) String sellerId, @Path(value = "customer_id", encoded = true) String customerId,
                                        @Path(value = "credit_id", encoded = true) String creditId, @Path(value = "job_id", encoded = true) String jobId);
@@ -123,6 +126,9 @@ public interface RetrofitApiInterface {
 
     @GET(Constants.FETCH_SELLER_DETAILS)
     Call<JsonObject> getSellerDetails(@Path(value = "seller_id", encoded = true) String sellerId);
+
+    @PUT(Constants.SAVE_CATEGORIES_FOR_SELLER)
+    Call<JsonObject> saveSellerCategories(@Path(value = "seller_id", encoded = true) String sellerId,  @Body HashMap<String, String> body);
 
     @GET(Constants.FETCH_ORDERS)
     Call<JsonObject> fetchOrders(@Path(value = "seller_id", encoded = true) String sellerId);
@@ -150,4 +156,7 @@ public interface RetrofitApiInterface {
 
     @GET(Constants.GET_DELIVERY_BOYS)
     Call<JsonObject> getDeliveryBoys(@Path(value = "seller_id", encoded = true) String sellerId);
+
+    @GET(Constants.GET_SELLER_CATEGORIES)
+    Call<JsonObject> fetchSellerCategories(@Path(value = "seller_id", encoded = true) String sellerId);
 }

@@ -25,7 +25,7 @@ public class FMCGHeaderModel implements Serializable {
 
     boolean isShowSelectAll;
 
-    public FMCGHeaderModel(String nameString, boolean selected) {
+    public FMCGHeaderModel(String nameString, String id, boolean selected) {
         this.name = nameString;
         this.isShowSelectAll = selected;
     }

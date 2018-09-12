@@ -2,6 +2,7 @@ package com.binbill.seller.Dashboard;
 
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.binbill.seller.AppSession;
@@ -18,6 +19,12 @@ public class ProfileActivity extends AppCompatActivity {
 
     @ViewById(R.id.toolbar_text)
     TextView toolbarText;
+
+    @ViewById
+    ImageView iv_shop_image;
+
+    @ViewById
+    TextView tv_shop_name, tv_shop_address,tv_main_category, tv_open_days, tv_timings, tv_delivery, tv_payment_modes, tv_view_attachment;
     private ProfileModel profileDetails;
 
     @AfterViews
@@ -28,6 +35,12 @@ public class ProfileActivity extends AppCompatActivity {
             onBackPressed();
         setUpToolbar();
         setUpListeners();
+        setUpData();
+    }
+
+    private void setUpData() {
+        tv_shop_name.setText(profileDetails.getName());
+        tv_shop_address.setText(profileDetails.getAddress());
     }
 
     private void setUpToolbar() {
@@ -39,6 +52,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void setUpListeners() {
+
     }
 
 }

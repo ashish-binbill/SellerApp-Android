@@ -33,7 +33,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.binbill.seller.APIHelper.ApiHelper;
 import com.binbill.seller.AppSession;
 import com.binbill.seller.BaseActivity;
 import com.binbill.seller.Constants;
@@ -44,8 +43,6 @@ import com.binbill.seller.Registration.OptionListFragment;
 import com.binbill.seller.Retrofit.RetrofitHelper;
 import com.binbill.seller.SharedPref;
 import com.binbill.seller.Utility;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.nex3z.flowlayout.FlowLayout;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.OkHttp3Downloader;
@@ -59,7 +56,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 import okhttp3.Authenticator;
@@ -350,6 +346,10 @@ public class AddAssistedServiceActivity extends BaseActivity implements OptionLi
         String price = et_price.getText().toString();
 
         if (mType.equalsIgnoreCase(Constants.EDIT_ASSISTED_SERVICES)) {
+            /**
+             * Make profileImageDetails null in case of edit
+             */
+            fileDetailsJsonProfile = null;
             new RetrofitHelper(this).createAssistedService(name, mobile, mAssistedServiceId, fileDetailsJson == null ? "" : fileDetailsJson.toString(), fileDetailsJsonProfile == null ? "" : fileDetailsJsonProfile.toString(),
                     new RetrofitHelper.RetrofitCallback() {
                         @Override
@@ -561,55 +561,104 @@ public class AddAssistedServiceActivity extends BaseActivity implements OptionLi
 
     private void uploadProfileImage() {
 
-        iv_sub_image.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.wait));
-        new RetrofitHelper(this).uploadFile(this, AppSession.getInstance(this).getSellerId(), Constants.UPLOAD_TYPE_ASSISTED_SERVICE_PROFILE, fileUri, new RetrofitHelper.RetrofitCallback() {
-            @Override
-            public void onResponse(String response) {
+        if (mType == Constants.EDIT_ASSISTED_SERVICES) {
+            iv_sub_image.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.wait));
+            new RetrofitHelper(this).updateAssistedProfileImage(this, mAssistedServiceId, fileUri, new RetrofitHelper.RetrofitCallback() {
+                @Override
+                public void onResponse(String response) {
 
-                showSnackBar("Upload Success");
+                    showSnackBar("Upload Success");
 
-                String uriString = Utility.getPath(AddAssistedServiceActivity.this, fileUri);
-                /**
-                 * /assisted/{id}/profile
-                 */
+                    String uriString = Utility.getPath(AddAssistedServiceActivity.this, fileUri);
 
-                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-                        RelativeLayout.LayoutParams.MATCH_PARENT,
-                        RelativeLayout.LayoutParams.MATCH_PARENT
-                );
-                params.setMargins(0, 0, 0, 0);
-                iv_user_image.setLayoutParams(params);
+                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                            RelativeLayout.LayoutParams.MATCH_PARENT,
+                            RelativeLayout.LayoutParams.MATCH_PARENT
+                    );
+                    params.setMargins(0, 0, 0, 0);
+                    iv_user_image.setLayoutParams(params);
 
-                iv_user_image.setScaleType(ImageView.ScaleType.FIT_XY);
+                    iv_user_image.setScaleType(ImageView.ScaleType.FIT_XY);
 
-                Picasso.get().
-                        load("file://" + uriString)
-                        .config(Bitmap.Config.RGB_565)
-                        .into(iv_user_image, new Callback() {
-                            @Override
-                            public void onSuccess() {
-                                Bitmap imageBitmap = ((BitmapDrawable) iv_user_image.getDrawable()).getBitmap();
-                                RoundedBitmapDrawable imageDrawable = RoundedBitmapDrawableFactory.create(getResources(), imageBitmap);
-                                imageDrawable.setCircular(true);
+                    Picasso.get().
+                            load("file://" + uriString)
+                            .config(Bitmap.Config.RGB_565)
+                            .into(iv_user_image, new Callback() {
+                                @Override
+                                public void onSuccess() {
+                                    Bitmap imageBitmap = ((BitmapDrawable) iv_user_image.getDrawable()).getBitmap();
+                                    RoundedBitmapDrawable imageDrawable = RoundedBitmapDrawableFactory.create(getResources(), imageBitmap);
+                                    imageDrawable.setCircular(true);
 //                                imageDrawable.setCornerRadius(Math.max(imageBitmap.getWidth(), imageBitmap.getHeight()) / 2.0f);
-                                iv_user_image.setImageDrawable(imageDrawable);
-                            }
+                                    iv_user_image.setImageDrawable(imageDrawable);
+                                }
 
-                            @Override
-                            public void onError(Exception e) {
+                                @Override
+                                public void onError(Exception e) {
 
-                            }
-                        });
+                                }
+                            });
 
-                processImageResponse(response);
-            }
+//                    processImageResponse(response);
+                }
 
-            @Override
-            public void onErrorResponse() {
-                showSnackBar("Upload Fail");
-                iv_sub_image.setImageDrawable(ContextCompat.getDrawable(AddAssistedServiceActivity.this, R.drawable.ic_camera));
-            }
-        });
+                @Override
+                public void onErrorResponse() {
+                    showSnackBar("Upload Fail");
+                    iv_sub_image.setImageDrawable(ContextCompat.getDrawable(AddAssistedServiceActivity.this, R.drawable.ic_camera));
+                }
+            });
+        } else {
+            iv_sub_image.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.wait));
+            new RetrofitHelper(this).uploadFile(this, AppSession.getInstance(this).getSellerId(), Constants.UPLOAD_TYPE_ASSISTED_SERVICE_PROFILE, fileUri, new RetrofitHelper.RetrofitCallback() {
+                @Override
+                public void onResponse(String response) {
+
+                    showSnackBar("Upload Success");
+
+                    String uriString = Utility.getPath(AddAssistedServiceActivity.this, fileUri);
+                    /**
+                     * /assisted/{id}/profile
+                     */
+
+                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                            RelativeLayout.LayoutParams.MATCH_PARENT,
+                            RelativeLayout.LayoutParams.MATCH_PARENT
+                    );
+                    params.setMargins(0, 0, 0, 0);
+                    iv_user_image.setLayoutParams(params);
+
+                    iv_user_image.setScaleType(ImageView.ScaleType.FIT_XY);
+
+                    Picasso.get().
+                            load("file://" + uriString)
+                            .config(Bitmap.Config.RGB_565)
+                            .into(iv_user_image, new Callback() {
+                                @Override
+                                public void onSuccess() {
+                                    Bitmap imageBitmap = ((BitmapDrawable) iv_user_image.getDrawable()).getBitmap();
+                                    RoundedBitmapDrawable imageDrawable = RoundedBitmapDrawableFactory.create(getResources(), imageBitmap);
+                                    imageDrawable.setCircular(true);
+//                                imageDrawable.setCornerRadius(Math.max(imageBitmap.getWidth(), imageBitmap.getHeight()) / 2.0f);
+                                    iv_user_image.setImageDrawable(imageDrawable);
+                                }
+
+                                @Override
+                                public void onError(Exception e) {
+
+                                }
+                            });
+
+                    processImageResponse(response);
+                }
+
+                @Override
+                public void onErrorResponse() {
+                    showSnackBar("Upload Fail");
+                    iv_sub_image.setImageDrawable(ContextCompat.getDrawable(AddAssistedServiceActivity.this, R.drawable.ic_camera));
+                }
+            });
+        }
     }
 
     private void uploadAdharImage() {

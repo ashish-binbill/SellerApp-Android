@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 
+import java.io.File;
+
 public class SharedPref {
 
     public static final String SHARED_PREF = "BinBill_Seller_Pref";
@@ -18,6 +20,16 @@ public class SharedPref {
             mSharedPref = context.getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE);
         }
         return mSharedPref;
+    }
+
+    public static void clearSharedPreferences(Context context) {
+        File sharedPreferenceFile = new File("/data/data/" + context.getApplicationContext().getPackageName() + "/shared_prefs/");
+        File[] listFiles = sharedPreferenceFile.listFiles();
+        if (listFiles != null) {
+            for (File file : listFiles) {
+                file.delete();
+            }
+        }
     }
 
     public static boolean hasKey(Context context, String pref) {

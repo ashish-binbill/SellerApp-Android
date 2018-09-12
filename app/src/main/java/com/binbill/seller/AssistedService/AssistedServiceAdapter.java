@@ -47,7 +47,9 @@ public class AssistedServiceAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
         void addAdditionalService(int position);
 
-        void onEditServiceCard(int positon);
+        void onEditServiceCard(int position);
+
+        void onShowReviews(int position);
     }
 
     @Override
@@ -158,6 +160,26 @@ public class AssistedServiceAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             userHolder.mReviews.setText(userHolder.mReviews.getContext().getString(R.string.reviews, String.valueOf(userReviews.size())));
         else
             userHolder.mReviews.setText(userHolder.mReviews.getContext().getString(R.string.reviews, "0"));
+
+        if (userReviews != null && userReviews.size() > 0) {
+            userHolder.mReviews.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (mListener != null)
+                        mListener.onShowReviews(position);
+                }
+            });
+        }
+
+        if (userReviews != null && userReviews.size() > 0) {
+            userHolder.mRating.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (mListener != null)
+                        mListener.onShowReviews(position);
+                }
+            });
+        }
 
         if (userHolder.mTagLayout.getChildCount() > 0)
             userHolder.mTagLayout.removeAllViews();

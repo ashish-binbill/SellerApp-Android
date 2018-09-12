@@ -20,7 +20,7 @@ import com.google.firebase.messaging.RemoteMessage;
  * Created by shruti.vig on 8/20/18.
  */
 
-public class AppFirebaseMessagingService  extends FirebaseMessagingService {
+public class AppFirebaseMessagingService extends FirebaseMessagingService {
 
     private static final String TAG = "AppFirebase";
 
@@ -30,13 +30,13 @@ public class AppFirebaseMessagingService  extends FirebaseMessagingService {
 
         if (remoteMessage.getData().size() > 0) {
             Log.d(TAG, "Message data payload: " + remoteMessage.getData());
-
-                handleNow();
+            handleNow("abc", "abc");
         }
 
         // Check if message contains a notification payload.
         if (remoteMessage.getNotification() != null) {
             Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
+//            handleNow("abc", "abc");
         }
 
     }
@@ -51,28 +51,16 @@ public class AppFirebaseMessagingService  extends FirebaseMessagingService {
     /**
      * Handle time allotted to BroadcastReceivers.
      */
-    private void handleNow() {
+    private void handleNow(String title, String message) {
         Log.d(TAG, "Short lived task is done.");
+        sendNotification(title, message);
     }
 
-    /**
-     * Persist token to third-party servers.
-     * <p>
-     * Modify this method to associate the user's FCM InstanceID token with any server-side account
-     * maintained by your application.
-     *
-     * @param token The new token.
-     */
     private void sendRegistrationToServer(String token) {
         // TODO: Implement this method to send token to your app server.
     }
 
-    /**
-     * Create and show a simple notification containing the received FCM message.
-     *
-     * @param messageBody FCM message body received.
-     */
-    private void sendNotification(String messageBody) {
+    private void sendNotification(String title, String messageBody) {
         Intent intent = new Intent(this, DashboardActivity_.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
@@ -83,7 +71,7 @@ public class AppFirebaseMessagingService  extends FirebaseMessagingService {
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(this, channelId)
                         .setSmallIcon(R.mipmap.ic_launcher)
-                        .setContentTitle("FCM Message")
+                        .setContentTitle(title)
                         .setContentText(messageBody)
                         .setAutoCancel(true)
                         .setSound(defaultSoundUri)
@@ -95,7 +83,7 @@ public class AppFirebaseMessagingService  extends FirebaseMessagingService {
         // Since android Oreo notification channel is needed.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(channelId,
-                    "BinBill",
+                    getString(R.string.default_notification_channel_id),
                     NotificationManager.IMPORTANCE_DEFAULT);
             notificationManager.createNotificationChannel(channel);
         }

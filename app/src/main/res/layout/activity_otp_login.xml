@@ -48,6 +48,29 @@
         <requestFocus />
     </com.binbill.seller.CustomViews.OtpView>
 
+    <LinearLayout
+        android:id="@+id/auto_read"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_30dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dimen_10dp"
+            android:text="@string/auto_reading_your_otp"
+            android:textColor="@color/color_black"
+            android:textSize="@dimen/dimen_10dp" />
+    </LinearLayout>
+
     <com.binbill.seller.CustomViews.AppButton
         android:id="@+id/btn_submit"
         android:layout_width="match_parent"

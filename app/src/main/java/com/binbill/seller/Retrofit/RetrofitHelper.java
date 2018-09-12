@@ -597,6 +597,28 @@ public class RetrofitHelper {
         });
     }
 
+    public void fetchSellerCategories(final RetrofitCallback retrofitCallback) {
+        RetrofitApiInterface apiService =
+                RetrofitHelper.getClient(mContext).create(RetrofitApiInterface.class);
+
+        Call<JsonObject> call = apiService.fetchSellerCategories(AppSession.getInstance(mContext).getSellerId());
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (response.isSuccessful()) {
+                    JsonObject body = response.body();
+                    retrofitCallback.onResponse(body.toString());
+                } else
+                    retrofitCallback.onErrorResponse();
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable throwable) {
+                retrofitCallback.onErrorResponse();
+            }
+        });
+    }
+
     public void fetchCompletedOrders(final RetrofitCallback retrofitCallback) {
         RetrofitApiInterface apiService =
                 RetrofitHelper.getClient(mContext).create(RetrofitApiInterface.class);
@@ -689,13 +711,15 @@ public class RetrofitHelper {
         });
     }
 
-    public void sendOrderOutForDeliveryCall(String orderID, String userId, String list, final RetrofitCallback retrofitCallback) {
+    public void sendOrderOutForDeliveryCall(String orderID, String userId, String list, String deliveryId, final RetrofitCallback retrofitCallback) {
         RetrofitApiInterface apiService =
                 RetrofitHelper.getClient(mContext).create(RetrofitApiInterface.class);
 
         HashMap<String, String> map = new HashMap<>();
         map.put("order_details", list);
         map.put("user_id", userId);
+        if (!Utility.isEmpty(deliveryId))
+            map.put("delivery_user_id", deliveryId);
 
         Call<JsonObject> call = apiService.sendOrderForDelivery(AppSession.getInstance(mContext).getSellerId(), orderID, map);
         call.enqueue(new Callback<JsonObject>() {
@@ -826,12 +850,14 @@ public class RetrofitHelper {
         if (offerId != null && !Utility.isEmpty(offerId))
             offerObject.put("id", offerId);
 
-        String jsonFormattedString = "";
-        try {
-            jsonFormattedString = new JSONTokener(fileUploadDetails).nextValue().toString();
-            offerObject.put("document_details", jsonFormattedString);
-        } catch (JSONException e) {
-            e.printStackTrace();
+        if (!Utility.isEmpty(fileUploadDetails)) {
+            String jsonFormattedString = "";
+            try {
+                jsonFormattedString = new JSONTokener(fileUploadDetails).nextValue().toString();
+                offerObject.put("document_details", jsonFormattedString);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
         offerObject.put("end_date", expiry);
 
@@ -924,6 +950,30 @@ public class RetrofitHelper {
                 RetrofitHelper.getClient(mContext).create(RetrofitApiInterface.class);
 
         Call<JsonObject> call = apiService.approveJobForVerification(AppSession.getInstance(mContext).getSellerId(), jobId);
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (response.isSuccessful()) {
+                    JsonObject body = response.body();
+                    retrofitCallback.onResponse(body.toString());
+                } else
+                    retrofitCallback.onErrorResponse();
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable throwable) {
+                retrofitCallback.onErrorResponse();
+            }
+        });
+    }
+
+    public void rejectJobForVerification(String jobId, String rejectId, final RetrofitCallback retrofitCallback) {
+        RetrofitApiInterface apiService =
+                RetrofitHelper.getClient(mContext).create(RetrofitApiInterface.class);
+        HashMap<String, String> map = new HashMap<>();
+        map.put("reason_id", rejectId);
+
+        Call<JsonObject> call = apiService.rejectJobForVerification(AppSession.getInstance(mContext).getSellerId(), jobId, map);
         call.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
@@ -1107,7 +1157,7 @@ public class RetrofitHelper {
         RetrofitApiInterface apiService =
                 RetrofitHelper.getClient(mContext).create(RetrofitApiInterface.class);
 
-        Call<JsonObject> call = apiService.deleteAssistedServiceTag(AppSession.getInstance(mContext).getSellerId(),userId,serviceTypeId);
+        Call<JsonObject> call = apiService.deleteAssistedServiceTag(AppSession.getInstance(mContext).getSellerId(), userId, serviceTypeId);
         call.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
@@ -1264,6 +1314,31 @@ public class RetrofitHelper {
         });
     }
 
+    public void saveCategoriesForSeller(JSONArray mapArray, final RetrofitCallback retrofitCallback) {
+        RetrofitApiInterface apiService =
+                RetrofitHelper.getClient(mContext).create(RetrofitApiInterface.class);
+
+        HashMap<String, String> map = new HashMap<>();
+        map.put("provider_type_detail", mapArray.toString());
+
+        Call<JsonObject> call = apiService.saveSellerCategories(AppSession.getInstance(mContext).getSellerId(), map);
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (response.isSuccessful()) {
+                    JsonObject body = response.body();
+                    retrofitCallback.onResponse(body.toString());
+                } else
+                    retrofitCallback.onErrorResponse();
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable throwable) {
+                retrofitCallback.onErrorResponse();
+            }
+        });
+    }
+
     public void addSettleCredit(String amount, String remarks, String transactionType, String userId, final RetrofitCallback retrofitCallback) {
 
         RetrofitApiInterface apiService =
@@ -1365,6 +1440,38 @@ public class RetrofitHelper {
         final String charset = "UTF-8";
 
         final String requestURL = Constants.BASE_URL + "offer/" + offerId + "/images/0";
+
+        String[] proj = {MediaStore.Images.Media.DATA};
+
+        String uriString = Utility.getPath(mContext, fileUri);
+
+        try {
+            if (uriString != null) {
+                File myFile = new File(uriString);
+                Log.d("SHRUTI", "fILE: " + uriString + " " + Integer.parseInt(String.valueOf(myFile.length() / 1024)));
+                myFile = new Compressor(context)
+                        .setMaxWidth(640)
+                        .setMaxHeight(480)
+                        .setQuality(75)
+                        .setCompressFormat(Bitmap.CompressFormat.JPEG)
+                        .compressToFile(myFile, "BinBill_" + System.currentTimeMillis());
+                filesToUpload.add(myFile);
+            } else {
+                Toast.makeText(mContext, "Cannot upload file!", Toast.LENGTH_SHORT).show();
+            }
+        } catch (IOException e) {
+            Toast.makeText(mContext, "Cannot upload file!", Toast.LENGTH_SHORT).show();
+        }
+
+        final String authToken = SharedPref.getString(context, SharedPref.AUTH_TOKEN);
+        new LongOperation(callback).execute(requestURL, charset, filesToUpload, authToken);
+    }
+
+    public void updateAssistedProfileImage(Context context, String assistedId, Uri fileUri, RetrofitCallback callback) {
+        ArrayList<File> filesToUpload = new ArrayList<>();
+        final String charset = "UTF-8";
+
+        final String requestURL = Constants.BASE_URL + "assisted/" + assistedId + "/profile/0";
 
         String[] proj = {MediaStore.Images.Media.DATA};
 

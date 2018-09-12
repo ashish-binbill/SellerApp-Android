@@ -49,6 +49,7 @@
             android:layout_below="@id/title"
             android:layout_marginBottom="@dimen/dimen_80dp"
             android:background="@color/color_white"
+            android:transcriptMode="disabled"
             android:paddingLeft="@dimen/dimen_10dp"
             android:paddingRight="@dimen/dimen_10dp" />
 

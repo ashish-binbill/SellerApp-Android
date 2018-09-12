@@ -21,6 +21,9 @@ public  class VerificationModel implements Serializable {
     @SerializedName("status_name")
     String cashbackStatus;
 
+    @SerializedName("cashback_id")
+    String cashbackId;
+
     @SerializedName("copies")
     ArrayList<JobCopy> jobCopyList;
 
@@ -41,6 +44,10 @@ public  class VerificationModel implements Serializable {
 
     @SerializedName("user_id")
     String userId;
+
+    public String getCashbackId() {
+        return cashbackId;
+    }
 
     public String getUserId() {
         return userId;

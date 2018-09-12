@@ -1,9 +1,13 @@
 package com.binbill.seller.Login;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -19,6 +23,8 @@ import com.binbill.seller.Model.DashboardModel;
 import com.binbill.seller.R;
 import com.binbill.seller.Registration.RegistrationResolver;
 import com.binbill.seller.Retrofit.RetrofitHelper;
+import com.binbill.seller.SMS.SMSListener;
+import com.binbill.seller.SMS.SMSReceiver;
 import com.binbill.seller.SharedPref;
 import com.binbill.seller.Utility;
 import com.google.gson.Gson;
@@ -48,13 +54,14 @@ public class OTPLoginActivity extends BaseActivity {
     AppButton btn_submit;
 
     @ViewById
-    LinearLayout btn_submit_progress;
+    LinearLayout btn_submit_progress, auto_read;
 
     @ViewById
     Toolbar toolbar;
 
     @ViewById
     TextView toolbar_text;
+    private boolean isSmsReceiverOnReceiveCalled;
 
     @AfterViews
     public void initiateViews() {
@@ -86,6 +93,31 @@ public class OTPLoginActivity extends BaseActivity {
                 Utility.enableButton(OTPLoginActivity.this, btn_submit, false);
             }
         });
+        checkPermission();
+    }
+
+    private void checkPermission() {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.RECEIVE_SMS)
+                == PackageManager.PERMISSION_GRANTED) {
+
+            auto_read.setVisibility(View.VISIBLE);
+            SMSReceiver.bindListener(new SMSListener() {
+                @Override
+                public void messageReceived(String messageText) {
+
+                    if (otp_view != null && btn_submit != null && !isSmsReceiverOnReceiveCalled) {
+                        isSmsReceiverOnReceiveCalled = true;
+                        Log.d("Text", messageText);
+                        auto_read.setVisibility(View.GONE);
+                        otp_view.setOTP(messageText.substring(messageText.indexOf("\"") + 1, messageText.lastIndexOf("\"") + 1));
+//                        s.callOnClick();
+                        isSmsReceiverOnReceiveCalled = false;
+                    }
+                }
+            });
+
+        }
     }
 
     @Click(R.id.btn_submit)

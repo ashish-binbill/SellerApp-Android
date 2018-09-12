@@ -88,121 +88,122 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         final Order model = mList.get(position);
 
 
+        if (model.getOrderType().equalsIgnoreCase(Constants.ORDER_TYPE_FMCG)) {
+            UserModel userModel = model.getUser();
 
-        UserModel userModel = model.getUser();
+            if (userModel != null) {
 
-        if (userModel != null) {
-
-            if (!Utility.isEmpty(userModel.getUserName()))
-                orderHolder.mUserName.setText(userModel.getUserName());
-            else if (!Utility.isEmpty(userModel.getUserEmail()))
-                orderHolder.mUserName.setText(userModel.getUserEmail());
-            else
-                orderHolder.mUserName.setText(userModel.getUserMobile());
-        }
-
-        orderHolder.mAddress.setText(model.getUserAddress());
-
-
-        ArrayList<OrderItem> itemList = model.getOrderItems();
-        if (itemList != null)
-            orderHolder.mItemCount.setText(itemList.size() + "");
-        else
-            orderHolder.mItemCount.setText("0");
-        orderHolder.mDate.setText(Utility.getFormattedDate(9, model.getOrderCreationDate(), 0));
-
-        /**
-         * Status
-         */
-        switch (model.getOrderStatus()) {
-            case Constants.STATUS_NEW_ORDER:
-                ViewCompat.setBackgroundTintList(orderHolder.mStatusColor, ContextCompat.getColorStateList(orderHolder.mStatusColor.getContext(), R.color.status_light_blue));
-                if (model.isModified())
-                    orderHolder.mStatus.setText(orderHolder.mStatusColor.getContext().getString(R.string.waiting_for_approval));
+                if (!Utility.isEmpty(userModel.getUserName()))
+                    orderHolder.mUserName.setText(userModel.getUserName());
+                else if (!Utility.isEmpty(userModel.getUserEmail()))
+                    orderHolder.mUserName.setText(userModel.getUserEmail());
                 else
-                    orderHolder.mStatus.setText(orderHolder.mStatus.getContext().getString(R.string.new_order));
-                break;
-            case Constants.STATUS_COMPLETE:
-                ViewCompat.setBackgroundTintList(orderHolder.mStatusColor, ContextCompat.getColorStateList(orderHolder.mStatusColor.getContext(), R.color.status_green));
-                orderHolder.mStatus.setText(orderHolder.mStatus.getContext().getString(R.string.order_complete));
-                break;
-            case Constants.STATUS_APPROVED:
-                ViewCompat.setBackgroundTintList(orderHolder.mStatusColor, ContextCompat.getColorStateList(orderHolder.mStatusColor.getContext(), R.color.status_yellow));
-                orderHolder.mStatus.setText(orderHolder.mStatus.getContext().getString(R.string.in_progress));
-                break;
-            case Constants.STATUS_CANCEL:
-                ViewCompat.setBackgroundTintList(orderHolder.mStatusColor, ContextCompat.getColorStateList(orderHolder.mStatusColor.getContext(), R.color.status_red));
-                orderHolder.mStatus.setText(orderHolder.mStatus.getContext().getString(R.string.order_cancelled));
-                break;
-            case Constants.STATUS_REJECTED:
-                ViewCompat.setBackgroundTintList(orderHolder.mStatusColor, ContextCompat.getColorStateList(orderHolder.mStatusColor.getContext(), R.color.status_orange));
-                orderHolder.mStatus.setText(orderHolder.mStatus.getContext().getString(R.string.order_rejected));
-                break;
-            case Constants.STATUS_OUT_FOR_DELIVERY:
-                ViewCompat.setBackgroundTintList(orderHolder.mStatusColor, ContextCompat.getColorStateList(orderHolder.mStatusColor.getContext(), R.color.status_blue));
-                orderHolder.mStatus.setText(orderHolder.mStatus.getContext().getString(R.string.out_for_delivery));
-                break;
-        }
-
-        if (model.getUserId() != null) {
-
-            final String authToken = SharedPref.getString(orderHolder.userImage.getContext(), SharedPref.AUTH_TOKEN);
-            OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                    .authenticator(new Authenticator() {
-                        @Override
-                        public Request authenticate(Route route, Response response) throws IOException {
-                            return response.request().newBuilder()
-                                    .header("Authorization", authToken)
-                                    .build();
-                        }
-                    }).build();
-
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-                    RelativeLayout.LayoutParams.MATCH_PARENT,
-                    RelativeLayout.LayoutParams.MATCH_PARENT
-            );
-            params.setMargins(0, 0, 0, 0);
-            orderHolder.userImage.setLayoutParams(params);
-
-            orderHolder.userImage.setScaleType(ImageView.ScaleType.FIT_XY);
-
-            Picasso picasso = new Picasso.Builder(orderHolder.userImage.getContext())
-                    .downloader(new OkHttp3Downloader(okHttpClient))
-                    .build();
-            picasso.load(Constants.BASE_URL + "customer/" + model.getUserId() + "/images")
-                    .config(Bitmap.Config.RGB_565)
-                    .into(orderHolder.userImage, new Callback() {
-                        @Override
-                        public void onSuccess() {
-                            Bitmap imageBitmap = ((BitmapDrawable) orderHolder.userImage.getDrawable()).getBitmap();
-                            RoundedBitmapDrawable imageDrawable = RoundedBitmapDrawableFactory.create(orderHolder.userImage.getContext().getResources(), imageBitmap);
-                            imageDrawable.setCircular(true);
-                            orderHolder.userImage.setImageDrawable(imageDrawable);
-                        }
-
-                        @Override
-                        public void onError(Exception e) {
-                            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-                                    RelativeLayout.LayoutParams.MATCH_PARENT,
-                                    RelativeLayout.LayoutParams.MATCH_PARENT
-                            );
-
-                            int margins = Utility.convertDPtoPx(orderHolder.userImage.getContext(), 15);
-                            params.setMargins(margins, margins, margins, margins);
-                            orderHolder.userImage.setLayoutParams(params);
-
-                            orderHolder.userImage.setImageDrawable(ContextCompat.getDrawable(orderHolder.userImage.getContext(), R.drawable.ic_user));
-                        }
-                    });
-        }
-
-        orderHolder.mRootCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (listener != null)
-                    listener.onOrderSelected(position);
+                    orderHolder.mUserName.setText(userModel.getUserMobile());
             }
-        });
+
+            orderHolder.mAddress.setText(model.getAddress());
+
+
+            ArrayList<OrderItem> itemList = model.getOrderItems();
+            if (itemList != null)
+                orderHolder.mItemCount.setText(itemList.size() + " Items");
+            else
+                orderHolder.mItemCount.setText("0");
+            orderHolder.mDate.setText(Utility.getFormattedDate(9, model.getOrderCreationDate(), 0));
+
+            /**
+             * Status
+             */
+            switch (model.getOrderStatus()) {
+                case Constants.STATUS_NEW_ORDER:
+                    ViewCompat.setBackgroundTintList(orderHolder.mStatusColor, ContextCompat.getColorStateList(orderHolder.mStatusColor.getContext(), R.color.status_light_blue));
+                    if (model.isModified())
+                        orderHolder.mStatus.setText(orderHolder.mStatusColor.getContext().getString(R.string.waiting_for_approval));
+                    else
+                        orderHolder.mStatus.setText(orderHolder.mStatus.getContext().getString(R.string.new_order));
+                    break;
+                case Constants.STATUS_COMPLETE:
+                    ViewCompat.setBackgroundTintList(orderHolder.mStatusColor, ContextCompat.getColorStateList(orderHolder.mStatusColor.getContext(), R.color.status_green));
+                    orderHolder.mStatus.setText(orderHolder.mStatus.getContext().getString(R.string.order_complete));
+                    break;
+                case Constants.STATUS_APPROVED:
+                    ViewCompat.setBackgroundTintList(orderHolder.mStatusColor, ContextCompat.getColorStateList(orderHolder.mStatusColor.getContext(), R.color.status_yellow));
+                    orderHolder.mStatus.setText(orderHolder.mStatus.getContext().getString(R.string.in_progress));
+                    break;
+                case Constants.STATUS_CANCEL:
+                    ViewCompat.setBackgroundTintList(orderHolder.mStatusColor, ContextCompat.getColorStateList(orderHolder.mStatusColor.getContext(), R.color.status_red));
+                    orderHolder.mStatus.setText(orderHolder.mStatus.getContext().getString(R.string.order_cancelled));
+                    break;
+                case Constants.STATUS_REJECTED:
+                    ViewCompat.setBackgroundTintList(orderHolder.mStatusColor, ContextCompat.getColorStateList(orderHolder.mStatusColor.getContext(), R.color.status_orange));
+                    orderHolder.mStatus.setText(orderHolder.mStatus.getContext().getString(R.string.order_rejected));
+                    break;
+                case Constants.STATUS_OUT_FOR_DELIVERY:
+                    ViewCompat.setBackgroundTintList(orderHolder.mStatusColor, ContextCompat.getColorStateList(orderHolder.mStatusColor.getContext(), R.color.status_blue));
+                    orderHolder.mStatus.setText(orderHolder.mStatus.getContext().getString(R.string.out_for_delivery));
+                    break;
+            }
+
+            if (model.getUserId() != null) {
+
+                final String authToken = SharedPref.getString(orderHolder.userImage.getContext(), SharedPref.AUTH_TOKEN);
+                OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                        .authenticator(new Authenticator() {
+                            @Override
+                            public Request authenticate(Route route, Response response) throws IOException {
+                                return response.request().newBuilder()
+                                        .header("Authorization", authToken)
+                                        .build();
+                            }
+                        }).build();
+
+                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                        RelativeLayout.LayoutParams.MATCH_PARENT,
+                        RelativeLayout.LayoutParams.MATCH_PARENT
+                );
+                params.setMargins(0, 0, 0, 0);
+                orderHolder.userImage.setLayoutParams(params);
+
+                orderHolder.userImage.setScaleType(ImageView.ScaleType.FIT_XY);
+
+                Picasso picasso = new Picasso.Builder(orderHolder.userImage.getContext())
+                        .downloader(new OkHttp3Downloader(okHttpClient))
+                        .build();
+                picasso.load(Constants.BASE_URL + "customer/" + model.getUserId() + "/images")
+                        .config(Bitmap.Config.RGB_565)
+                        .into(orderHolder.userImage, new Callback() {
+                            @Override
+                            public void onSuccess() {
+                                Bitmap imageBitmap = ((BitmapDrawable) orderHolder.userImage.getDrawable()).getBitmap();
+                                RoundedBitmapDrawable imageDrawable = RoundedBitmapDrawableFactory.create(orderHolder.userImage.getContext().getResources(), imageBitmap);
+                                imageDrawable.setCircular(true);
+                                orderHolder.userImage.setImageDrawable(imageDrawable);
+                            }
+
+                            @Override
+                            public void onError(Exception e) {
+                                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                                        RelativeLayout.LayoutParams.MATCH_PARENT,
+                                        RelativeLayout.LayoutParams.MATCH_PARENT
+                                );
+
+                                int margins = Utility.convertDPtoPx(orderHolder.userImage.getContext(), 15);
+                                params.setMargins(margins, margins, margins, margins);
+                                orderHolder.userImage.setLayoutParams(params);
+
+                                orderHolder.userImage.setImageDrawable(ContextCompat.getDrawable(orderHolder.userImage.getContext(), R.drawable.ic_user));
+                            }
+                        });
+            }
+
+            orderHolder.mRootCard.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (listener != null)
+                        listener.onOrderSelected(position);
+                }
+            });
+        }
     }
 }
 

@@ -36,6 +36,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
+        <include layout="@layout/full_screen_loader" />
+
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/dimen_2dp"

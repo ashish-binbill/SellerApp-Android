@@ -1,7 +1,9 @@
 package com.binbill.seller.Order;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
@@ -47,6 +49,7 @@ public class DeliveryAgentAdapter extends RecyclerView.Adapter<RecyclerView.View
         protected AppCompatRatingBar mRating;
         protected RelativeLayout mImageLayout, mSelectedCardLayout;
         protected LinearLayout mInfoLayout;
+        protected ImageView mCall;
 
         public DeliveryAgentHolder(View view) {
             super(view);
@@ -60,7 +63,7 @@ public class DeliveryAgentAdapter extends RecyclerView.Adapter<RecyclerView.View
             mImageLayout = (RelativeLayout) view.findViewById(R.id.rl_image_layout);
             mInfoLayout = (LinearLayout) view.findViewById(R.id.ll_info_layout);
             mSelectedCardLayout = (RelativeLayout) view.findViewById(R.id.card_selected);
-//            mCall = (ImageView) view.findViewById(R.id.iv_call);
+            mCall = (ImageView) view.findViewById(R.id.iv_call);
 
         }
     }
@@ -186,6 +189,16 @@ public class DeliveryAgentAdapter extends RecyclerView.Adapter<RecyclerView.View
                 resetSelection();
                 model.setSelected(true);
                 notifyDataSetChanged();
+            }
+        });
+
+        userHolder.mCall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (model.getMobile() != null) {
+                    Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + model.getMobile()));
+                    userHolder.mCall.getContext().startActivity(intent);
+                }
             }
         });
 

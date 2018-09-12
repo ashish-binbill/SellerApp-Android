@@ -15,6 +15,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.binbill.seller.BaseActivity;
+import com.binbill.seller.BinBillSeller;
+import com.binbill.seller.Constants;
 import com.binbill.seller.CustomViews.AppButton;
 import com.binbill.seller.Customer.AddCustomerActivity_;
 import com.binbill.seller.R;
@@ -28,6 +30,8 @@ import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+
+import io.socket.emitter.Emitter;
 
 /**
  * Created by shruti.vig on 9/6/18.
@@ -71,6 +75,42 @@ public class PastOrderFragment extends Fragment implements OrderAdapter.OrderSel
         super.onResume();
         fetchOrders();
     }
+
+
+    private void connectSocket() {
+        BinBillSeller.getSocket(getActivity()).connect();
+        BinBillSeller.getSocket(getActivity()).on("order-placed", SOCKET_EVENT_ORDER_PLACED);
+        BinBillSeller.getSocket(getActivity()).on("order-status-change", SOCKET_EVENT_ORDER_STATUS_CHANGED);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
+
+    private Emitter.Listener SOCKET_EVENT_ORDER_PLACED = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            fetchOrders();
+        }
+    };
+
+    private Emitter.Listener SOCKET_EVENT_ORDER_STATUS_CHANGED = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            fetchOrders();
+        }
+    };
+
+    @Override
+    public void setMenuVisibility(final boolean visible) {
+        if (visible) {
+//            connectSocket();
+        }
+
+        super.setMenuVisibility(visible);
+    }
+
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -196,6 +236,11 @@ public class PastOrderFragment extends Fragment implements OrderAdapter.OrderSel
 
     @Override
     public void onOrderSelected(int pos) {
+        Order order = mOrderList.get(pos);
+
+        Intent intent = new Intent(getActivity(), OrderDetailsActivity_.class);
+        intent.putExtra(Constants.ORDER_ID, order.getOrderId());
+        startActivity(intent);
 
     }
 }

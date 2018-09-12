@@ -29,6 +29,7 @@ import com.binbill.seller.AssistedService.AssistedUserModel;
 import com.binbill.seller.BaseActivity;
 import com.binbill.seller.Constants;
 import com.binbill.seller.CustomViews.AppButton;
+import com.binbill.seller.CustomViews.ReviewsDialogFragment;
 import com.binbill.seller.CustomViews.YesNoDialogFragment;
 import com.binbill.seller.R;
 import com.binbill.seller.Retrofit.RetrofitHelper;
@@ -246,6 +247,14 @@ public class AssistedServiceFragment extends Fragment implements AssistedService
         Intent intent = new Intent(getActivity(), AddAssistedServiceActivity_.class);
         intent.putExtra(Constants.EDIT_ASSISTED_SERVICES, assistedUserModel);
         getActivity().startActivity(intent);
+    }
+
+    @Override
+    public void onShowReviews(int position) {
+        AssistedUserModel assistedUserModel = assistedUserList.get(position);
+        android.support.v4.app.FragmentManager fm = getFragmentManager();
+        ReviewsDialogFragment fragment = ReviewsDialogFragment.newInstance(getString(R.string.reviews_string), assistedUserModel.getReviews());
+        fragment.show(fm, "ReviewsDialogFragment");
     }
 
 

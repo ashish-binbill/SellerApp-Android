@@ -7,6 +7,8 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
@@ -122,15 +124,9 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
     }
 
     private void connectSocket() {
+        BinBillSeller.getSocket(this).connect();
         BinBillSeller.getSocket(this).on("order-placed", SOCKET_EVENT_ORDER_PLACED);
-        BinBillSeller.getSocket(this).on("order-status-changed", SOCKET_EVENT_ORDER_STATUS_CHANGED);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-
-        BinBillSeller.getSocket(this).disconnect();
+        BinBillSeller.getSocket(this).on("order-status-change", SOCKET_EVENT_ORDER_STATUS_CHANGED);
     }
 
     private Emitter.Listener SOCKET_EVENT_ORDER_PLACED = new Emitter.Listener() {
@@ -140,10 +136,17 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
 
             Type classType = new TypeToken<Order>() {
             }.getType();
-            Order mOrderDetails = new Gson().fromJson(args.toString(), classType);
-            if (orderId.equalsIgnoreCase(orderDetails.getOrderId())) {
-                orderDetails = mOrderDetails;
-                handleResponse();
+            final Order mOrderDetails = new Gson().fromJson(args[0].toString(), classType);
+            if (orderId.equalsIgnoreCase(mOrderDetails.getOrderId())) {
+
+                Handler uiHandler = new Handler(Looper.getMainLooper());
+                uiHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        orderDetails = mOrderDetails;
+                        handleResponse();
+                    }
+                });
             }
         }
     };
@@ -155,10 +158,16 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
             Type classType = new TypeToken<Order>() {
             }.getType();
 
-            Order mOrderDetails = new Gson().fromJson(args.toString(), classType);
-            if (orderId.equalsIgnoreCase(orderDetails.getOrderId())) {
-                orderDetails = mOrderDetails;
-                handleResponse();
+            final Order mOrderDetails = new Gson().fromJson(args[0].toString(), classType);
+            if (orderId.equalsIgnoreCase(mOrderDetails.getOrderId())) {
+                Handler uiHandler = new Handler(Looper.getMainLooper());
+                uiHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        orderDetails = mOrderDetails;
+                        handleResponse();
+                    }
+                });
             }
 
         }
@@ -181,9 +190,6 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                 String textOnButton = btn_accept.getText().toString();
                 ArrayList<OrderItem> updatedList = mAdapter.getUpdatedOrderList();
                 for (OrderItem orderItem : updatedList) {
-
-                    if (orderItem.getUpdatedSKUMeasurement() != null)
-                        orderItem.setOrderSKU(orderItem.getUpdatedSKUMeasurement());
                     orderItem.setItemAvailability(orderItem.isUpdateItemAvailable());
                 }
                 if (textOnButton.equalsIgnoreCase(getString(R.string.send_for_approval))) {
@@ -271,42 +277,36 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                     orderItem.setItemAvailability(orderItem.isUpdateItemAvailable());
                 }
 
-                try {
-                    Gson gson = new Gson();
-                    Type type = new TypeToken<List<OrderItem>>() {
-                    }.getType();
-                    String json = gson.toJson(updatedList, type);
 
-                    Intent intent = data;
-                    JSONObject jsonObject = new JSONObject(json);
-                    if (intent.hasExtra(Constants.DELIVERY_AGENT_ID)) {
-                        jsonObject.put("delivery_user_id", intent.getStringExtra(Constants.DELIVERY_AGENT_ID));
-                    }
+                Gson gson = new Gson();
+                Type type = new TypeToken<List<OrderItem>>() {
+                }.getType();
+                String json = gson.toJson(updatedList, type);
 
-
-                    new RetrofitHelper(OrderDetailsActivity.this).sendOrderOutForDeliveryCall(orderDetails.getOrderId(), orderDetails.getUserId(), jsonObject.toString(), new RetrofitHelper.RetrofitCallback() {
-                        @Override
-                        public void onResponse(String response) {
-                            btn_accept.setVisibility(View.VISIBLE);
-                            btn_accept_progress.setVisibility(View.GONE);
-                            handleApiResponse(response);
-                        }
-
-                        @Override
-                        public void onErrorResponse() {
-                            btn_accept.setVisibility(View.GONE);
-                            btn_accept_progress.setVisibility(View.VISIBLE);
-                            shimmer_view_container.setVisibility(View.GONE);
-
-                            showSnackBar(getString(R.string.something_went_wrong));
-                            finish();
-                        }
-                    });
-
-                } catch (JSONException e) {
-
+                Intent intent = data;
+                String deliveryId = "";
+                if (intent != null && intent.hasExtra(Constants.DELIVERY_AGENT_ID)) {
+                    deliveryId = intent.getStringExtra(Constants.DELIVERY_AGENT_ID);
                 }
 
+                new RetrofitHelper(OrderDetailsActivity.this).sendOrderOutForDeliveryCall(orderDetails.getOrderId(), orderDetails.getUserId(), json, deliveryId, new RetrofitHelper.RetrofitCallback() {
+                    @Override
+                    public void onResponse(String response) {
+                        btn_accept.setVisibility(View.VISIBLE);
+                        btn_accept_progress.setVisibility(View.GONE);
+                        handleApiResponse(response);
+                    }
+
+                    @Override
+                    public void onErrorResponse() {
+                        btn_accept.setVisibility(View.GONE);
+                        btn_accept_progress.setVisibility(View.VISIBLE);
+                        shimmer_view_container.setVisibility(View.GONE);
+
+                        showSnackBar(getString(R.string.something_went_wrong));
+                        finish();
+                    }
+                });
             }
         }
     }
@@ -321,7 +321,6 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                     JSONObject jsonObject = new JSONObject(response);
                     if (jsonObject.getBoolean("status")) {
                         invokeSuccessDialog();
-                        onBackPressed();
                     } else {
 
                         showSnackBar(getString(R.string.something_went_wrong));
@@ -442,7 +441,7 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
     }
 
     private void handleResponse() {
-        if (orderDetails != null) {
+        if (orderDetails != null && orderDetails.getOrderItems() != null) {
             initialiseUpdatedDataArray(orderDetails.getOrderItems().size());
             setUpData();
         } else {
@@ -459,6 +458,8 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
     }
 
     private void setUpData() {
+
+        Utility.hideKeyboard(this, rv_shopping_list);
         setUpUserLayout();
 
         rv_shopping_list.setHasFixedSize(true);
@@ -471,28 +472,48 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
         nested_scroll_view.fullScroll(View.FOCUS_UP);
         nested_scroll_view.smoothScrollTo(0, 0);
 
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                rv_shopping_list.scrollTo(0, 0);
+            }
+        });
+
     }
 
     public void changeButtonStateToApproval(int state) {
 
         switch (state) {
             case 0:
-                ll_user_action.setVisibility(View.VISIBLE);
+                if (orderDetails.getOrderStatus() == Constants.STATUS_NEW_ORDER) {
+                    if (orderDetails.isModified())
+                        ll_user_action.setVisibility(View.GONE);
+                    else
+                        ll_user_action.setVisibility(View.VISIBLE);
+                } else
+                    ll_user_action.setVisibility(View.GONE);
                 frame_decline.setVisibility(View.GONE);
                 btn_accept.setText(getString(R.string.send_for_approval));
                 break;
             case 1:
-                ll_user_action.setVisibility(View.VISIBLE);
+                if (orderDetails.getOrderStatus() == Constants.STATUS_NEW_ORDER) {
+                    ll_user_action.setVisibility(View.VISIBLE);
+                } else
+                    ll_user_action.setVisibility(View.GONE);
                 frame_decline.setVisibility(View.VISIBLE);
                 btn_accept.setText(getString(R.string.accept));
                 break;
             case 2:
-                ll_user_action.setVisibility(View.VISIBLE);
+                if (orderDetails.getOrderStatus() == Constants.STATUS_OUT_FOR_DELIVERY)
+                    ll_user_action.setVisibility(View.GONE);
+                else
+                    ll_user_action.setVisibility(View.VISIBLE);
                 frame_decline.setVisibility(View.GONE);
                 btn_accept.setText(getString(R.string.out_for_delivery));
                 break;
             default:
                 ll_user_action.setVisibility(View.GONE);
+                break;
         }
     }
 
@@ -539,7 +560,7 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
             }
 
             if (orderDetails.getUser() != null) {
-                UserModel userModel = orderDetails.getUser();
+                final UserModel userModel = orderDetails.getUser();
 
                 if (!Utility.isEmpty(userModel.getUserName()))
                     tv_name.setText(userModel.getUserName());
@@ -548,12 +569,12 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                 else
                     tv_name.setText(userModel.getUserMobile());
 
-                tv_address.setText(orderDetails.getUserAddress());
+                tv_address.setText(orderDetails.getAddress());
 
                 if (userModel.getUserId() != null) {
 
                     final String authToken = SharedPref.getString(this, SharedPref.AUTH_TOKEN);
-                    OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                    final OkHttpClient okHttpClient = new OkHttpClient.Builder()
                             .authenticator(new Authenticator() {
                                 @Override
                                 public Request authenticate(Route route, Response response) throws IOException {
@@ -572,37 +593,43 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
 
                     iv_user_image.setScaleType(ImageView.ScaleType.FIT_XY);
 
-                    Picasso picasso = new Picasso.Builder(this)
-                            .downloader(new OkHttp3Downloader(okHttpClient))
-                            .build();
-                    picasso.load(Constants.BASE_URL + "customer/" + userModel.getUserId() + "/images")
-                            .config(Bitmap.Config.RGB_565)
-                            .into(iv_user_image, new Callback() {
-                                @Override
-                                public void onSuccess() {
-                                    Bitmap imageBitmap = ((BitmapDrawable) iv_user_image.getDrawable()).getBitmap();
-                                    RoundedBitmapDrawable imageDrawable = RoundedBitmapDrawableFactory.create(getResources(), imageBitmap);
-                                    imageDrawable.setCircular(true);
-                                    iv_user_image.setImageDrawable(imageDrawable);
-                                }
+                    Handler uiHandler = new Handler(Looper.getMainLooper());
+                    uiHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Picasso picasso = new Picasso.Builder(OrderDetailsActivity.this)
+                                    .downloader(new OkHttp3Downloader(okHttpClient))
+                                    .build();
+                            picasso.load(Constants.BASE_URL + "customer/" + userModel.getUserId() + "/images")
+                                    .config(Bitmap.Config.RGB_565)
+                                    .into(iv_user_image, new Callback() {
+                                        @Override
+                                        public void onSuccess() {
+                                            Bitmap imageBitmap = ((BitmapDrawable) iv_user_image.getDrawable()).getBitmap();
+                                            RoundedBitmapDrawable imageDrawable = RoundedBitmapDrawableFactory.create(getResources(), imageBitmap);
+                                            imageDrawable.setCircular(true);
+                                            iv_user_image.setImageDrawable(imageDrawable);
+                                        }
 
-                                @Override
-                                public void onError(Exception e) {
-                                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-                                            RelativeLayout.LayoutParams.MATCH_PARENT,
-                                            RelativeLayout.LayoutParams.MATCH_PARENT
-                                    );
+                                        @Override
+                                        public void onError(Exception e) {
+                                            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                                                    RelativeLayout.LayoutParams.MATCH_PARENT,
+                                                    RelativeLayout.LayoutParams.MATCH_PARENT
+                                            );
 
-                                    int margins = Utility.convertDPtoPx(OrderDetailsActivity.this, 15);
-                                    params.setMargins(margins, margins, margins, margins);
-                                    iv_user_image.setLayoutParams(params);
+                                            int margins = Utility.convertDPtoPx(OrderDetailsActivity.this, 15);
+                                            params.setMargins(margins, margins, margins, margins);
+                                            iv_user_image.setLayoutParams(params);
 
-                                    iv_user_image.setImageDrawable(ContextCompat.getDrawable(OrderDetailsActivity.this, R.drawable.ic_user));
-                                }
-                            });
+                                            iv_user_image.setImageDrawable(ContextCompat.getDrawable(OrderDetailsActivity.this, R.drawable.ic_user));
+                                        }
+                                    });
+                        }
+                    });
                 }
+                tv_date.setText(Utility.getFormattedDate(9, orderDetails.getOrderCreationDate(), 0));
             }
-            tv_date.setText(Utility.getFormattedDate(9, orderDetails.getOrderCreationDate(), 0));
         }
     }
 
@@ -622,7 +649,7 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
             final OrderItem orderItem = orderDetails.getOrderItems().get(pos);
 
             just_sec_layout.setVisibility(View.VISIBLE);
-            new RetrofitHelper(this).fetchMeasurementsByID(orderItem.getOrderSKU().getSkuId(), new RetrofitHelper.RetrofitCallback() {
+            new RetrofitHelper(this).fetchMeasurementsByID(orderItem.getItemId(), new RetrofitHelper.RetrofitCallback() {
                         @Override
                         public void onResponse(String response) {
                             just_sec_layout.setVisibility(View.GONE);
@@ -657,17 +684,17 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                         }
                     }
             );
-
-
         }
     }
 
     @Override
     public void onItemInteraction(boolean enable) {
-        if (enable)
-            changeButtonStateToApproval(0);
-        else
-            changeButtonStateToApproval(1);
+        if (orderDetails.getOrderStatus() == Constants.STATUS_NEW_ORDER && !orderDetails.isModified()) {
+            if (enable)
+                changeButtonStateToApproval(0);
+            else
+                changeButtonStateToApproval(1);
+        }
     }
 
     private void invokeSkuPopUp(ArrayList<OrderItem.OrderSKU> skuList, String itemId) {
