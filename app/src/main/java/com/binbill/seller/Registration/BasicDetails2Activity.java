@@ -221,8 +221,6 @@ public class BasicDetails2Activity extends BaseActivity implements OptionListFra
             map.put("city_id", userRegistrationDetails.getCity().getCityId());
         if (userRegistrationDetails.getLocality() != null)
             map.put("locality_id", userRegistrationDetails.getLocality().getLocalityId());
-        if (userRegistrationDetails.getMainCategory() != null && !Utility.isEmpty(userRegistrationDetails.getMainCategory().getId()))
-            map.put("category_id", userRegistrationDetails.getMainCategory().getId());
         if (userRegistrationDetails.getDaysOpen() != null && userRegistrationDetails.getDaysOpen().size() > 0)
             map.put("shop_open_day", TextUtils.join(",", userRegistrationDetails.getDaysOpen()));
         if (!Utility.isEmpty(userRegistrationDetails.getShopOpen()))

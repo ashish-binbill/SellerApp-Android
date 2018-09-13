@@ -317,6 +317,9 @@ public class AppSession {
     }
 
     public String getMobile() {
+        if (mAppSessionData.getMobile() == null)
+            setMobile(SharedPref.getString(mContext, SharedPref.MOBILE));
+
         return mAppSessionData.getMobile();
     }
 

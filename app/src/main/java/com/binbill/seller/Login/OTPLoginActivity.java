@@ -48,7 +48,7 @@ public class OTPLoginActivity extends BaseActivity {
     OtpView otp_view;
 
     @ViewById
-    TextView resend_otp;
+    TextView resend_otp, tv_auto_read;
 
     @ViewById
     AppButton btn_submit;
@@ -62,6 +62,7 @@ public class OTPLoginActivity extends BaseActivity {
     @ViewById
     TextView toolbar_text;
     private boolean isSmsReceiverOnReceiveCalled;
+    private boolean isAutoReading = false;
 
     @AfterViews
     public void initiateViews() {
@@ -102,6 +103,7 @@ public class OTPLoginActivity extends BaseActivity {
                 == PackageManager.PERMISSION_GRANTED) {
 
             auto_read.setVisibility(View.VISIBLE);
+            isAutoReading = true;
             SMSReceiver.bindListener(new SMSListener() {
                 @Override
                 public void messageReceived(String messageText) {
@@ -110,7 +112,7 @@ public class OTPLoginActivity extends BaseActivity {
                         isSmsReceiverOnReceiveCalled = true;
                         Log.d("Text", messageText);
                         auto_read.setVisibility(View.GONE);
-                        otp_view.setOTP(messageText.substring(messageText.indexOf("\"") + 1, messageText.lastIndexOf("\"") + 1));
+                        otp_view.setOTP(messageText.substring(messageText.indexOf("\"") + 1, messageText.lastIndexOf("\"")));
 //                        s.callOnClick();
                         isSmsReceiverOnReceiveCalled = false;
                     }
@@ -126,6 +128,57 @@ public class OTPLoginActivity extends BaseActivity {
         btn_submit_progress.setVisibility(View.VISIBLE);
 
         makeVerifyOTPCall();
+    }
+
+    @Click(R.id.resend_otp)
+    public void onResendOtp(View resend) {
+        makeSendOTPRequest();
+    }
+
+    private void makeSendOTPRequest() {
+
+        HashMap<String, String> map = new HashMap<>();
+        map.put("mobile_no", getIntent().getStringExtra(Constants.MOBILE));
+
+        tv_auto_read.setText("Sending OTP to " + getIntent().getStringExtra(Constants.MOBILE));
+        auto_read.setVisibility(View.VISIBLE);
+
+        new RetrofitHelper(this).getOTPToLoginUser(map, new RetrofitHelper.RetrofitCallback() {
+            @Override
+            public void onResponse(String response) {
+                handleResponse(response.toString());
+            }
+
+            @Override
+            public void onErrorResponse() {
+                tv_auto_read.setText(getString(R.string.auto_reading_your_otp));
+                if (isAutoReading)
+                    tv_auto_read.setVisibility(View.VISIBLE);
+                else
+                    tv_auto_read.setVisibility(View.GONE);
+                showSnackBar(getString(R.string.something_went_wrong));
+            }
+        });
+    }
+
+    private void handleResponse(String value) {
+
+        tv_auto_read.setText(getString(R.string.auto_reading_your_otp));
+        if (isAutoReading)
+            tv_auto_read.setVisibility(View.VISIBLE);
+        else
+            tv_auto_read.setVisibility(View.GONE);
+
+        try {
+            JSONObject jsonObject = new JSONObject(value);
+            if (jsonObject.getBoolean("status")) {
+
+            } else {
+                showSnackBar(getString(R.string.something_went_wrong));
+            }
+        } catch (JSONException e) {
+            showSnackBar(getString(R.string.something_went_wrong));
+        }
     }
 
     private void makeVerifyOTPCall() {

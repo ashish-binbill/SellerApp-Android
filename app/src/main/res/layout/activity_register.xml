@@ -19,6 +19,12 @@
         <include layout="@layout/app_toolbar" />
     </android.support.design.widget.AppBarLayout>
 
+    <FrameLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -27,10 +33,11 @@
         android:paddingRight="@dimen/dimen_30dp">
 
         <android.support.v4.widget.NestedScrollView
-            android:layout_width="match_parent"
             android:id="@+id/scroll_view"
-            android:layout_above="@+id/bottom_layout"
-            android:layout_height="wrap_content">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="@dimen/dimen_10dp"
+            android:layout_marginBottom="@dimen/dimen_60dp">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -46,14 +53,35 @@
                     android:src="@drawable/binbill_icon" />
 
                 <EditText
-                    android:id="@+id/et_email"
+                    android:id="@+id/et_main_category"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dimen_55dp"
                     android:layout_below="@id/iv_binbill"
                     android:background="@drawable/edittext_bg"
-                    android:hint="@string/email_id"
+                    android:drawableRight="@drawable/ic_dropdown"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:hint="@string/main_category_asterisk"
+                    android:inputType="textMultiLine"
+                    android:lineSpacingExtra="-1sp"
+                    android:maxLines="3"
+                    android:minHeight="@dimen/dimen_55dp"
+                    android:paddingLeft="@dimen/dimen_12dp"
+                    android:paddingRight="@dimen/dimen_12dp"
+                    android:textColor="@color/text_44"
                     android:layout_marginTop="@dimen/dimen_35dp"
+                    android:textColorHint="@color/hint_color"
+                    android:textSize="@dimen/dimen_15dp" />
+
+                <EditText
+                    android:id="@+id/et_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dimen_55dp"
+                    android:layout_below="@id/et_main_category"
+                    android:background="@drawable/edittext_bg"
+                    android:hint="@string/email_id"
                     android:inputType="textEmailAddress"
+                    android:layout_marginTop="@dimen/dimen_10dp"
                     android:lineSpacingExtra="-1sp"
                     android:paddingLeft="@dimen/dimen_12dp"
                     android:paddingRight="@dimen/dimen_12dp"
@@ -65,11 +93,11 @@
                     android:id="@+id/tv_error_email"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/et_email"
+                    android:layout_marginLeft="@dimen/dimen_5dp"
                     android:layout_marginTop="@dimen/dimen_5dp"
                     android:fontFamily="sans-serif"
                     android:text=""
-                    android:layout_marginLeft="@dimen/dimen_5dp"
+                    android:layout_below="@id/et_email"
                     android:textColor="@android:color/holo_red_light"
                     android:textSize="@dimen/dimen_10dp"
                     android:textStyle="normal"
@@ -92,9 +120,9 @@
                     android:layout_marginTop="@dimen/dimen_20dp"
                     android:background="@drawable/edittext_bg"
                     android:hint="@string/pan_number_asterisk"
+                    android:inputType="textCapCharacters"
                     android:lineSpacingExtra="-1sp"
                     android:paddingLeft="@dimen/dimen_12dp"
-                    android:inputType="textCapCharacters"
                     android:paddingRight="@dimen/dimen_12dp"
                     android:textColor="@color/text_44"
                     android:textColorHint="@color/hint_color"
@@ -105,10 +133,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/et_pan"
+                    android:layout_marginLeft="@dimen/dimen_5dp"
                     android:layout_marginTop="@dimen/dimen_5dp"
                     android:fontFamily="sans-serif"
                     android:text=""
-                    android:layout_marginLeft="@dimen/dimen_5dp"
                     android:textColor="@android:color/holo_red_light"
                     android:textSize="@dimen/dimen_10dp"
                     android:textStyle="normal"
@@ -143,10 +171,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/et_gstin"
+                    android:layout_marginLeft="@dimen/dimen_5dp"
                     android:layout_marginTop="@dimen/dimen_5dp"
                     android:fontFamily="sans-serif"
                     android:text=""
-                    android:layout_marginLeft="@dimen/dimen_5dp"
                     android:textColor="@android:color/holo_red_light"
                     android:textSize="@dimen/dimen_10dp"
                     android:textStyle="normal"
@@ -205,8 +233,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:visibility="gone"
-                android:layout_marginTop="@dimen/dimen_10dp">
+                android:layout_marginTop="@dimen/dimen_10dp"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"

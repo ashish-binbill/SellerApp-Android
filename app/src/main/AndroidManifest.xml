@@ -9,6 +9,7 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
 
     <application
         android:name=".BinBillSeller"
@@ -24,6 +25,14 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
+        <receiver
+            android:name=".SMS.SMSReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+            </intent-filter>
+        </receiver>
 
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
@@ -120,6 +129,9 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Order.SelectDeliveryAgentActivity_"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Registration.DuplicateSellerActivity_"
             android:theme="@style/AppTheme.NoActionBar" />
     </application>
 

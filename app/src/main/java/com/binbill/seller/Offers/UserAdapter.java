@@ -121,7 +121,7 @@ public class UserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
     public static class MyCustomerHolder extends RecyclerView.ViewHolder {
         protected View mRootCard;
         protected CardView mCard;
-        protected TextView mUserName, mUserTransactions, mUserCredit, mUserPoints, mAddCredits, mAddPoints, mDistance;
+        protected TextView mUserName, mUserTransactions, mUserCredit, mUserPoints, mAddCredits, mAddPoints, mDistance, mStatus;
         protected ImageView userImage;
 
         public MyCustomerHolder(View view) {
@@ -136,6 +136,7 @@ public class UserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             mAddCredits = (TextView) view.findViewById(R.id.tv_add_credit);
             mAddPoints = (TextView) view.findViewById(R.id.tv_add_points);
             mDistance = (TextView) view.findViewById(R.id.tv_distance);
+            mStatus = (TextView) view.findViewById(R.id.tv_user_status);
 
         }
     }
@@ -200,8 +201,18 @@ public class UserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         userHolder.mUserTransactions.setText(model.getTransactionCount());
         userHolder.mUserCredit.setText(model.getUserCredit());
         userHolder.mUserPoints.setText(model.getUserLoyalty());
-        // tODO
-//        userHolder.mDistance.setText(model.getlo);
+
+        if (!Utility.isEmpty(model.getUserDistance())) {
+            userHolder.mDistance.setText(model.getUserDistance());
+            userHolder.mDistance.setVisibility(View.VISIBLE);
+
+        } else
+            userHolder.mDistance.setVisibility(View.GONE);
+
+        if (model.getUserStatusType().equalsIgnoreCase(Constants.ACTIVE)) {
+            userHolder.mStatus.setVisibility(View.VISIBLE);
+        } else
+            userHolder.mStatus.setVisibility(View.GONE);
 
         userHolder.mCard.setOnClickListener(new View.OnClickListener() {
             @Override

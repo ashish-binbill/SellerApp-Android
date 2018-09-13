@@ -4,6 +4,7 @@ package com.binbill.seller.Dashboard;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
@@ -202,14 +203,21 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (drawer_layout.isDrawerOpen(GravityCompat.START))
+                    drawer_layout.closeDrawer(GravityCompat.START);
                 just_sec_layout.setVisibility(View.VISIBLE);
                 SharedPref.clearSharedPreferences(DashboardActivity.this);
                 AppSession.setInstanceToNull();
 
-                Intent intent = new Intent(DashboardActivity.this, LoginActivity_.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-                finish();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Intent intent = new Intent(DashboardActivity.this, LoginActivity_.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        finish();
+                    }
+                }, 2000);
 
             }
         });

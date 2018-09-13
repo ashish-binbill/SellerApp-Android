@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.binbill.seller.APIHelper.ApiHelper;
@@ -58,6 +59,9 @@ public class FMCGRegistrationActivity extends BaseActivity {
     @ViewById
     TextView title;
 
+    @ViewById
+    RelativeLayout just_sec_layout;
+
     UserRegistrationDetails userRegistrationDetails;
 
     ArrayList<FMCGHeaderModel> expandableListTitle;
@@ -84,18 +88,18 @@ public class FMCGRegistrationActivity extends BaseActivity {
                 expandableListDetail = getFmcgData();
                 title.setText(getString(R.string.select_services_you_provide));
                 break;
-            case Constants.SERVICE_CATEGORY:
-                expandableListDetail = getServicesCategoryData();
-                title.setText(getString(R.string.select_services_categories));
-                break;
-            case Constants.SERVICE_BRAND:
-                expandableListDetail = getServicesBrandData(userRegistrationDetails);
-                title.setText(getString(R.string.select_brand_you_select));
-                break;
             case Constants.FMCG_BRANDS:
                 makeFMCGBrandCall();
                 title.setText(getString(R.string.select_brand_you_select));
                 break;
+//            case Constants.SERVICE_CATEGORY:
+//                expandableListDetail = getServicesCategoryData();
+//                title.setText(getString(R.string.select_services_categories));
+//                break;
+//            case Constants.SERVICE_BRAND:
+//                expandableListDetail = getServicesBrandData(userRegistrationDetails);
+//                title.setText(getString(R.string.select_brand_you_select));
+//                break;
         }
 
         if (expandableListDetail != null) {
@@ -108,6 +112,9 @@ public class FMCGRegistrationActivity extends BaseActivity {
     }
 
     private void makeFMCGBrandCall() {
+
+        just_sec_layout.setVisibility(View.VISIBLE);
+
         if (userRegistrationDetails != null) {
             HashMap<String, ArrayList<String>> fmcgCategoriesSelected = userRegistrationDetails.getFmcgCategoriesSelected();
             String commaSeparatedSubCategories = "";
@@ -155,6 +162,8 @@ public class FMCGRegistrationActivity extends BaseActivity {
                             fmcgExpandableAdapter = new FMCGExpandableAdapter(FMCGRegistrationActivity.this, expandableListTitle, expandableListDetail);
                             expandable_list.setAdapter(fmcgExpandableAdapter);
                         }
+
+                        just_sec_layout.setVisibility(View.GONE);
 
                     } catch (JSONException e) {
 

@@ -7,6 +7,7 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,7 +46,8 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     public static class OrderHolder extends RecyclerView.ViewHolder {
         protected View mRootCard;
         protected TextView mUserName, mAddress, mItemCount, mDate, mStatus;
-        protected ImageView userImage, mStatusColor;
+        protected ImageView userImage, mStatusColor, mServiceType;
+        protected RelativeLayout userImageLayout;
 
         public OrderHolder(View view) {
             super(view);
@@ -57,6 +59,8 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             mDate = (TextView) view.findViewById(R.id.tv_date);
             mStatusColor = (ImageView) view.findViewById(R.id.iv_status_color);
             mStatus = (TextView) view.findViewById(R.id.tv_status);
+            mServiceType = (ImageView) view.findViewById(R.id.iv_service);
+            userImageLayout = (RelativeLayout) view.findViewById(R.id.rl_user_image);
         }
     }
 
@@ -87,63 +91,62 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         final OrderHolder orderHolder = (OrderHolder) holder;
         final Order model = mList.get(position);
 
+        UserModel userModel = model.getUser();
+
+        if (userModel != null) {
+
+            if (!Utility.isEmpty(userModel.getUserName()))
+                orderHolder.mUserName.setText(userModel.getUserName());
+            else if (!Utility.isEmpty(userModel.getUserEmail()))
+                orderHolder.mUserName.setText(userModel.getUserEmail());
+            else
+                orderHolder.mUserName.setText(userModel.getUserMobile());
+        }
+
+        orderHolder.mAddress.setText(model.getAddress());
+
+
+        ArrayList<OrderItem> itemList = model.getOrderItems();
+        if (itemList != null)
+            orderHolder.mItemCount.setText(itemList.size() + " Items");
+        else
+            orderHolder.mItemCount.setText("0");
+        orderHolder.mDate.setText(Utility.getFormattedDate(9, model.getOrderCreationDate(), 0));
+
+        /**
+         * Status
+         */
+        switch (model.getOrderStatus()) {
+            case Constants.STATUS_NEW_ORDER:
+                ViewCompat.setBackgroundTintList(orderHolder.mStatusColor, ContextCompat.getColorStateList(orderHolder.mStatusColor.getContext(), R.color.status_light_blue));
+                if (model.isModified())
+                    orderHolder.mStatus.setText(orderHolder.mStatusColor.getContext().getString(R.string.waiting_for_approval));
+                else
+                    orderHolder.mStatus.setText(orderHolder.mStatus.getContext().getString(R.string.new_order));
+                break;
+            case Constants.STATUS_COMPLETE:
+                ViewCompat.setBackgroundTintList(orderHolder.mStatusColor, ContextCompat.getColorStateList(orderHolder.mStatusColor.getContext(), R.color.status_green));
+                orderHolder.mStatus.setText(orderHolder.mStatus.getContext().getString(R.string.order_complete));
+                break;
+            case Constants.STATUS_APPROVED:
+                ViewCompat.setBackgroundTintList(orderHolder.mStatusColor, ContextCompat.getColorStateList(orderHolder.mStatusColor.getContext(), R.color.status_yellow));
+                orderHolder.mStatus.setText(orderHolder.mStatus.getContext().getString(R.string.in_progress));
+                break;
+            case Constants.STATUS_CANCEL:
+                ViewCompat.setBackgroundTintList(orderHolder.mStatusColor, ContextCompat.getColorStateList(orderHolder.mStatusColor.getContext(), R.color.status_red));
+                orderHolder.mStatus.setText(orderHolder.mStatus.getContext().getString(R.string.order_cancelled));
+                break;
+            case Constants.STATUS_REJECTED:
+                ViewCompat.setBackgroundTintList(orderHolder.mStatusColor, ContextCompat.getColorStateList(orderHolder.mStatusColor.getContext(), R.color.status_orange));
+                orderHolder.mStatus.setText(orderHolder.mStatus.getContext().getString(R.string.order_rejected));
+                break;
+            case Constants.STATUS_OUT_FOR_DELIVERY:
+                ViewCompat.setBackgroundTintList(orderHolder.mStatusColor, ContextCompat.getColorStateList(orderHolder.mStatusColor.getContext(), R.color.status_blue));
+                orderHolder.mStatus.setText(orderHolder.mStatus.getContext().getString(R.string.out_for_delivery));
+                break;
+        }
 
         if (model.getOrderType().equalsIgnoreCase(Constants.ORDER_TYPE_FMCG)) {
-            UserModel userModel = model.getUser();
-
-            if (userModel != null) {
-
-                if (!Utility.isEmpty(userModel.getUserName()))
-                    orderHolder.mUserName.setText(userModel.getUserName());
-                else if (!Utility.isEmpty(userModel.getUserEmail()))
-                    orderHolder.mUserName.setText(userModel.getUserEmail());
-                else
-                    orderHolder.mUserName.setText(userModel.getUserMobile());
-            }
-
-            orderHolder.mAddress.setText(model.getAddress());
-
-
-            ArrayList<OrderItem> itemList = model.getOrderItems();
-            if (itemList != null)
-                orderHolder.mItemCount.setText(itemList.size() + " Items");
-            else
-                orderHolder.mItemCount.setText("0");
-            orderHolder.mDate.setText(Utility.getFormattedDate(9, model.getOrderCreationDate(), 0));
-
-            /**
-             * Status
-             */
-            switch (model.getOrderStatus()) {
-                case Constants.STATUS_NEW_ORDER:
-                    ViewCompat.setBackgroundTintList(orderHolder.mStatusColor, ContextCompat.getColorStateList(orderHolder.mStatusColor.getContext(), R.color.status_light_blue));
-                    if (model.isModified())
-                        orderHolder.mStatus.setText(orderHolder.mStatusColor.getContext().getString(R.string.waiting_for_approval));
-                    else
-                        orderHolder.mStatus.setText(orderHolder.mStatus.getContext().getString(R.string.new_order));
-                    break;
-                case Constants.STATUS_COMPLETE:
-                    ViewCompat.setBackgroundTintList(orderHolder.mStatusColor, ContextCompat.getColorStateList(orderHolder.mStatusColor.getContext(), R.color.status_green));
-                    orderHolder.mStatus.setText(orderHolder.mStatus.getContext().getString(R.string.order_complete));
-                    break;
-                case Constants.STATUS_APPROVED:
-                    ViewCompat.setBackgroundTintList(orderHolder.mStatusColor, ContextCompat.getColorStateList(orderHolder.mStatusColor.getContext(), R.color.status_yellow));
-                    orderHolder.mStatus.setText(orderHolder.mStatus.getContext().getString(R.string.in_progress));
-                    break;
-                case Constants.STATUS_CANCEL:
-                    ViewCompat.setBackgroundTintList(orderHolder.mStatusColor, ContextCompat.getColorStateList(orderHolder.mStatusColor.getContext(), R.color.status_red));
-                    orderHolder.mStatus.setText(orderHolder.mStatus.getContext().getString(R.string.order_cancelled));
-                    break;
-                case Constants.STATUS_REJECTED:
-                    ViewCompat.setBackgroundTintList(orderHolder.mStatusColor, ContextCompat.getColorStateList(orderHolder.mStatusColor.getContext(), R.color.status_orange));
-                    orderHolder.mStatus.setText(orderHolder.mStatus.getContext().getString(R.string.order_rejected));
-                    break;
-                case Constants.STATUS_OUT_FOR_DELIVERY:
-                    ViewCompat.setBackgroundTintList(orderHolder.mStatusColor, ContextCompat.getColorStateList(orderHolder.mStatusColor.getContext(), R.color.status_blue));
-                    orderHolder.mStatus.setText(orderHolder.mStatus.getContext().getString(R.string.out_for_delivery));
-                    break;
-            }
-
             if (model.getUserId() != null) {
 
                 final String authToken = SharedPref.getString(orderHolder.userImage.getContext(), SharedPref.AUTH_TOKEN);
@@ -196,14 +199,30 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         });
             }
 
-            orderHolder.mRootCard.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (listener != null)
-                        listener.onOrderSelected(position);
-                }
-            });
+            orderHolder.mItemCount.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
+
+            orderHolder.mServiceType.setVisibility(View.GONE);
+            orderHolder.userImageLayout.setVisibility(View.VISIBLE);
+        } else {
+            orderHolder.userImageLayout.setVisibility(View.GONE);
+
+            ArrayList<OrderItem> orderItems = model.getOrderItems();
+            Picasso.get().load(Constants.BASE_URL + "assisted/" + orderItems.get(0).getServiceTypeId() + "/images")
+                    .config(Bitmap.Config.RGB_565)
+                    .into(orderHolder.mServiceType);
+            orderHolder.mServiceType.setVisibility(View.VISIBLE);
+
+            orderHolder.mItemCount.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
+            orderHolder.mItemCount.setText(orderItems.get(0).getServiceName());
         }
+
+        orderHolder.mRootCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (listener != null)
+                    listener.onOrderSelected(position);
+            }
+        });
     }
 }
 

@@ -29,6 +29,12 @@ public interface RetrofitApiInterface {
     @POST(Constants.UPDATE_PAN_OR_GSTIN)
     Call<JsonObject> updatePANorGSTINInfo(@Body HashMap<String, String> map);
 
+    @PUT(Constants.LINK_SHOP)
+    Call<JsonObject> updateExistingShop(@Body HashMap<String, String> map);
+
+    @POST(Constants.LINK_SHOP)
+    Call<JsonObject> createNewShop(@Body HashMap<String, String> map);
+
     @GET(Constants.GET_LATEST_USER_STATE)
     Call<JsonObject> getUserState(@Query(value = "data_required", encoded = true) String isDataRequired);
 

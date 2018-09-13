@@ -40,7 +40,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-medium"
-                    android:text="Arya Stark"
+                    android:text=""
                     android:textColor="@color/text_44"
                     android:textSize="@dimen/dimen_16dp" />
 
@@ -49,7 +49,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dimen_8dp"
-                    android:text="45 Transaction"
+                    android:text=""
                     android:textColor="@color/text_44"
                     android:textSize="11sp" />
 
@@ -58,7 +58,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dimen_12dp"
-                    android:text="B-350, Spaze IT Tech Park, Sector - 49, Gurugram"
+                    android:text=""
                     android:textColor="@color/text_44"
                     android:textSize="11sp" />
 

@@ -1,6 +1,7 @@
 package com.binbill.seller.Order;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -9,12 +10,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.binbill.seller.Constants;
 import com.binbill.seller.R;
 import com.binbill.seller.Utility;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -32,9 +35,11 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
 
     public static class OrderShoppingListHolder extends RecyclerView.ViewHolder {
         protected View mRootCard;
-        protected TextView mItemName, mQuantity, mItemAvailability, mMeasurement;
+        protected TextView mItemName, mQuantity, mItemAvailability, mMeasurement, mServiceName;
         protected EditText mItemPrice, mAvailableQuantity;
         protected View mDivider;
+        protected ImageView mServiceImage;
+        protected LinearLayout layoutService, layoutFMCG;
 
         public OrderShoppingListHolder(View view) {
             super(view);
@@ -46,6 +51,11 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
             mItemAvailability = (TextView) view.findViewById(R.id.tv_item_unavailable);
             mAvailableQuantity = (EditText) view.findViewById(R.id.et_quantity);
             mDivider = (View) view.findViewById(R.id.v_divider);
+            layoutService = (LinearLayout) view.findViewById(R.id.ll_service_order);
+            layoutFMCG = (LinearLayout) view.findViewById(R.id.ll_fmcg_order);
+            mServiceImage = (ImageView) view.findViewById(R.id.iv_service_image);
+            mServiceName = (TextView) view.findViewById(R.id.tv_service_name);
+
         }
     }
 
@@ -54,10 +64,12 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
     private final boolean[] updateStateMap;
     private final int mStatus;
     private final boolean orderModified;
+    private String mOrderType;
 
-    public OrderShoppingListAdapter(ArrayList<OrderItem> list, OrderItemSelectedInterface object, boolean[] updateStates, int status, boolean isModified) {
+    public OrderShoppingListAdapter(String orderType, ArrayList<OrderItem> list, OrderItemSelectedInterface object, boolean[] updateStates, int status, boolean isModified) {
         this.listener = object;
         this.mList = list;
+        this.mOrderType = orderType;
         this.updateStateMap = updateStates;
         this.mStatus = status;
         this.orderModified = isModified;
@@ -83,146 +95,178 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
         final OrderItem model = mList.get(position);
         final OrderItem.OrderSKU skuModel = model.getOrderSKU();
 
-        orderHolder.mItemName.setText(model.getItemTitle());
-        orderHolder.mQuantity.setText(model.getQuantity());
-        orderHolder.mMeasurement.setText(skuModel.getSkuMeasurementValue() + " " + skuModel.getSkuMeasurementAcronym());
+        if (mOrderType.equalsIgnoreCase(Constants.ORDER_TYPE_FMCG)) {
 
-        if (!Utility.isEmpty(model.getUpdatedPrice()))
-            orderHolder.mItemPrice.setText(model.getUpdatedPrice());
-        else
-            orderHolder.mItemPrice.setText("");
+            orderHolder.layoutService.setVisibility(View.GONE);
+            orderHolder.layoutFMCG.setVisibility(View.VISIBLE);
 
-        if (model.isUpdateItemAvailable()) {
-            orderHolder.mItemAvailability.setTag("1");
-        } else {
-            orderHolder.mItemAvailability.setTag("0");
-        }
+            orderHolder.mItemName.setText(model.getItemTitle());
+            orderHolder.mQuantity.setText(model.getQuantity());
+            orderHolder.mMeasurement.setText(skuModel.getSkuMeasurementValue() + " " + skuModel.getSkuMeasurementAcronym());
 
-        updateItemAvailability(orderHolder.mItemAvailability.getContext(), orderHolder.mItemAvailability);
+            if (!Utility.isEmpty(model.getUpdatedPrice()))
+                orderHolder.mItemPrice.setText(model.getUpdatedPrice());
+            else
+                orderHolder.mItemPrice.setText("");
 
-        orderHolder.mItemAvailability.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                boolean updateState = false;
-                TextView textView = (TextView) view;
-                String tag = (String) textView.getTag();
-                if (tag.equalsIgnoreCase("1")) {
+            if (model.isUpdateItemAvailable()) {
+                orderHolder.mItemAvailability.setTag("1");
+            } else {
+                orderHolder.mItemAvailability.setTag("0");
+            }
 
-                    updateState = true;
-                    model.setUpdateItemAvailable(false);
-                    textView.setTag("0");
-                    updateItemAvailability(orderHolder.mItemAvailability.getContext(), orderHolder.mItemAvailability);
+            updateItemAvailability(orderHolder.mItemAvailability.getContext(), orderHolder.mItemAvailability);
 
-                    orderHolder.mAvailableQuantity.setText("");
-                } else {
+            orderHolder.mItemAvailability.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    boolean updateState = false;
+                    TextView textView = (TextView) view;
+                    String tag = (String) textView.getTag();
+                    if (tag.equalsIgnoreCase("1")) {
 
-                    if (model.getUpdatedSKUMeasurement() != null) {
-                        OrderItem.OrderSKU updatedSku = model.getUpdatedSKUMeasurement();
-                        OrderItem.OrderSKU sku = model.getOrderSKU();
-                        if (updatedSku.getSkuId() == null || updatedSku.getSkuId().equalsIgnoreCase(sku.getSkuId())) {
-                            updateState = false;
+                        updateState = true;
+                        model.setUpdateItemAvailable(false);
+                        textView.setTag("0");
+                        updateItemAvailability(orderHolder.mItemAvailability.getContext(), orderHolder.mItemAvailability);
+
+                        orderHolder.mAvailableQuantity.setText("");
+                    } else {
+
+                        if (model.getUpdatedSKUMeasurement() != null) {
+                            OrderItem.OrderSKU updatedSku = model.getUpdatedSKUMeasurement();
+                            OrderItem.OrderSKU sku = model.getOrderSKU();
+                            if (updatedSku.getSkuId() == null || updatedSku.getSkuId().equalsIgnoreCase(sku.getSkuId())) {
+                                updateState = false;
+                            } else
+                                updateState = true;
                         } else
-                            updateState = true;
-                    } else
-                        updateState = false;
+                            updateState = false;
 
-                    model.setUpdateItemAvailable(true);
-                    textView.setTag("1");
-                    updateItemAvailability(orderHolder.mItemAvailability.getContext(), orderHolder.mItemAvailability);
+                        model.setUpdateItemAvailable(true);
+                        textView.setTag("1");
+                        updateItemAvailability(orderHolder.mItemAvailability.getContext(), orderHolder.mItemAvailability);
+                    }
+
+                    updateStateMap[position] = updateState;
+                    checkStateMap();
                 }
+            });
+
+            if (model.getUpdatedSKUMeasurement() != null) {
+                boolean updateState = false;
+                OrderItem.OrderSKU sku = model.getUpdatedSKUMeasurement();
+
+                orderHolder.mAvailableQuantity.setText(sku.getSkuMeasurementValue() + " " + sku.getSkuMeasurementAcronym());
+
+                OrderItem.OrderSKU requestedSku = model.getOrderSKU();
+                if (sku.getSkuId() == null || requestedSku.getSkuId().equalsIgnoreCase(sku.getSkuId())) {
+                    updateState = false;
+                } else
+                    updateState = true;
 
                 updateStateMap[position] = updateState;
                 checkStateMap();
             }
-        });
 
-        if (model.getUpdatedSKUMeasurement() != null) {
-            boolean updateState = false;
-            OrderItem.OrderSKU sku = model.getUpdatedSKUMeasurement();
+            orderHolder.mAvailableQuantity.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
 
+                    model.setUpdateItemAvailable(true);
+                    orderHolder.mItemAvailability.setTag("1");
+                    updateItemAvailability(orderHolder.mItemAvailability.getContext(), orderHolder.mItemAvailability);
 
-            orderHolder.mAvailableQuantity.setText(sku.getSkuMeasurementValue() + " " + sku.getSkuMeasurementAcronym());
-
-            OrderItem.OrderSKU requestedSku = model.getOrderSKU();
-            if (sku.getSkuId() == null || requestedSku.getSkuId().equalsIgnoreCase(sku.getSkuId())) {
-                updateState = false;
-            } else
-                updateState = true;
-
-            updateStateMap[position] = updateState;
-            checkStateMap();
-        }
-
-        orderHolder.mAvailableQuantity.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                model.setUpdateItemAvailable(true);
-                orderHolder.mItemAvailability.setTag("1");
-                updateItemAvailability(orderHolder.mItemAvailability.getContext(), orderHolder.mItemAvailability);
-
-                if (listener != null)
-                    listener.onOrderItemQuantitySelected(position);
-            }
-        });
-
-        orderHolder.mItemPrice.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-                if (!Utility.isEmpty(editable.toString())) {
-                    String newPrice = editable.toString();
-                    model.setUpdatedPrice(newPrice.trim());
+                    if (listener != null)
+                        listener.onOrderItemQuantitySelected(position);
                 }
+            });
+
+            orderHolder.mItemPrice.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+
+                    if (!Utility.isEmpty(editable.toString())) {
+                        String newPrice = editable.toString();
+                        model.setUpdatedPrice(newPrice.trim());
+                    }
+                }
+            });
+
+
+            if (mStatus == Constants.STATUS_CANCEL || mStatus == Constants.STATUS_COMPLETE ||
+                    mStatus == Constants.STATUS_OUT_FOR_DELIVERY || mStatus == Constants.STATUS_REJECTED) {
+
+                if (Utility.isEmpty(orderHolder.mItemPrice.getText().toString()))
+                    orderHolder.mItemPrice.setVisibility(View.GONE);
+                else
+                    orderHolder.mItemPrice.setVisibility(View.VISIBLE);
+
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT);
+
+                int margin20 = Utility.convertDPtoPx(orderHolder.mItemPrice.getContext(), 20);
+                int margin10 = Utility.convertDPtoPx(orderHolder.mItemPrice.getContext(), 10);
+                int margin5 = Utility.convertDPtoPx(orderHolder.mItemPrice.getContext(), 5);
+                layoutParams.setMargins(margin20, margin10, 0, 0);
+
+                orderHolder.mItemPrice.setLayoutParams(layoutParams);
+                orderHolder.mItemPrice.setPadding(margin5, margin5, margin5, margin5);
+                orderHolder.mItemPrice.setFocusable(false);
+                orderHolder.mItemPrice.setFocusableInTouchMode(false);
+                orderHolder.mItemPrice.setBackground(null);
+                orderHolder.mItemPrice.setTextColor(ContextCompat.getColor(orderHolder.mItemPrice.getContext(),
+                        R.color.colorPrimary));
             }
-        });
 
+            if (mStatus != Constants.STATUS_NEW_ORDER || orderModified) {
 
-        if (mStatus == Constants.STATUS_CANCEL || mStatus == Constants.STATUS_COMPLETE ||
-                mStatus == Constants.STATUS_OUT_FOR_DELIVERY || mStatus == Constants.STATUS_REJECTED) {
+                if (orderModified && mStatus == Constants.STATUS_NEW_ORDER) {
+                    orderHolder.mItemAvailability.setVisibility(View.VISIBLE);
+                    orderHolder.mItemAvailability.setEnabled(false);
 
-            if (Utility.isEmpty(orderHolder.mItemPrice.getText().toString()))
-                orderHolder.mItemPrice.setVisibility(View.GONE);
-            else
-                orderHolder.mItemPrice.setVisibility(View.VISIBLE);
+                    if (!model.isItemAvailability()) {
+                        orderHolder.mItemAvailability.setBackground(ContextCompat.getDrawable(orderHolder.mItemAvailability.getContext(), R.drawable.edittext_bg_red));
+                        orderHolder.mItemAvailability.setTextColor(ContextCompat.getColor(orderHolder.mItemAvailability.getContext(), R.color.color_white));
+                    } else {
+                        orderHolder.mItemAvailability.setBackground(ContextCompat.getDrawable(orderHolder.mItemAvailability.getContext(), R.drawable.edittext_bg));
+                        orderHolder.mItemAvailability.setTextColor(ContextCompat.getColor(orderHolder.mItemAvailability.getContext(), R.color.text_77));
+                    }
 
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT);
+                } else
+                    orderHolder.mItemAvailability.setVisibility(View.GONE);
 
-            int margin20 = Utility.convertDPtoPx(orderHolder.mItemPrice.getContext(), 20);
-            int margin10 = Utility.convertDPtoPx(orderHolder.mItemPrice.getContext(), 10);
-            int margin5 = Utility.convertDPtoPx(orderHolder.mItemPrice.getContext(), 5);
-            layoutParams.setMargins(margin20, margin10, 0, 0);
+                if (orderModified && mStatus == Constants.STATUS_NEW_ORDER && model.getUpdatedSKUMeasurement() != null) {
 
-            orderHolder.mItemPrice.setLayoutParams(layoutParams);
-            orderHolder.mItemPrice.setPadding(margin5, margin5, margin5, margin5);
-            orderHolder.mItemPrice.setFocusable(false);
-            orderHolder.mItemPrice.setFocusableInTouchMode(false);
-            orderHolder.mItemPrice.setBackground(null);
-            orderHolder.mItemPrice.setTextColor(ContextCompat.getColor(orderHolder.mItemPrice.getContext(),
-                    R.color.colorPrimary));
-        }
+                    orderHolder.mAvailableQuantity.setVisibility(View.VISIBLE);
+                    orderHolder.mAvailableQuantity.setEnabled(false);
+                    orderHolder.mAvailableQuantity.setTextColor(ContextCompat.getColor(orderHolder.mItemAvailability.getContext(), R.color.color_white));
+                    orderHolder.mAvailableQuantity.setBackground(ContextCompat.getDrawable(orderHolder.mItemAvailability.getContext(), R.drawable.edittext_bg_red));
 
-        if (mStatus != Constants.STATUS_NEW_ORDER || orderModified) {
+                } else
+                    orderHolder.mAvailableQuantity.setVisibility(View.GONE);
 
-            if (orderModified && mStatus == Constants.STATUS_NEW_ORDER) {
-                orderHolder.mItemAvailability.setVisibility(View.VISIBLE);
-                orderHolder.mItemAvailability.setEnabled(false);
-            } else
-                orderHolder.mItemAvailability.setVisibility(View.GONE);
-            orderHolder.mAvailableQuantity.setVisibility(View.GONE);
+                orderHolder.mDivider.setVisibility(View.GONE);
+            }
+        } else if (mOrderType.equalsIgnoreCase(Constants.ORDER_TYPE_SERVICE)) {
+            orderHolder.layoutService.setVisibility(View.VISIBLE);
+            orderHolder.layoutFMCG.setVisibility(View.GONE);
 
-            orderHolder.mDivider.setVisibility(View.GONE);
+            Picasso.get().load(Constants.BASE_URL + "assisted/" + model.getServiceTypeId() + "/images")
+                    .config(Bitmap.Config.RGB_565)
+                    .into(orderHolder.mServiceImage);
+
+            orderHolder.mServiceName.setText(model.getServiceName());
         }
     }
 
