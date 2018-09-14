@@ -133,6 +133,12 @@
         <activity
             android:name=".Registration.DuplicateSellerActivity_"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".DeliveryAgent.DeliveryAgentActivity_"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".DeliveryAgent.AddNewDeliveryAgentActivity_"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

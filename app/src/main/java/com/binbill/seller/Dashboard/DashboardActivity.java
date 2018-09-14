@@ -32,6 +32,7 @@ import com.binbill.seller.BaseActivity;
 import com.binbill.seller.Constants;
 import com.binbill.seller.CustomViews.YesNoDialogFragment;
 import com.binbill.seller.Customer.AddCustomerActivity_;
+import com.binbill.seller.DeliveryAgent.DeliveryAgentActivity_;
 import com.binbill.seller.Login.LoginActivity_;
 import com.binbill.seller.R;
 import com.binbill.seller.Registration.RegistrationResolver;
@@ -179,10 +180,22 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
 
     private void setUpListener() {
 
+        TextView manageDelivery = nav_view.findViewById(R.id.tv_manage_delivery_boy);
+        manageDelivery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (drawer_layout.isDrawerOpen(GravityCompat.START))
+                    drawer_layout.closeDrawer(GravityCompat.START);
+                startActivity(new Intent(DashboardActivity.this, DeliveryAgentActivity_.class));
+            }
+        });
+
         TextView manageCategory = nav_view.findViewById(R.id.tv_manage_category);
         manageCategory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (drawer_layout.isDrawerOpen(GravityCompat.START))
+                    drawer_layout.closeDrawer(GravityCompat.START);
                 Intent intent = RegistrationResolver.getNextIntent(DashboardActivity.this, 4);
                 if (intent != null)
                     startActivity(intent);
@@ -193,6 +206,8 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
         manageBrands.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (drawer_layout.isDrawerOpen(GravityCompat.START))
+                    drawer_layout.closeDrawer(GravityCompat.START);
                 Intent intent = RegistrationResolver.getNextIntent(DashboardActivity.this, 5);
                 if (intent != null)
                     startActivity(intent);

@@ -1,22 +1,21 @@
-package com.binbill.seller.Order;
+package com.binbill.seller.DeliveryAgent;
 
-import android.content.Intent;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.binbill.seller.BaseActivity;
-import com.binbill.seller.Constants;
 import com.binbill.seller.CustomViews.AppButton;
+import com.binbill.seller.CustomViews.ReviewsDialogFragment;
+import com.binbill.seller.CustomViews.YesNoDialogFragment;
+import com.binbill.seller.Order.DeliveryAgentAdapter;
+import com.binbill.seller.Order.DeliveryModel;
 import com.binbill.seller.R;
 import com.binbill.seller.Retrofit.RetrofitHelper;
-import com.binbill.seller.Utility;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -30,9 +29,8 @@ import org.json.JSONObject;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
-@EActivity(R.layout.activity_select_delivery_agent)
-public class SelectDeliveryAgentActivity extends BaseActivity implements DeliveryAgentAdapter.CardInteractionListener {
-
+@EActivity(R.layout.activity_delivery_agent)
+public class DeliveryAgentActivity extends BaseActivity implements DeliveryAgentAdapter.CardInteractionListener, YesNoDialogFragment.YesNoClickInterface {
     @ViewById
     Toolbar toolbar;
 
@@ -49,21 +47,17 @@ public class SelectDeliveryAgentActivity extends BaseActivity implements Deliver
     LinearLayout no_data_layout;
 
     @ViewById
-    TextView tv_no_data, iv_skip;
+    TextView tv_no_data;
 
     @ViewById
     SwipeRefreshLayout sl_pull_to_refresh;
 
     @ViewById
-    AppButton btn_no_data, btn_accept;
+    AppButton btn_no_data;
 
-    @ViewById
-    ProgressBar btn_accept_progress;
     private DeliveryAgentAdapter mAdapter;
-
-    @ViewById
-    FrameLayout fl_button;
-
+    private ArrayList<DeliveryModel> deliveryBoyList;
+    private String mDeliveryAgentIdToDelete;
 
     @AfterViews
     public void setUpView() {
@@ -76,12 +70,12 @@ public class SelectDeliveryAgentActivity extends BaseActivity implements Deliver
     private void setUpData() {
         tv_no_data.setText(getString(R.string.no_delivery_boys));
         btn_no_data.setVisibility(View.VISIBLE);
+        btn_no_data.setText(getString(R.string.add_delivery_boy));
         btn_no_data.setText(getString(R.string.skip));
     }
 
     private void makeDeliveryBoyFetchApiCall() {
 
-        fl_button.setVisibility(View.GONE);
         rv_delivery_agents.setVisibility(View.GONE);
         shimmer_view_container.setVisibility(View.VISIBLE);
         no_data_layout.setVisibility(View.GONE);
@@ -96,7 +90,6 @@ public class SelectDeliveryAgentActivity extends BaseActivity implements Deliver
             @Override
             public void onErrorResponse() {
                 showSnackBar(getString(R.string.something_went_wrong));
-                fl_button.setVisibility(View.GONE);
                 rv_delivery_agents.setVisibility(View.GONE);
                 shimmer_view_container.setVisibility(View.GONE);
                 no_data_layout.setVisibility(View.VISIBLE);
@@ -119,14 +112,12 @@ public class SelectDeliveryAgentActivity extends BaseActivity implements Deliver
                     if (deliveryList != null && deliveryList.size() > 0) {
                         showInView(deliveryList);
                     } else {
-                        fl_button.setVisibility(View.GONE);
                         rv_delivery_agents.setVisibility(View.GONE);
                         shimmer_view_container.setVisibility(View.GONE);
                         no_data_layout.setVisibility(View.VISIBLE);
                     }
                 }
             } else {
-                fl_button.setVisibility(View.GONE);
                 rv_delivery_agents.setVisibility(View.GONE);
                 shimmer_view_container.setVisibility(View.GONE);
                 no_data_layout.setVisibility(View.VISIBLE);
@@ -134,45 +125,36 @@ public class SelectDeliveryAgentActivity extends BaseActivity implements Deliver
                 showSnackBar(getString(R.string.something_went_wrong));
             }
         } catch (JSONException e) {
-            fl_button.setVisibility(View.GONE);
             rv_delivery_agents.setVisibility(View.GONE);
             shimmer_view_container.setVisibility(View.GONE);
             no_data_layout.setVisibility(View.VISIBLE);
 
             showSnackBar(getString(R.string.something_went_wrong));
         }
-
     }
 
     private void showInView(ArrayList<DeliveryModel> deliveryList) {
+        this.deliveryBoyList = deliveryList;
         rv_delivery_agents.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         rv_delivery_agents.setLayoutManager(llm);
-        mAdapter = new DeliveryAgentAdapter(deliveryList, true, this);
+        mAdapter = new DeliveryAgentAdapter(deliveryList, false, this);
         rv_delivery_agents.setAdapter(mAdapter);
 
-        fl_button.setVisibility(View.VISIBLE);
         rv_delivery_agents.setVisibility(View.VISIBLE);
         shimmer_view_container.setVisibility(View.GONE);
         no_data_layout.setVisibility(View.GONE);
     }
 
     private void setUpListeners() {
-
         btn_no_data.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                setResult(RESULT_OK);
-                finish();
-            }
-        });
+                /**
+                 * Add delivery boy
+                 */
 
-        iv_skip.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                setResult(RESULT_OK);
-                finish();
             }
         });
 
@@ -180,26 +162,6 @@ public class SelectDeliveryAgentActivity extends BaseActivity implements Deliver
             @Override
             public void onRefresh() {
                 makeDeliveryBoyFetchApiCall();
-            }
-        });
-
-        btn_accept.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ArrayList<DeliveryModel> list = mAdapter.getUpdatedList();
-                String deliveryBoySelected = "";
-                for (DeliveryModel model : list) {
-                    if (model.isSelected())
-                        deliveryBoySelected = model.getDeliveryBoyId();
-                }
-
-                if (!Utility.isEmpty(deliveryBoySelected)) {
-                    Intent intent = new Intent();
-                    intent.putExtra(Constants.DELIVERY_AGENT_ID, deliveryBoySelected);
-                    setResult(RESULT_OK, intent);
-                    finish();
-                } else
-                    showSnackBar(getString(R.string.please_select_boy));
             }
         });
     }
@@ -210,23 +172,52 @@ public class SelectDeliveryAgentActivity extends BaseActivity implements Deliver
 
         getSupportActionBar().setTitle("");
         toolbarText.setText(getString(R.string.assign_delivery_boy));
-
-        iv_skip.setVisibility(View.VISIBLE);
     }
 
 
     @Override
     public void onShowReviews(int position) {
-
+        DeliveryModel deliveryModel = deliveryBoyList.get(position);
+        android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
+        ReviewsDialogFragment fragment = ReviewsDialogFragment.newInstance(getString(R.string.reviews_string), deliveryModel.getReviews());
+        fragment.show(fm, "ReviewsDialogFragment");
     }
 
     @Override
     public void onDeleteAgent(int position) {
-
+        mDeliveryAgentIdToDelete = deliveryBoyList.get(position).getDeliveryBoyId();
+        android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
+        YesNoDialogFragment fragment = YesNoDialogFragment.newInstance(getString(R.string.delete_agent), "Delete Agent");
+        fragment.show(fm, "YesNoDialogFragment");
     }
 
     @Override
     public void onEditAgent(int position) {
 
+    }
+
+    @Override
+    public void onOptionSelected(boolean isProceed) {
+        if (isProceed) {
+            makeDeleteAgentApiCall();
+        } else {
+            /**
+             * do nothing
+             */
+        }
+    }
+
+    private void makeDeleteAgentApiCall() {
+        new RetrofitHelper(this).deleteAssistedService(mDeliveryAgentIdToDelete, new RetrofitHelper.RetrofitCallback() {
+            @Override
+            public void onResponse(String response) {
+                makeDeliveryBoyFetchApiCall();
+            }
+
+            @Override
+            public void onErrorResponse() {
+                showSnackBar(getString(R.string.something_went_wrong));
+            }
+        });
     }
 }

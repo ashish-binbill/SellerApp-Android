@@ -10,6 +10,7 @@ import com.binbill.seller.Model.UserModel;
 import com.binbill.seller.Model.UserRegistrationDetails;
 import com.binbill.seller.Order.Order;
 import com.binbill.seller.Retrofit.RetrofitHelper;
+import com.binbill.seller.Utility;
 import com.binbill.seller.Verification.RejectReasonModel;
 import com.binbill.seller.Verification.VerificationModel;
 import com.google.gson.Gson;
@@ -235,24 +236,62 @@ public class ApiHelper {
     public static void parseAndSaveUserCategories(Context context, JSONArray categoryArray) {
 
         HashMap<String, ArrayList<String>> map = new HashMap<>();
+        HashMap<String, ArrayList<String>> brandMap = new HashMap<>();
 
         try {
             for (int i = 0; i < categoryArray.length(); i++) {
                 JSONObject categoryObject = categoryArray.getJSONObject(i);
                 String categoryId = categoryObject.getString("sub_category_id");
                 ArrayList<String> list = map.get(categoryId);
+
+                String catId = categoryObject.getString("category_4_id");
                 if (list != null)
-                    list.add(categoryObject.getString("category_4_id"));
+                    list.add(catId);
                 else {
                     list = new ArrayList<>();
-                    list.add(categoryObject.getString("category_4_id"));
+                    list.add(catId);
+                }
+
+                JSONArray brandArray = categoryObject.getJSONArray("brand_ids");
+
+                map.put(categoryId, list);
+
+                if (brandArray != null && brandArray.length() > 0)
+                    brandMap.put(catId, Utility.convert(brandArray));
+            }
+
+            UserRegistrationDetails userRegistrationDetails = AppSession.getInstance(context).getUserRegistrationDetails();
+            userRegistrationDetails.setFmcgCategoriesSelected(map);
+            userRegistrationDetails.setFmcgBrandsSelected(brandMap);
+
+            AppSession.getInstance(context).setUserRegistrationDetails(userRegistrationDetails);
+        } catch (JSONException e) {
+
+        }
+
+    }
+
+    public static void parseAndSaveUserBrands(Context context, JSONArray brandArray) {
+
+        HashMap<String, ArrayList<String>> map = new HashMap<>();
+
+        try {
+            for (int i = 0; i < brandArray.length(); i++) {
+                JSONObject categoryObject = brandArray.getJSONObject(i);
+                String categoryId = categoryObject.getString("category_4_id");
+                ArrayList<String> list = map.get(categoryId);
+                if (list != null)
+                    list.add(categoryObject.getString("brand_ids"));
+                else {
+                    list = new ArrayList<>();
+                    list.add(categoryObject.getString("brand_ids"));
                 }
 
                 map.put(categoryId, list);
             }
 
             UserRegistrationDetails userRegistrationDetails = AppSession.getInstance(context).getUserRegistrationDetails();
-            userRegistrationDetails.setFmcgCategoriesSelected(map);
+            userRegistrationDetails.setFmcgBrandsSelected(map);
         } catch (JSONException e) {
 
         }

@@ -25,6 +25,7 @@ public class FMCGChildModel implements Serializable {
     public FMCGChildModel(String nameString, String id, boolean selected) {
         this.name = nameString;
         this.userSelected = selected;
+        this.id = id;
     }
 
     public String getImageUrl() {

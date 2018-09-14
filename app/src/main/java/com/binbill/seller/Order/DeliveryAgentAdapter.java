@@ -42,13 +42,22 @@ import okhttp3.Route;
 
 public class DeliveryAgentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    public interface CardInteractionListener {
+
+        void onShowReviews(int position);
+
+        void onDeleteAgent(int position);
+
+        void onEditAgent(int position);
+    }
+
     public static class DeliveryAgentHolder extends RecyclerView.ViewHolder {
         protected View mRootCard;
         protected TextView mUserName, mReviews, statusText;
-        protected ImageView userImage, statusColor;
+        protected ImageView userImage, statusColor, editAgent, deleteAgent;
         protected AppCompatRatingBar mRating;
         protected RelativeLayout mImageLayout, mSelectedCardLayout;
-        protected LinearLayout mInfoLayout;
+        protected LinearLayout mInfoLayout, mActionLayout;
         protected ImageView mCall;
 
         public DeliveryAgentHolder(View view) {
@@ -57,6 +66,8 @@ public class DeliveryAgentAdapter extends RecyclerView.Adapter<RecyclerView.View
             mUserName = (TextView) view.findViewById(R.id.tv_user_name);
             statusText = (TextView) view.findViewById(R.id.iv_assign_count);
             statusColor = (ImageView) view.findViewById(R.id.iv_assign_color);
+            editAgent = (ImageView) view.findViewById(R.id.iv_edit);
+            deleteAgent = (ImageView) view.findViewById(R.id.iv_delete);
             mReviews = (TextView) view.findViewById(R.id.tv_reviews);
             userImage = (ImageView) view.findViewById(R.id.iv_user_image);
             mRating = (AppCompatRatingBar) view.findViewById(R.id.rb_rating);
@@ -64,14 +75,19 @@ public class DeliveryAgentAdapter extends RecyclerView.Adapter<RecyclerView.View
             mInfoLayout = (LinearLayout) view.findViewById(R.id.ll_info_layout);
             mSelectedCardLayout = (RelativeLayout) view.findViewById(R.id.card_selected);
             mCall = (ImageView) view.findViewById(R.id.iv_call);
+            mActionLayout = (LinearLayout) view.findViewById(R.id.user_actions);
 
         }
     }
 
     private ArrayList<DeliveryModel> mList;
+    private boolean mShowSelection;
+    private CardInteractionListener mListener;
 
-    public DeliveryAgentAdapter(ArrayList<DeliveryModel> list) {
+    public DeliveryAgentAdapter(ArrayList<DeliveryModel> list, boolean showSelection, CardInteractionListener context) {
         this.mList = list;
+        this.mListener = context;
+        this.mShowSelection = showSelection;
     }
 
     @Override
@@ -115,6 +131,11 @@ public class DeliveryAgentAdapter extends RecyclerView.Adapter<RecyclerView.View
             userHolder.statusText.setText(userHolder.statusColor.getContext().getString(R.string.no_task_assigned));
             userHolder.statusText.setTextColor(ContextCompat.getColor(userHolder.statusColor.getContext(), R.color.status_green));
         }
+
+        if (mShowSelection)
+            userHolder.mActionLayout.setVisibility(View.GONE);
+        else
+            userHolder.mActionLayout.setVisibility(View.VISIBLE);
 
         if (model.getProfileImage() != null) {
 
@@ -173,24 +194,46 @@ public class DeliveryAgentAdapter extends RecyclerView.Adapter<RecyclerView.View
         else
             userHolder.mSelectedCardLayout.setVisibility(View.GONE);
 
+        if (mShowSelection) {
 
-        userHolder.mImageLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                resetSelection();
-                model.setSelected(true);
-                notifyDataSetChanged();
-            }
-        });
+            userHolder.mImageLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    resetSelection();
+                    model.setSelected(true);
+                    notifyDataSetChanged();
+                }
+            });
 
-        userHolder.mInfoLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                resetSelection();
-                model.setSelected(true);
-                notifyDataSetChanged();
-            }
-        });
+            userHolder.mInfoLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    resetSelection();
+                    model.setSelected(true);
+                    notifyDataSetChanged();
+                }
+            });
+        }
+
+        if (userReviews != null && userReviews.size() > 0) {
+            userHolder.mReviews.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (mListener != null)
+                        mListener.onShowReviews(position);
+                }
+            });
+        }
+
+        if (userReviews != null && userReviews.size() > 0) {
+            userHolder.mRating.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (mListener != null)
+                        mListener.onShowReviews(position);
+                }
+            });
+        }
 
         userHolder.mCall.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -199,6 +242,24 @@ public class DeliveryAgentAdapter extends RecyclerView.Adapter<RecyclerView.View
                     Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + model.getMobile()));
                     userHolder.mCall.getContext().startActivity(intent);
                 }
+            }
+        });
+
+        userHolder.editAgent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mListener != null)
+                    mListener.onEditAgent(position);
+
+            }
+        });
+
+        userHolder.deleteAgent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (mListener != null)
+                    mListener.onDeleteAgent(position);
             }
         });
 

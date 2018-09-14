@@ -2,7 +2,6 @@ package com.binbill.seller.Registration;
 
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
@@ -131,7 +130,6 @@ public class FMCGRegistrationActivity extends BaseActivity {
             new RetrofitHelper(this).fetchBrandsFromCategories(commaSeparatedSubCategories, new RetrofitHelper.RetrofitCallback() {
                 @Override
                 public void onResponse(String response) {
-                    Log.d("SHRUTI", "data : " + response);
 
                     LinkedHashMap<FMCGHeaderModel, List<FMCGChildModel>> map = new LinkedHashMap<>();
                     try {
@@ -141,6 +139,7 @@ public class FMCGRegistrationActivity extends BaseActivity {
                         for (int i = 0; i < resultArray.length(); i++) {
                             JSONObject object = resultArray.getJSONObject(i);
                             FMCGHeaderModel model = new FMCGHeaderModel(object.getString("category_name"), object.getString("category_id"), false);
+                            model.setRefId(object.getString("ref_id"));
 
                             ArrayList<FMCGChildModel> childList = new ArrayList<>();
                             JSONArray brandNames = object.optJSONArray("brands");
@@ -166,7 +165,7 @@ public class FMCGRegistrationActivity extends BaseActivity {
                         just_sec_layout.setVisibility(View.GONE);
 
                     } catch (JSONException e) {
-
+                        just_sec_layout.setVisibility(View.GONE);
                         showSnackBar(getString(R.string.something_went_wrong));
                         finish();
                     }
@@ -175,6 +174,7 @@ public class FMCGRegistrationActivity extends BaseActivity {
 
                 @Override
                 public void onErrorResponse() {
+                    just_sec_layout.setVisibility(View.GONE);
                     showSnackBar(getString(R.string.something_went_wrong));
                     finish();
                 }
@@ -248,10 +248,105 @@ public class FMCGRegistrationActivity extends BaseActivity {
         if (isValid()) {
             btn_submit.setVisibility(View.GONE);
             btn_submit_progress.setVisibility(View.VISIBLE);
-
-            saveDataInUserRegistrationModel();
-            makeUploadDataToServerCall();
+            uploadData();
         }
+    }
+
+    private void uploadData() {
+        switch (mType) {
+            case Constants.FMCG:
+                saveDataInUserRegistrationModel();
+                makeUploadDataToServerCall();
+                break;
+            case Constants.FMCG_BRANDS:
+                saveBrandInUserRegistrationModel();
+                makeUploadDataToServerCallBrands();
+                break;
+        }
+    }
+
+    private void saveBrandInUserRegistrationModel() {
+        HashMap<FMCGHeaderModel, ArrayList<String>> checkedMap = new HashMap<>();
+        expandableListDetail = fmcgExpandableAdapter.getUpdatedModelMap();
+
+        Iterator it = expandableListDetail.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry) it.next();
+            ArrayList<FMCGChildModel> childList = (ArrayList<FMCGChildModel>) pair.getValue();
+            ArrayList<String> checkedItems = new ArrayList<>();
+            if (childList != null && childList.size() > 0)
+                for (FMCGChildModel model : childList) {
+                    if (model.isUserSelected()) {
+                        checkedItems.add(model.getId());
+                    }
+                }
+
+            if (checkedItems.size() > 0) {
+                checkedMap.put((FMCGHeaderModel) pair.getKey(), checkedItems);
+            }
+        }
+        userRegistrationDetails.setNonASCBrandsSelected(checkedMap);
+    }
+
+    private void makeUploadDataToServerCallBrands() {
+        JSONArray mapArray = new JSONArray();
+        try {
+            if (userRegistrationDetails != null) {
+                HashMap<FMCGHeaderModel, ArrayList<String>> fmcgBrandsSelected = userRegistrationDetails.getNonASCBrandsSelected();
+                Iterator it = fmcgBrandsSelected.entrySet().iterator();
+                while (it.hasNext()) {
+                    Map.Entry pair = (Map.Entry) it.next();
+                    ArrayList<FMCGChildModel> childList = (ArrayList<FMCGChildModel>) pair.getValue();
+                    JSONObject childObject = new JSONObject();
+                    childObject.put("provider_type_id", 1);
+                    childObject.put("sub_category_id", ((FMCGHeaderModel) pair.getKey()).getRefId());
+                    childObject.put("category_4_id", ((FMCGHeaderModel) pair.getKey()).getId());
+                    childObject.put("brand_ids", new JSONArray(childList));
+                    mapArray.put(childObject);
+                }
+            }
+        } catch (JSONException e) {
+
+        }
+
+        new RetrofitHelper(this).saveBrandsForSeller(mapArray, new RetrofitHelper.RetrofitCallback() {
+            @Override
+            public void onResponse(String response) {
+                btn_submit.setVisibility(View.VISIBLE);
+                btn_submit_progress.setVisibility(View.GONE);
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    if (jsonObject.optBoolean("status")) {
+
+                        JSONArray array = jsonObject.getJSONArray("seller_provider_types");
+                        ApiHelper.parseAndSaveUserBrands(FMCGRegistrationActivity.this, array);
+
+                        showSnackBar(getString(R.string.details_saved_successfully));
+
+                        new android.os.Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                onBackPressed();
+                            }
+                        }, 1000);
+                    } else {
+                        showSnackBar(getString(R.string.something_went_wrong));
+                    }
+
+                } catch (JSONException e) {
+                    showSnackBar(getString(R.string.something_went_wrong));
+                }
+
+            }
+
+            @Override
+            public void onErrorResponse() {
+                btn_submit.setVisibility(View.VISIBLE);
+                btn_submit_progress.setVisibility(View.GONE);
+
+                showSnackBar(getString(R.string.something_went_wrong));
+            }
+        });
     }
 
     private void makeUploadDataToServerCall() {
@@ -335,21 +430,14 @@ public class FMCGRegistrationActivity extends BaseActivity {
             }
         }
 
-        switch (mType) {
-            case Constants.FMCG:
-                userRegistrationDetails.setFmcgCategoriesSelected(checkedMap);
-                break;
-            case Constants.SERVICE_CATEGORY:
-                userRegistrationDetails.setNonASCCategoriesSelected(checkedMap);
-                break;
-            case Constants.SERVICE_BRAND:
-                userRegistrationDetails.setNonASCBrandsSelected(checkedMap);
-                break;
-            case Constants.FMCG_BRANDS:
-                userRegistrationDetails.setNonASCBrandsSelected(checkedMap);
-                break;
+        userRegistrationDetails.setFmcgCategoriesSelected(checkedMap);
+//            case Constants.SERVICE_CATEGORY:
+//                userRegistrationDetails.setNonASCCategoriesSelected(checkedMap);
+//                break;
+//            case Constants.SERVICE_BRAND:
+//                userRegistrationDetails.setNonASCBrandsSelected(checkedMap);
+//                break;
 
-        }
     }
 
     private boolean isValid() {

@@ -28,12 +28,16 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -44,6 +48,18 @@ import java.util.TimeZone;
  */
 
 public class Utility {
+
+    public static ArrayList<String> convert(JSONArray jArr) {
+        ArrayList<String> list = new ArrayList<String>();
+        try {
+            for (int i = 0, l = jArr.length(); i < l; i++) {
+                list.add(jArr.getString(i));
+            }
+        } catch (JSONException e) {
+        }
+
+        return list;
+    }
 
     public static void enableButton(Context context, Button button, boolean enable) {
         if (enable) {

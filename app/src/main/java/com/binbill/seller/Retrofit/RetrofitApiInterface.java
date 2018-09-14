@@ -136,6 +136,9 @@ public interface RetrofitApiInterface {
     @PUT(Constants.SAVE_CATEGORIES_FOR_SELLER)
     Call<JsonObject> saveSellerCategories(@Path(value = "seller_id", encoded = true) String sellerId,  @Body HashMap<String, String> body);
 
+    @PUT(Constants.SAVE_BRANDS_FOR_SELLER)
+    Call<JsonObject> saveSellerBrands(@Path(value = "seller_id", encoded = true) String sellerId,  @Body HashMap<String, String> body);
+
     @GET(Constants.FETCH_ORDERS)
     Call<JsonObject> fetchOrders(@Path(value = "seller_id", encoded = true) String sellerId);
 

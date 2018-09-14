@@ -36,7 +36,7 @@ public class UserRegistrationDetails implements Serializable {
 
     ArrayList<String> autoEEServices;
     HashMap<String, ArrayList<String>> nonASCCategoriesSelected;
-    HashMap<String, ArrayList<String>> nonASCBrandsSelected;
+    HashMap<FMCGHeaderModel, ArrayList<String>> nonASCBrandsSelected;
     ArrayList<String> ASCCategoriesSelected;
     ArrayList<String> ASCBrandsSelected;
 
@@ -64,7 +64,7 @@ public class UserRegistrationDetails implements Serializable {
         this.nonASCCategoriesSelected = nonASCCategoriesSelected;
     }
 
-    public void setNonASCBrandsSelected(HashMap<String, ArrayList<String>> nonASCBrandsSelected) {
+    public void setNonASCBrandsSelected(HashMap<FMCGHeaderModel, ArrayList<String>> nonASCBrandsSelected) {
         this.nonASCBrandsSelected = nonASCBrandsSelected;
     }
 
@@ -92,7 +92,7 @@ public class UserRegistrationDetails implements Serializable {
         return nonASCCategoriesSelected;
     }
 
-    public HashMap<String, ArrayList<String>> getNonASCBrandsSelected() {
+    public HashMap<FMCGHeaderModel, ArrayList<String>> getNonASCBrandsSelected() {
         return nonASCBrandsSelected;
     }
 

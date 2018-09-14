@@ -17,6 +17,8 @@ public class FMCGHeaderModel implements Serializable {
     @SerializedName("id")
     String id;
 
+    transient String refId;
+
     @SerializedName("categoryImageUrl")
     String imageUrl;
 
@@ -28,6 +30,19 @@ public class FMCGHeaderModel implements Serializable {
     public FMCGHeaderModel(String nameString, String id, boolean selected) {
         this.name = nameString;
         this.isShowSelectAll = selected;
+        this.id = id;
+    }
+
+    public String getRefId() {
+        return refId;
+    }
+
+    public void setRefId(String refId) {
+        this.refId = refId;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {
