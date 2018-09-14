@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.text.TextUtils;
 
 import java.io.File;
+import java.util.logging.Handler;
 
 public class SharedPref {
 
@@ -12,6 +13,7 @@ public class SharedPref {
     public static final String FIREBASE_TOKEN = "FIREBASE_TOKEN";
     public static final String AUTH_TOKEN = "AUTH_TOKEN";
     public static final String SELLER_ID = "SELLER_ID";
+    public static final String MOBILE = "MOBILE";
 
     private static SharedPreferences mSharedPref;
 

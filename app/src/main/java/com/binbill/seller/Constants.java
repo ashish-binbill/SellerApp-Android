@@ -14,6 +14,7 @@ public class Constants {
     public static final String GET_OTP_FOR_USER_LOGIN = "sellers/getotp";
     public static final String VERIFY_OTP_FOR_USER_LOGIN = "sellers/validate";
     public static final String UPDATE_PAN_OR_GSTIN = "sellers/init";
+    public static final String LINK_SHOP = "sellers/link";
     public static final String GET_LATEST_USER_STATE = "sellers/reference";
     public static final String UPDATE_BASIC_DETAILS = "/sellers/{id}/basic";
     public static final String GET_CITY_BY_STATE = "states/{id}/cities";
@@ -132,4 +133,11 @@ public class Constants {
     public static final String DELIVERY_AGENT_ID = "DELIVERY_AGENT_ID";
     public static final String ORDER_TYPE_FMCG = "1";
     public static final String ORDER_TYPE_SERVICE = "2";
+    public static final String MOBILE = "MOBILE";
+    public static final String SELLER_LIST = "SELLER_LIST";
+    public static final String DUPLICATE_ITEM = "DUPLICATE_ITEM";
+    public static final String GSTIN = "GSTIN";
+    public static final String PAN = "PAN";
+    public static final String NONE = "NONE";
+    public static final String ACTIVE = "1";
 }

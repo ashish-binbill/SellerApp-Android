@@ -348,27 +348,6 @@
                     android:textColor="@color/colorAccent"
                     android:textSize="@dimen/dimen_12dp" />
 
-                <EditText
-                    android:id="@+id/et_main_category"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/dimen_55dp"
-                    android:layout_below="@id/image_count"
-                    android:layout_marginTop="@dimen/dimen_15dp"
-                    android:background="@drawable/edittext_bg"
-                    android:drawableRight="@drawable/ic_dropdown"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
-                    android:hint="@string/main_category_asterisk"
-                    android:inputType="textMultiLine"
-                    android:lineSpacingExtra="-1sp"
-                    android:maxLines="3"
-                    android:minHeight="@dimen/dimen_55dp"
-                    android:paddingLeft="@dimen/dimen_12dp"
-                    android:paddingRight="@dimen/dimen_12dp"
-                    android:textColor="@color/text_44"
-                    android:textColorHint="@color/hint_color"
-                    android:textSize="@dimen/dimen_15dp" />
-
             </RelativeLayout>
         </android.support.v4.widget.NestedScrollView>
 

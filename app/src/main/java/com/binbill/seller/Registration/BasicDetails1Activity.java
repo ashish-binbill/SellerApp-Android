@@ -58,7 +58,7 @@ public class BasicDetails1Activity extends BaseActivity implements OptionListFra
     FrameLayout container;
 
     @ViewById
-    EditText et_shop_name, et_business_name, et_business_address, et_pincode, et_city, et_locality, et_upload_shop_image, et_main_category, et_state;
+    EditText et_shop_name, et_business_name, et_business_address, et_pincode, et_city, et_locality, et_upload_shop_image, et_state;
 
     @ViewById
     TextView tv_error_shop_name, view_image, image_count, tv_error_business_name, tv_error_business_address, tv_error_pincode, tv_error_city, tv_error_locality, tv_error_state;
@@ -93,8 +93,6 @@ public class BasicDetails1Activity extends BaseActivity implements OptionListFra
 
         et_business_address.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
         et_business_address.setMaxLines(3);
-        et_main_category.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
-        et_main_category.setMaxLines(3);
 
         enableDisableVerifyButton();
         Utility.hideKeyboard(this, btn_submit);
@@ -111,10 +109,8 @@ public class BasicDetails1Activity extends BaseActivity implements OptionListFra
         String state = et_state.getText().toString();
         String locality = et_locality.getText().toString();
 
-        String mainCategory = et_main_category.getText().toString();
-
         if (!Utility.isEmpty(shopName.trim()) && !Utility.isEmpty(businessName.trim()) && !Utility.isEmpty(businessAddress.trim()) &&
-                !Utility.isEmpty(city.trim()) && !Utility.isEmpty(locality) && !Utility.isEmpty(state.trim()) && !Utility.isEmpty(pincode.trim()) && !Utility.isEmpty(mainCategory.trim()))
+                !Utility.isEmpty(city.trim()) && !Utility.isEmpty(locality) && !Utility.isEmpty(state.trim()) && !Utility.isEmpty(pincode.trim()))
             Utility.enableButton(this, btn_submit, true);
         else
             Utility.enableButton(this, btn_submit, false);
@@ -128,23 +124,7 @@ public class BasicDetails1Activity extends BaseActivity implements OptionListFra
                 checkCameraPermission();
             }
         });
-        et_main_category.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
-                Utility.hideKeyboard(BasicDetails1Activity.this, btn_submit);
-
-                ArrayList<MainCategory> list = AppSession.getInstance(BasicDetails1Activity.this).getMainCategoryList();
-                if (list != null && list.size() > 0) {
-                    OptionListFragment optionListFragment = OptionListFragment.newInstance(list, Constants.MAIN_CATEGORY);
-                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                    transaction.add(R.id.container, optionListFragment, "OptionListFragment");
-                    transaction.commitAllowingStateLoss();
-                    container.setVisibility(View.VISIBLE);
-                    scroll_view.setVisibility(View.GONE);
-                }
-            }
-        });
 
         et_state.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -517,16 +497,6 @@ public class BasicDetails1Activity extends BaseActivity implements OptionListFra
     public void onListItemSelected(Object item, int identifier) {
 
         switch (identifier) {
-            case Constants.MAIN_CATEGORY:
-                MainCategory selectedItem = (MainCategory) item;
-                et_main_category.setText(selectedItem.getName());
-                userRegistrationDetails.setMainCategory(selectedItem);
-
-                container.setVisibility(View.GONE);
-                scroll_view.setVisibility(View.VISIBLE);
-                scroll_view.smoothScrollTo(0, et_main_category.getBottom());
-
-                break;
             case Constants.STATES:
                 StateCityModel selectedObject = (StateCityModel) item;
                 mStateSelected = selectedObject;

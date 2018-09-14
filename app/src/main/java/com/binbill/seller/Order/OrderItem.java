@@ -43,6 +43,20 @@ public class OrderItem implements Serializable {
     @SerializedName("updated_measurement")
     OrderSKU updatedSKUMeasurement;
 
+    @SerializedName("service_name")
+    String serviceName;
+
+    @SerializedName("service_type_id")
+    String serviceTypeId;
+
+    public String getServiceTypeId() {
+        return serviceTypeId;
+    }
+
+    public String getServiceName() {
+        return serviceName;
+    }
+
     transient boolean updateItemAvailable = true;
 
     public String getUpdatedPrice() {

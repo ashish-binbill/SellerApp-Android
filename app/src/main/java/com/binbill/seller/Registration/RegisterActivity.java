@@ -4,15 +4,18 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -20,6 +23,7 @@ import com.binbill.seller.AppSession;
 import com.binbill.seller.BaseActivity;
 import com.binbill.seller.Constants;
 import com.binbill.seller.CustomViews.AppButton;
+import com.binbill.seller.Model.MainCategory;
 import com.binbill.seller.Model.UserRegistrationDetails;
 import com.binbill.seller.R;
 import com.binbill.seller.Retrofit.RetrofitHelper;
@@ -30,14 +34,16 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 
 @EActivity(R.layout.activity_register)
-public class RegisterActivity extends BaseActivity {
+public class RegisterActivity extends BaseActivity  implements OptionListFragment.OnOptionListInteractionListener{
 
     @ViewById
     Toolbar toolbar;
@@ -52,13 +58,16 @@ public class RegisterActivity extends BaseActivity {
     EditText et_email, et_pan, et_gstin;
 
     @ViewById
-    TextView tv_error_email, tv_error_pan, tv_error_gstin, btn_login_now;
+    TextView tv_error_email, tv_error_pan, tv_error_gstin, btn_login_now, et_main_category;
 
     @ViewById
     AppButton btn_register_now;
 
     @ViewById
     LinearLayout btn_register_progress;
+
+    @ViewById
+    FrameLayout container;
 
     UserRegistrationDetails userRegistrationDetails;
 
@@ -67,6 +76,9 @@ public class RegisterActivity extends BaseActivity {
         userRegistrationDetails = AppSession.getInstance(this).getUserRegistrationDetails();
         setUpToolbar();
         setUpListeners();
+
+        et_main_category.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+        et_main_category.setMaxLines(3);
 
         enableDisableRegisterButton();
     }
@@ -126,6 +138,24 @@ public class RegisterActivity extends BaseActivity {
             }
         });
 
+        et_main_category.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Utility.hideKeyboard(RegisterActivity.this, btn_register_now);
+
+                ArrayList<MainCategory> list = AppSession.getInstance(RegisterActivity.this).getMainCategoryList();
+                if (list != null && list.size() > 0) {
+                    OptionListFragment optionListFragment = OptionListFragment.newInstance(list, Constants.MAIN_CATEGORY);
+                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                    transaction.add(R.id.container, optionListFragment, "OptionListFragment");
+                    transaction.commitAllowingStateLoss();
+                    container.setVisibility(View.VISIBLE);
+                    scroll_view.setVisibility(View.GONE);
+                }
+            }
+        });
+
 
     }
 
@@ -136,7 +166,7 @@ public class RegisterActivity extends BaseActivity {
             btn_register_now.setVisibility(View.GONE);
             btn_register_progress.setVisibility(View.VISIBLE);
 
-            checkPermission();
+            makeRegisterCall();
         }
     }
 
@@ -146,23 +176,7 @@ public class RegisterActivity extends BaseActivity {
         finish();
     }
 
-    private void checkPermission() {
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.READ_SMS)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.READ_SMS)) {
-            }
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.READ_SMS},
-                    Constants.PERMISSION_READ_SMS);
-        } else {
-            makeSendOTPRequest();
-        }
-    }
-
-    private void makeSendOTPRequest() {
+    private void makeRegisterCall() {
 
         saveUserProfileLocally();
 
@@ -174,6 +188,8 @@ public class RegisterActivity extends BaseActivity {
             map.put("gstin", userRegistrationDetails.getGstin());
         if (!Utility.isEmpty(userRegistrationDetails.getPan()))
             map.put("pan", userRegistrationDetails.getPan());
+        if (userRegistrationDetails.getMainCategory() != null && !Utility.isEmpty(userRegistrationDetails.getMainCategory().getId()))
+            map.put("category_id", userRegistrationDetails.getMainCategory().getId());
 
         new RetrofitHelper(this).updatePanGstinInfo(map, new RetrofitHelper.RetrofitCallback() {
             @Override
@@ -202,17 +218,57 @@ public class RegisterActivity extends BaseActivity {
             if (jsonObject.getBoolean("status")) {
 
                 JSONObject sellerDetails = jsonObject.optJSONObject("seller_detail");
-                if (sellerDetails != null && !Utility.isEmpty("seller_detail")) {
+                if (sellerDetails != null) {
                     String sellerId = sellerDetails.optString("id");
                     userRegistrationDetails.setId(sellerId);
                     AppSession.getInstance(this).setUserRegistrationDetails(userRegistrationDetails);
 
                     SharedPref.putString(this, SharedPref.SELLER_ID, sellerId);
-                }
 
-                int registrationIndex = getIntent().getIntExtra(Constants.REGISTRATION_INDEX, -1);
-                Intent intent = RegistrationResolver.getNextIntent(this, registrationIndex);
-                startActivity(intent);
+                    int registrationIndex = getIntent().getIntExtra(Constants.REGISTRATION_INDEX, -1);
+                    Intent intent = RegistrationResolver.getNextIntent(this, registrationIndex);
+                    startActivity(intent);
+                } else {
+                    /**
+                     * Check if seller already exists
+                     */
+                    JSONArray sellerArray = jsonObject.optJSONArray("existing_sellers");
+                    if (sellerArray != null) {
+                        ArrayList<Seller> sellerList = new ArrayList<>();
+                        for (int i = 0; i < sellerArray.length(); i++) {
+                            JSONObject object = sellerArray.getJSONObject(i);
+                            Seller seller = new Seller();
+                            seller.setId(object.optString("id"));
+                            seller.setName(object.optString("seller_name"));
+                            seller.setAddress(object.optString("address"));
+
+                            sellerList.add(seller);
+                        }
+
+                        Intent duplicateIntent = new Intent(RegisterActivity.this, DuplicateSellerActivity_.class);
+                        duplicateIntent.putExtra(Constants.SELLER_LIST, sellerList);
+
+                        if (!Utility.isEmpty(userRegistrationDetails.getEmail()))
+                            duplicateIntent.putExtra("email", userRegistrationDetails.getEmail());
+                        if (!Utility.isEmpty(userRegistrationDetails.getGstin()))
+                            duplicateIntent.putExtra("gstin", userRegistrationDetails.getGstin());
+                        if (!Utility.isEmpty(userRegistrationDetails.getPan()))
+                            duplicateIntent.putExtra("pan", userRegistrationDetails.getPan());
+                        if (userRegistrationDetails.getMainCategory() != null && !Utility.isEmpty(userRegistrationDetails.getMainCategory().getId()))
+                            duplicateIntent.putExtra("category_id", userRegistrationDetails.getMainCategory().getId());
+
+                        if (!Utility.isEmpty(et_gstin.getText().toString()))
+                            duplicateIntent.putExtra(Constants.DUPLICATE_ITEM, Constants.GSTIN);
+                        else if (!Utility.isEmpty(et_pan.getText().toString()))
+                            duplicateIntent.putExtra(Constants.DUPLICATE_ITEM, Constants.PAN);
+                        else
+                            duplicateIntent.putExtra(Constants.DUPLICATE_ITEM, Constants.NONE);
+
+                        startActivity(duplicateIntent);
+
+                    } else
+                        handleError();
+                }
 
                 btn_register_now.setVisibility(View.VISIBLE);
                 btn_register_progress.setVisibility(View.GONE);
@@ -233,21 +289,6 @@ public class RegisterActivity extends BaseActivity {
 
         AppSession.getInstance(this).setUserRegistrationDetails(userRegistrationDetails);
     }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case Constants.PERMISSION_READ_SMS: {
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    makeSendOTPRequest();
-                } else {
-                    makeSendOTPRequest();
-                }
-            }
-        }
-    }
-
 
     private boolean isValidDetails() {
 
@@ -308,7 +349,9 @@ public class RegisterActivity extends BaseActivity {
         String pan = et_pan.getText().toString();
         String gstin = et_gstin.getText().toString();
 
-        if ((!Utility.isEmpty(pan) || !Utility.isEmpty(gstin)))
+        String mainCategory = et_main_category.getText().toString();
+
+        if ((!Utility.isEmpty(pan) || !Utility.isEmpty(gstin)) &&  !Utility.isEmpty(mainCategory.trim()))
             Utility.enableButton(this, btn_register_now, true);
         else
             Utility.enableButton(this, btn_register_now, false);
@@ -325,5 +368,33 @@ public class RegisterActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+    }
+
+    @Override
+    public void onListItemSelected(Object item, int identifier) {
+        switch (identifier) {
+            case Constants.MAIN_CATEGORY:
+                MainCategory selectedItem = (MainCategory) item;
+                et_main_category.setText(selectedItem.getName());
+                userRegistrationDetails.setMainCategory(selectedItem);
+
+                container.setVisibility(View.GONE);
+                scroll_view.setVisibility(View.VISIBLE);
+                scroll_view.smoothScrollTo(0, et_main_category.getBottom());
+
+                break;
+        }
+    }
+
+    @Override
+    public void onCancel() {
+        container.setVisibility(View.GONE);
+        scroll_view.setVisibility(View.VISIBLE);
+
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag("OptionListFragment");
+        if (fragment != null)
+            getSupportFragmentManager().beginTransaction().remove(fragment).commit();
+
+        enableDisableRegisterButton();
     }
 }

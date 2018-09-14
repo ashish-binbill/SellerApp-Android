@@ -209,7 +209,7 @@
     <string name="view_attachment">View Attachment</string>
     <string name="new_order">New Order</string>
     <string name="my_order">Orders</string>
-    <string name="order_complete">Complete</string>
+    <string name="order_complete">Completed</string>
     <string name="no_active_orders">No active orders for now.</string>
     <string name="no_past_orders">No Past Order history available.</string>
     <string name="in_progress">In Progress</string>
@@ -240,5 +240,9 @@
     <string name="reviews_string">Reviews</string>
     <string name="details_saved_successfully">Details saved successfully</string>
     <string name="auto_reading_your_otp">Auto reading your OTP</string>
+    <string name="create_new_shop">Create New Shop</string>
+    <string name="found_shop">Found shop with same %1$s Number. Select from below.</string>
+    <string name="active">Active</string>
+    <string name="verified">Verified</string>
     >
 </resources>

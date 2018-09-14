@@ -177,89 +177,94 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
         btn_decline.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                btn_decline.setVisibility(View.GONE);
-                btn_decline_progress.setVisibility(View.VISIBLE);
+                    btn_decline.setVisibility(View.GONE);
+                    btn_decline_progress.setVisibility(View.VISIBLE);
 
-                makeDeclineOrderCall();
+                    makeDeclineOrderCall();
             }
         });
 
         btn_accept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String textOnButton = btn_accept.getText().toString();
-                ArrayList<OrderItem> updatedList = mAdapter.getUpdatedOrderList();
-                for (OrderItem orderItem : updatedList) {
-                    orderItem.setItemAvailability(orderItem.isUpdateItemAvailable());
-                }
-                if (textOnButton.equalsIgnoreCase(getString(R.string.send_for_approval))) {
-                    /**
-                     * Modification call
-                     */
-                    Gson gson = new Gson();
-                    Type type = new TypeToken<List<OrderItem>>() {
-                    }.getType();
-                    String json = gson.toJson(updatedList, type);
-                    btn_accept.setVisibility(View.GONE);
-                    btn_accept_progress.setVisibility(View.VISIBLE);
-                    new RetrofitHelper(OrderDetailsActivity.this).sendOrderModificationCall(orderDetails.getOrderId(), orderDetails.getUserId(), json, new RetrofitHelper.RetrofitCallback() {
-                        @Override
-                        public void onResponse(String response) {
-                            btn_accept.setVisibility(View.VISIBLE);
-                            btn_accept_progress.setVisibility(View.GONE);
-                            handleApiResponse(response);
-                        }
 
-                        @Override
-                        public void onErrorResponse() {
-                            btn_accept.setVisibility(View.GONE);
-                            btn_accept_progress.setVisibility(View.VISIBLE);
-                            shimmer_view_container.setVisibility(View.GONE);
+                if (orderDetails.getOrderType().equalsIgnoreCase(Constants.ORDER_TYPE_FMCG)) {
+                    String textOnButton = btn_accept.getText().toString();
+                    ArrayList<OrderItem> updatedList = mAdapter.getUpdatedOrderList();
+                    for (OrderItem orderItem : updatedList) {
+                        orderItem.setItemAvailability(orderItem.isUpdateItemAvailable());
+                    }
+                    if (textOnButton.equalsIgnoreCase(getString(R.string.send_for_approval))) {
+                        /**
+                         * Modification call
+                         */
+                        Gson gson = new Gson();
+                        Type type = new TypeToken<List<OrderItem>>() {
+                        }.getType();
+                        String json = gson.toJson(updatedList, type);
+                        btn_accept.setVisibility(View.GONE);
+                        btn_accept_progress.setVisibility(View.VISIBLE);
+                        new RetrofitHelper(OrderDetailsActivity.this).sendOrderModificationCall(orderDetails.getOrderId(), orderDetails.getUserId(), json, new RetrofitHelper.RetrofitCallback() {
+                            @Override
+                            public void onResponse(String response) {
+                                btn_accept.setVisibility(View.VISIBLE);
+                                btn_accept_progress.setVisibility(View.GONE);
+                                handleApiResponse(response);
+                            }
 
-                            showSnackBar(getString(R.string.something_went_wrong));
-                            finish();
-                        }
-                    });
+                            @Override
+                            public void onErrorResponse() {
+                                btn_accept.setVisibility(View.GONE);
+                                btn_accept_progress.setVisibility(View.VISIBLE);
+                                shimmer_view_container.setVisibility(View.GONE);
+
+                                showSnackBar(getString(R.string.something_went_wrong));
+                                finish();
+                            }
+                        });
+
+                    } else if (textOnButton.equalsIgnoreCase(getString(R.string.accept))) {
+                        /**
+                         * Approval call
+                         */
+
+                        Gson gson = new Gson();
+                        Type type = new TypeToken<List<OrderItem>>() {
+                        }.getType();
+                        String json = gson.toJson(updatedList, type);
 
 
-                } else if (textOnButton.equalsIgnoreCase(getString(R.string.accept))) {
-                    /**
-                     * Approval call
-                     */
+                        new RetrofitHelper(OrderDetailsActivity.this).sendOrderApprovalCall(orderDetails.getOrderId(), orderDetails.getUserId(), json, new RetrofitHelper.RetrofitCallback() {
+                            @Override
+                            public void onResponse(String response) {
+                                btn_accept.setVisibility(View.VISIBLE);
+                                btn_accept_progress.setVisibility(View.GONE);
+                                handleApiResponse(response);
+                            }
 
-                    Gson gson = new Gson();
-                    Type type = new TypeToken<List<OrderItem>>() {
-                    }.getType();
-                    String json = gson.toJson(updatedList, type);
+                            @Override
+                            public void onErrorResponse() {
+                                btn_accept.setVisibility(View.GONE);
+                                btn_accept_progress.setVisibility(View.VISIBLE);
+                                shimmer_view_container.setVisibility(View.GONE);
 
+                                showSnackBar(getString(R.string.something_went_wrong));
+                                finish();
+                            }
+                        });
 
-                    new RetrofitHelper(OrderDetailsActivity.this).sendOrderApprovalCall(orderDetails.getOrderId(), orderDetails.getUserId(), json, new RetrofitHelper.RetrofitCallback() {
-                        @Override
-                        public void onResponse(String response) {
-                            btn_accept.setVisibility(View.VISIBLE);
-                            btn_accept_progress.setVisibility(View.GONE);
-                            handleApiResponse(response);
-                        }
+                    } else if (textOnButton.equalsIgnoreCase(getString(R.string.out_for_delivery))) {
+                        /**
+                         * Out for delivery call
+                         */
 
-                        @Override
-                        public void onErrorResponse() {
-                            btn_accept.setVisibility(View.GONE);
-                            btn_accept_progress.setVisibility(View.VISIBLE);
-                            shimmer_view_container.setVisibility(View.GONE);
+                        Intent intent = new Intent(OrderDetailsActivity.this, SelectDeliveryAgentActivity_.class);
+                        startActivityForResult(intent, Constants.INTENT_CALL_SELECT_DELIVERY_AGENT);
 
-                            showSnackBar(getString(R.string.something_went_wrong));
-                            finish();
-                        }
-                    });
+                    }
 
-                } else if (textOnButton.equalsIgnoreCase(getString(R.string.out_for_delivery))) {
-                    /**
-                     * Out for delivery call
-                     */
-
-                    Intent intent = new Intent(OrderDetailsActivity.this, SelectDeliveryAgentActivity_.class);
-                    startActivityForResult(intent, Constants.INTENT_CALL_SELECT_DELIVERY_AGENT);
-
+                }else if(orderDetails.getOrderType().equalsIgnoreCase(Constants.ORDER_TYPE_SERVICE)){
+                    
                 }
             }
         });
@@ -466,7 +471,8 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
         LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         rv_shopping_list.setLayoutManager(llm);
-        mAdapter = new OrderShoppingListAdapter(orderDetails.getOrderItems(), this, mUpdateStateArray, orderDetails.getOrderStatus(), orderDetails.isModified());
+
+        mAdapter = new OrderShoppingListAdapter(orderDetails.getOrderType(), orderDetails.getOrderItems(), this, mUpdateStateArray, orderDetails.getOrderStatus(), orderDetails.isModified());
         rv_shopping_list.setAdapter(mAdapter);
 
         nested_scroll_view.fullScroll(View.FOCUS_UP);
