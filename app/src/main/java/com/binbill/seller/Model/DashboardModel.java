@@ -25,6 +25,20 @@ public class DashboardModel implements Serializable {
     @SerializedName("notification_count")
     String notificationCount;
 
+    @SerializedName("is_assisted")
+    boolean assisted;
+
+    @SerializedName("is_fmcg")
+    boolean fmcg;
+
+    public boolean isAssisted() {
+        return assisted;
+    }
+
+    public boolean isFmcg() {
+        return fmcg;
+    }
+
     public String getConsumerCount() {
         return consumerCount;
     }

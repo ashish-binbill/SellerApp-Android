@@ -63,6 +63,7 @@ public class AdditionalServiceDialogFragment extends DialogFragment {
 
         final Spinner type = (Spinner) view.findViewById(R.id.et_type_of_service);
         final EditText price = (EditText) view.findViewById(R.id.et_price);
+        final EditText priceOver = (EditText) view.findViewById(R.id.et_price_over);
 
         final ArrayList<AssistedUserModel.ServiceType> mServiceTypes = AppSession.getInstance(getActivity()).getAssistedServiceTypes();
 
@@ -101,7 +102,7 @@ public class AdditionalServiceDialogFragment extends DialogFragment {
                     String linkId = checkIfLinkIdRequired((String) type.getSelectedItem(), assistedUserModel);
 
                     if (listener != null && !Utility.isEmpty(typeId)) {
-                        listener.onAddService(assistedServiceId, linkId, typeId, price.getText().toString());
+                        listener.onAddService(assistedServiceId, linkId, typeId, price.getText().toString(), priceOver.getText().toString());
                         dismiss();
                     } else
                         dismiss();
@@ -138,6 +139,6 @@ public class AdditionalServiceDialogFragment extends DialogFragment {
     }
 
     public interface AdditionalServiceClickInterface {
-        void onAddService(String assistedServiceId, String linkId, String serviceTypeId, String price);
+        void onAddService(String assistedServiceId, String linkId, String serviceTypeId, String price, String overTimePrice);
     }
 }

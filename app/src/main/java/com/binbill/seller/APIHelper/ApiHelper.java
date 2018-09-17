@@ -22,6 +22,7 @@ import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 /**
@@ -252,7 +253,7 @@ public class ApiHelper {
                     list.add(catId);
                 }
 
-                JSONArray brandArray = categoryObject.getJSONArray("brand_ids");
+                JSONArray brandArray = categoryObject.optJSONArray("brand_ids");
 
                 map.put(categoryId, list);
 
@@ -267,6 +268,7 @@ public class ApiHelper {
             AppSession.getInstance(context).setUserRegistrationDetails(userRegistrationDetails);
         } catch (JSONException e) {
 
+            e.printStackTrace();
         }
 
     }
@@ -280,18 +282,14 @@ public class ApiHelper {
                 JSONObject categoryObject = brandArray.getJSONObject(i);
                 String categoryId = categoryObject.getString("category_4_id");
                 ArrayList<String> list = map.get(categoryId);
-                if (list != null)
-                    list.add(categoryObject.getString("brand_ids"));
-                else {
-                    list = new ArrayList<>();
-                    list.add(categoryObject.getString("brand_ids"));
-                }
+                list = new ArrayList<>(Arrays.asList(categoryObject.getString("brand_ids").split(",")));
 
                 map.put(categoryId, list);
             }
 
             UserRegistrationDetails userRegistrationDetails = AppSession.getInstance(context).getUserRegistrationDetails();
             userRegistrationDetails.setFmcgBrandsSelected(map);
+            AppSession.getInstance(context).setUserRegistrationDetails(userRegistrationDetails);
         } catch (JSONException e) {
 
         }

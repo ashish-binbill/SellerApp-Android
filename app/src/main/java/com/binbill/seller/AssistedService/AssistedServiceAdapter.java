@@ -188,8 +188,15 @@ public class AssistedServiceAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             for (AssistedUserModel.ServiceType serviceType : serviceTypes) {
                 LayoutInflater inflater = LayoutInflater.from(userHolder.mUserName.getContext());
                 TextView inflatedLayout = (TextView) inflater.inflate(R.layout.item_tag_view, null, false);
-                if (serviceType.getPrice() != null)
-                    inflatedLayout.setText(serviceType.getServiceType() + " ( Rs " + serviceType.getPrice().getValue() + " )");
+                if (serviceType.getPrice() != null) {
+                    AssistedUserModel.Price basePrice = serviceType.getPrice().get(0);
+                    if (serviceType.getPrice().size() > 1) {
+                        AssistedUserModel.Price overTime = serviceType.getPrice().get(1);
+                        inflatedLayout.setText(serviceType.getServiceType() + " ( Rs " + basePrice.getValue() + ", " + overTime.getValue() + " )");
+                    } else {
+                        inflatedLayout.setText(serviceType.getServiceType() + " ( Rs " + basePrice.getValue() + " )");
+                    }
+                }
                 userHolder.mTagLayout.addView(inflatedLayout);
             }
         }

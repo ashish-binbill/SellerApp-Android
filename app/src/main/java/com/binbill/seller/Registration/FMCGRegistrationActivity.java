@@ -136,17 +136,28 @@ public class FMCGRegistrationActivity extends BaseActivity {
                         JSONObject responseObject = new JSONObject(response);
                         JSONArray resultArray = responseObject.getJSONArray("result");
 
+                        HashMap<String, ArrayList<String>> fmcgSelectedMap = userRegistrationDetails.getFmcgBrandsSelected();
+
                         for (int i = 0; i < resultArray.length(); i++) {
                             JSONObject object = resultArray.getJSONObject(i);
                             FMCGHeaderModel model = new FMCGHeaderModel(object.getString("category_name"), object.getString("category_id"), false);
                             model.setRefId(object.getString("ref_id"));
 
                             ArrayList<FMCGChildModel> childList = new ArrayList<>();
+
+                            ArrayList<String> selectedBrands = fmcgSelectedMap.get(object.getString("category_id"));
                             JSONArray brandNames = object.optJSONArray("brands");
                             if (brandNames != null && brandNames.length() > 0) {
                                 for (int j = 0; j < brandNames.length(); j++) {
                                     JSONObject brandObject = brandNames.getJSONObject(j);
-                                    FMCGChildModel childModel = new FMCGChildModel(brandObject.getString("brandName"), brandObject.getString("id"), false);
+                                    boolean selected = false;
+
+                                    if (selectedBrands != null && selectedBrands.size() > 0)
+                                        for (String selectedBrandId : selectedBrands) {
+                                            if (selectedBrandId.equalsIgnoreCase(brandObject.getString("id")))
+                                                selected = true;
+                                        }
+                                    FMCGChildModel childModel = new FMCGChildModel(brandObject.getString("brandName"), brandObject.getString("id"), selected);
                                     childList.add(childModel);
                                 }
                                 map.put(model, (List) childList);
@@ -443,6 +454,9 @@ public class FMCGRegistrationActivity extends BaseActivity {
     private boolean isValid() {
         expandableListDetail = fmcgExpandableAdapter.getUpdatedModelMap();
 
+        /**
+         * Always true
+         */
         Iterator it = expandableListDetail.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry pair = (Map.Entry) it.next();
@@ -453,7 +467,7 @@ public class FMCGRegistrationActivity extends BaseActivity {
                 }
             }
         }
-        return false;
+        return true;
     }
 
     public LinkedHashMap<FMCGHeaderModel, List<FMCGChildModel>> getFmcgData() {

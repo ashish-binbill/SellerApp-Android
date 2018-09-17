@@ -45,6 +45,34 @@ public  class VerificationModel implements Serializable {
     @SerializedName("user_id")
     String userId;
 
+    @SerializedName("total_credits")
+    String totalCredits;
+
+    @SerializedName("redeemed_credits")
+    String redeemedCredits;
+
+    @SerializedName("total_loyalty")
+    String totalLoyalty;
+
+    @SerializedName("redeemed_loyalty")
+    String redeemedLoyalty;
+
+    public String getRedeemedCredits() {
+        return redeemedCredits;
+    }
+
+    public String getRedeemedLoyalty() {
+        return redeemedLoyalty;
+    }
+
+    public String getTotalCredits() {
+        return totalCredits;
+    }
+
+    public String getTotalLoyalty() {
+        return totalLoyalty;
+    }
+
     public String getCashbackId() {
         return cashbackId;
     }

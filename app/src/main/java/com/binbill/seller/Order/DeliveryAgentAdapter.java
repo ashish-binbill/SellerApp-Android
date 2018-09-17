@@ -53,7 +53,7 @@ public class DeliveryAgentAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     public static class DeliveryAgentHolder extends RecyclerView.ViewHolder {
         protected View mRootCard;
-        protected TextView mUserName, mReviews, statusText;
+        protected TextView mUserName, mReviews, statusText, mBasePrice, mAdditionalPrice, ratingText;
         protected ImageView userImage, statusColor, editAgent, deleteAgent;
         protected AppCompatRatingBar mRating;
         protected RelativeLayout mImageLayout, mSelectedCardLayout;
@@ -67,6 +67,7 @@ public class DeliveryAgentAdapter extends RecyclerView.Adapter<RecyclerView.View
             statusText = (TextView) view.findViewById(R.id.iv_assign_count);
             statusColor = (ImageView) view.findViewById(R.id.iv_assign_color);
             editAgent = (ImageView) view.findViewById(R.id.iv_edit);
+            ratingText = (TextView) view.findViewById(R.id.tv_rating);
             deleteAgent = (ImageView) view.findViewById(R.id.iv_delete);
             mReviews = (TextView) view.findViewById(R.id.tv_reviews);
             userImage = (ImageView) view.findViewById(R.id.iv_user_image);
@@ -76,18 +77,30 @@ public class DeliveryAgentAdapter extends RecyclerView.Adapter<RecyclerView.View
             mSelectedCardLayout = (RelativeLayout) view.findViewById(R.id.card_selected);
             mCall = (ImageView) view.findViewById(R.id.iv_call);
             mActionLayout = (LinearLayout) view.findViewById(R.id.user_actions);
+            mBasePrice = (TextView) view.findViewById(R.id.tv_base_price);
+            mAdditionalPrice = (TextView) view.findViewById(R.id.tv_additional_price);
 
         }
     }
 
     private ArrayList<DeliveryModel> mList;
-    private boolean mShowSelection;
+    private boolean mShowSelection, isServiceOrder;
     private CardInteractionListener mListener;
+    private String serviceTypeId;
 
     public DeliveryAgentAdapter(ArrayList<DeliveryModel> list, boolean showSelection, CardInteractionListener context) {
         this.mList = list;
         this.mListener = context;
         this.mShowSelection = showSelection;
+        this.isServiceOrder = false;
+    }
+
+    public DeliveryAgentAdapter(ArrayList<DeliveryModel> list, boolean showSelection, CardInteractionListener context, String serviceId) {
+        this.mList = list;
+        this.mListener = context;
+        this.mShowSelection = showSelection;
+        this.isServiceOrder = true;
+        this.serviceTypeId = serviceId;
     }
 
     @Override
@@ -115,6 +128,7 @@ public class DeliveryAgentAdapter extends RecyclerView.Adapter<RecyclerView.View
         if (!Utility.isEmpty(model.getRating()))
             rating = Float.parseFloat(model.getRating());
         userHolder.mRating.setRating(rating);
+        userHolder.ratingText.setText(userHolder.mReviews.getContext().getString(R.string.rating_value, String.valueOf(rating)));
 
         ArrayList<AssistedUserModel.Review> userReviews = model.getReviews();
         if (userReviews != null)
@@ -132,10 +146,34 @@ public class DeliveryAgentAdapter extends RecyclerView.Adapter<RecyclerView.View
             userHolder.statusText.setTextColor(ContextCompat.getColor(userHolder.statusColor.getContext(), R.color.status_green));
         }
 
-        if (mShowSelection)
+        if (mShowSelection) {
             userHolder.mActionLayout.setVisibility(View.GONE);
-        else
+        } else {
             userHolder.mActionLayout.setVisibility(View.VISIBLE);
+        }
+
+        userHolder.mBasePrice.setVisibility(View.GONE);
+        userHolder.mAdditionalPrice.setVisibility(View.GONE);
+
+        if (isServiceOrder && !Utility.isEmpty(serviceTypeId)) {
+            ArrayList<AssistedUserModel.ServiceType> serviceTypes = model.getServiceType();
+            for (AssistedUserModel.ServiceType serviceType : serviceTypes) {
+                if (serviceType.getServiceTypeId().equalsIgnoreCase(serviceTypeId)) {
+                    ArrayList<AssistedUserModel.Price> priceList = serviceType.getPrice();
+                    for (AssistedUserModel.Price price : priceList) {
+                        if (price.getPriceType().equalsIgnoreCase("1")) {
+                            userHolder.mBasePrice.setText(userHolder.mBasePrice.getContext().getString(R.string.base_price_value, price.getValue()));
+                            userHolder.mBasePrice.setVisibility(View.VISIBLE);
+                        }
+
+                        if (price.getPriceType().equalsIgnoreCase("2")) {
+                            userHolder.mAdditionalPrice.setText(userHolder.mBasePrice.getContext().getString(R.string.additional_price_value, price.getValue()));
+                            userHolder.mAdditionalPrice.setVisibility(View.VISIBLE);
+                        }
+                    }
+                }
+            }
+        }
 
         if (model.getProfileImage() != null) {
 

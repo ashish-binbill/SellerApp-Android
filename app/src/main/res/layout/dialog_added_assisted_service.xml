@@ -52,6 +52,23 @@
         android:layout_height="@dimen/dimen_55dp"
         android:layout_marginTop="@dimen/dimen_15dp"
         android:background="@drawable/edittext_bg"
+        android:hint="@string/base_price"
+        android:inputType="number"
+        android:lineSpacingExtra="-1sp"
+        android:paddingLeft="@dimen/dimen_12dp"
+        android:layout_marginRight="@dimen/dimen_20dp"
+        android:layout_marginLeft="@dimen/dimen_20dp"
+        android:paddingRight="@dimen/dimen_12dp"
+        android:textColor="@color/text_44"
+        android:textColorHint="@color/hint_color"
+        android:textSize="@dimen/dimen_15dp" />
+
+    <EditText
+        android:id="@+id/et_price_over"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_55dp"
+        android:layout_marginTop="@dimen/dimen_15dp"
+        android:background="@drawable/edittext_bg"
         android:hint="@string/price"
         android:inputType="number"
         android:lineSpacingExtra="-1sp"

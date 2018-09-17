@@ -17,6 +17,7 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -34,6 +35,8 @@ import com.binbill.seller.CustomViews.YesNoDialogFragment;
 import com.binbill.seller.Customer.AddCustomerActivity_;
 import com.binbill.seller.DeliveryAgent.DeliveryAgentActivity_;
 import com.binbill.seller.Login.LoginActivity_;
+import com.binbill.seller.Model.DashboardModel;
+import com.binbill.seller.Model.MainCategory;
 import com.binbill.seller.R;
 import com.binbill.seller.Registration.RegistrationResolver;
 import com.binbill.seller.Retrofit.RetrofitHelper;
@@ -47,11 +50,13 @@ import com.squareup.picasso.Picasso;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 
 import okhttp3.Authenticator;
 import okhttp3.OkHttpClient;
@@ -63,6 +68,9 @@ import okhttp3.Route;
 public class DashboardActivity extends BaseActivity implements YesNoDialogFragment.YesNoClickInterface,
         AdditionalServiceDialogFragment.AdditionalServiceClickInterface, NavigationView.OnNavigationItemSelectedListener {
 
+    private static final int FMCG_ASSISTED_USER = 0;
+    private static final int FMCG_ONLY_USER = 1;
+    private static final int ASSISTED_ONLY_USER = 2;
     @ViewById
     Toolbar toolbar;
 
@@ -94,6 +102,7 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
     BottomNavigationView bottom_navigation;
     private AssistedServiceFragment assistedServiceFragment;
     private MyCustomerFragment myCustomerFragment;
+    public static int sellerType;
 
     @AfterViews
     public void setUpView() {
@@ -117,6 +126,13 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
 
                         ProfileModel profileModel = new Gson().fromJson(profileJson.toString(), classType);
                         AppSession.getInstance(DashboardActivity.this).setSellerProfile(profileModel);
+
+                        JSONArray paymentModesArray = jsonObject.getJSONArray("payment_modes");
+                        classType = new TypeToken<ArrayList<MainCategory>>() {
+                        }.getType();
+
+                        ArrayList<MainCategory> paymentModes = new Gson().fromJson(paymentModesArray.toString(), classType);
+                        AppSession.getInstance(DashboardActivity.this).setPaymentModes(paymentModes);
 
                         setUpHamburger();
                     }
@@ -302,6 +318,36 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
          */
 //        Utility.disableShiftMode(bottom_navigation);
 
+        DashboardModel dashboardModel = AppSession.getInstance(this).getDashboardData();
+
+        sellerType = FMCG_ASSISTED_USER;
+
+        if (dashboardModel.isAssisted()) {
+            if (dashboardModel.isFmcg()) {
+                sellerType = FMCG_ASSISTED_USER;
+            } else
+                sellerType = ASSISTED_ONLY_USER;
+        } else {
+            if (dashboardModel.isFmcg()) {
+                sellerType = FMCG_ONLY_USER;
+            }
+        }
+
+        Menu menu = bottom_navigation.getMenu();
+        switch (sellerType) {
+            case FMCG_ASSISTED_USER:
+                break;
+            case FMCG_ONLY_USER:
+                menu.removeItem(R.id.action_assisted);
+                break;
+            case ASSISTED_ONLY_USER:
+                menu.removeItem(R.id.action_verification);
+                nav_view.findViewById(R.id.tv_manage_delivery_boy).setVisibility(View.GONE);
+                nav_view.findViewById(R.id.ll_sku_management).setVisibility(View.GONE);
+                break;
+        }
+
+
         bottom_navigation.setOnNavigationItemSelectedListener(
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
                     @Override
@@ -322,6 +368,7 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
                                 setUpToolbar(getString(R.string.verification));
 
                                 iv_notification.setVisibility(View.INVISIBLE);
+                                iv_search.setVisibility(View.GONE);
                                 break;
                             case R.id.action_chat:
                                 OrderFragment orderFragment = OrderFragment.newInstance();
@@ -329,6 +376,7 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
                                 setUpToolbar(getString(R.string.my_order));
 
                                 iv_notification.setVisibility(View.INVISIBLE);
+                                iv_search.setVisibility(View.GONE);
                                 break;
                             case R.id.action_customers:
                                 myCustomerFragment = MyCustomerFragment.newInstance();
@@ -414,9 +462,9 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
     }
 
     @Override
-    public void onAddService(String assistedServiceId, String linkId, String serviceTypeId, String price) {
+    public void onAddService(String assistedServiceId, String linkId, String serviceTypeId, String price, String overTimePrice) {
         if (bottom_navigation.getSelectedItemId() == R.id.action_assisted) {
-            assistedServiceFragment.onAddService(assistedServiceId, linkId, serviceTypeId, price);
+            assistedServiceFragment.onAddService(assistedServiceId, linkId, serviceTypeId, price, overTimePrice);
         }
     }
 

@@ -61,6 +61,7 @@ public class SplashActivity extends BaseActivity {
     }
 
     private void handleError() {
+
         Toast.makeText(this, getString(R.string.something_went_wrong), Toast.LENGTH_LONG).show();
     }
 

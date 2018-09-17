@@ -13,6 +13,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -306,7 +307,7 @@ public class VerificationFragment extends Fragment implements VerificationAdapte
         if (type == LINK_CREDIT) {
             headerTitle.setText(getString(R.string.link_credits));
             noData.setText(getString(R.string.no_credit));
-        }else if (type == LINK_POINTS) {
+        } else if (type == LINK_POINTS) {
             headerTitle.setText(getString(R.string.link_points));
             noData.setText(getString(R.string.no_points));
         }
@@ -353,6 +354,8 @@ public class VerificationFragment extends Fragment implements VerificationAdapte
                             creditId = model.getCreditId();
                     }
 
+                    Log.d("SHRUTI", "Credit Id " + creditId);
+
                     if (!Utility.isEmpty(creditId)) {
                         linkButtonProgress.setVisibility(View.VISIBLE);
                         linkButton.setVisibility(View.GONE);
@@ -361,9 +364,12 @@ public class VerificationFragment extends Fragment implements VerificationAdapte
                             if (dialog != null)
                                 dialog.dismiss();
                         } else if (type == LINK_POINTS) {
-                            makeLinkPointsApiCall(userId, creditId, jobId);
-                            if (dialog != null)
-                                dialog.dismiss();
+
+                            if (!Utility.isEmpty(creditId)) {
+                                makeLinkPointsApiCall(userId, creditId, jobId);
+                                if (dialog != null)
+                                    dialog.dismiss();
+                            }
                         }
                     }
                 }
@@ -424,7 +430,7 @@ public class VerificationFragment extends Fragment implements VerificationAdapte
 
     private void makePointsHistoryCall(final String userId, final String jobId) {
 
-        new RetrofitHelper(getActivity()).getUserLoyaltyPoints(userId, new RetrofitHelper.RetrofitCallback() {
+        new RetrofitHelper(getActivity()).getUserLoyaltyPoints(userId, jobId, new RetrofitHelper.RetrofitCallback() {
             @Override
             public void onResponse(String response) {
                 try {
@@ -460,7 +466,7 @@ public class VerificationFragment extends Fragment implements VerificationAdapte
 
     private void makeCreditHistoryCall(final String userId, final String jobId) {
 
-        new RetrofitHelper(getActivity()).getUserCredits(userId, new RetrofitHelper.RetrofitCallback() {
+        new RetrofitHelper(getActivity()).getUserCredits(userId,jobId,  new RetrofitHelper.RetrofitCallback() {
             @Override
             public void onResponse(String response) {
                 try {

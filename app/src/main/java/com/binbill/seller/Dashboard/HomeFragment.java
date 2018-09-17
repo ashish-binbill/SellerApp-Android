@@ -16,6 +16,7 @@ import com.binbill.seller.AppSession;
 import com.binbill.seller.Model.DashboardModel;
 import com.binbill.seller.Offers.OfferActivity_;
 import com.binbill.seller.R;
+import com.binbill.seller.Registration.RegistrationResolver;
 
 public class HomeFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
@@ -23,6 +24,8 @@ public class HomeFragment extends Fragment {
 
     private String mParam1;
     private String mParam2;
+
+    private static final int ASSISTED_ONLY_USER = 2;
 
 
     public HomeFragment() {
@@ -83,6 +86,20 @@ public class HomeFragment extends Fragment {
                 startActivity(new Intent(getActivity(), OfferActivity_.class));
             }
         });
+
+        CardView manageCategories = (CardView) view.findViewById(R.id.manage_categories);
+        manageCategories.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = RegistrationResolver.getNextIntent(getActivity(), 4);
+                if (intent != null)
+                    startActivity(intent);
+            }
+        });
+
+        if(DashboardActivity.sellerType == ASSISTED_ONLY_USER)
+            manageCategories.setVisibility(View.GONE);
+
     }
 
     private void setUpData() {

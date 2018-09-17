@@ -253,6 +253,7 @@ public class OTPLoginActivity extends BaseActivity {
                                             AppSession.getInstance(OTPLoginActivity.this).setDashboardData(dashboardModel);
 
                                             startActivity(intent);
+                                            finish();
                                         }
                                     } catch (JSONException e) {
                                         finish();
@@ -266,6 +267,7 @@ public class OTPLoginActivity extends BaseActivity {
                             });
                         } else {
                             startActivity(intent);
+                            finish();
                         }
 
                         btn_submit.setVisibility(View.VISIBLE);

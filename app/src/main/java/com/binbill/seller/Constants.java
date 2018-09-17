@@ -40,7 +40,7 @@ public class Constants {
     public static final String APPROVE_JOB = "sellers/{seller_id}/cashbacks/{id}/approve";
     public static final String REJECT_JOB = "sellers/{seller_id}/cashbacks/{id}/reject";
     public static final String LINK_CREDIT_WITH_JOB = "seller/{seller_id}/users/{customer_id}/credits/{credit_id}/jobs/{job_id}";
-    public static final String LINK_POINTS_WITH_JOB = "seller/{seller_id}/users/{customer_id}/points/{point_id}/jobs/{job_id}";
+    public static final String LINK_POINTS_WITH_JOB = "seller/{seller_id}/users/{customer_id}/points/{credit_id}/jobs/{job_id}";
     public static final String FETCH_USER_TRANSACTIONS = "sellers/{seller_id}/users/{customer_id}/transactions";
     public static final String FETCH_SELLER_DETAILS = "sellers/{seller_id}/details";
     public static final String FETCH_ORDERS = "sellers/{seller_id}/orders/active";
@@ -48,6 +48,7 @@ public class Constants {
     public static final String FETCH_ORDERS_BY_ID = "sellers/{seller_id}/orders/{id}";
     public static final String FETCH_SKU_BY_ID = "skus/{sku_id}/measurements";
     public static final String SEND_ORDER_FOR_APPROVAL = "sellers/{seller_id}/orders/{order_id}/modify";
+    public static final String SEND_ORDER_FOR_MODIFY_ASSISTED = "sellers/{seller_id}/assisted/{order_id}/modify";
     public static final String SEND_ORDER_ACCEPTANCE = "sellers/{seller_id}/orders/{order_id}/approve";
     public static final String SEND_ORDER_REJECTED = "sellers/{seller_id}/orders/{order_id}/reject";
     public static final String SEND_ORDER_OUT_FOR_DELIVERY = "sellers/{seller_id}/orders/{order_id}/outfordelivery";
@@ -103,6 +104,7 @@ public class Constants {
     public static final String UPLOAD_TYPE_ASSISTED_SERVICE = "3";
     public static final String UPLOAD_TYPE_SELLER_OFFER = "4";
     public static final String UPLOAD_TYPE_ASSISTED_SERVICE_PROFILE = "5";
+    public static final String UPLOAD_TYPE_ASSISTED_DELIVERY_BOY= "0";
     public static final String FILE_URI = "FILE_URI";
     public static final String TYPE = "TYPE";
     public static final String ADD_USER_FOR_OFFER = "ADD_USER_FOR_OFFER";
@@ -130,6 +132,8 @@ public class Constants {
     public static final int STATUS_CANCEL = 17;
     public static final int STATUS_REJECTED = 18;
     public static final int STATUS_OUT_FOR_DELIVERY = 19;
+    public static final int STATUS_JOB_STARTED = 20;
+    public static final int STATUS_JOB_ENDED = 21;
     public static final String ORDER_ID = "ORDER_ID";
     public static final String DELIVERY_AGENT_ID = "DELIVERY_AGENT_ID";
     public static final String ORDER_TYPE_FMCG = "1";
@@ -142,4 +146,6 @@ public class Constants {
     public static final String NONE = "NONE";
     public static final String ACTIVE = "1";
     public static final String EDIT_DELIVERY_BOY = "EDIT_DELIVERY_BOY";
+    public static final String PROFILE_MODEL = "PROFILE_MODEL";
+    public static final String EDIT_MODE = "EDIT_MODE";
 }

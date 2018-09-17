@@ -117,7 +117,7 @@ public class AssistedServiceFragment extends Fragment implements AssistedService
                             AppSession.getInstance(getActivity()).setAssistedServiceList(userList);
                             handleResponse();
                         }
-                    }else{
+                    } else {
                         assistedListView.setVisibility(View.GONE);
                         shimmerview.setVisibility(View.GONE);
                         noDataLayout.setVisibility(View.VISIBLE);
@@ -282,12 +282,12 @@ public class AssistedServiceFragment extends Fragment implements AssistedService
         });
     }
 
-    public void onAddService(String assistedServiceId, String linkId, String serviceTypeId, String price) {
+    public void onAddService(String assistedServiceId, String linkId, String serviceTypeId, String price, String overTimePrice) {
 
         /**
          * Make api call
          */
-        new RetrofitHelper(getActivity()).addServiceToAssistedService(assistedServiceId,linkId, serviceTypeId, price, new RetrofitHelper.RetrofitCallback() {
+        new RetrofitHelper(getActivity()).addServiceToAssistedService(assistedServiceId, linkId, serviceTypeId, price, overTimePrice, new RetrofitHelper.RetrofitCallback() {
             @Override
             public void onResponse(String response) {
                 invokeSuccessDialog();

@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +39,7 @@ import io.socket.emitter.Emitter;
  * Created by shruti.vig on 9/5/18.
  */
 
-public class ActiveOrderFragment extends Fragment implements OrderAdapter.OrderSelectedInterface{
+public class ActiveOrderFragment extends Fragment implements OrderAdapter.OrderSelectedInterface {
 
     private RecyclerView orderListView;
     private LinearLayout shimmerview, noDataLayout;
@@ -81,6 +80,7 @@ public class ActiveOrderFragment extends Fragment implements OrderAdapter.OrderS
         BinBillSeller.getSocket(getActivity()).connect();
         BinBillSeller.getSocket(getActivity()).on("order-placed", SOCKET_EVENT_ORDER_PLACED);
         BinBillSeller.getSocket(getActivity()).on("order-status-change", SOCKET_EVENT_ORDER_STATUS_CHANGED);
+        BinBillSeller.getSocket(getActivity()).on("assisted-status-change", SOCKET_ASSISTED_ORDER_STATUS_CHANGED);
     }
 
     @Override
@@ -96,6 +96,13 @@ public class ActiveOrderFragment extends Fragment implements OrderAdapter.OrderS
     };
 
     private Emitter.Listener SOCKET_EVENT_ORDER_STATUS_CHANGED = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            fetchOrders();
+        }
+    };
+
+    private Emitter.Listener SOCKET_ASSISTED_ORDER_STATUS_CHANGED = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
             fetchOrders();

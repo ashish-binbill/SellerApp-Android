@@ -10,7 +10,7 @@
 
     <color name="light_grey">#d7d7d7</color>
     <color name="text_44">#444444</color>
-    <color name="color_white_40">#40FFFFFF</color>
+    <color name="color_white_40">#70FFFFFF</color>
     <color name="text_77">#777777</color>
     <color name="hint_color">#99444444</color>
     <color name="dark_grey">#939393</color>
@@ -28,10 +28,10 @@
     <color name="off_white">#f9f9f9</color>
     <color name="color_ababab">#ababab</color>
     <color name="status_red">#FF0000</color>
-    <color name="status_green">#00FF00</color>
+    <color name="status_green">#009900</color>
     <color name="status_blue">#0000FF</color>
     <color name="status_light_blue">#009EE5</color>
     <color name="status_orange">#FF732E</color>
-    <color name="status_yellow">#FFFF00</color>
+    <color name="status_yellow">#CECE00</color>
     <color name="text_77_80">#80777777</color>
 </resources>

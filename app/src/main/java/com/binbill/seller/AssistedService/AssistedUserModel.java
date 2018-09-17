@@ -82,9 +82,9 @@ public class AssistedUserModel implements Serializable{
         String serviceTypeId;
 
         @SerializedName("price")
-        Price price;
+        ArrayList<Price> price;
 
-        public Price getPrice() {
+        public ArrayList<Price> getPrice() {
             return price;
         }
 

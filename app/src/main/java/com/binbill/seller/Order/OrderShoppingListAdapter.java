@@ -130,7 +130,7 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
                         textView.setTag("0");
                         updateItemAvailability(orderHolder.mItemAvailability.getContext(), orderHolder.mItemAvailability);
 
-                        orderHolder.mAvailableQuantity.setText("");
+                        orderHolder.mAvailableQuantity.setText(model.getOrderSKU().getSkuMeasurementValue() + " " + model.getOrderSKU().getSkuMeasurementAcronym());
                     } else {
 
                         if (model.getUpdatedSKUMeasurement() != null) {
@@ -167,6 +167,8 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
 
                 updateStateMap[position] = updateState;
                 checkStateMap();
+            } else {
+                orderHolder.mAvailableQuantity.setText(model.getOrderSKU().getSkuMeasurementValue() + " " + model.getOrderSKU().getSkuMeasurementAcronym());
             }
 
             orderHolder.mAvailableQuantity.setOnClickListener(new View.OnClickListener() {
@@ -212,16 +214,6 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
                 else
                     orderHolder.mItemPrice.setVisibility(View.VISIBLE);
 
-                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT);
-
-                int margin20 = Utility.convertDPtoPx(orderHolder.mItemPrice.getContext(), 20);
-                int margin10 = Utility.convertDPtoPx(orderHolder.mItemPrice.getContext(), 10);
-                int margin5 = Utility.convertDPtoPx(orderHolder.mItemPrice.getContext(), 5);
-                layoutParams.setMargins(margin20, margin10, 0, 0);
-
-                orderHolder.mItemPrice.setLayoutParams(layoutParams);
-                orderHolder.mItemPrice.setPadding(margin5, margin5, margin5, margin5);
                 orderHolder.mItemPrice.setFocusable(false);
                 orderHolder.mItemPrice.setFocusableInTouchMode(false);
                 orderHolder.mItemPrice.setBackground(null);
@@ -253,8 +245,12 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
                     orderHolder.mAvailableQuantity.setTextColor(ContextCompat.getColor(orderHolder.mItemAvailability.getContext(), R.color.color_white));
                     orderHolder.mAvailableQuantity.setBackground(ContextCompat.getDrawable(orderHolder.mItemAvailability.getContext(), R.drawable.edittext_bg_red));
 
-                } else
-                    orderHolder.mAvailableQuantity.setVisibility(View.GONE);
+                } else {
+                    orderHolder.mAvailableQuantity.setVisibility(View.VISIBLE);
+                    orderHolder.mAvailableQuantity.setEnabled(false);
+                    orderHolder.mAvailableQuantity.setTextColor(ContextCompat.getColor(orderHolder.mItemAvailability.getContext(), R.color.text_77));
+                    orderHolder.mAvailableQuantity.setBackground(ContextCompat.getDrawable(orderHolder.mItemAvailability.getContext(), R.drawable.edittext_bg));
+                }
 
                 orderHolder.mDivider.setVisibility(View.GONE);
             }

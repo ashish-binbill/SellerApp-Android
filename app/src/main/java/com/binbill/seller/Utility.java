@@ -136,6 +136,54 @@ public class Utility {
         return file;
     }
 
+    public static String getDateDifference(String start, String end) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+
+        format.setTimeZone(TimeZone.getTimeZone("IST"));
+
+        try {
+            Date startDate = format.parse(start);
+            Date endDate = format.parse(end);
+
+            long different = endDate.getTime() - startDate.getTime();
+
+            long secondsInMilli = 1000;
+            long minutesInMilli = secondsInMilli * 60;
+            long hoursInMilli = minutesInMilli * 60;
+            long daysInMilli = hoursInMilli * 24;
+
+            long elapsedDays = different / daysInMilli;
+            different = different % daysInMilli;
+
+            long elapsedHours = different / hoursInMilli;
+            different = different % hoursInMilli;
+
+            long elapsedMinutes = different / minutesInMilli;
+            different = different % minutesInMilli;
+
+            long elapsedSeconds = different / secondsInMilli;
+
+            System.out.printf(
+                    "%d days, %d hours, %d minutes, %d seconds%n",
+                    elapsedDays, elapsedHours, elapsedMinutes, elapsedSeconds);
+
+            StringBuilder timeElapsed = new StringBuilder();
+            if (elapsedDays > 0)
+                timeElapsed.append(elapsedDays + " Days ");
+
+            if (elapsedHours > 0)
+                timeElapsed.append(elapsedHours + " Hours ");
+
+            if (elapsedMinutes > 0)
+                timeElapsed.append(elapsedMinutes + " Min");
+
+            return timeElapsed.toString();
+        } catch (ParseException e) {
+
+        }
+        return "";
+    }
+
     public static String getFormattedDate(int type, String dateTime, int dateFormat) {
 
         String formattedDate = null;
@@ -247,6 +295,12 @@ public class Utility {
                     CharSequence monthYear = android.text.format.DateFormat.format("MMM, yyyy", date);
                     if (monthYear != null)
                         formattedDate = monthYear.toString();
+                    break;
+                case 17:
+                    CharSequence custom1 = android.text.format.DateFormat.format("dd MMM, yyyy", date);
+                    CharSequence customTime1 = android.text.format.DateFormat.format("kk:mm a", date);
+                    if (custom1 != null)
+                        formattedDate = custom1.toString() + " " + customTime1;
                     break;
             }
         } catch (ParseException e) {

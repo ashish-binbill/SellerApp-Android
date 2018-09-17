@@ -147,7 +147,7 @@
     <string name="phone_number">Phone Number</string>
     <string name="upload_adhar">Upload Aadhar Card Image</string>
     <string name="type_of_service">Type of Services</string>
-    <string name="price">Price</string>
+    <string name="price">Price (additional 30 min)</string>
     <string name="save">Save</string>
     <string name="assisted_service_added">Service added successfully</string>
     <string name="upload_profile_image">Please upload profile image</string>
@@ -247,5 +247,25 @@
     <string name="add_delivery_boy">Add Delivery Agent</string>
     <string name="delete_agent">Are you sure you want to delete this Agent?</string>
     <string name="agent_name">Agent Name</string>
-    >
+    <string name="base_price">Base Price (up to one hour)</string>
+    <string name="delivery_agent_added">Agent added successfully</string>
+    <string name="service_requested">Service Requested</string>
+    <string name="select_distance">Select Distance</string>
+    <string name="provider_assigned">Provider Assigned</string>
+    <string name="out_for_service">Out For Service Delivery</string>
+    <string name="provider_accepted">Provider Accepted</string>
+    <string name="service_started">Service Started</string>
+    <string name="service_completed">Service Completed</string>
+    <string name="started_time">Start Time</string>
+    <string name="end_time">End Time</string>
+    <string name="time_elapsed">Time Elapsed</string>
+    <string name="total_time">Total Time</string>
+    <string name="redeemed_credits">Credits Settled : </string>
+    <string name="total_credits_colon">Credits Added : </string>
+    <string name="redeemed_points">Points Settled : </string>
+    <string name="total_points_colon">Points Added: </string>
+    <string name="total_amount">Total Amount</string>
+    <string name="base_price_value">Base Price: ₹ %1$s (upto one hour)</string>
+    <string name="additional_price_value">*₹ %1$s each additional 30 Min.</string>
+
 </resources>

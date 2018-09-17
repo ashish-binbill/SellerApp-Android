@@ -421,12 +421,16 @@ public class AddOfferActivity extends BaseActivity implements BottomSheetHelper.
 
                         OfferItem offerItem = new Gson().fromJson(sellerOffer.toString(), classType);
 
-                        Intent addIntent = new Intent(AddOfferActivity.this, PublishOfferToUserActivity_.class);
-                        addIntent.putExtra(Constants.OFFER_ITEM, offerItem);
-                        addIntent.putExtra(Constants.FLOW_TYPE, Constants.ADD_USER_FOR_OFFER);
-                        addIntent.putExtra(Constants.CREATE_OFFER, true);
-                        startActivity(addIntent);
-                        finish();
+                        if (mType == EDIT_OFFER) {
+                            finish();
+                        } else {
+                            Intent addIntent = new Intent(AddOfferActivity.this, PublishOfferToUserActivity_.class);
+                            addIntent.putExtra(Constants.OFFER_ITEM, offerItem);
+                            addIntent.putExtra(Constants.FLOW_TYPE, Constants.ADD_USER_FOR_OFFER);
+                            addIntent.putExtra(Constants.CREATE_OFFER, true);
+                            startActivity(addIntent);
+                            finish();
+                        }
                     } else {
                         showSnackBar(getString(R.string.something_went_wrong));
                         btn_submit.setVisibility(View.VISIBLE);

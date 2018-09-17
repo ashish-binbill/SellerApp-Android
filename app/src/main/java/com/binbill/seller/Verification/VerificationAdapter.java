@@ -56,11 +56,11 @@ public class VerificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public static class VerificationHolder extends RecyclerView.ViewHolder {
         protected View mRootCard;
         protected TextView mUserName, mJobStatus, mTransactionId, mItemCount, mHomeDelivery,
-                mAmount, mBBCash, mLinkCredits, mLinkPoints, mViewBill;
+                mAmount, mBBCash, mLinkCredits, mLinkPoints, mViewBill, mTotalCredits, mTotalPoints, mRedeemedCredits, mRedeemedPoints;
         protected ImageView userImage;
         protected AppButton approve;
         protected AppButtonGreyed reject;
-        protected LinearLayout approveProgress;
+        protected LinearLayout approveProgress, totalCredits, redeemedCredits, totalPoints, redeemedPoints;
 
         public VerificationHolder(View view) {
             super(view);
@@ -79,6 +79,14 @@ public class VerificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             approve = (AppButton) view.findViewById(R.id.btn_yes);
             reject = (AppButtonGreyed) view.findViewById(R.id.btn_no);
             approveProgress = (LinearLayout) view.findViewById(R.id.btn_yes_progress);
+            totalCredits = (LinearLayout) view.findViewById(R.id.ll_total_credits);
+            redeemedCredits = (LinearLayout) view.findViewById(R.id.ll_redeemed_credits);
+            totalPoints = (LinearLayout) view.findViewById(R.id.ll_total_points);
+            redeemedPoints = (LinearLayout) view.findViewById(R.id.ll_redeemed_points);
+            mTotalCredits = (TextView) view.findViewById(R.id.tv_total_credits);
+            mRedeemedCredits = (TextView) view.findViewById(R.id.tv_redeemed_credits);
+            mTotalPoints = (TextView) view.findViewById(R.id.tv_total_points);
+            mRedeemedPoints = (TextView) view.findViewById(R.id.tv_redeemed_points);
         }
     }
 
@@ -126,15 +134,49 @@ public class VerificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
         verificationHolder.mViewBill.setText(content);
 
-        SpannableString linkCredits = new SpannableString(verificationHolder.mLinkCredits.getText().toString());
-        linkCredits.setSpan(new UnderlineSpan(), 0, linkCredits.length(), 0);
-        verificationHolder.mLinkCredits.setText(linkCredits);
+        if (Utility.isEmpty(model.getTotalCredits()) || Utility.isEmpty(model.getRedeemedCredits())) {
+            verificationHolder.mLinkCredits.setVisibility(View.VISIBLE);
+            SpannableString linkCredits = new SpannableString(verificationHolder.mLinkCredits.getText().toString());
+            linkCredits.setSpan(new UnderlineSpan(), 0, linkCredits.length(), 0);
+            verificationHolder.mLinkCredits.setText(linkCredits);
+        } else
+            verificationHolder.mLinkCredits.setVisibility(View.GONE);
 
-        SpannableString linkPoints = new SpannableString(verificationHolder.mLinkPoints.getText().toString());
-        linkPoints.setSpan(new UnderlineSpan(), 0, linkPoints.length(), 0);
-        verificationHolder.mLinkPoints.setText(linkPoints);
+        if (Utility.isEmpty(model.getTotalLoyalty()) || Utility.isEmpty(model.getRedeemedLoyalty())) {
+            SpannableString linkPoints = new SpannableString(verificationHolder.mLinkPoints.getText().toString());
+            linkPoints.setSpan(new UnderlineSpan(), 0, linkPoints.length(), 0);
+            verificationHolder.mLinkPoints.setText(linkPoints);
+        } else
+            verificationHolder.mLinkPoints.setVisibility(View.GONE);
+
+
+        if (!Utility.isEmpty(model.getTotalCredits())) {
+            verificationHolder.totalCredits.setVisibility(View.VISIBLE);
+            verificationHolder.mTotalCredits.setText(" " + model.getTotalCredits());
+        } else
+            verificationHolder.totalCredits.setVisibility(View.GONE);
+
+        if (!Utility.isEmpty(model.getRedeemedCredits())) {
+            verificationHolder.redeemedCredits.setVisibility(View.VISIBLE);
+            verificationHolder.mRedeemedCredits.setText(" " + model.getRedeemedCredits());
+        } else
+            verificationHolder.redeemedCredits.setVisibility(View.GONE);
+
+        if (!Utility.isEmpty(model.getTotalLoyalty())) {
+            verificationHolder.totalPoints.setVisibility(View.VISIBLE);
+            verificationHolder.mTotalPoints.setText(" " + model.getTotalLoyalty());
+        } else
+            verificationHolder.mTotalPoints.setVisibility(View.GONE);
+
+        if (!Utility.isEmpty(model.getRedeemedLoyalty())) {
+            verificationHolder.redeemedPoints.setVisibility(View.VISIBLE);
+            verificationHolder.mRedeemedPoints.setText(" " + model.getRedeemedLoyalty());
+        } else
+            verificationHolder.redeemedPoints.setVisibility(View.GONE);
+
 
         verificationHolder.mJobStatus.setText(model.getCashbackStatus());
+        verificationHolder.mJobStatus.setVisibility(View.GONE);
 
         final String authToken = SharedPref.getString(verificationHolder.userImage.getContext(), SharedPref.AUTH_TOKEN);
         OkHttpClient okHttpClient = new OkHttpClient.Builder()

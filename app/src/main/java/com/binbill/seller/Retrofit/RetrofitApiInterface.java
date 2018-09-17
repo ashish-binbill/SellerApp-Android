@@ -101,11 +101,17 @@ public interface RetrofitApiInterface {
     @GET(Constants.FETCH_SELLER_CREDITS)
     Call<JsonObject> fetchUserCredits(@Path(value = "seller_id", encoded = true) String sellerId, @Path(value = "customer_id", encoded = true) String customerId);
 
+    @GET(Constants.FETCH_SELLER_CREDITS)
+    Call<JsonObject> fetchUserCredits(@Path(value = "seller_id", encoded = true) String sellerId, @Path(value = "customer_id", encoded = true) String customerId, @Query(value = "job_id", encoded = true) String jobId);
+
     @PUT(Constants.ADD_SETTLE_CREDIT)
     Call<JsonObject> addSettleCredits(@Path(value = "seller_id", encoded = true) String sellerId, @Body HashMap<String, String> body);
 
     @GET(Constants.FETCH_SELLER_POINTS)
     Call<JsonObject> fetchUserLoyaltyPoints(@Path(value = "seller_id", encoded = true) String sellerId, @Path(value = "customer_id", encoded = true) String customerId);
+
+    @GET(Constants.FETCH_SELLER_POINTS)
+    Call<JsonObject> fetchUserLoyaltyPoints(@Path(value = "seller_id", encoded = true) String sellerId, @Path(value = "customer_id", encoded = true) String customerId, @Query(value = "job_id", encoded = true) String jobId);
 
     @PUT(Constants.ADD_SETTLE_POINTS)
     Call<JsonObject> addSettleLoyaltyPoints(@Path(value = "seller_id", encoded = true) String sellerId, @Body HashMap<String, String> body);
@@ -157,6 +163,9 @@ public interface RetrofitApiInterface {
     @PUT(Constants.SEND_ORDER_ACCEPTANCE)
     Call<JsonObject> sendOrderAccepted(@Path(value = "seller_id", encoded = true) String sellerId, @Path(value = "order_id", encoded = true) String orderId, @Body HashMap<String, String> body);
 
+    @PUT(Constants.SEND_ORDER_FOR_MODIFY_ASSISTED)
+    Call<JsonObject> sendOrderModifyAssisted(@Path(value = "seller_id", encoded = true) String sellerId, @Path(value = "order_id", encoded = true) String orderId, @Body HashMap<String, String> body);
+
     @PUT(Constants.SEND_ORDER_REJECTED)
     Call<JsonObject> sendOrderRejected(@Path(value = "seller_id", encoded = true) String sellerId, @Path(value = "order_id", encoded = true) String orderId, @Body HashMap<String, String> body);
 
@@ -165,6 +174,9 @@ public interface RetrofitApiInterface {
 
     @GET(Constants.GET_DELIVERY_BOYS)
     Call<JsonObject> getDeliveryBoys(@Path(value = "seller_id", encoded = true) String sellerId);
+
+    @GET(Constants.FETCH_ASSISTED_SERVICE)
+    Call<JsonObject> getDeliveryBoys(@Path(value = "seller_id", encoded = true) String sellerId, @Query(value = "service_type_id", encoded = true) String serviceTypeID);
 
     @GET(Constants.GET_SELLER_CATEGORIES)
     Call<JsonObject> fetchSellerCategories(@Path(value = "seller_id", encoded = true) String sellerId);

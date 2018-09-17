@@ -73,7 +73,7 @@ public class AddAssistedServiceActivity extends BaseActivity implements OptionLi
     TextView toolbarText;
 
     @ViewById
-    EditText et_service_guide, et_mobile, et_adhar_image, et_type_of_service, et_price;
+    EditText et_service_guide, et_mobile, et_adhar_image, et_type_of_service, et_price, et_price_over;
 
     @ViewById
     AppButton btn_submit;
@@ -132,6 +132,7 @@ public class AddAssistedServiceActivity extends BaseActivity implements OptionLi
         et_service_guide.setText(userModel.getName());
 
         et_price.setVisibility(View.GONE);
+        et_price_over.setVisibility(View.GONE);
         et_type_of_service.setVisibility(View.GONE);
         upload_image_layout.setVisibility(View.GONE);
 
@@ -202,8 +203,16 @@ public class AddAssistedServiceActivity extends BaseActivity implements OptionLi
                 FrameLayout inflatedLayout = (FrameLayout) inflater.inflate(R.layout.item_tag_view_edit, null, false);
                 TextView textView = (TextView) inflatedLayout.findViewById(R.id.tv_text);
                 FrameLayout frameCross = (FrameLayout) inflatedLayout.findViewById(R.id.frame_cross);
-                if (serviceType.getPrice() != null)
-                    textView.setText(serviceType.getServiceType() + " ( Rs " + serviceType.getPrice().getValue() + " )");
+                if (serviceType.getPrice() != null && serviceType.getPrice().size() > 0) {
+                    AssistedUserModel.Price basePrice = serviceType.getPrice().get(0);
+
+                    if (serviceType.getPrice().size() > 1) {
+                        AssistedUserModel.Price overTime = serviceType.getPrice().get(1);
+                        textView.setText(serviceType.getServiceType() + " ( Rs " + basePrice.getValue() + ", " + overTime.getValue() + " )");
+                    } else {
+                        textView.setText(serviceType.getServiceType() + " ( Rs " + basePrice.getValue() + " )");
+                    }
+                }
                 textView.setTag(serviceType);
                 textView.setOnClickListener(mTagClickListener);
                 fl_tag_layout.addView(inflatedLayout);
@@ -256,6 +265,7 @@ public class AddAssistedServiceActivity extends BaseActivity implements OptionLi
             }
         });
         et_price.addTextChangedListener(textWatcher);
+        et_price_over.addTextChangedListener(textWatcher);
         et_service_guide.addTextChangedListener(textWatcher);
 
         et_mobile.addTextChangedListener(new TextWatcher() {
@@ -344,6 +354,7 @@ public class AddAssistedServiceActivity extends BaseActivity implements OptionLi
         String name = et_service_guide.getText().toString();
         String mobile = et_mobile.getText().toString();
         String price = et_price.getText().toString();
+        String overTimeServicePrice = et_price_over.getText().toString();
 
         if (mType.equalsIgnoreCase(Constants.EDIT_ASSISTED_SERVICES)) {
             /**
@@ -378,7 +389,7 @@ public class AddAssistedServiceActivity extends BaseActivity implements OptionLi
                         }
                     });
         } else {
-            new RetrofitHelper(this).createAssistedService(name, mobile, mServiceTypeId, price, fileDetailsJson == null ? "" : fileDetailsJson.toString(), fileDetailsJsonProfile == null ? "" : fileDetailsJsonProfile.toString(), new RetrofitHelper.RetrofitCallback() {
+            new RetrofitHelper(this).createAssistedService(name, mobile, mServiceTypeId, price, overTimeServicePrice, fileDetailsJson == null ? "" : fileDetailsJson.toString(), fileDetailsJsonProfile == null ? "" : fileDetailsJsonProfile.toString(), new RetrofitHelper.RetrofitCallback() {
                 @Override
                 public void onResponse(String response) {
                     try {
@@ -522,7 +533,10 @@ public class AddAssistedServiceActivity extends BaseActivity implements OptionLi
 
                 if (grantResults.length > 1
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-                    cameraFileUri.add(Utility.proceedToTakePicture(this));
+                    if (mProfileImage)
+                        fileUri = Utility.proceedToTakePicture(this);
+                    else
+                        cameraFileUri.add(Utility.proceedToTakePicture(this));
 
                 } else {
 
@@ -650,6 +664,8 @@ public class AddAssistedServiceActivity extends BaseActivity implements OptionLi
                             });
 
                     processImageResponse(response);
+                    iv_sub_image.setImageDrawable(ContextCompat.getDrawable(AddAssistedServiceActivity.this, R.drawable.ic_camera));
+
                 }
 
                 @Override

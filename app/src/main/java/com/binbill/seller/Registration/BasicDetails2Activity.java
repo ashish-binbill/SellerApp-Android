@@ -2,7 +2,6 @@ package com.binbill.seller.Registration;
 
 import android.app.TimePickerDialog;
 import android.content.Intent;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -24,6 +23,7 @@ import com.binbill.seller.AppSession;
 import com.binbill.seller.BaseActivity;
 import com.binbill.seller.Constants;
 import com.binbill.seller.CustomViews.AppButton;
+import com.binbill.seller.Dashboard.ProfileModel;
 import com.binbill.seller.Model.MainCategory;
 import com.binbill.seller.Model.UserRegistrationDetails;
 import com.binbill.seller.R;
@@ -78,6 +78,9 @@ public class BasicDetails2Activity extends BaseActivity implements OptionListFra
     UserRegistrationDetails userRegistrationDetails;
     String shopOpenTime = "9:00 AM";
     String shopCloseTime = "9:00 PM";
+    private String mMode;
+    private String sellerId;
+    private ProfileModel.BasicDetails basicDetails;
 
     @AfterViews
     public void initiateViews() {
@@ -89,6 +92,69 @@ public class BasicDetails2Activity extends BaseActivity implements OptionListFra
 
         enableDisableVerifyButton();
         Utility.hideKeyboard(this, btn_submit);
+
+        if (getIntent().hasExtra(Constants.PROFILE_MODEL)) {
+            mMode = Constants.EDIT_MODE;
+            ProfileModel profileModel = (ProfileModel) getIntent().getSerializableExtra(Constants.PROFILE_MODEL);
+            sellerId = profileModel.getId();
+
+            if (profileModel.getSellerDetails() != null)
+                basicDetails = profileModel.getSellerDetails().getBasicDetails();
+
+            setUpData();
+        }
+    }
+
+    private void setUpData() {
+//        start_time.setText(basicDetails.getShopOpenDays());
+
+        String shopOpenDays = basicDetails.getShopOpenDays();
+
+        switch (Integer.parseInt(shopOpenDays)) {
+            case 0:
+                tv_sunday.callOnClick();
+                break;
+            case 1:
+                tv_monday.callOnClick();
+                break;
+            case 2:
+                tv_tuesday.callOnClick();
+                break;
+            case 3:
+                tv_wednesday.callOnClick();
+                break;
+            case 4:
+                tv_thursday.callOnClick();
+                break;
+            case 5:
+                tv_friday.callOnClick();
+                break;
+            case 6:
+                tv_saturday.callOnClick();
+                break;
+
+        }
+
+        String paymentMode = basicDetails.getPaymentModes();
+
+        if (cb_paytm.getTag() != null && cb_paytm.getTag().toString().equalsIgnoreCase(paymentMode))
+            cb_paytm.callOnClick();
+        if (cb_cod.getTag() != null && cb_cod.getTag().toString().equalsIgnoreCase(paymentMode))
+            cb_cod.callOnClick();
+        if (cb_credit_debit.getTag() != null && cb_credit_debit.getTag().toString().equalsIgnoreCase(paymentMode))
+            cb_credit_debit.callOnClick();
+        if (cb_other_wallets.getTag() != null && cb_other_wallets.getTag().toString().equalsIgnoreCase(paymentMode))
+            cb_other_wallets.callOnClick();
+
+        if (!Utility.isEmpty(basicDetails.getHomeDelivery()) && basicDetails.getHomeDelivery().equalsIgnoreCase("true"))
+            radio_group_home_delivery.check(R.id.yes);
+        else
+            radio_group_home_delivery.check(R.id.no);
+
+        if (!Utility.isEmpty(basicDetails.getHomeDeliveryRemarks()))
+            et_delivery_distance.setText(basicDetails.getHomeDeliveryRemarks());
+
+
     }
 
     private void setUpViews() {
@@ -261,12 +327,16 @@ public class BasicDetails2Activity extends BaseActivity implements OptionListFra
             JSONObject jsonObject = new JSONObject(response);
             if (jsonObject.getBoolean("status")) {
 
+                if (mMode == Constants.EDIT_MODE) {
+                    finish();
+                } else {
 
-                int registrationIndex = getIntent().getIntExtra(Constants.REGISTRATION_INDEX, -1);
-                Intent intent = RegistrationResolver.getNextIntent(this, registrationIndex);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-                finish();
+                    int registrationIndex = getIntent().getIntExtra(Constants.REGISTRATION_INDEX, -1);
+                    Intent intent = RegistrationResolver.getNextIntent(this, registrationIndex);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    finish();
+                }
 
                 btn_submit.setVisibility(View.VISIBLE);
                 btn_submit_progress.setVisibility(View.GONE);

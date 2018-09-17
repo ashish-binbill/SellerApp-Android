@@ -13,6 +13,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -27,6 +28,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.binbill.seller.AssistedService.AssistedUserModel;
 import com.binbill.seller.BaseActivity;
 import com.binbill.seller.BinBillSeller;
 import com.binbill.seller.Constants;
@@ -76,7 +78,7 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
     TextView toolbarText;
 
     @ViewById
-    TextView tv_address, tv_date, tv_name, tv_order_status;
+    TextView tv_address, tv_date, tv_name, tv_order_status, header_shopping_list, header_quantity, tv_start_time, tv_end_time, tv_time_elapsed, tv_total_amount;
     @ViewById
     ImageView iv_user_image;
 
@@ -84,11 +86,17 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
     RecyclerView rv_shopping_list;
 
     @ViewById
-    LinearLayout shimmer_view_container, ll_user_action;
+    LinearLayout shimmer_view_container, ll_user_action, ll_bill_layout;
     private Order orderDetails;
 
     @ViewById
     RelativeLayout just_sec_layout;
+
+    /**
+     * Service agent layout
+     */
+    @ViewById
+    CardView cv_root_delivery;
 
     @ViewById
     AppButton btn_accept;
@@ -127,6 +135,7 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
         BinBillSeller.getSocket(this).connect();
         BinBillSeller.getSocket(this).on("order-placed", SOCKET_EVENT_ORDER_PLACED);
         BinBillSeller.getSocket(this).on("order-status-change", SOCKET_EVENT_ORDER_STATUS_CHANGED);
+        BinBillSeller.getSocket(this).on("assisted-status-change", SOCKET_ASSISTED_ORDER_STATUS_CHANGED);
     }
 
     private Emitter.Listener SOCKET_EVENT_ORDER_PLACED = new Emitter.Listener() {
@@ -173,23 +182,44 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
         }
     };
 
+    private Emitter.Listener SOCKET_ASSISTED_ORDER_STATUS_CHANGED = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            Log.d("SHRUTI", "order-status-change" + args.toString());
+            Type classType = new TypeToken<Order>() {
+            }.getType();
+
+            final Order mOrderDetails = new Gson().fromJson(args[0].toString(), classType);
+            if (orderId.equalsIgnoreCase(mOrderDetails.getOrderId())) {
+                Handler uiHandler = new Handler(Looper.getMainLooper());
+                uiHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        orderDetails = mOrderDetails;
+                        handleResponse();
+                    }
+                });
+            }
+
+        }
+    };
+
     private void setUpListener() {
         btn_decline.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                    btn_decline.setVisibility(View.GONE);
-                    btn_decline_progress.setVisibility(View.VISIBLE);
+                btn_decline.setVisibility(View.GONE);
+                btn_decline_progress.setVisibility(View.VISIBLE);
 
-                    makeDeclineOrderCall();
+                makeDeclineOrderCall();
             }
         });
 
         btn_accept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                String textOnButton = btn_accept.getText().toString();
                 if (orderDetails.getOrderType().equalsIgnoreCase(Constants.ORDER_TYPE_FMCG)) {
-                    String textOnButton = btn_accept.getText().toString();
                     ArrayList<OrderItem> updatedList = mAdapter.getUpdatedOrderList();
                     for (OrderItem orderItem : updatedList) {
                         orderItem.setItemAvailability(orderItem.isUpdateItemAvailable());
@@ -263,8 +293,36 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
 
                     }
 
-                }else if(orderDetails.getOrderType().equalsIgnoreCase(Constants.ORDER_TYPE_SERVICE)){
-                    
+                } else if (orderDetails.getOrderType().equalsIgnoreCase(Constants.ORDER_TYPE_SERVICE)) {
+
+                    if (textOnButton.equalsIgnoreCase(getString(R.string.accept))) {
+                        Intent intent = new Intent(OrderDetailsActivity.this, SelectDeliveryAgentActivity_.class);
+
+                        ArrayList<OrderItem> orderItems = orderDetails.getOrderItems();
+                        if (orderItems.size() > 0) {
+                            intent.putExtra(Constants.ORDER_TYPE_SERVICE, orderItems.get(0).getServiceTypeId());
+                        }
+                        startActivityForResult(intent, Constants.INTENT_CALL_SELECT_DELIVERY_AGENT);
+                    } else {
+                        new RetrofitHelper(OrderDetailsActivity.this).sendOrderOutForDeliveryCall(orderDetails.getOrderId(), orderDetails.getUserId(), null, null, new RetrofitHelper.RetrofitCallback() {
+                            @Override
+                            public void onResponse(String response) {
+                                btn_accept.setVisibility(View.VISIBLE);
+                                btn_accept_progress.setVisibility(View.GONE);
+                                handleApiResponse(response);
+                            }
+
+                            @Override
+                            public void onErrorResponse() {
+                                btn_accept.setVisibility(View.GONE);
+                                btn_accept_progress.setVisibility(View.VISIBLE);
+                                shimmer_view_container.setVisibility(View.GONE);
+
+                                showSnackBar(getString(R.string.something_went_wrong));
+                                finish();
+                            }
+                        });
+                    }
                 }
             }
         });
@@ -275,43 +333,62 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
         if (requestCode == Constants.INTENT_CALL_SELECT_DELIVERY_AGENT) {
             if (resultCode == RESULT_OK) {
 
-                ArrayList<OrderItem> updatedList = mAdapter.getUpdatedOrderList();
-                for (OrderItem orderItem : updatedList) {
-                    if (orderItem.getUpdatedSKUMeasurement() != null)
-                        orderItem.setOrderSKU(orderItem.getUpdatedSKUMeasurement());
-                    orderItem.setItemAvailability(orderItem.isUpdateItemAvailable());
-                }
-
-
-                Gson gson = new Gson();
-                Type type = new TypeToken<List<OrderItem>>() {
-                }.getType();
-                String json = gson.toJson(updatedList, type);
-
                 Intent intent = data;
                 String deliveryId = "";
                 if (intent != null && intent.hasExtra(Constants.DELIVERY_AGENT_ID)) {
                     deliveryId = intent.getStringExtra(Constants.DELIVERY_AGENT_ID);
                 }
+                if (orderDetails.getOrderType().equalsIgnoreCase(Constants.ORDER_TYPE_SERVICE)) {
 
-                new RetrofitHelper(OrderDetailsActivity.this).sendOrderOutForDeliveryCall(orderDetails.getOrderId(), orderDetails.getUserId(), json, deliveryId, new RetrofitHelper.RetrofitCallback() {
-                    @Override
-                    public void onResponse(String response) {
-                        btn_accept.setVisibility(View.VISIBLE);
-                        btn_accept_progress.setVisibility(View.GONE);
-                        handleApiResponse(response);
+                    new RetrofitHelper(OrderDetailsActivity.this).sendOrderModifyAssisted(orderDetails.getOrderId(), orderDetails.getUserId(), deliveryId, new RetrofitHelper.RetrofitCallback() {
+                        @Override
+                        public void onResponse(String response) {
+                            btn_accept.setVisibility(View.VISIBLE);
+                            btn_accept_progress.setVisibility(View.GONE);
+                            handleApiResponse(response);
+                        }
+
+                        @Override
+                        public void onErrorResponse() {
+                            btn_accept.setVisibility(View.GONE);
+                            btn_accept_progress.setVisibility(View.VISIBLE);
+                            shimmer_view_container.setVisibility(View.GONE);
+
+                            showSnackBar(getString(R.string.something_went_wrong));
+                        }
+                    });
+                } else {
+                    ArrayList<OrderItem> updatedList = mAdapter.getUpdatedOrderList();
+                    for (OrderItem orderItem : updatedList) {
+                        if (orderItem.getUpdatedSKUMeasurement() != null)
+                            orderItem.setOrderSKU(orderItem.getUpdatedSKUMeasurement());
+                        orderItem.setItemAvailability(orderItem.isUpdateItemAvailable());
                     }
 
-                    @Override
-                    public void onErrorResponse() {
-                        btn_accept.setVisibility(View.GONE);
-                        btn_accept_progress.setVisibility(View.VISIBLE);
-                        shimmer_view_container.setVisibility(View.GONE);
 
-                        showSnackBar(getString(R.string.something_went_wrong));
-                        finish();
-                    }
-                });
+                    Gson gson = new Gson();
+                    Type type = new TypeToken<List<OrderItem>>() {
+                    }.getType();
+                    String json = gson.toJson(updatedList, type);
+
+                    new RetrofitHelper(OrderDetailsActivity.this).sendOrderOutForDeliveryCall(orderDetails.getOrderId(), orderDetails.getUserId(), json, deliveryId, new RetrofitHelper.RetrofitCallback() {
+                        @Override
+                        public void onResponse(String response) {
+                            btn_accept.setVisibility(View.VISIBLE);
+                            btn_accept_progress.setVisibility(View.GONE);
+                            handleApiResponse(response);
+                        }
+
+                        @Override
+                        public void onErrorResponse() {
+                            btn_accept.setVisibility(View.GONE);
+                            btn_accept_progress.setVisibility(View.VISIBLE);
+                            shimmer_view_container.setVisibility(View.GONE);
+
+                            showSnackBar(getString(R.string.something_went_wrong));
+                        }
+                    });
+                }
             }
         }
     }
@@ -434,14 +511,25 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                 shimmer_view_container.setVisibility(View.GONE);
                 showSnackBar(getString(R.string.something_went_wrong));
 
-                finish();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        finish();
+                    }
+                }, 1000);
             }
         } catch (JSONException e) {
             rv_shopping_list.setVisibility(View.GONE);
             shimmer_view_container.setVisibility(View.GONE);
 
             showSnackBar(getString(R.string.something_went_wrong));
-            finish();
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    finish();
+                }
+            }, 1000);
         }
     }
 
@@ -464,6 +552,11 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
 
     private void setUpData() {
 
+        if (orderDetails.getOrderType().equalsIgnoreCase(Constants.ORDER_TYPE_SERVICE)) {
+            header_shopping_list.setText(getString(R.string.service_requested));
+            header_quantity.setVisibility(View.GONE);
+        }
+
         Utility.hideKeyboard(this, rv_shopping_list);
         setUpUserLayout();
 
@@ -485,6 +578,152 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
             }
         });
 
+        if (orderDetails.getOrderType().equalsIgnoreCase(Constants.ORDER_TYPE_SERVICE) &&
+                (orderDetails.getOrderStatus() == Constants.STATUS_JOB_ENDED) || orderDetails.getOrderStatus() == Constants.STATUS_COMPLETE) {
+            if (orderDetails.getOrderItems() != null && orderDetails.getOrderItems().size() > 0) {
+                final OrderItem orderItem = orderDetails.getOrderItems().get(0);
+                if (!Utility.isEmpty(orderItem.getStartDate())) {
+                    tv_start_time.setText(Utility.getFormattedDate(17, orderItem.getStartDate(), 0));
+                    tv_end_time.setText(Utility.getFormattedDate(17, orderItem.getEndDate(), 0));
+                    tv_time_elapsed.setText(Utility.getDateDifference(orderItem.getStartDate(), orderItem.getEndDate()));
+                    tv_total_amount.setText(getString(R.string.rupee_sign) + " " + orderItem.getTotalAmount());
+                    ll_bill_layout.setVisibility(View.VISIBLE);
+                }
+
+                if (orderItem.getServiceUser() != null) {
+
+                    new RetrofitHelper(this).fetchDeliveryBoysForSeller(new RetrofitHelper.RetrofitCallback() {
+                        @Override
+                        public void onResponse(String response) {
+                            try {
+                                JSONObject jsonObject = new JSONObject(response);
+                                if (jsonObject.getBoolean("status")) {
+                                    if (jsonObject.optJSONArray("result") != null) {
+                                        JSONArray userArray = jsonObject.getJSONArray("result");
+                                        Type classType = new TypeToken<ArrayList<DeliveryModel>>() {
+                                        }.getType();
+
+                                        ArrayList<DeliveryModel> deliveryList = new Gson().fromJson(userArray.toString(), classType);
+                                        if (deliveryList != null && deliveryList.size() > 0) {
+                                            for (DeliveryModel deliveryModel : deliveryList) {
+                                                if (deliveryModel.getDeliveryBoyId().equalsIgnoreCase(orderItem.getServiceUser().getId())) {
+                                                    DeliveryAgentAdapter.DeliveryAgentHolder deliveryAgentHolder = new DeliveryAgentAdapter.DeliveryAgentHolder(cv_root_delivery);
+                                                    updateAgentLayout(deliveryAgentHolder, deliveryModel, orderItem.getServiceTypeId());
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            } catch (JSONException e) {
+
+                            }
+                        }
+
+                        @Override
+                        public void onErrorResponse() {
+
+                        }
+                    }, orderItem.getServiceTypeId());
+                }
+            }
+        }
+
+    }
+
+    private void updateAgentLayout(final DeliveryAgentAdapter.DeliveryAgentHolder userHolder, DeliveryModel model, String serviceId) {
+        userHolder.mUserName.setText(model.getName());
+
+        float rating = 0;
+        if (!Utility.isEmpty(model.getRating()))
+            rating = Float.parseFloat(model.getRating());
+        userHolder.mRating.setRating(rating);
+        userHolder.ratingText.setText(userHolder.mReviews.getContext().getString(R.string.rating_value, String.valueOf(rating)));
+
+        ArrayList<AssistedUserModel.Review> userReviews = model.getReviews();
+        if (userReviews != null)
+            userHolder.mReviews.setText(userHolder.mReviews.getContext().getString(R.string.reviews, String.valueOf(userReviews.size())));
+        else
+            userHolder.mReviews.setText(userHolder.mReviews.getContext().getString(R.string.reviews, "0"));
+
+        userHolder.statusText.setVisibility(View.GONE);
+        userHolder.mActionLayout.setVisibility(View.GONE);
+        userHolder.statusColor.setVisibility(View.GONE);
+
+        userHolder.mBasePrice.setVisibility(View.GONE);
+        userHolder.mAdditionalPrice.setVisibility(View.GONE);
+
+        ArrayList<AssistedUserModel.ServiceType> serviceTypes = model.getServiceType();
+        for (AssistedUserModel.ServiceType serviceType : serviceTypes) {
+            if (serviceType.getServiceTypeId().equalsIgnoreCase(serviceId)) {
+                ArrayList<AssistedUserModel.Price> priceList = serviceType.getPrice();
+                for (AssistedUserModel.Price price : priceList) {
+                    if (price.getPriceType().equalsIgnoreCase("1")) {
+                        userHolder.mBasePrice.setText(userHolder.mBasePrice.getContext().getString(R.string.base_price_value, price.getValue()));
+                        userHolder.mBasePrice.setVisibility(View.VISIBLE);
+                    }
+
+                    if (price.getPriceType().equalsIgnoreCase("2")) {
+                        userHolder.mAdditionalPrice.setText(userHolder.mBasePrice.getContext().getString(R.string.additional_price_value, price.getValue()));
+                        userHolder.mAdditionalPrice.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+        }
+
+        if (model.getProfileImage() != null) {
+
+            final String authToken = SharedPref.getString(userHolder.userImage.getContext(), SharedPref.AUTH_TOKEN);
+            OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                    .authenticator(new Authenticator() {
+                        @Override
+                        public Request authenticate(Route route, Response response) throws IOException {
+                            return response.request().newBuilder()
+                                    .header("Authorization", authToken)
+                                    .build();
+                        }
+                    }).build();
+
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                    RelativeLayout.LayoutParams.MATCH_PARENT,
+                    RelativeLayout.LayoutParams.MATCH_PARENT
+            );
+            params.setMargins(0, 0, 0, 0);
+            userHolder.userImage.setLayoutParams(params);
+
+            userHolder.userImage.setScaleType(ImageView.ScaleType.FIT_XY);
+
+            Picasso picasso = new Picasso.Builder(userHolder.userImage.getContext())
+                    .downloader(new OkHttp3Downloader(okHttpClient))
+                    .build();
+            picasso.load(Constants.BASE_URL + "assisted/" + model.getDeliveryBoyId() + "/profile")
+                    .config(Bitmap.Config.RGB_565)
+                    .into(userHolder.userImage, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            Bitmap imageBitmap = ((BitmapDrawable) userHolder.userImage.getDrawable()).getBitmap();
+                            RoundedBitmapDrawable imageDrawable = RoundedBitmapDrawableFactory.create(userHolder.userImage.getContext().getResources(), imageBitmap);
+                            imageDrawable.setCircular(true);
+                            userHolder.userImage.setImageDrawable(imageDrawable);
+                        }
+
+                        @Override
+                        public void onError(Exception e) {
+                            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                                    RelativeLayout.LayoutParams.MATCH_PARENT,
+                                    RelativeLayout.LayoutParams.MATCH_PARENT
+                            );
+
+                            int margins = Utility.convertDPtoPx(userHolder.userImage.getContext(), 15);
+                            params.setMargins(margins, margins, margins, margins);
+                            userHolder.userImage.setLayoutParams(params);
+
+                            userHolder.userImage.setImageDrawable(ContextCompat.getDrawable(userHolder.userImage.getContext(), R.drawable.ic_user));
+                        }
+                    });
+        }
+
+        userHolder.mSelectedCardLayout.setVisibility(View.GONE);
+        cv_root_delivery.setVisibility(View.VISIBLE);
     }
 
     public void changeButtonStateToApproval(int state) {
@@ -515,7 +754,11 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                 else
                     ll_user_action.setVisibility(View.VISIBLE);
                 frame_decline.setVisibility(View.GONE);
-                btn_accept.setText(getString(R.string.out_for_delivery));
+
+                if (orderDetails.getOrderType().equalsIgnoreCase(Constants.ORDER_TYPE_SERVICE))
+                    btn_accept.setText(getString(R.string.out_for_service));
+                else
+                    btn_accept.setText(getString(R.string.out_for_delivery));
                 break;
             default:
                 ll_user_action.setVisibility(View.GONE);
@@ -545,7 +788,10 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                     break;
                 case Constants.STATUS_APPROVED:
                     tv_order_status.setTextColor(ContextCompat.getColor(this, R.color.status_yellow));
-                    tv_order_status.setText(getString(R.string.in_progress));
+                    if (orderDetails.getOrderType().equalsIgnoreCase(Constants.ORDER_TYPE_SERVICE))
+                        tv_order_status.setText(getString(R.string.provider_accepted));
+                    else
+                        tv_order_status.setText(getString(R.string.in_progress));
                     changeButtonStateToApproval(2);
                     break;
                 case Constants.STATUS_CANCEL:
@@ -560,7 +806,21 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                     break;
                 case Constants.STATUS_OUT_FOR_DELIVERY:
                     tv_order_status.setTextColor(ContextCompat.getColor(this, R.color.status_blue));
-                    tv_order_status.setText(getString(R.string.out_for_delivery));
+
+                    if (orderDetails.getOrderType().equalsIgnoreCase(Constants.ORDER_TYPE_SERVICE))
+                        tv_order_status.setText(getString(R.string.provider_assigned));
+                    else
+                        tv_order_status.setText(getString(R.string.out_for_delivery));
+                    changeButtonStateToApproval(3);
+                    break;
+                case Constants.STATUS_JOB_STARTED:
+                    tv_order_status.setTextColor(ContextCompat.getColor(this, R.color.status_blue));
+                    tv_order_status.setText(getString(R.string.service_started));
+                    changeButtonStateToApproval(3);
+                    break;
+                case Constants.STATUS_JOB_ENDED:
+                    tv_order_status.setTextColor(ContextCompat.getColor(this, R.color.status_blue));
+                    tv_order_status.setText(getString(R.string.service_completed));
                     changeButtonStateToApproval(3);
                     break;
             }

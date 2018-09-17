@@ -1,5 +1,6 @@
 package com.binbill.seller.Order;
 
+import com.binbill.seller.Model.MainCategory;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
@@ -46,8 +47,48 @@ public class OrderItem implements Serializable {
     @SerializedName("service_name")
     String serviceName;
 
+    /******************************************** TYPE_SERVICE ****************************************/
+    /**
+     *  "end_date": "2018-09-14T09:46:55.891Z",
+     "base_price": 25,
+     "start_date": "2018-09-14T09:42:47.579Z",
+     "service_name": "Cook",
+     "service_user": {
+     "id": 17,
+     "name": "Mr Sagar Chauhan"
+     },
+     "total_amount": 25,
+     */
     @SerializedName("service_type_id")
     String serviceTypeId;
+
+    @SerializedName("end_date")
+    String endDate;
+
+    @SerializedName("start_date")
+    String startDate;
+
+    @SerializedName("service_user")
+    MainCategory serviceUser;
+
+    @SerializedName("total_amount")
+    String totalAmount;
+
+    public String getTotalAmount() {
+        return totalAmount;
+    }
+
+    public MainCategory getServiceUser() {
+        return serviceUser;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public String getStartDate() {
+        return startDate;
+    }
 
     public String getServiceTypeId() {
         return serviceTypeId;

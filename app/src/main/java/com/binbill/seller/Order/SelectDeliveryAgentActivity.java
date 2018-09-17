@@ -63,6 +63,7 @@ public class SelectDeliveryAgentActivity extends BaseActivity implements Deliver
 
     @ViewById
     FrameLayout fl_button;
+    private String serviceTypeId;
 
 
     @AfterViews
@@ -70,6 +71,10 @@ public class SelectDeliveryAgentActivity extends BaseActivity implements Deliver
         setUpData();
         setUpToolbar();
         setUpListeners();
+
+        if (getIntent().hasExtra(Constants.ORDER_TYPE_SERVICE)) {
+            iv_skip.setVisibility(View.GONE);
+        }
         makeDeliveryBoyFetchApiCall();
     }
 
@@ -86,24 +91,48 @@ public class SelectDeliveryAgentActivity extends BaseActivity implements Deliver
         shimmer_view_container.setVisibility(View.VISIBLE);
         no_data_layout.setVisibility(View.GONE);
 
-        new RetrofitHelper(this).fetchDeliveryBoysForSeller(new RetrofitHelper.RetrofitCallback() {
-            @Override
-            public void onResponse(String response) {
-                handleResponse(response);
-                sl_pull_to_refresh.setRefreshing(false);
-            }
+        if (getIntent().hasExtra(Constants.ORDER_TYPE_SERVICE)) {
+            serviceTypeId = getIntent().getStringExtra(Constants.ORDER_TYPE_SERVICE);
 
-            @Override
-            public void onErrorResponse() {
-                showSnackBar(getString(R.string.something_went_wrong));
-                fl_button.setVisibility(View.GONE);
-                rv_delivery_agents.setVisibility(View.GONE);
-                shimmer_view_container.setVisibility(View.GONE);
-                no_data_layout.setVisibility(View.VISIBLE);
+            new RetrofitHelper(this).fetchDeliveryBoysForSeller(new RetrofitHelper.RetrofitCallback() {
+                @Override
+                public void onResponse(String response) {
+                    handleResponse(response);
+                    sl_pull_to_refresh.setRefreshing(false);
+                }
 
-                sl_pull_to_refresh.setRefreshing(false);
-            }
-        });
+                @Override
+                public void onErrorResponse() {
+                    showSnackBar(getString(R.string.something_went_wrong));
+                    fl_button.setVisibility(View.GONE);
+                    rv_delivery_agents.setVisibility(View.GONE);
+                    shimmer_view_container.setVisibility(View.GONE);
+                    no_data_layout.setVisibility(View.VISIBLE);
+
+                    sl_pull_to_refresh.setRefreshing(false);
+                }
+            }, serviceTypeId);
+        } else {
+
+            new RetrofitHelper(this).fetchDeliveryBoysForSeller(new RetrofitHelper.RetrofitCallback() {
+                @Override
+                public void onResponse(String response) {
+                    handleResponse(response);
+                    sl_pull_to_refresh.setRefreshing(false);
+                }
+
+                @Override
+                public void onErrorResponse() {
+                    showSnackBar(getString(R.string.something_went_wrong));
+                    fl_button.setVisibility(View.GONE);
+                    rv_delivery_agents.setVisibility(View.GONE);
+                    shimmer_view_container.setVisibility(View.GONE);
+                    no_data_layout.setVisibility(View.VISIBLE);
+
+                    sl_pull_to_refresh.setRefreshing(false);
+                }
+            });
+        }
     }
 
     private void handleResponse(String response) {
@@ -149,7 +178,11 @@ public class SelectDeliveryAgentActivity extends BaseActivity implements Deliver
         LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         rv_delivery_agents.setLayoutManager(llm);
-        mAdapter = new DeliveryAgentAdapter(deliveryList, true, this);
+
+        if (getIntent().hasExtra(Constants.ORDER_TYPE_SERVICE))
+            mAdapter = new DeliveryAgentAdapter(deliveryList, true, this, serviceTypeId);
+        else
+            mAdapter = new DeliveryAgentAdapter(deliveryList, true, this);
         rv_delivery_agents.setAdapter(mAdapter);
 
         fl_button.setVisibility(View.VISIBLE);

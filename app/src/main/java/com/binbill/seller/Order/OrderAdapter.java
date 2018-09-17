@@ -130,7 +130,10 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 break;
             case Constants.STATUS_APPROVED:
                 ViewCompat.setBackgroundTintList(orderHolder.mStatusColor, ContextCompat.getColorStateList(orderHolder.mStatusColor.getContext(), R.color.status_yellow));
-                orderHolder.mStatus.setText(orderHolder.mStatus.getContext().getString(R.string.in_progress));
+                if (model.getOrderType().equalsIgnoreCase(Constants.ORDER_TYPE_SERVICE))
+                    orderHolder.mStatus.setText(orderHolder.mStatus.getContext().getString(R.string.provider_accepted));
+                else
+                    orderHolder.mStatus.setText(orderHolder.mStatus.getContext().getString(R.string.in_progress));
                 break;
             case Constants.STATUS_CANCEL:
                 ViewCompat.setBackgroundTintList(orderHolder.mStatusColor, ContextCompat.getColorStateList(orderHolder.mStatusColor.getContext(), R.color.status_red));
@@ -142,7 +145,18 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 break;
             case Constants.STATUS_OUT_FOR_DELIVERY:
                 ViewCompat.setBackgroundTintList(orderHolder.mStatusColor, ContextCompat.getColorStateList(orderHolder.mStatusColor.getContext(), R.color.status_blue));
-                orderHolder.mStatus.setText(orderHolder.mStatus.getContext().getString(R.string.out_for_delivery));
+                if (model.getOrderType().equalsIgnoreCase(Constants.ORDER_TYPE_SERVICE))
+                    orderHolder.mStatus.setText(orderHolder.mStatus.getContext().getString(R.string.provider_assigned));
+                else
+                    orderHolder.mStatus.setText(orderHolder.mStatus.getContext().getString(R.string.out_for_delivery));
+                break;
+            case Constants.STATUS_JOB_STARTED:
+                ViewCompat.setBackgroundTintList(orderHolder.mStatusColor, ContextCompat.getColorStateList(orderHolder.mStatusColor.getContext(), R.color.status_blue));
+                orderHolder.mStatus.setText(orderHolder.mStatus.getContext().getString(R.string.service_started));
+                break;
+            case Constants.STATUS_JOB_ENDED:
+                ViewCompat.setBackgroundTintList(orderHolder.mStatusColor, ContextCompat.getColorStateList(orderHolder.mStatusColor.getContext(), R.color.status_blue));
+                orderHolder.mStatus.setText(orderHolder.mStatus.getContext().getString(R.string.service_completed));
                 break;
         }
 

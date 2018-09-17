@@ -16,6 +16,16 @@ public class MainCategory implements Serializable{
     @SerializedName("title")
     String name;
 
+    /**
+     * Reused to get agent name during job completion in service type order
+     */
+    @SerializedName("name")
+    String agentName;
+
+    public String getAgentName() {
+        return agentName;
+    }
+
     public String getName() {
         return name;
     }

@@ -31,7 +31,14 @@ public class DeliveryModel implements Serializable {
     @SerializedName("profile_image_detail")
     FileItem profileImage;
 
+    @SerializedName("service_types")
+    ArrayList<AssistedUserModel.ServiceType> serviceType;
+
     transient boolean selected;
+
+    public ArrayList<AssistedUserModel.ServiceType> getServiceType() {
+        return serviceType;
+    }
 
     @SerializedName("reviews")
     ArrayList<AssistedUserModel.Review> reviews;

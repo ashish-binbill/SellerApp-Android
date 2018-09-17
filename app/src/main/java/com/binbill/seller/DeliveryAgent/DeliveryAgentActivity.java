@@ -1,14 +1,19 @@
 package com.binbill.seller.DeliveryAgent;
 
+import android.content.Intent;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.binbill.seller.AssistedService.AddAssistedServiceActivity_;
 import com.binbill.seller.BaseActivity;
+import com.binbill.seller.Constants;
 import com.binbill.seller.CustomViews.AppButton;
 import com.binbill.seller.CustomViews.ReviewsDialogFragment;
 import com.binbill.seller.CustomViews.YesNoDialogFragment;
@@ -55,6 +60,9 @@ public class DeliveryAgentActivity extends BaseActivity implements DeliveryAgent
     @ViewById
     AppButton btn_no_data;
 
+    @ViewById
+    ImageView iv_notification;
+
     private DeliveryAgentAdapter mAdapter;
     private ArrayList<DeliveryModel> deliveryBoyList;
     private String mDeliveryAgentIdToDelete;
@@ -64,6 +72,11 @@ public class DeliveryAgentActivity extends BaseActivity implements DeliveryAgent
         setUpData();
         setUpToolbar();
         setUpListeners();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         makeDeliveryBoyFetchApiCall();
     }
 
@@ -154,7 +167,7 @@ public class DeliveryAgentActivity extends BaseActivity implements DeliveryAgent
                 /**
                  * Add delivery boy
                  */
-
+                startActivity(new Intent(DeliveryAgentActivity.this, AddNewDeliveryAgentActivity_.class));
             }
         });
 
@@ -162,6 +175,13 @@ public class DeliveryAgentActivity extends BaseActivity implements DeliveryAgent
             @Override
             public void onRefresh() {
                 makeDeliveryBoyFetchApiCall();
+            }
+        });
+
+        iv_notification.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(DeliveryAgentActivity.this, AddNewDeliveryAgentActivity_.class));
             }
         });
     }
@@ -172,6 +192,9 @@ public class DeliveryAgentActivity extends BaseActivity implements DeliveryAgent
 
         getSupportActionBar().setTitle("");
         toolbarText.setText(getString(R.string.assign_delivery_boy));
+
+        iv_notification.setVisibility(View.VISIBLE);
+        iv_notification.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_add_offer));
     }
 
 
@@ -193,7 +216,10 @@ public class DeliveryAgentActivity extends BaseActivity implements DeliveryAgent
 
     @Override
     public void onEditAgent(int position) {
-
+        DeliveryModel deliveryModel = deliveryBoyList.get(position);
+        Intent intent = new Intent(this, AddNewDeliveryAgentActivity_.class);
+        intent.putExtra(Constants.EDIT_DELIVERY_BOY, deliveryModel);
+        startActivity(intent);
     }
 
     @Override

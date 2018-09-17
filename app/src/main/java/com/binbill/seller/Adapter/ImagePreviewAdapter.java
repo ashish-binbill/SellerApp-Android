@@ -100,7 +100,9 @@ public class ImagePreviewAdapter extends PagerAdapter {
             Picasso picasso = new Picasso.Builder(context)
                     .downloader(new OkHttp3Downloader(okHttpClient))
                     .build();
-            picasso.load(Constants.BASE_URL + jobCopies.get(position).getCopyUrl())
+
+            JobCopy copy = jobCopies.get(position);
+            picasso.load(Constants.BASE_URL + "jobs/" + copy.getJobId() + "/files/" + copy.getCopyId())
                     .config(Bitmap.Config.RGB_565)
                     .fit().centerCrop()
                     .into(imageView);

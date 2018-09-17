@@ -10,6 +10,7 @@
         android:orientation="vertical">
 
         <LinearLayout
+            android:id="@+id/ll_sku_management"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#edf8fd"
@@ -41,7 +42,7 @@
 
             <TextView
                 android:id="@+id/tv_manage_brands"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/dimen_60dp"
                 android:layout_marginTop="@dimen/dimen_12dp"
@@ -52,7 +53,7 @@
                 android:textSize="@dimen/dimen_14dp" />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/dimen_60dp"
                 android:layout_marginTop="@dimen/dimen_12dp"
@@ -66,7 +67,7 @@
 
         <TextView
             android:id="@+id/tv_manage_delivery_boy"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/ic_delivery"
             android:drawablePadding="@dimen/dimen_15dp"
@@ -78,7 +79,7 @@
             android:textSize="@dimen/dimen_14dp" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/ic_loyalty_rules"
             android:drawablePadding="@dimen/dimen_15dp"
@@ -91,7 +92,7 @@
 
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/ic_insight"
             android:drawablePadding="@dimen/dimen_15dp"
@@ -99,12 +100,13 @@
             android:lineSpacingExtra="1sp"
             android:padding="@dimen/dimen_15dp"
             android:text="@string/reports"
+            android:visibility="gone"
             android:textColor="@color/text_44"
             android:textSize="@dimen/dimen_14dp" />
 
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/ic_call"
             android:drawablePadding="@dimen/dimen_15dp"
@@ -117,7 +119,7 @@
 
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/ic_email"
             android:drawablePadding="@dimen/dimen_15dp"
@@ -170,7 +172,7 @@
 
         <TextView
             android:id="@+id/tv_logout"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/ic_logout"
             android:drawablePadding="@dimen/dimen_15dp"
