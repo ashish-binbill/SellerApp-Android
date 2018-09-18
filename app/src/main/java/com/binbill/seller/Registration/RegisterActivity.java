@@ -1,13 +1,9 @@
 package com.binbill.seller.Registration;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -43,7 +39,7 @@ import java.util.HashMap;
 import java.util.regex.Matcher;
 
 @EActivity(R.layout.activity_register)
-public class RegisterActivity extends BaseActivity  implements OptionListFragment.OnOptionListInteractionListener{
+public class RegisterActivity extends BaseActivity implements OptionListFragment.OnOptionListInteractionListener, SellerTypeFragment.SellerTypeInterface {
 
     @ViewById
     Toolbar toolbar;
@@ -81,6 +77,8 @@ public class RegisterActivity extends BaseActivity  implements OptionListFragmen
         et_main_category.setMaxLines(3);
 
         enableDisableRegisterButton();
+
+        showSellerTypeFragment(0);
     }
 
     private void setUpListeners() {
@@ -190,6 +188,10 @@ public class RegisterActivity extends BaseActivity  implements OptionListFragmen
             map.put("pan", userRegistrationDetails.getPan());
         if (userRegistrationDetails.getMainCategory() != null && !Utility.isEmpty(userRegistrationDetails.getMainCategory().getId()))
             map.put("category_id", userRegistrationDetails.getMainCategory().getId());
+        map.put("is_fmcg", String.valueOf(userRegistrationDetails.isFmcg()));
+        map.put("is_assisted", String.valueOf(userRegistrationDetails.isAssisted()));
+        map.put("has_pos", String.valueOf(userRegistrationDetails.isHasPos()));
+
 
         new RetrofitHelper(this).updatePanGstinInfo(map, new RetrofitHelper.RetrofitCallback() {
             @Override
@@ -351,7 +353,7 @@ public class RegisterActivity extends BaseActivity  implements OptionListFragmen
 
         String mainCategory = et_main_category.getText().toString();
 
-        if ((!Utility.isEmpty(pan) || !Utility.isEmpty(gstin)) &&  !Utility.isEmpty(mainCategory.trim()))
+        if ((!Utility.isEmpty(pan) || !Utility.isEmpty(gstin)) && !Utility.isEmpty(mainCategory.trim()))
             Utility.enableButton(this, btn_register_now, true);
         else
             Utility.enableButton(this, btn_register_now, false);
@@ -367,7 +369,15 @@ public class RegisterActivity extends BaseActivity  implements OptionListFragmen
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+
+        FragmentManager fm = getSupportFragmentManager();
+        if (fm.getBackStackEntryCount() > 0) {
+            fm.popBackStack();
+
+            if (scroll_view.getVisibility() == View.VISIBLE)
+                super.onBackPressed();
+        } else
+            super.onBackPressed();
     }
 
     @Override
@@ -386,6 +396,7 @@ public class RegisterActivity extends BaseActivity  implements OptionListFragmen
         }
     }
 
+
     @Override
     public void onCancel() {
         container.setVisibility(View.GONE);
@@ -396,5 +407,29 @@ public class RegisterActivity extends BaseActivity  implements OptionListFragmen
             getSupportFragmentManager().beginTransaction().remove(fragment).commit();
 
         enableDisableRegisterButton();
+    }
+
+    @Override
+    public void onNext(int stage) {
+        if (stage == 0)
+            showSellerTypeFragment(++stage);
+        else {
+            container.setVisibility(View.GONE);
+            scroll_view.setVisibility(View.VISIBLE);
+
+            toolbarText.setText(getString(R.string.register));
+        }
+    }
+
+    private void showSellerTypeFragment(int flow) {
+        toolbarText.setText(getString(R.string.select_service_type));
+
+        SellerTypeFragment sellerTypeFragment = SellerTypeFragment.newInstance(flow);
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.container, sellerTypeFragment, "SellerTypeFragment");
+        transaction.addToBackStack("SellerTypeFragment");
+        transaction.commitAllowingStateLoss();
+        container.setVisibility(View.VISIBLE);
+        scroll_view.setVisibility(View.GONE);
     }
 }

@@ -101,6 +101,7 @@
     <string name="add_offers">Add Offers</string>
     <string name="my_offers">My Offers</string>
     <string name="create_new_offer">Create New Offer</string>
+    <string name="update_new_offer">Update Offer</string>
     <string name="upload_offer_image">Upload Offer Image</string>
     <string name="select_from_default">Choose image from default templates</string>
     <string name="offer_name">Offer Name</string>
@@ -245,6 +246,7 @@
     <string name="active">Active</string>
     <string name="verified">Verified</string>
     <string name="add_delivery_boy">Add Delivery Agent</string>
+    <string name="update_delivery_boy">Update Delivery Agent</string>
     <string name="delete_agent">Are you sure you want to delete this Agent?</string>
     <string name="agent_name">Agent Name</string>
     <string name="base_price">Base Price (up to one hour)</string>
@@ -265,7 +267,16 @@
     <string name="redeemed_points">Points Settled : </string>
     <string name="total_points_colon">Points Added: </string>
     <string name="total_amount">Total Amount</string>
-    <string name="base_price_value">Base Price: ₹ %1$s (upto one hour)</string>
+    <string name="base_price_value">Base Price: ₹ %1$s (up to one hour)</string>
     <string name="additional_price_value">*₹ %1$s each additional 30 Min.</string>
+    <string name="customer_added_successfully">Customer added successfully</string>
+    <string name="add">Add</string>
+    <string name="update">Update</string>
+    <string name="fmcg_only">FMCG Only</string>
+    <string name="fmcg_and_assisted"><![CDATA[FMCG & Assisted Services]]></string>
+    <string name="assisted_only">Assisted Services Only</string>
+    <string name="select_service_type">Select Service Type</string>
+    <string name="total_agents">Total Agents</string>
+    <string name="cashback_to_users">Cashback To Users</string>
 
 </resources>

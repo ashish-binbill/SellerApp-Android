@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Registration.SellerTypeFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/dimen_20dp">
+
+        <RadioGroup
+            android:id="@+id/radio_group_seller"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/dimen_20dp"
+            android:visibility="visible">
+
+            <android.support.v7.widget.AppCompatRadioButton
+                android:id="@+id/rb_fmcg"
+                style="@style/RadionButton"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_50dp"
+                android:checked="true"
+                android:paddingStart="@dimen/dimen_20dp"
+                android:text="@string/fmcg_only"
+                android:textColor="@color/text_44"
+                android:textSize="@dimen/dimen_16dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_1dp"
+                android:background="@color/divider" />
+
+            <android.support.v7.widget.AppCompatRadioButton
+                android:id="@+id/rb_fmcg_assisted"
+                style="@style/RadionButton"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dimen_50dp"
+                android:layout_marginTop="@dimen/dimen_5dp"
+                android:paddingStart="@dimen/dimen_20dp"
+                android:text="@string/fmcg_and_assisted"
+                android:textColor="@color/text_44"
+                android:textSize="@dimen/dimen_16dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_1dp"
+                android:background="@color/divider" />
+
+            <android.support.v7.widget.AppCompatRadioButton
+                android:id="@+id/rb_assisted"
+                style="@style/RadionButton"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dimen_50dp"
+                android:layout_marginTop="@dimen/dimen_5dp"
+                android:paddingStart="@dimen/dimen_20dp"
+                android:text="@string/assisted_only"
+                android:textColor="@color/text_44"
+                android:textSize="@dimen/dimen_16dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_1dp"
+                android:background="@color/divider" />
+
+        </RadioGroup>
+
+        <LinearLayout
+            android:id="@+id/ll_pos"
+            android:layout_width="match_parent"
+            android:visibility="gone"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif"
+                android:lineSpacingExtra="-0.5sp"
+                android:layout_marginLeft="@dimen/dimen_20dp"
+                android:layout_marginTop="@dimen/dimen_20dp"
+                android:textColor="@color/text_44"
+                android:textSize="@dimen/dimen_15dp"
+                android:textStyle="bold"
+                android:text="Billing Software" />
+
+            <RadioGroup
+                android:id="@+id/radio_group_pos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="@dimen/dimen_20dp">
+
+                <android.support.v7.widget.AppCompatRadioButton
+                    android:id="@+id/rb_pos_yes"
+                    style="@style/RadionButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/dimen_50dp"
+                    android:checked="true"
+                    android:layout_marginTop="@dimen/dimen_5dp"
+                    android:paddingStart="@dimen/dimen_20dp"
+                    android:text="@string/yes"
+                    android:textColor="@color/text_44"
+                    android:textSize="@dimen/dimen_16dp" />
+
+                <android.support.v7.widget.AppCompatRadioButton
+                    android:id="@+id/rb_pos_no"
+                    style="@style/RadionButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/dimen_50dp"
+                    android:layout_marginTop="@dimen/dimen_5dp"
+                    android:paddingStart="@dimen/dimen_20dp"
+                    android:text="@string/no"
+                    android:layout_marginLeft="@dimen/dimen_20dp"
+                    android:textColor="@color/text_44"
+                    android:textSize="@dimen/dimen_16dp" />
+
+            </RadioGroup>
+
+        </LinearLayout>
+
+        <com.binbill.seller.CustomViews.AppButton
+            android:id="@+id/btn_next"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_50dp"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="@dimen/dimen_20dp"
+            android:text="@string/next"
+            android:textSize="@dimen/dimen_20dp" />
+
+    </RelativeLayout>
+
+
+</FrameLayout>

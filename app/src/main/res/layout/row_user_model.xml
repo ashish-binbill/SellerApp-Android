@@ -54,13 +54,14 @@
                     android:textSize="11sp" />
 
                 <TextView
-                    android:id="@+id/tv_user_address"
+                    android:id="@+id/tv_address"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimen_12dp"
+                    android:fontFamily="sans-serif-light"
+                    android:layout_marginTop="@dimen/dimen_10dp"
                     android:text=""
-                    android:textColor="@color/text_44"
-                    android:textSize="11sp" />
+                    android:textColor="@color/text_77"
+                    android:textSize="@dimen/dimen_12dp" />
 
                 <com.binbill.seller.CustomViews.AppButton
                     android:id="@+id/add_customer"

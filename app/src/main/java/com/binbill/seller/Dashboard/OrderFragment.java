@@ -47,7 +47,7 @@ public class OrderFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        ApiHelper.fetchAllCustomer(getActivity());
+//        ApiHelper.fetchOrders(getActivity());
     }
 
     @Override

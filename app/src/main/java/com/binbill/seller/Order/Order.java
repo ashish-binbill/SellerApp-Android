@@ -33,6 +33,9 @@ public class Order implements Serializable {
     @SerializedName("is_modified")
     boolean modified;
 
+    @SerializedName("order_item_counts")
+    String itemCount;
+
     @SerializedName("order_details")
     ArrayList<OrderItem> orderItems;
 
@@ -41,6 +44,10 @@ public class Order implements Serializable {
 
     @SerializedName("user_address_detail")
     String address;
+
+    public String getItemCount() {
+        return itemCount;
+    }
 
     public String getAddress() {
         return address;

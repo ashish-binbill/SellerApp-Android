@@ -252,6 +252,7 @@ public class OTPLoginActivity extends BaseActivity {
                                             DashboardModel dashboardModel = new Gson().fromJson(jsonObject.toString(), classType);
                                             AppSession.getInstance(OTPLoginActivity.this).setDashboardData(dashboardModel);
 
+                                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                             startActivity(intent);
                                             finish();
                                         }

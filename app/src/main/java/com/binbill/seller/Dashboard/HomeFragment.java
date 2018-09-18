@@ -5,10 +5,12 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.binbill.seller.APIHelper.ApiHelper;
@@ -16,7 +18,6 @@ import com.binbill.seller.AppSession;
 import com.binbill.seller.Model.DashboardModel;
 import com.binbill.seller.Offers.OfferActivity_;
 import com.binbill.seller.R;
-import com.binbill.seller.Registration.RegistrationResolver;
 
 public class HomeFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
@@ -25,7 +26,10 @@ public class HomeFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private static final int ASSISTED_ONLY_USER = 2;
+    private static final int FMCG_ASSISTED_USER = 0;
+    private static final int FMCG_ONLY_USER_HAS_POS = 1;
+    private static final int FMCG_ONLY_USER_NO_POS = 2;
+    private static final int ASSISTED_ONLY_USER = 3;
 
 
     public HomeFragment() {
@@ -74,7 +78,6 @@ public class HomeFragment extends Fragment {
         DashboardModel dashboardModel = AppSession.getInstance(getActivity()).getDashboardData();
         if (dashboardModel != null) {
             transactionValue.setText(getString(R.string.rupee_sign) + " " + dashboardModel.getTotalTransactionValue());
-            customerCount.setText(dashboardModel.getConsumerCount());
             pendingCredit.setText(getString(R.string.rupee_sign) + " " + dashboardModel.getCreditPending());
             loyalty.setText(dashboardModel.getLoyaltyPoints());
         }
@@ -87,18 +90,19 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        CardView manageCategories = (CardView) view.findViewById(R.id.manage_categories);
-        manageCategories.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = RegistrationResolver.getNextIntent(getActivity(), 4);
-                if (intent != null)
-                    startActivity(intent);
-            }
-        });
+        TextView tvLabelCustomer = (TextView) view.findViewById(R.id.tv_label_customer);
+        ImageView ivLabelCustomer = (ImageView) view.findViewById(R.id.iv_customer);
 
-        if(DashboardActivity.sellerType == ASSISTED_ONLY_USER)
-            manageCategories.setVisibility(View.GONE);
+        switch (dashboardModel.getSellerType()) {
+            case ASSISTED_ONLY_USER:
+                tvLabelCustomer.setText(getString(R.string.total_agents));
+                ivLabelCustomer.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_customer_icon));
+                break;
+            default:
+                tvLabelCustomer.setText(getString(R.string.cashback_to_users));
+                ivLabelCustomer.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_cashback));
+                break;
+        }
 
     }
 

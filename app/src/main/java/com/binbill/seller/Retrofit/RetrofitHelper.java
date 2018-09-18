@@ -573,6 +573,52 @@ public class RetrofitHelper {
         });
     }
 
+    public void createAssistedServiceDeliveryBoy(String name, String mobile, String profileImageDetails, final RetrofitCallback retrofitCallback) {
+
+        RetrofitApiInterface apiService =
+                RetrofitHelper.getClient(mContext).create(RetrofitApiInterface.class);
+
+        HashMap<String, String> assistedService = new HashMap<String, String>();
+        assistedService.put("mobile_no", mobile);
+        assistedService.put("name", name);
+        String profileImageString = "";
+        try {
+
+            if (!Utility.isEmpty(profileImageDetails)) {
+                profileImageString = new JSONTokener(profileImageDetails).nextValue().toString();
+                assistedService.put("profile_image_detail", profileImageString);
+            }
+
+            JSONArray serviceType = new JSONArray();
+            JSONObject object = new JSONObject();
+            object.put("service_type_id", Constants.UPLOAD_TYPE_ASSISTED_DELIVERY_BOY);
+            String serviceTypeObject = new JSONTokener(object.toString()).nextValue().toString();
+            serviceType.put(serviceTypeObject);
+
+            assistedService.put("service_type_detail", new JSONTokener(serviceType.toString()).nextValue().toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        Call<JsonObject> call = apiService.createAssistedService(AppSession.getInstance(mContext).getSellerId(), assistedService);
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (response.isSuccessful()) {
+                    JsonObject body = response.body();
+                    retrofitCallback.onResponse(body.toString());
+                } else
+                    retrofitCallback.onErrorResponse();
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable throwable) {
+                retrofitCallback.onErrorResponse();
+            }
+        });
+    }
+
+
     public void createAssistedServiceDeliveryBoy(String name, String mobile, String serviceTypeId, String profileImageDetails, final RetrofitCallback retrofitCallback) {
 
         RetrofitApiInterface apiService =

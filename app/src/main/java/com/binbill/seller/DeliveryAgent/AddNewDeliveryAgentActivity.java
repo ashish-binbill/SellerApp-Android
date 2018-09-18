@@ -30,7 +30,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.binbill.seller.AppSession;
-import com.binbill.seller.AssistedService.AddAssistedServiceActivity;
 import com.binbill.seller.BaseActivity;
 import com.binbill.seller.Constants;
 import com.binbill.seller.CustomViews.AppButton;
@@ -90,20 +89,20 @@ public class AddNewDeliveryAgentActivity extends BaseActivity {
 
     @AfterViews
     public void setUpView() {
-        setUpToolbar();
-        setUpListeners();
 
         if (getIntent() != null && getIntent().hasExtra(Constants.EDIT_DELIVERY_BOY)) {
+            mType = Constants.EDIT_DELIVERY_BOY;
             DeliveryModel userModel = (DeliveryModel) getIntent().getSerializableExtra(Constants.EDIT_DELIVERY_BOY);
             assistedServiceId = userModel.getDeliveryBoyId();
             setUpData(userModel);
         }
 
+        setUpToolbar();
+        setUpListeners();
         enableDisableSaveButton();
     }
 
     private void setUpData(DeliveryModel userModel) {
-        mType = Constants.EDIT_DELIVERY_BOY;
 
         et_name.setText(userModel.getName());
         et_mobile.setText(userModel.getMobile());
@@ -159,6 +158,8 @@ public class AddNewDeliveryAgentActivity extends BaseActivity {
                         }
                     });
         }
+
+        btn_save.setText(getString(R.string.update));
     }
 
     private void setUpListeners() {
@@ -250,7 +251,7 @@ public class AddNewDeliveryAgentActivity extends BaseActivity {
                         }
                     });
         } else {
-            new RetrofitHelper(this).createAssistedServiceDeliveryBoy(name, mobile, Constants.UPLOAD_TYPE_ASSISTED_DELIVERY_BOY, fileDetailsJsonProfile == null ? "" : fileDetailsJsonProfile.toString(), new RetrofitHelper.RetrofitCallback() {
+            new RetrofitHelper(this).createAssistedServiceDeliveryBoy(name, mobile, fileDetailsJsonProfile == null ? "" : fileDetailsJsonProfile.toString(), new RetrofitHelper.RetrofitCallback() {
                 @Override
                 public void onResponse(String response) {
                     try {
@@ -535,7 +536,11 @@ public class AddNewDeliveryAgentActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         getSupportActionBar().setTitle("");
-        toolbarText.setText(getString(R.string.add_delivery_boy));
+
+        if (mType == Constants.EDIT_DELIVERY_BOY)
+            toolbarText.setText(getString(R.string.update_delivery_boy));
+        else
+            toolbarText.setText(getString(R.string.add_delivery_boy));
     }
 
     private void enableDisableSaveButton() {

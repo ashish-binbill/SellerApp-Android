@@ -43,6 +43,33 @@ public class UserRegistrationDetails implements Serializable {
     HashMap<String, ArrayList<String>> fmcgCategoriesSelected;
     private HashMap<String, ArrayList<String>> fmcgBrandsSelected;
 
+    boolean fmcg;
+    boolean assisted;
+    boolean hasPos;
+
+    public boolean isFmcg() {
+        return fmcg;
+    }
+
+    public boolean isAssisted() {
+        return assisted;
+    }
+
+    public boolean isHasPos() {
+        return hasPos;
+    }
+
+    public void setFmcg(boolean fmcg) {
+        this.fmcg = fmcg;
+    }
+
+    public void setAssisted(boolean assisted) {
+        this.assisted = assisted;
+    }
+
+    public void setHasPos(boolean hasPos) {
+        this.hasPos = hasPos;
+    }
 
     public String getId() {
         return id;

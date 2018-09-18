@@ -31,6 +31,23 @@ public class DashboardModel implements Serializable {
     @SerializedName("is_fmcg")
     boolean fmcg;
 
+    @SerializedName("has_pos")
+    boolean hasPos;
+
+    public boolean isHasPos() {
+        return hasPos;
+    }
+
+    transient int sellerType;
+
+    public int getSellerType() {
+        return sellerType;
+    }
+
+    public void setSellerType(int sellerType) {
+        this.sellerType = sellerType;
+    }
+
     public boolean isAssisted() {
         return assisted;
     }

@@ -95,6 +95,8 @@ public class UserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         void onAddPoints(int position);
 
         void onAddCredits(int position);
+
+        void onCustomerAdded(int position);
     }
 
     public static class UserHolder extends RecyclerView.ViewHolder {
@@ -111,7 +113,7 @@ public class UserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             mCard = (CardView) view.findViewById(R.id.cv_root);
             mUserName = (TextView) view.findViewById(R.id.tv_user_name);
             mUserTransactions = (TextView) view.findViewById(R.id.tv_user_transactions);
-            mUserAddress = (TextView) view.findViewById(R.id.tv_user_address);
+            mUserAddress = (TextView) view.findViewById(R.id.tv_address);
             userImage = (ImageView) view.findViewById(R.id.iv_user_image);
             mCardOverlay = (RelativeLayout) view.findViewById(R.id.card_selected);
             mAddCustomer = (AppButton) view.findViewById(R.id.add_customer);
@@ -121,7 +123,7 @@ public class UserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
     public static class MyCustomerHolder extends RecyclerView.ViewHolder {
         protected View mRootCard;
         protected CardView mCard;
-        protected TextView mUserName, mUserTransactions, mUserCredit, mUserPoints, mAddCredits, mAddPoints, mDistance, mStatus;
+        protected TextView mUserName, mUserTransactions, mUserCredit,mUserAddress,  mUserPoints, mAddCredits, mAddPoints, mDistance, mStatus;
         protected ImageView userImage;
 
         public MyCustomerHolder(View view) {
@@ -133,6 +135,7 @@ public class UserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             mUserCredit = (TextView) view.findViewById(R.id.tv_user_credit);
             mUserPoints = (TextView) view.findViewById(R.id.tv_user_points);
             mUserTransactions = (TextView) view.findViewById(R.id.tv_user_txn);
+            mUserAddress = (TextView) view.findViewById(R.id.tv_address);
             mAddCredits = (TextView) view.findViewById(R.id.tv_add_credit);
             mAddPoints = (TextView) view.findViewById(R.id.tv_add_points);
             mDistance = (TextView) view.findViewById(R.id.tv_distance);
@@ -201,9 +204,14 @@ public class UserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         userHolder.mUserTransactions.setText(model.getTransactionCount());
         userHolder.mUserCredit.setText(model.getUserCredit());
         userHolder.mUserPoints.setText(model.getUserLoyalty());
+        if(!Utility.isEmpty(model.getAddress())) {
+            userHolder.mUserAddress.setText(model.getAddress());
+            userHolder.mUserAddress.setVisibility(View.VISIBLE);
+        }else
+            userHolder.mUserAddress.setVisibility(View.GONE);
 
         if (!Utility.isEmpty(model.getUserDistance())) {
-            userHolder.mDistance.setText(model.getUserDistance());
+            userHolder.mDistance.setText(model.getUserDistance() + " " + model.getDistanceMetric());
             userHolder.mDistance.setVisibility(View.VISIBLE);
 
         } else
@@ -295,7 +303,11 @@ public class UserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             transactionCount = Integer.parseInt(model.getTransactionCount());
 
         userHolder.mUserTransactions.setText(userHolder.userImage.getContext().getResources().getQuantityString(R.plurals.transaction, transactionCount, transactionCount));
-        userHolder.mUserAddress.setText(model.getUserLocation());
+        if(!Utility.isEmpty(model.getAddress())) {
+            userHolder.mUserAddress.setText(model.getAddress());
+            userHolder.mUserAddress.setVisibility(View.VISIBLE);
+        }else
+            userHolder.mUserAddress.setVisibility(View.GONE);
 
         if (model.getUserImage() != null && !Utility.isEmpty(model.getUserImage())) {
 
@@ -382,6 +394,7 @@ public class UserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 
                             if (jsonObject.optBoolean("status"))
                                 userHolder.mAddCustomer.setVisibility(View.GONE);
+
                         } catch (JSONException e) {
 
                         }

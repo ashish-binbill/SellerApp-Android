@@ -97,6 +97,11 @@ public class AddOfferActivity extends BaseActivity implements BottomSheetHelper.
 
     @AfterViews
     public void setUpView() {
+        if (getIntent().hasExtra(Constants.OFFER_ITEM)) {
+            mType = EDIT_OFFER;
+            setUpData((OfferItem) getIntent().getSerializableExtra(Constants.OFFER_ITEM));
+        }
+
         SpannableString content = new SpannableString(getString(R.string.upload_offer_image));
         content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
         tv_upload_image.setText(content);
@@ -108,11 +113,6 @@ public class AddOfferActivity extends BaseActivity implements BottomSheetHelper.
         enableDisableVerifyButton();
         setUpToolbar();
         setUpListener();
-
-        if (getIntent().hasExtra(Constants.OFFER_ITEM)) {
-            mType = EDIT_OFFER;
-            setUpData((OfferItem) getIntent().getSerializableExtra(Constants.OFFER_ITEM));
-        }
     }
 
     private void setUpData(OfferItem offer) {
@@ -142,6 +142,8 @@ public class AddOfferActivity extends BaseActivity implements BottomSheetHelper.
         mOfferId = offer.getOfferId();
 
         fileDetailsJson = new JSONArray(offer.getOfferFiles());
+
+        btn_submit.setText(getString(R.string.update));
     }
 
     private void setUpListener() {
@@ -477,6 +479,10 @@ public class AddOfferActivity extends BaseActivity implements BottomSheetHelper.
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         getSupportActionBar().setTitle("");
+
+        if(mType == EDIT_OFFER)
+            toolbarText.setText(getString(R.string.create_new_offer));
+        else
         toolbarText.setText(getString(R.string.create_new_offer));
     }
 

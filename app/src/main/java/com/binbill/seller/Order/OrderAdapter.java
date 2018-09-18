@@ -106,11 +106,11 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         orderHolder.mAddress.setText(model.getAddress());
 
 
-        ArrayList<OrderItem> itemList = model.getOrderItems();
-        if (itemList != null)
-            orderHolder.mItemCount.setText(itemList.size() + " Items");
+        String itemCount = model.getItemCount();
+        if (itemCount != null)
+            orderHolder.mItemCount.setText(itemCount + " Items");
         else
-            orderHolder.mItemCount.setText("0");
+            orderHolder.mItemCount.setText("0 Items");
         orderHolder.mDate.setText(Utility.getFormattedDate(9, model.getOrderCreationDate(), 0));
 
         /**

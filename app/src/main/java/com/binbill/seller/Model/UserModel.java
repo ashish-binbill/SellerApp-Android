@@ -70,7 +70,21 @@ public class UserModel implements Serializable {
     @SerializedName("distance")
     String userDistance;
 
+    @SerializedName("distanceMetrics")
+    String distanceMetric;
+
+    @SerializedName("address")
+    String address;
+
+    public String getAddress() {
+        return address;
+    }
+
     transient boolean isSelected = false;
+
+    public String getDistanceMetric() {
+        return distanceMetric;
+    }
 
     public String getUserDistance() {
         return userDistance;

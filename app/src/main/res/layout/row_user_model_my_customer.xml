@@ -42,8 +42,19 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-medium"
                     android:text="Arya Stark"
+                    android:textStyle="bold"
                     android:textColor="@color/text_44"
                     android:textSize="@dimen/dimen_16dp" />
+
+                <TextView
+                    android:id="@+id/tv_address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-light"
+                    android:layout_marginTop="@dimen/dimen_10dp"
+                    android:text=""
+                    android:textColor="@color/text_77"
+                    android:textSize="@dimen/dimen_12dp" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"

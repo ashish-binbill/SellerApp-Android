@@ -58,11 +58,12 @@
                         android:layout_height="wrap_content"
                         android:layout_marginRight="@dimen/dimen_10dp"
                         android:layout_weight="1"
+                        android:textStyle="bold"
                         android:fontFamily="sans-serif-medium"
                         android:lineSpacingExtra="2sp"
                         android:text=""
                         android:textColor="@color/text_44"
-                        android:textSize="@dimen/dimen_14dp" />
+                        android:textSize="@dimen/dimen_16dp" />
 
                     <ImageView
                         android:id="@+id/iv_status_color"
@@ -89,10 +90,10 @@
                     android:id="@+id/tv_address"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimen_20dp"
-                    android:lineSpacingExtra="3sp"
+                    android:fontFamily="sans-serif-light"
+                    android:layout_marginTop="@dimen/dimen_10dp"
                     android:text=""
-                    android:textColor="@color/text_44"
+                    android:textColor="@color/text_77"
                     android:textSize="@dimen/dimen_12dp" />
 
                 <TextView

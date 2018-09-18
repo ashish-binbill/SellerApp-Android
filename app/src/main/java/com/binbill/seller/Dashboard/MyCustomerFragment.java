@@ -237,6 +237,11 @@ public class MyCustomerFragment extends Fragment implements UserAdapter.CardInte
         invokeAddSettleCreditDialog(ADD_CREDIT, selectedModel.getUserId());
     }
 
+    @Override
+    public void onCustomerAdded(int position) {
+
+    }
+
     private void invokeAddSettleCreditDialog(final int type, final String userId) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getLayoutInflater();

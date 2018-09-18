@@ -390,6 +390,11 @@ public class PublishOfferToUserActivity extends BaseActivity implements UserAdap
 
     }
 
+    @Override
+    public void onCustomerAdded(int position) {
+
+    }
+
     public void invokeSuccessDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
