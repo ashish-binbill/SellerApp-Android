@@ -341,7 +341,7 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
 
         DashboardModel dashboardModel = AppSession.getInstance(this).getDashboardData();
 
-        sellerType = FMCG_ASSISTED_USER;
+        sellerType = FMCG_ASSISTED_USER_POS;
 
         if (dashboardModel.isAssisted()) {
             if (dashboardModel.isFmcg()) {
