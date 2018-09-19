@@ -283,5 +283,13 @@
     <string name="available_bbcash">Available BBCash</string>
     <string name="redeem_via_paytm">Redeem Via Paytm</string>
     <string name="bbcash_transactions">BBCash Transactions</string>
+    <string name="name_string">Name : %1$s</string>
+    <string name="received_from_home_delivery">Received from BinBill for Home Delivery</string>
+    <string name="received_from_customer">Received from Customer</string>
+    <string name="success">Success</string>
+    <string name="no_wallet_txn">You dont have any wallet transactions</string>
+    <string name="confirm_paytm">Please confirm your PayTM Number - %1$s Or go back to Redeem Via Seller.</string>
+    <string name="confirm_number">Confirm Number</string>
+    <string name="redeem_successfully">Request generated successfully to redeem wallet amount</string>
 
 </resources>

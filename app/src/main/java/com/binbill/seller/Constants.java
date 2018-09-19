@@ -57,6 +57,7 @@ public class Constants {
     public static final String GET_SELLER_CATEGORIES = "sellers/{seller_id}/categories";
     public static final String SAVE_BRANDS_FOR_SELLER = "sellers/{seller_id}/providers/brands";
     public static final String FETCH_WALLET_TRANSACTIONS = "sellers/{seller_id}/wallet";
+    public static final String REDEEM_WALLET_AMOUNT = "sellers/{seller_id}/wallet/redeem";
 
     public static final int PERMISSION_READ_SMS = 100;
     public static final int PERMISSION_CAMERA = 101;
@@ -105,7 +106,7 @@ public class Constants {
     public static final String UPLOAD_TYPE_ASSISTED_SERVICE = "3";
     public static final String UPLOAD_TYPE_SELLER_OFFER = "4";
     public static final String UPLOAD_TYPE_ASSISTED_SERVICE_PROFILE = "5";
-    public static final String UPLOAD_TYPE_ASSISTED_DELIVERY_BOY= "0";
+    public static final String UPLOAD_TYPE_ASSISTED_DELIVERY_BOY = "0";
     public static final String FILE_URI = "FILE_URI";
     public static final String TYPE = "TYPE";
     public static final String ADD_USER_FOR_OFFER = "ADD_USER_FOR_OFFER";

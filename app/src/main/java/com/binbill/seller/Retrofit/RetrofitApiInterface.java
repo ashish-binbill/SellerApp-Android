@@ -183,4 +183,7 @@ public interface RetrofitApiInterface {
 
     @GET(Constants.GET_SELLER_CATEGORIES)
     Call<JsonObject> fetchSellerCategories(@Path(value = "seller_id", encoded = true) String sellerId);
+
+    @PUT(Constants.REDEEM_WALLET_AMOUNT)
+    Call<JsonObject> redeemWalletAmount(@Path(value = "seller_id", encoded = true) String sellerId);
 }

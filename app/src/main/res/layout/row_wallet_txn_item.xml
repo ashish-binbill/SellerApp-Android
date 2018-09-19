@@ -29,8 +29,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_centerInParent="true"
-                    android:layout_margin="@dimen/dimen_15dp"
-                    android:src="@drawable/ic_user" />
+                    android:layout_margin="@dimen/dimen_5dp" />
             </RelativeLayout>
 
 
@@ -40,23 +39,100 @@
                 android:layout_marginLeft="@dimen/dimen_20dp"
                 android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-medium"
-                    android:lineSpacingExtra="5.5sp"
-                    android:text="Redeemed at Paytm"
-                    android:textColor="@color/text_44"
-                    android:textSize="@dimen/dimen_14dp" />
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tv_title"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="sans-serif-medium"
+                        android:text="Redeemed at Paytm"
+                        android:textStyle="bold"
+                        android:textColor="@color/text_44"
+                        android:textSize="@dimen/dimen_14dp" />
+
+                    <TextView
+                        android:id="@+id/tv_amount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dimen_10dp"
+                        android:fontFamily="sans-serif-medium"
+                        android:gravity="end"
+                        android:text=""
+                        android:textStyle="bold"
+                        android:textColor="@color/text_44"
+                        android:textSize="@dimen/dimen_14dp" />
+
+                </LinearLayout>
 
                 <TextView
-                    android:text="Jul 27, 2018"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/tv_user_name"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:lineSpacingExtra="8sp"
+                    android:text="@string/name_string"
                     android:layout_marginTop="@dimen/dimen_2dp"
+                    android:textColor="@color/text_44"
+                    android:textSize="@dimen/dimen_12dp"
+                    android:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/tv_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimen_5dp"
+                    android:lineSpacingExtra="8sp"
+                    android:text=""
                     android:textColor="#999999"
                     android:textSize="11sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dimen_10dp"
+                        android:lineSpacingExtra="8sp"
+                        android:text="Transaction ID : "
+                        android:textColor="@color/text_44"
+                        android:textSize="@dimen/dimen_12dp" />
+
+
+                    <TextView
+                        android:id="@+id/tv_transaction_id"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dimen_10dp"
+                        android:fontFamily="sans-serif-medium"
+                        android:lineSpacingExtra="8sp"
+                        android:text="NDP2087652"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/dimen_12dp" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_user_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:visibility="gone"
+                    android:background="@drawable/tag_pending"
+                    android:paddingBottom="@dimen/dimen_2dp"
+                    android:paddingLeft="@dimen/dimen_5dp"
+                    android:paddingRight="@dimen/dimen_5dp"
+                    android:paddingTop="@dimen/dimen_2dp"
+                    android:text="@string/pending"
+                    android:textColor="@color/color_white"
+                    android:textSize="@dimen/dimen_10dp" />
+
             </LinearLayout>
         </LinearLayout>
 
