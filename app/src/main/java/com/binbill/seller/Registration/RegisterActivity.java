@@ -232,6 +232,7 @@ public class RegisterActivity extends BaseActivity implements OptionListFragment
                     int registrationIndex = getIntent().getIntExtra(Constants.REGISTRATION_INDEX, -1);
                     Intent intent = RegistrationResolver.getNextIntent(this, registrationIndex);
                     startActivity(intent);
+                    finish();
                 } else {
                     /**
                      * Check if seller already exists
