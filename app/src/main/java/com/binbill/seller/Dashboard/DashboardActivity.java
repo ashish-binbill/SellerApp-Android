@@ -68,10 +68,11 @@ import okhttp3.Route;
 public class DashboardActivity extends BaseActivity implements YesNoDialogFragment.YesNoClickInterface,
         AdditionalServiceDialogFragment.AdditionalServiceClickInterface, NavigationView.OnNavigationItemSelectedListener {
 
-    private static final int FMCG_ASSISTED_USER = 0;
-    private static final int FMCG_ONLY_USER_HAS_POS = 1;
-    private static final int FMCG_ONLY_USER_NO_POS = 2;
-    private static final int ASSISTED_ONLY_USER = 3;
+    private static final int FMCG_ASSISTED_USER_POS = 0;
+    private static final int FMCG_ASSISTED_USER_NO_POS = 1;
+    private static final int FMCG_ONLY_USER_HAS_POS = 2;
+    private static final int FMCG_ONLY_USER_NO_POS = 3;
+    private static final int ASSISTED_ONLY_USER = 4;
     @ViewById
     Toolbar toolbar;
 
@@ -344,7 +345,10 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
 
         if (dashboardModel.isAssisted()) {
             if (dashboardModel.isFmcg()) {
-                sellerType = FMCG_ASSISTED_USER;
+                if (dashboardModel.isHasPos())
+                    sellerType = FMCG_ASSISTED_USER_POS;
+                else
+                    sellerType = FMCG_ASSISTED_USER_NO_POS;
             } else
                 sellerType = ASSISTED_ONLY_USER;
         } else {
@@ -360,7 +364,10 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
         AppSession.getInstance(this).setDashboardData(dashboardModel);
         Menu menu = bottom_navigation.getMenu();
         switch (sellerType) {
-            case FMCG_ASSISTED_USER:
+            case FMCG_ASSISTED_USER_POS:
+                break;
+            case FMCG_ASSISTED_USER_NO_POS:
+                menu.removeItem(R.id.action_verification);
                 break;
             case FMCG_ONLY_USER_HAS_POS:
                 menu.removeItem(R.id.action_assisted);
