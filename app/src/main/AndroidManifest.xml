@@ -140,7 +140,7 @@
             android:name=".DeliveryAgent.AddNewDeliveryAgentActivity_"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Dashboard.WalletActivity_"
+            android:name=".Wallet.WalletActivity_"
             android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
