@@ -76,31 +76,10 @@ public class PastOrderFragment extends Fragment implements OrderAdapter.OrderSel
         fetchOrders();
     }
 
-
-    private void connectSocket() {
-        BinBillSeller.getSocket(getActivity()).connect();
-        BinBillSeller.getSocket(getActivity()).on("order-placed", SOCKET_EVENT_ORDER_PLACED);
-        BinBillSeller.getSocket(getActivity()).on("order-status-change", SOCKET_EVENT_ORDER_STATUS_CHANGED);
-    }
-
     @Override
     public void onStop() {
         super.onStop();
     }
-
-    private Emitter.Listener SOCKET_EVENT_ORDER_PLACED = new Emitter.Listener() {
-        @Override
-        public void call(Object... args) {
-            fetchOrders();
-        }
-    };
-
-    private Emitter.Listener SOCKET_EVENT_ORDER_STATUS_CHANGED = new Emitter.Listener() {
-        @Override
-        public void call(Object... args) {
-            fetchOrders();
-        }
-    };
 
     @Override
     public void setMenuVisibility(final boolean visible) {
@@ -177,14 +156,16 @@ public class PastOrderFragment extends Fragment implements OrderAdapter.OrderSel
                         shimmerview.setVisibility(View.GONE);
                         noDataLayout.setVisibility(View.VISIBLE);
 
-                        ((BaseActivity) getActivity()).showSnackBar(getString(R.string.something_went_wrong));
+                        if (isVisible() && isAdded())
+                            ((BaseActivity) getActivity()).showSnackBar(getString(R.string.something_went_wrong));
                     }
                 } catch (JSONException e) {
                     orderListView.setVisibility(View.GONE);
                     shimmerview.setVisibility(View.GONE);
                     noDataLayout.setVisibility(View.VISIBLE);
 
-                    ((BaseActivity) getActivity()).showSnackBar(getString(R.string.something_went_wrong));
+                    if (isVisible() && isAdded())
+                        ((BaseActivity) getActivity()).showSnackBar(getString(R.string.something_went_wrong));
                 }
 
                 swipeRefreshLayout.setRefreshing(false);
@@ -197,8 +178,10 @@ public class PastOrderFragment extends Fragment implements OrderAdapter.OrderSel
                 shimmerview.setVisibility(View.GONE);
                 noDataLayout.setVisibility(View.VISIBLE);
 
-                ((BaseActivity) getActivity()).showSnackBar(getString(R.string.something_went_wrong));
-                swipeRefreshLayout.setRefreshing(false);
+                if (isVisible() && isAdded()) {
+                    ((BaseActivity) getActivity()).showSnackBar(getString(R.string.something_went_wrong));
+                    swipeRefreshLayout.setRefreshing(false);
+                }
 
             }
         });
