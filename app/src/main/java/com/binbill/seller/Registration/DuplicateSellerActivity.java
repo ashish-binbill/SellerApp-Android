@@ -9,15 +9,19 @@ import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.binbill.seller.APIHelper.ApiHelper;
 import com.binbill.seller.AppSession;
 import com.binbill.seller.BaseActivity;
 import com.binbill.seller.Constants;
 import com.binbill.seller.CustomViews.AppButton;
+import com.binbill.seller.Model.DashboardModel;
 import com.binbill.seller.Model.UserRegistrationDetails;
 import com.binbill.seller.R;
 import com.binbill.seller.Retrofit.RetrofitHelper;
 import com.binbill.seller.SharedPref;
 import com.binbill.seller.Utility;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
@@ -25,6 +29,7 @@ import org.androidannotations.annotations.ViewById;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -115,7 +120,9 @@ public class DuplicateSellerActivity extends BaseActivity implements DuplicateSh
                         try {
                             JSONObject jsonObject = new JSONObject(response);
                             if (jsonObject.optBoolean("status")) {
-                                String sellerId = sellerDetails.getId();
+
+                                JSONObject sellerDetails = jsonObject.getJSONObject("seller_detail");
+                                String sellerId = sellerDetails.getString("id");
                                 userRegistrationDetails.setId(sellerId);
                                 AppSession.getInstance(DuplicateSellerActivity.this).setUserRegistrationDetails(userRegistrationDetails);
 
@@ -178,9 +185,7 @@ public class DuplicateSellerActivity extends BaseActivity implements DuplicateSh
                                 AppSession.getInstance(DuplicateSellerActivity.this).setUserRegistrationDetails(userRegistrationDetails);
 
                                 SharedPref.putString(DuplicateSellerActivity.this, SharedPref.SELLER_ID, sellerId);
-
-                                Intent intent = RegistrationResolver.getNextIntent(DuplicateSellerActivity.this, 3);
-                                startActivity(intent);
+                                makeDashboardCall();
                             } else
                                 showSnackBar(getString(R.string.something_went_wrong));
                         } catch (JSONException e) {
@@ -199,6 +204,42 @@ public class DuplicateSellerActivity extends BaseActivity implements DuplicateSh
                 });
             }
         });
+    }
+
+    private void makeDashboardCall() {
+        btn_next_progress.setVisibility(View.VISIBLE);
+        btn_next.setVisibility(View.GONE);
+
+        ApiHelper.makeDashboardDataCall(this, new RetrofitHelper.RetrofitCallback() {
+            @Override
+            public void onResponse(String response) {
+
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    if (jsonObject.getBoolean("status")) {
+
+                        Type classType = new TypeToken<DashboardModel>() {
+                        }.getType();
+
+                        DashboardModel dashboardModel = new Gson().fromJson(jsonObject.toString(), classType);
+                        AppSession.getInstance(DuplicateSellerActivity.this).setDashboardData(dashboardModel);
+
+                        Intent intent = RegistrationResolver.getNextIntent(DuplicateSellerActivity.this, 3);
+                        startActivity(intent);
+                        finish();
+                    }
+                } catch (JSONException e) {
+                    finish();
+                }
+            }
+
+            @Override
+            public void onErrorResponse() {
+                finish();
+            }
+        });
+
+
     }
 
     private void setUpToolbar() {
