@@ -184,7 +184,7 @@
     <string name="reason_for_rejection">Reason for Rejection</string>
     <string name="customer_name">Customer Name : </string>
     <string name="credit_due">Credit Due : </string>
-    <string name="points_given">Loyalty Discount Given : </string>
+    <string name="points_given">Loyalty Discount : </string>
     <string name="earned_bbcash">Earned BBCash : </string>
     <string name="no_copies">No Bill is attached</string>
     <string name="sku_management">SKU Management</string>
@@ -278,5 +278,9 @@
     <string name="select_service_type">Select Service Type</string>
     <string name="total_agents">Total Agents</string>
     <string name="cashback_to_users">Cashback To Users</string>
+    <string name="wallet_points">%1$s Pts.</string>
+    <string name="my_wallet">My Wallet</string>
+    <string name="available_bbcash">Available BBCash</string>
+    <string name="redeem_via_paytm">Redeem Via Paytm</string>
 
 </resources>

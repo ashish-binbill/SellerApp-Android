@@ -18,6 +18,7 @@ import com.binbill.seller.AppSession;
 import com.binbill.seller.Model.DashboardModel;
 import com.binbill.seller.Offers.OfferActivity_;
 import com.binbill.seller.R;
+import com.binbill.seller.Utility;
 
 public class HomeFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
@@ -96,10 +97,18 @@ public class HomeFragment extends Fragment {
         switch (dashboardModel.getSellerType()) {
             case ASSISTED_ONLY_USER:
                 tvLabelCustomer.setText(getString(R.string.total_agents));
+                if (!Utility.isEmpty(dashboardModel.getAssistedUserCount()))
+                    customerCount.setText(dashboardModel.getTotalUserCashback());
+                else
+                    customerCount.setText("0");
                 ivLabelCustomer.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_customer_icon));
                 break;
             default:
                 tvLabelCustomer.setText(getString(R.string.cashback_to_users));
+                if (!Utility.isEmpty(dashboardModel.getTotalUserCashback()))
+                    customerCount.setText(dashboardModel.getTotalUserCashback());
+                else
+                    customerCount.setText("0");
                 ivLabelCustomer.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_cashback));
                 break;
         }

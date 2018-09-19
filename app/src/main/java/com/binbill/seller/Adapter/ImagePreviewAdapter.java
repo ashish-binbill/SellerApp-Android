@@ -9,7 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
+import com.binbill.seller.AppSession;
 import com.binbill.seller.Constants;
+import com.binbill.seller.Model.FileItem;
 import com.binbill.seller.Model.JobCopy;
 import com.binbill.seller.R;
 import com.binbill.seller.SharedPref;
@@ -33,6 +35,7 @@ import okhttp3.Route;
 
 public class ImagePreviewAdapter extends PagerAdapter {
 
+    ArrayList<FileItem> file;
     Context context;
     ArrayList<Uri> images;
     ArrayList<JobCopy> jobCopies;
@@ -46,6 +49,8 @@ public class ImagePreviewAdapter extends PagerAdapter {
             this.images = (ArrayList<Uri>) images;
         else if (type == Constants.TYPE_URL)
             this.jobCopies = (ArrayList<JobCopy>) images;
+        else if (type == Constants.TYPE_URL_FILE)
+            this.file = (ArrayList<FileItem>) images;
         this.mType = type;
         layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
@@ -58,6 +63,11 @@ public class ImagePreviewAdapter extends PagerAdapter {
                 return 0;
             else
                 return images.size();
+        } else if (mType == Constants.TYPE_URL_FILE) {
+            if (file == null)
+                return 0;
+            else
+                return file.size();
         } else {
             if (jobCopies == null)
                 return 0;
@@ -103,6 +113,29 @@ public class ImagePreviewAdapter extends PagerAdapter {
 
             JobCopy copy = jobCopies.get(position);
             picasso.load(Constants.BASE_URL + "jobs/" + copy.getJobId() + "/files/" + copy.getCopyId())
+                    .config(Bitmap.Config.RGB_565)
+                    .fit().centerCrop()
+                    .into(imageView);
+        } else if (mType == Constants.TYPE_URL_FILE) {
+            final String authToken = SharedPref.getString(context, SharedPref.AUTH_TOKEN);
+            OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                    .authenticator(new Authenticator() {
+                        @Override
+                        public Request authenticate(Route route, Response response) throws IOException {
+                            return response.request().newBuilder()
+                                    .header("Authorization", authToken)
+                                    .build();
+                        }
+                    }).build();
+
+            Picasso picasso = new Picasso.Builder(context)
+                    .downloader(new OkHttp3Downloader(okHttpClient))
+                    .build();
+
+            // sellers/{id}/upload/{type}/images/{index}
+            String sellerId = AppSession.getInstance(imageView.getContext()).getSellerId();
+            FileItem copy = file.get(position);
+            picasso.load(Constants.BASE_URL + "sellers/" + sellerId + "/upload/2/images/" + position)
                     .config(Bitmap.Config.RGB_565)
                     .fit().centerCrop()
                     .into(imageView);

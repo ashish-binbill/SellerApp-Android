@@ -38,6 +38,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 
@@ -106,45 +107,53 @@ public class BasicDetails2Activity extends BaseActivity implements OptionListFra
     }
 
     private void setUpData() {
-//        start_time.setText(basicDetails.getShopOpenDays());
+        start_time.setText(basicDetails.getStartTime());
+        end_time.setText(basicDetails.getCloseTime());
 
         String shopOpenDays = basicDetails.getShopOpenDays();
+        ArrayList<String> list = new ArrayList<>(Arrays.asList(shopOpenDays.split(",")));
 
-        switch (Integer.parseInt(shopOpenDays)) {
-            case 0:
-                tv_sunday.callOnClick();
-                break;
-            case 1:
-                tv_monday.callOnClick();
-                break;
-            case 2:
-                tv_tuesday.callOnClick();
-                break;
-            case 3:
-                tv_wednesday.callOnClick();
-                break;
-            case 4:
-                tv_thursday.callOnClick();
-                break;
-            case 5:
-                tv_friday.callOnClick();
-                break;
-            case 6:
-                tv_saturday.callOnClick();
-                break;
+        for (String shopOpen : list)
+            switch (Integer.parseInt(shopOpen)) {
+                case 0:
+                    tv_sunday.callOnClick();
+                    break;
+                case 1:
+                    tv_monday.callOnClick();
+                    break;
+                case 2:
+                    tv_tuesday.callOnClick();
+                    break;
+                case 3:
+                    tv_wednesday.callOnClick();
+                    break;
+                case 4:
+                    tv_thursday.callOnClick();
+                    break;
+                case 5:
+                    tv_friday.callOnClick();
+                    break;
+                case 6:
+                    tv_saturday.callOnClick();
+                    break;
 
-        }
+            }
 
         String paymentMode = basicDetails.getPaymentModes();
 
-        if (cb_paytm.getTag() != null && cb_paytm.getTag().toString().equalsIgnoreCase(paymentMode))
-            cb_paytm.callOnClick();
-        if (cb_cod.getTag() != null && cb_cod.getTag().toString().equalsIgnoreCase(paymentMode))
-            cb_cod.callOnClick();
-        if (cb_credit_debit.getTag() != null && cb_credit_debit.getTag().toString().equalsIgnoreCase(paymentMode))
-            cb_credit_debit.callOnClick();
-        if (cb_other_wallets.getTag() != null && cb_other_wallets.getTag().toString().equalsIgnoreCase(paymentMode))
-            cb_other_wallets.callOnClick();
+        ArrayList<String> paymentModes = new ArrayList<>(Arrays.asList(paymentMode.split(",")));
+
+        for (String mode : paymentModes) {
+
+            if (cb_paytm.getTag() != null && cb_paytm.getTag().toString().equalsIgnoreCase(mode))
+                cb_paytm.setChecked(true);
+            if (cb_cod.getTag() != null && cb_cod.getTag().toString().equalsIgnoreCase(mode))
+                cb_cod.setChecked(true);
+            if (cb_credit_debit.getTag() != null && cb_credit_debit.getTag().toString().equalsIgnoreCase(mode))
+                cb_credit_debit.setChecked(true);
+            if (cb_other_wallets.getTag() != null && cb_other_wallets.getTag().toString().equalsIgnoreCase(mode))
+                cb_other_wallets.setChecked(true);
+        }
 
         if (!Utility.isEmpty(basicDetails.getHomeDelivery()) && basicDetails.getHomeDelivery().equalsIgnoreCase("true"))
             radio_group_home_delivery.check(R.id.yes);

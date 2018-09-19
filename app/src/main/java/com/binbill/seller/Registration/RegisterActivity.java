@@ -7,7 +7,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
-import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
@@ -73,8 +72,8 @@ public class RegisterActivity extends BaseActivity implements OptionListFragment
         setUpToolbar();
         setUpListeners();
 
-        et_main_category.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
-        et_main_category.setMaxLines(3);
+//        et_main_category.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+//        et_main_category.setMaxLines(3);
 
         enableDisableRegisterButton();
 
@@ -136,23 +135,23 @@ public class RegisterActivity extends BaseActivity implements OptionListFragment
             }
         });
 
-        et_main_category.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                Utility.hideKeyboard(RegisterActivity.this, btn_register_now);
-
-                ArrayList<MainCategory> list = AppSession.getInstance(RegisterActivity.this).getMainCategoryList();
-                if (list != null && list.size() > 0) {
-                    OptionListFragment optionListFragment = OptionListFragment.newInstance(list, Constants.MAIN_CATEGORY);
-                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                    transaction.add(R.id.container, optionListFragment, "OptionListFragment");
-                    transaction.commitAllowingStateLoss();
-                    container.setVisibility(View.VISIBLE);
-                    scroll_view.setVisibility(View.GONE);
-                }
-            }
-        });
+//        et_main_category.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//                Utility.hideKeyboard(RegisterActivity.this, btn_register_now);
+//
+//                ArrayList<MainCategory> list = AppSession.getInstance(RegisterActivity.this).getMainCategoryList();
+//                if (list != null && list.size() > 0) {
+//                    OptionListFragment optionListFragment = OptionListFragment.newInstance(list, Constants.MAIN_CATEGORY);
+//                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+//                    transaction.add(R.id.container, optionListFragment, "OptionListFragment");
+//                    transaction.commitAllowingStateLoss();
+//                    container.setVisibility(View.VISIBLE);
+//                    scroll_view.setVisibility(View.GONE);
+//                }
+//            }
+//        });
 
 
     }
@@ -186,8 +185,11 @@ public class RegisterActivity extends BaseActivity implements OptionListFragment
             map.put("gstin", userRegistrationDetails.getGstin());
         if (!Utility.isEmpty(userRegistrationDetails.getPan()))
             map.put("pan", userRegistrationDetails.getPan());
-        if (userRegistrationDetails.getMainCategory() != null && !Utility.isEmpty(userRegistrationDetails.getMainCategory().getId()))
-            map.put("category_id", userRegistrationDetails.getMainCategory().getId());
+//        if (userRegistrationDetails.getMainCategory() != null && !Utility.isEmpty(userRegistrationDetails.getMainCategory().getId()))
+        /**
+         * Hardcoding catgeory id, since we are supporting only FMCG For now
+         */
+        map.put("category_id", "26");
         map.put("is_fmcg", String.valueOf(userRegistrationDetails.isFmcg()));
         map.put("is_assisted", String.valueOf(userRegistrationDetails.isAssisted()));
         map.put("has_pos", String.valueOf(userRegistrationDetails.isHasPos()));
@@ -351,9 +353,9 @@ public class RegisterActivity extends BaseActivity implements OptionListFragment
         String pan = et_pan.getText().toString();
         String gstin = et_gstin.getText().toString();
 
-        String mainCategory = et_main_category.getText().toString();
+//        String mainCategory = et_main_category.getText().toString();
 
-        if ((!Utility.isEmpty(pan) || !Utility.isEmpty(gstin)) && !Utility.isEmpty(mainCategory.trim()))
+        if ((!Utility.isEmpty(pan) || !Utility.isEmpty(gstin)))
             Utility.enableButton(this, btn_register_now, true);
         else
             Utility.enableButton(this, btn_register_now, false);
@@ -410,8 +412,8 @@ public class RegisterActivity extends BaseActivity implements OptionListFragment
     }
 
     @Override
-    public void onNext(int stage) {
-        if (stage == 0)
+    public void onNext(int stage, boolean isFMCG) {
+        if (stage == 0 && isFMCG)
             showSellerTypeFragment(++stage);
         else {
             container.setVisibility(View.GONE);

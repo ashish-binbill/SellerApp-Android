@@ -34,6 +34,20 @@ public class DashboardModel implements Serializable {
     @SerializedName("has_pos")
     boolean hasPos;
 
+    @SerializedName("assisted_count")
+    String assistedUserCount;
+
+    @SerializedName("user_cashback")
+    String totalUserCashback;
+
+    public String getAssistedUserCount() {
+        return assistedUserCount;
+    }
+
+    public String getTotalUserCashback() {
+        return totalUserCashback;
+    }
+
     public boolean isHasPos() {
         return hasPos;
     }
@@ -43,6 +57,7 @@ public class DashboardModel implements Serializable {
     public int getSellerType() {
         return sellerType;
     }
+
 
     public void setSellerType(int sellerType) {
         this.sellerType = sellerType;

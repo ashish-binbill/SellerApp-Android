@@ -20,6 +20,12 @@ public class FileItem implements Serializable {
     String imageType;
     @SerializedName("updated_by")
     String updatedBy;
+    @SerializedName("index")
+    String index;
+
+    public String getIndex() {
+        return index;
+    }
 
     public String getType() {
         return type;

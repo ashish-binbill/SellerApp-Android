@@ -1,29 +1,50 @@
 package com.binbill.seller.Dashboard;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
+import android.graphics.Bitmap;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.binbill.seller.AppSession;
+import com.binbill.seller.BaseActivity;
 import com.binbill.seller.Constants;
+import com.binbill.seller.Model.BusinessDetailsModel;
+import com.binbill.seller.Model.FileItem;
 import com.binbill.seller.Model.MainCategory;
 import com.binbill.seller.Model.UserRegistrationDetails;
 import com.binbill.seller.R;
+import com.binbill.seller.Registration.ImagePreviewActivity_;
 import com.binbill.seller.Registration.RegistrationResolver;
+import com.binbill.seller.Retrofit.RetrofitHelper;
+import com.binbill.seller.SharedPref;
 import com.binbill.seller.Utility;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.squareup.picasso.OkHttp3Downloader;
+import com.squareup.picasso.Picasso;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import okhttp3.Authenticator;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.Route;
+
 @EActivity(R.layout.activity_profile)
-public class ProfileActivity extends AppCompatActivity {
+public class ProfileActivity extends BaseActivity {
     @ViewById
     Toolbar toolbar;
 
@@ -34,21 +55,16 @@ public class ProfileActivity extends AppCompatActivity {
     ImageView iv_shop_image;
 
     @ViewById
-    TextView tv_shop_name, tv_shop_address, tv_main_category, tv_open_days, tv_timings, tv_delivery, tv_payment_modes, tv_view_attachment;
+    TextView tv_shop_name, tv_business_type, tv_shop_address, tv_main_category, tv_open_days, tv_timings, tv_delivery, tv_payment_modes, tv_view_attachment;
 
     @ViewById
-    TextView tv_other_details;
+    TextView tv_other_details, tv_edit_business;
     private ProfileModel profileDetails;
 
     @AfterViews
     public void initiateViews() {
-
-        profileDetails = AppSession.getInstance(this).getSellerProfile();
-        if (profileDetails == null)
-            onBackPressed();
         setUpToolbar();
         setUpListeners();
-        setUpData();
     }
 
     private void setUpData() {
@@ -100,14 +116,13 @@ public class ProfileActivity extends AppCompatActivity {
             for (String pay : list) {
 
                 for (MainCategory paymentMode : paymentModesModel) {
-                    if (pay.equalsIgnoreCase(paymentMode.getId())){
-                        displayPaymentModes = displayPaymentModes.append(pay);
+                    if (pay.equalsIgnoreCase(paymentMode.getId())) {
+                        displayPaymentModes = displayPaymentModes.append(paymentMode.getName());
                         displayPaymentModes = displayPaymentModes.append(" | ");
                     }
                 }
             }
 
-//            displayPaymentModes.deleteCharAt(displayOpenDays.lastIndexOf("|"));
         }
 
         tv_payment_modes.setText(displayPaymentModes);
@@ -122,6 +137,39 @@ public class ProfileActivity extends AppCompatActivity {
 
         if (!Utility.isEmpty(basicDetails.getHomeDeliveryRemarks()))
             homeDelivery.append("\nWithin " + basicDetails.getHomeDeliveryRemarks());
+
+        final String authToken = SharedPref.getString(this, SharedPref.AUTH_TOKEN);
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .authenticator(new Authenticator() {
+                    @Override
+                    public Request authenticate(Route route, Response response) throws IOException {
+                        return response.request().newBuilder()
+                                .header("Authorization", authToken)
+                                .build();
+                    }
+                }).build();
+
+        Picasso picasso = new Picasso.Builder(this)
+                .downloader(new OkHttp3Downloader(okHttpClient))
+                .build();
+        String sellerId = AppSession.getInstance(this).getSellerId();
+
+        ArrayList<FileItem> files = basicDetails.getDocuments();
+        FileItem copy = files.get(0);
+        picasso.load(Constants.BASE_URL + "sellers/" + sellerId + "/upload/2/images/" + 0)
+                .config(Bitmap.Config.RGB_565)
+                .into(iv_shop_image);
+
+
+        ProfileModel.BusinessDetails businessDetails = profileDetails.getSellerDetails().getBusinessDetails();
+        ArrayList<BusinessDetailsModel> business = AppSession.getInstance(ProfileActivity.this).getBusinessDetails();
+
+        if (business != null && business.size() > 0)
+            for (BusinessDetailsModel model : business) {
+                if (model.getBusinessId().equalsIgnoreCase(businessDetails.getBusinessType())) {
+                    tv_business_type.setText(model.getBusinessName());
+                }
+            }
     }
 
     private void setUpToolbar() {
@@ -130,6 +178,49 @@ public class ProfileActivity extends AppCompatActivity {
 
         getSupportActionBar().setTitle("");
         toolbarText.setText(getString(R.string.profile));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        makeSellerProfileApiCall();
+    }
+
+    private void makeSellerProfileApiCall() {
+        new RetrofitHelper(this).getSellerDetails(new RetrofitHelper.RetrofitCallback() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    if (jsonObject.getBoolean("status")) {
+
+                        JSONObject profileJson = jsonObject.getJSONObject("result");
+                        Type classType = new TypeToken<ProfileModel>() {
+                        }.getType();
+
+                        ProfileModel profileModel = new Gson().fromJson(profileJson.toString(), classType);
+                        AppSession.getInstance(ProfileActivity.this).setSellerProfile(profileModel);
+
+                        JSONArray paymentModesArray = jsonObject.getJSONArray("payment_modes");
+                        classType = new TypeToken<ArrayList<MainCategory>>() {
+                        }.getType();
+
+                        ArrayList<MainCategory> paymentModes = new Gson().fromJson(paymentModesArray.toString(), classType);
+                        AppSession.getInstance(ProfileActivity.this).setPaymentModes(paymentModes);
+
+                        profileDetails = AppSession.getInstance(ProfileActivity.this).getSellerProfile();
+                        setUpData();
+                    }
+                } catch (JSONException e) {
+
+                }
+            }
+
+            @Override
+            public void onErrorResponse() {
+
+            }
+        });
     }
 
     private void setUpListeners() {
@@ -141,6 +232,28 @@ public class ProfileActivity extends AppCompatActivity {
                 intent.putExtra(Constants.PROFILE_MODEL, profileDetails);
                 startActivity(intent);
 
+            }
+        });
+
+        tv_view_attachment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ProfileModel.BusinessDetails businessDetails = profileDetails.getSellerDetails().getBusinessDetails();
+                if (businessDetails.getDocuments() != null && businessDetails.getDocuments().size() > 0) {
+                    Intent intent = new Intent(ProfileActivity.this, ImagePreviewActivity_.class);
+                    intent.putExtra(Constants.FILE_URI, businessDetails.getDocuments());
+                    intent.putExtra(Constants.IMAGE_TYPE, Constants.TYPE_URL_FILE);
+                    startActivity(intent);
+                } else
+                    showSnackBar(getString(R.string.no_copies));
+            }
+        });
+
+        tv_edit_business.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = RegistrationResolver.getNextIntent(ProfileActivity.this, 2);
+                startActivity(intent);
             }
         });
     }

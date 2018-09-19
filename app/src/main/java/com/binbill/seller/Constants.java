@@ -148,4 +148,5 @@ public class Constants {
     public static final String EDIT_DELIVERY_BOY = "EDIT_DELIVERY_BOY";
     public static final String PROFILE_MODEL = "PROFILE_MODEL";
     public static final String EDIT_MODE = "EDIT_MODE";
+    public static final int TYPE_URL_FILE = 3;
 }

@@ -65,6 +65,7 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/wallet_amount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:drawablePadding="@dimen/dimen_5dp"
@@ -73,7 +74,7 @@
                 android:gravity="center_horizontal"
                 android:lineSpacingExtra="-3.5sp"
                 android:layout_alignParentRight="true"
-                android:text="1200 Pts."
+                android:text="@string/wallet_points"
                 android:textColor="@color/color_white"
                 android:textSize="@dimen/dimen_14dp" />
 

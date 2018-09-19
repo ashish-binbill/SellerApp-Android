@@ -193,6 +193,9 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
 
         tv_shop_name.setText(model.getName());
         tv_shop_number.setText(model.getContactNo());
+
+        TextView wallet = nav_view.findViewById(R.id.wallet_amount);
+        wallet.setText(getString(R.string.wallet_points, model.getCashBack()));
     }
 
     private void setUpListener() {
@@ -254,8 +257,24 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
             }
         });
 
+        TextView wallet = nav_view.findViewById(R.id.wallet_amount);
+        wallet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(DashboardActivity.this, WalletActivity_.class));
+            }
+        });
+
         TextView profile = nav_view.findViewById(R.id.tv_shop_name);
         profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(DashboardActivity.this, ProfileActivity_.class));
+            }
+        });
+
+        TextView mobile = nav_view.findViewById(R.id.tv_shop_number);
+        mobile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(DashboardActivity.this, ProfileActivity_.class));

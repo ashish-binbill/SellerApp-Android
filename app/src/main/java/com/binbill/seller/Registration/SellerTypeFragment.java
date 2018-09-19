@@ -25,7 +25,7 @@ public class SellerTypeFragment extends Fragment {
     private SellerTypeInterface mListener;
 
     public interface SellerTypeInterface {
-        void onNext(int stage);
+        void onNext(int stage, boolean isFMCG);
     }
 
     public SellerTypeFragment() {
@@ -77,24 +77,28 @@ public class SellerTypeFragment extends Fragment {
 
                         UserRegistrationDetails userRegistrationDetails = AppSession.getInstance(getActivity()).getUserRegistrationDetails();
 
+                        boolean isFMCG = false;
                         switch (radioButtonID) {
                             case R.id.rb_fmcg:
                                 userRegistrationDetails.setFmcg(true);
                                 userRegistrationDetails.setAssisted(false);
+                                isFMCG = true;
                                 break;
                             case R.id.rb_fmcg_assisted:
                                 userRegistrationDetails.setFmcg(true);
                                 userRegistrationDetails.setAssisted(true);
+                                isFMCG = true;
                                 break;
                             case R.id.rb_assisted:
                                 userRegistrationDetails.setFmcg(false);
                                 userRegistrationDetails.setAssisted(true);
+                                isFMCG = false;
                                 break;
                         }
 
                         AppSession.getInstance(getActivity()).setUserRegistrationDetails(userRegistrationDetails);
 
-                        mListener.onNext(flowType);
+                        mListener.onNext(flowType, isFMCG);
                     }
                 });
 
@@ -124,7 +128,7 @@ public class SellerTypeFragment extends Fragment {
 
                         AppSession.getInstance(getActivity()).setUserRegistrationDetails(userRegistrationDetails);
 
-                        mListener.onNext(flowType);
+                        mListener.onNext(flowType, true);
                     }
                 });
 

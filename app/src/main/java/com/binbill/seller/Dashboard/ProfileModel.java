@@ -1,8 +1,11 @@
 package com.binbill.seller.Dashboard;
 
+import com.binbill.seller.Model.FileItem;
+import com.binbill.seller.Model.JobCopy;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * Created by shruti.vig on 9/8/18.
@@ -141,20 +144,19 @@ public class ProfileModel implements Serializable {
         @SerializedName("basic_details")
         BasicDetails basicDetails;
 
+        @SerializedName("business_details")
+        BusinessDetails businessDetails;
+
+        public BusinessDetails getBusinessDetails() {
+            return businessDetails;
+        }
+
         public BasicDetails getBasicDetails() {
             return basicDetails;
         }
     }
 
     public class BasicDetails implements Serializable {
-
-        /**
-         * "category_id": 26,
-         * "is_complete": true,
-         * "business_name": "Shruti Fashion P T",
-         * "payment_modes": "2",
-         * "shop_open_day": "5"
-         */
 
         @SerializedName("category_id")
         String catId;
@@ -179,6 +181,13 @@ public class ProfileModel implements Serializable {
 
         @SerializedName("start_time")
         String startTime;
+
+        @SerializedName("documents")
+        ArrayList<FileItem> documents;
+
+        public ArrayList<FileItem> getDocuments() {
+            return documents;
+        }
 
         public String getCloseTime() {
             return closeTime;
@@ -212,6 +221,22 @@ public class ProfileModel implements Serializable {
             return shopOpenDays;
         }
 
+    }
+
+    public class BusinessDetails implements Serializable{
+        @SerializedName("business_type")
+        String businessType;
+
+        @SerializedName("documents")
+        ArrayList<FileItem> documents;
+
+        public ArrayList<FileItem> getDocuments() {
+            return documents;
+        }
+
+        public String getBusinessType() {
+            return businessType;
+        }
     }
 
 }

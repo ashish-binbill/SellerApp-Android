@@ -45,6 +45,20 @@ public class TransactionModel implements Serializable {
     @SerializedName("item_counts")
     String itemCount;
 
+    @SerializedName("user_name")
+    String userName;
+
+    @SerializedName("created_at")
+    String date;
+
+    public String getDate() {
+        return date;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
     public String getTransactionId() {
         return transactionId;
     }

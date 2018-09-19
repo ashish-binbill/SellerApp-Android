@@ -52,6 +52,7 @@
                     android:layout_marginTop="@dimen/dimen_35dp"
                     android:src="@drawable/binbill_icon" />
 
+                <!-- Removed as we only support FMCG for now-->
                 <EditText
                     android:id="@+id/et_main_category"
                     android:layout_width="match_parent"
@@ -68,6 +69,7 @@
                     android:minHeight="@dimen/dimen_55dp"
                     android:paddingLeft="@dimen/dimen_12dp"
                     android:paddingRight="@dimen/dimen_12dp"
+                    android:visibility="gone"
                     android:textColor="@color/text_44"
                     android:layout_marginTop="@dimen/dimen_35dp"
                     android:textColorHint="@color/hint_color"
@@ -81,7 +83,7 @@
                     android:background="@drawable/edittext_bg"
                     android:hint="@string/email_id"
                     android:inputType="textEmailAddress"
-                    android:layout_marginTop="@dimen/dimen_10dp"
+                    android:layout_marginTop="@dimen/dimen_35dp"
                     android:lineSpacingExtra="-1sp"
                     android:paddingLeft="@dimen/dimen_12dp"
                     android:paddingRight="@dimen/dimen_12dp"

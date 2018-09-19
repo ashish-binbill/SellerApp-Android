@@ -9,6 +9,7 @@ import com.binbill.seller.Adapter.ImagePreviewAdapter;
 import com.binbill.seller.AppSession;
 import com.binbill.seller.BaseActivity;
 import com.binbill.seller.Constants;
+import com.binbill.seller.Model.FileItem;
 import com.binbill.seller.Model.JobCopy;
 import com.binbill.seller.Model.UserRegistrationDetails;
 import com.binbill.seller.R;
@@ -61,6 +62,9 @@ public class ImagePreviewActivity extends BaseActivity {
             populatePager(files, type);
         } else if (type == Constants.TYPE_URL) {
             ArrayList<JobCopy> files = (ArrayList<JobCopy>) getIntent().getSerializableExtra(Constants.FILE_URI);
+            populatePager(files, type);
+        } else if (type == Constants.TYPE_URL_FILE) {
+            ArrayList<FileItem> files = (ArrayList<FileItem>) getIntent().getSerializableExtra(Constants.FILE_URI);
             populatePager(files, type);
         }
     }
