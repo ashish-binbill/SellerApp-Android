@@ -18,11 +18,13 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.binbill.seller.APIHelper.ApiHelper;
 import com.binbill.seller.AppSession;
 import com.binbill.seller.BaseActivity;
 import com.binbill.seller.Constants;
 import com.binbill.seller.CustomViews.AppButton;
 import com.binbill.seller.Model.BusinessDetailsModel;
+import com.binbill.seller.Model.DashboardModel;
 import com.binbill.seller.Model.FMCGHeaderModel;
 import com.binbill.seller.Model.MainCategory;
 import com.binbill.seller.Model.UserRegistrationDetails;
@@ -647,7 +649,8 @@ public class BusinessDetailsActivity extends BaseActivity implements OptionListF
         btn_submit.setVisibility(View.VISIBLE);
         btn_submit_progress.setVisibility(View.GONE);
 
-        new RetrofitHelper(this).fetchCategories(new RetrofitHelper.RetrofitCallback() {
+
+        ApiHelper.makeDashboardDataCall(this, new RetrofitHelper.RetrofitCallback() {
             @Override
             public void onResponse(String response) {
 
@@ -655,14 +658,11 @@ public class BusinessDetailsActivity extends BaseActivity implements OptionListF
                     JSONObject jsonObject = new JSONObject(response);
                     if (jsonObject.getBoolean("status")) {
 
-                        JSONArray categoriesData = jsonObject.optJSONArray("categories");
-                        if (categoriesData != null) {
-                            Type classType = new TypeToken<ArrayList<FMCGHeaderModel>>() {
-                            }.getType();
+                        Type classType = new TypeToken<DashboardModel>() {
+                        }.getType();
 
-                            ArrayList<FMCGHeaderModel> categories = new Gson().fromJson(categoriesData.toString(), classType);
-                            AppSession.getInstance(BusinessDetailsActivity.this).setCategories(categories);
-                        }
+                        DashboardModel dashboardModel = new Gson().fromJson(jsonObject.toString(), classType);
+                        AppSession.getInstance(BusinessDetailsActivity.this).setDashboardData(dashboardModel);
 
                         int registrationIndex = getIntent().getIntExtra(Constants.REGISTRATION_INDEX, -1);
                         Intent intent = RegistrationResolver.getNextIntent(BusinessDetailsActivity.this, registrationIndex);
@@ -671,13 +671,13 @@ public class BusinessDetailsActivity extends BaseActivity implements OptionListF
                         finish();
                     }
                 } catch (JSONException e) {
-                    showSnackBar(getString(R.string.something_went_wrong));
+                    finish();
                 }
             }
 
             @Override
             public void onErrorResponse() {
-                showSnackBar(getString(R.string.something_went_wrong));
+                finish();
             }
         });
     }

@@ -25,9 +25,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/bg_wallet"
         android:orientation="vertical"
-        android:paddingBottom="@dimen/dimen_20dp"
-        android:background="@color/colorPrimary">
+        android:paddingBottom="@dimen/dimen_20dp">
 
         <TextView
             android:layout_width="match_parent"
@@ -45,26 +45,60 @@
             android:id="@+id/tv_wallet"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/dimen_55dp"
-            android:textColor="@color/color_white"
+            android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/dimen_15dp"
             android:fontFamily="sans-serif-light"
-            android:layout_gravity="center_horizontal"
-            android:lineSpacingExtra="-41.5sp"
             android:gravity="center_horizontal"
+            android:lineSpacingExtra="-41.5sp"
             android:text=""
-            />
+            android:textColor="@color/color_white"
+            android:textSize="@dimen/dimen_55dp" />
 
         <com.binbill.seller.CustomViews.AppButton
             android:layout_width="match_parent"
-            android:layout_marginTop="@dimen/dimen_15dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="@string/redeem_via_paytm"
             android:layout_marginLeft="@dimen/dimen_70dp"
             android:layout_marginRight="@dimen/dimen_70dp"
-            android:textSize="@dimen/dimen_14dp"
-            android:layout_height="wrap_content" />
+            android:layout_marginTop="@dimen/dimen_15dp"
+            android:text="@string/redeem_via_paytm"
+            android:textSize="@dimen/dimen_14dp" />
 
     </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:lineSpacingExtra="5.5sp"
+        android:padding="@dimen/dimen_10dp"
+        android:fontFamily="sans-serif-medium"
+        android:text="@string/bbcash_transactions"
+        android:textColor="@color/text_44"
+        android:textSize="@dimen/dimen_14dp" />
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/sl_pull_to_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/off_white">
+
+            <include layout="@layout/layout_shimmer_holder" />
+
+            <include layout="@layout/layout_no_data" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_wallet_txn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dimen_10dp"
+                android:layout_weight="1"
+                android:visibility="visible" />
+
+        </FrameLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </LinearLayout>

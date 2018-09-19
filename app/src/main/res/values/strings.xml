@@ -282,5 +282,6 @@
     <string name="my_wallet">My Wallet</string>
     <string name="available_bbcash">Available BBCash</string>
     <string name="redeem_via_paytm">Redeem Via Paytm</string>
+    <string name="bbcash_transactions">BBCash Transactions</string>
 
 </resources>

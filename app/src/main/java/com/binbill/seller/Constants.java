@@ -56,6 +56,7 @@ public class Constants {
     public static final String SAVE_CATEGORIES_FOR_SELLER = "sellers/{seller_id}/providers";
     public static final String GET_SELLER_CATEGORIES = "sellers/{seller_id}/categories";
     public static final String SAVE_BRANDS_FOR_SELLER = "sellers/{seller_id}/providers/brands";
+    public static final String FETCH_WALLET_TRANSACTIONS = "sellers/{seller_id}/wallet";
 
     public static final int PERMISSION_READ_SMS = 100;
     public static final int PERMISSION_CAMERA = 101;
