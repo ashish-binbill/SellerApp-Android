@@ -539,9 +539,9 @@ public class RetrofitHelper {
 
             if (!Utility.isEmpty(overTimePrice)) {
                 JSONObject typeObject2 = new JSONObject();
-                typeObject.put("price_type", "2");
-                typeObject.put("value", overTimePrice);
-                priceObject.put(typeObject);
+                typeObject2.put("price_type", "2");
+                typeObject2.put("value", overTimePrice);
+                priceObject.put(typeObject2);
             }
 
             String priceFormatted = new JSONTokener(priceObject.toString()).nextValue().toString();

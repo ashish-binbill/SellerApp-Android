@@ -475,6 +475,12 @@ public class AddAssistedServiceActivity extends BaseActivity implements OptionLi
                 }
                 return false;
             }
+            if(fileDetailsJson.length() == 0){
+                if (showErrorOnUI) {
+                    showSnackBar(getString(R.string.upload_adhar));
+                }
+                return false;
+            }
         }
         return true;
     }
@@ -496,7 +502,7 @@ public class AddAssistedServiceActivity extends BaseActivity implements OptionLi
                 if (tv_error_mobile != null && tv_error_mobile.getVisibility() == View.VISIBLE) {
                     tv_error_mobile.setVisibility(View.GONE);
                 }
-            } else if (!Utility.isEmpty(et_price.getText().toString()) && !Utility.isEmpty(et_type_of_service.getText().toString())) {
+            } else if (!Utility.isEmpty(et_price.getText().toString()) && !Utility.isEmpty(et_price_over.getText().toString()) && !Utility.isEmpty(et_type_of_service.getText().toString())) {
                 Utility.enableButton(this, btn_submit, true);
 
                 if (tv_error_mobile != null && tv_error_mobile.getVisibility() == View.VISIBLE) {

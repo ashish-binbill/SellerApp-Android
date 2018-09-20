@@ -151,7 +151,7 @@
     <string name="price">Price (additional 30 min)</string>
     <string name="save">Save</string>
     <string name="assisted_service_added">Service added successfully</string>
-    <string name="upload_profile_image">Please upload profile image</string>
+    <string name="upload_profile_image">Please upload Profile image</string>
     <string name="add_additional_service">Service</string>
     <string name="add_additional_service_header">Add Service</string>
     <string name="reviews">Reviews (%1$s)</string>
