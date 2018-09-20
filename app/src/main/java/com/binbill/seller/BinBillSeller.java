@@ -3,6 +3,8 @@ package com.binbill.seller;
 import android.app.Application;
 import android.content.Context;
 import android.os.StrictMode;
+import android.support.multidex.MultiDex;
+import android.support.multidex.MultiDexApplication;
 
 import com.google.firebase.FirebaseApp;
 
@@ -15,9 +17,15 @@ import io.socket.client.Socket;
  * Created by shruti.vig on 8/20/18.
  */
 
-public class BinBillSeller extends Application {
+public class BinBillSeller extends MultiDexApplication {
 
     private static Socket mSocket;
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
+    }
 
     @Override
     public void onCreate() {

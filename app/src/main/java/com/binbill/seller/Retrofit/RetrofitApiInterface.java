@@ -186,4 +186,10 @@ public interface RetrofitApiInterface {
 
     @PUT(Constants.REDEEM_WALLET_AMOUNT)
     Call<JsonObject> redeemWalletAmount(@Path(value = "seller_id", encoded = true) String sellerId);
+
+    @GET(Constants.GET_LOYALTY_POINTS)
+    Call<JsonObject> getLoyaltyPoints(@Path(value = "seller_id", encoded = true) String sellerId);
+
+    @PUT(Constants.GET_LOYALTY_POINTS)
+    Call<JsonObject> setLoyaltyPoints(@Path(value = "seller_id", encoded = true) String sellerId, @Body HashMap<String, String> body);
 }

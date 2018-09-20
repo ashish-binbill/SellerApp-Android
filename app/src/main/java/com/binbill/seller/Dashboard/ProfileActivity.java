@@ -11,18 +11,15 @@ import com.binbill.seller.AppSession;
 import com.binbill.seller.BaseActivity;
 import com.binbill.seller.Constants;
 import com.binbill.seller.Model.BusinessDetailsModel;
-import com.binbill.seller.Model.FileItem;
 import com.binbill.seller.Model.MainCategory;
 import com.binbill.seller.Model.UserRegistrationDetails;
 import com.binbill.seller.R;
 import com.binbill.seller.Registration.ImagePreviewActivity_;
 import com.binbill.seller.Registration.RegistrationResolver;
 import com.binbill.seller.Retrofit.RetrofitHelper;
-import com.binbill.seller.SharedPref;
 import com.binbill.seller.Utility;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.squareup.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 
 import org.androidannotations.annotations.AfterViews;
@@ -32,16 +29,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
-
-import okhttp3.Authenticator;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import okhttp3.Route;
 
 @EActivity(R.layout.activity_profile)
 public class ProfileActivity extends BaseActivity {
@@ -138,25 +128,10 @@ public class ProfileActivity extends BaseActivity {
         if (!Utility.isEmpty(basicDetails.getHomeDeliveryRemarks()))
             homeDelivery.append("\nWithin " + basicDetails.getHomeDeliveryRemarks());
 
-        final String authToken = SharedPref.getString(this, SharedPref.AUTH_TOKEN);
-        OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .authenticator(new Authenticator() {
-                    @Override
-                    public Request authenticate(Route route, Response response) throws IOException {
-                        return response.request().newBuilder()
-                                .header("Authorization", authToken)
-                                .build();
-                    }
-                }).build();
-
-        Picasso picasso = new Picasso.Builder(this)
-                .downloader(new OkHttp3Downloader(okHttpClient))
-                .build();
         String sellerId = AppSession.getInstance(this).getSellerId();
 
-        ArrayList<FileItem> files = basicDetails.getDocuments();
-        FileItem copy = files.get(0);
-        picasso.load(Constants.BASE_URL + "sellers/" + sellerId + "/upload/2/images/" + 0)
+        Picasso.get()
+                .load(Constants.BASE_URL + "sellers/" + sellerId + "/upload/2/images/" + 0)
                 .config(Bitmap.Config.RGB_565)
                 .into(iv_shop_image);
 

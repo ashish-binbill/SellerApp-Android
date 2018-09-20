@@ -1,6 +1,7 @@
 package com.binbill.seller.Dashboard;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -15,7 +16,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.view.GravityCompat;
-import com.binbill.seller.Wallet.WalletActivity_;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -25,7 +25,16 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.applozic.mobicomkit.Applozic;
+import com.applozic.mobicomkit.ApplozicClient;
+import com.applozic.mobicomkit.api.account.register.RegistrationResponse;
+import com.applozic.mobicomkit.api.account.user.MobiComUserPreference;
+import com.applozic.mobicomkit.api.account.user.PushNotificationTask;
+import com.applozic.mobicomkit.api.account.user.User;
+import com.applozic.mobicomkit.api.account.user.UserLoginTask;
+import com.applozic.mobicomkit.uiwidgets.ApplozicSetting;
 import com.binbill.seller.APIHelper.ApiHelper;
 import com.binbill.seller.AppSession;
 import com.binbill.seller.AssistedService.AddAssistedServiceActivity_;
@@ -36,12 +45,14 @@ import com.binbill.seller.CustomViews.YesNoDialogFragment;
 import com.binbill.seller.Customer.AddCustomerActivity_;
 import com.binbill.seller.DeliveryAgent.DeliveryAgentActivity_;
 import com.binbill.seller.Login.LoginActivity_;
+import com.binbill.seller.Loyalty.LoyaltyRulesActivity_;
 import com.binbill.seller.Model.DashboardModel;
 import com.binbill.seller.Model.MainCategory;
 import com.binbill.seller.R;
 import com.binbill.seller.Registration.RegistrationResolver;
 import com.binbill.seller.Retrofit.RetrofitHelper;
 import com.binbill.seller.SharedPref;
+import com.binbill.seller.Wallet.WalletActivity_;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Callback;
@@ -115,6 +126,53 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
         ApiHelper.getUserSelectedCategories(this);
     }
 
+    private void initialiseApplozic() {
+        UserLoginTask.TaskListener listener = new UserLoginTask.TaskListener() {
+
+            @Override
+            public void onSuccess(RegistrationResponse registrationResponse, Context context) {
+                //After successful registration with Applozic server the callback will come here
+                ApplozicSetting.getInstance(context).enableRegisteredUsersContactCall();
+                ApplozicClient.getInstance(context).showAppIconInNotification(true);
+                ApplozicClient.getInstance(context).enableNotification();
+
+                if (MobiComUserPreference.getInstance(context).isRegistered()) {
+
+                    PushNotificationTask pushNotificationTask = null;
+                    PushNotificationTask.TaskListener listener = new PushNotificationTask.TaskListener() {
+                        @Override
+                        public void onSuccess(RegistrationResponse registrationResponse) {
+
+                        }
+
+                        @Override
+                        public void onFailure(RegistrationResponse registrationResponse, Exception exception) {
+
+                        }
+                    };
+
+                    pushNotificationTask = new PushNotificationTask(Applozic.getInstance(context).getDeviceRegistrationId(), listener, DashboardActivity.this);
+                    pushNotificationTask.execute((Void) null);
+                }
+            }
+
+            @Override
+            public void onFailure(RegistrationResponse registrationResponse, Exception exception) {
+                Toast.makeText(DashboardActivity.this, "Registration failed", Toast.LENGTH_LONG).show();
+            }
+        };
+
+        String sellerId = AppSession.getInstance(this).getSellerId();
+        ProfileModel profileModel = AppSession.getInstance(DashboardActivity.this).getSellerProfile();
+        User user = new User();
+        user.setUserId("seller_" + sellerId);
+        user.setDisplayName(profileModel.getName());
+        user.setAuthenticationTypeId(User.AuthenticationType.APPLOZIC.getValue());
+        user.setPassword("");
+        user.setImageLink("");
+        new UserLoginTask(user, listener, DashboardActivity.this).execute((Void) null);
+    }
+
     private void makeSellerProfileApiCall() {
         new RetrofitHelper(this).getSellerDetails(new RetrofitHelper.RetrofitCallback() {
             @Override
@@ -138,6 +196,7 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
                         AppSession.getInstance(DashboardActivity.this).setPaymentModes(paymentModes);
 
                         setUpHamburger();
+                        initialiseApplozic();
                     }
                 } catch (JSONException e) {
 
@@ -175,7 +234,9 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
         Picasso picasso = new Picasso.Builder(this)
                 .downloader(new OkHttp3Downloader(okHttpClient))
                 .build();
-        picasso.load(Constants.BASE_URL + "customer/" + model.getId() + "/images")
+
+        String sellerID = AppSession.getInstance(this).getSellerId();
+        picasso.load(Constants.BASE_URL + "sellers/" + sellerID + "/upload/2/images/" + 0)
                 .config(Bitmap.Config.RGB_565)
                 .into(iv_user_image, new Callback() {
                     @Override
@@ -183,7 +244,6 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
                         Bitmap imageBitmap = ((BitmapDrawable) iv_user_image.getDrawable()).getBitmap();
                         RoundedBitmapDrawable imageDrawable = RoundedBitmapDrawableFactory.create(getResources(), imageBitmap);
                         imageDrawable.setCircular(true);
-                        imageDrawable.setCornerRadius(Math.max(imageBitmap.getWidth(), imageBitmap.getHeight()) / 2.0f);
                         iv_user_image.setImageDrawable(imageDrawable);
                     }
 
@@ -233,6 +293,16 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
                 Intent intent = RegistrationResolver.getNextIntent(DashboardActivity.this, 5);
                 if (intent != null)
                     startActivity(intent);
+            }
+        });
+
+        TextView loyaltyRules = nav_view.findViewById(R.id.tv_layalty_rules);
+        loyaltyRules.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (drawer_layout.isDrawerOpen(GravityCompat.START))
+                    drawer_layout.closeDrawer(GravityCompat.START);
+                startActivity(new Intent(DashboardActivity.this, LoyaltyRulesActivity_.class));
             }
         });
 

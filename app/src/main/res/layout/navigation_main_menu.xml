@@ -79,6 +79,7 @@
             android:textSize="@dimen/dimen_14dp" />
 
         <TextView
+            android:id="@+id/tv_layalty_rules"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/ic_loyalty_rules"
@@ -131,7 +132,7 @@
             android:textSize="@dimen/dimen_14dp" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/ic_share_grey"
             android:drawablePadding="@dimen/dimen_15dp"

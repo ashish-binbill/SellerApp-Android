@@ -167,6 +167,8 @@ public class WalletAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             walletHolder.mAmount.setText("- " + model.getAmount());
             walletHolder.mAmount.setTextColor(ContextCompat.getColor(walletHolder.mAmount.getContext(), R.color.text_44));
 
+            walletHolder.mTitle.setText(R.string.redeemed_at_paytm);
+            walletHolder.mUserName.setVisibility(View.GONE);
             if (model.getStatusType().equalsIgnoreCase("13")) {
                 /**
                  * pending

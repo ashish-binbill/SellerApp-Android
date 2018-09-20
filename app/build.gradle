@@ -8,6 +8,7 @@ android {
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -68,6 +69,18 @@ dependencies {
     implementation 'com.facebook.shimmer:shimmer:0.3.0'
     implementation 'org.aviran.cookiebar2:cookiebar2:1.0.9'
     implementation 'com.nex3z:flow-layout:1.2.2'
+    implementation 'com.github.Haegon:ParallaxViewPager:1.0.1'
+    implementation 'com.romandanylyk:pageindicatorview:0.2.0@aar'
+
+    implementation 'com.applozic.communication.uiwidget:mobicomkitui:5.9.1'
+    compile 'com.android.support:multidex:1.0.3'
+
+    implementation 'de.hdodenhof:circleimageview:2.2.0'
+    implementation 'com.theartofdev.edmodo:android-image-cropper:2.7.0'
+    implementation 'com.github.bumptech.glide:glide:4.7.1'
+    api 'com.google.code.gson:gson:2.8.5'
+    api 'com.google.android.gms:play-services-maps:15.0.1'
+    api 'com.google.android.gms:play-services-location:15.0.1'
     compile('io.socket:socket.io-client:1.0.0') {
         exclude group: 'org.json', module: 'json'
     }

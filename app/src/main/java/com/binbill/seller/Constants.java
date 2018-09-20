@@ -58,6 +58,7 @@ public class Constants {
     public static final String SAVE_BRANDS_FOR_SELLER = "sellers/{seller_id}/providers/brands";
     public static final String FETCH_WALLET_TRANSACTIONS = "sellers/{seller_id}/wallet";
     public static final String REDEEM_WALLET_AMOUNT = "sellers/{seller_id}/wallet/redeem";
+    public static final String GET_LOYALTY_POINTS = "sellers/{seller_id}/loyalty/rules";
 
     public static final int PERMISSION_READ_SMS = 100;
     public static final int PERMISSION_CAMERA = 101;

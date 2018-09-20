@@ -87,12 +87,19 @@ public class WalletActivity extends BaseActivity {
         btn_redeem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                tv_wallet_balance.setText(" " + tv_wallet.getText().toString());
-                tv_mobile.setText(getString(R.string.confirm_paytm, AppSession.getInstance(WalletActivity.this).getMobile()));
-                setUpToolbar(true);
+                String walletAmount = tv_wallet.getText().toString();
+                if (!Utility.isEmpty(walletAmount) && !walletAmount.equalsIgnoreCase("null")) {
+                    float amountFloat = Float.parseFloat(walletAmount);
+                    if (amountFloat > 0) {
+                        tv_wallet_balance.setText(" " + tv_wallet.getText().toString());
+                        tv_mobile.setText(getString(R.string.confirm_paytm, AppSession.getInstance(WalletActivity.this).getMobile()));
+                        setUpToolbar(true);
 
-                ll_wallet_layout.setVisibility(View.GONE);
-                rl_confirm_layout.setVisibility(View.VISIBLE);
+                        ll_wallet_layout.setVisibility(View.GONE);
+                        rl_confirm_layout.setVisibility(View.VISIBLE);
+                    }else
+                        showSnackBar(getString(R.string.insufficient_wallet_amount));
+                }
             }
         });
 

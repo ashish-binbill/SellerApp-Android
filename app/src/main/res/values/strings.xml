@@ -288,8 +288,26 @@
     <string name="received_from_customer">Received from Customer</string>
     <string name="success">Success</string>
     <string name="no_wallet_txn">You dont have any wallet transactions</string>
-    <string name="confirm_paytm">Please confirm your PayTM Number - %1$s Or go back to Redeem Via Seller.</string>
+    <string name="confirm_paytm">Please confirm your Paytm Number - %1$s Or go back to Redeem Via Seller.</string>
     <string name="confirm_number">Confirm Number</string>
     <string name="redeem_successfully">Request generated successfully to redeem wallet amount</string>
+    <string name="_1_rs">1 Rs. =</string>
+    <string name="points_string">Points</string>
+    <string name="example_loyalty_points">Ex. 100 points for Rs. 10</string>
+    <string name="minimum_points_for_redemption">Minimum points for redemption</string>
+    <string name="enter_points_string">Enter Points</string>
+    <string name="set_loyalty_rules">Set Loyalty Rules</string>
+    <string name="redeemed_at_paytm">Redeemed at Paytm</string>
+    <string name="insufficient_wallet_amount">The amount in your wallet is insufficient to redeem.</string>
+    <string name="onboarding_title_1">Multiply Your Sales</string>
+    <string name="onboarding_sub_title_1">Increase in Store Footfalls as well as combat Online Players by grabbing Online Sales on our platform.</string>
+    <string name="onboarding_title_2">Build Customer Loyalty</string>
+    <string name="onboarding_sub_title_2">Retain your customers through Effective  Communication of In Store Offers, Successful Loyalty Programs visible to your customers and by Earning Cashback on Home Delivery.</string>
+    <string name="onboarding_title_3">Home Services for Income Boost</string>
+    <string name="onboarding_sub_title_3"><![CDATA[Boost your income & provide employment by assisting on demand services like cook, cleaner, carpenter, plumber etc. to your customers.]]></string>
+    <string name="onboarding_title_4">Gain Consumer Insights</string>
+    <string name="onboarding_sub_title_4"><![CDATA[Gain insightful Customer Insights, Valuable Customer Feedback & Manage Methodical Credit Record.]]></string>
+    <string name="get_started">Get Started</string>
+    <string name="default_media_location_folder">BinBillPartner</string>
 
 </resources>

@@ -8,6 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import com.binbill.seller.APIHelper.ApiHelper;
+import com.binbill.seller.Login.LandingActivity;
+import com.binbill.seller.Login.LandingActivity_;
 import com.binbill.seller.Login.LoginActivity_;
 import com.binbill.seller.Model.DashboardModel;
 import com.binbill.seller.Registration.RegistrationResolver;
@@ -36,7 +38,7 @@ public class SplashActivity extends AppCompatActivity {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    startActivity(new Intent(SplashActivity.this, LoginActivity_.class));
+                    startActivity(new Intent(SplashActivity.this, LandingActivity_.class));
                     finish();
                 }
             }, 3000);

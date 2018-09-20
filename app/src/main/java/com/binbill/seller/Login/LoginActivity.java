@@ -235,9 +235,15 @@ public class LoginActivity extends BaseActivity {
 
     private void setUpToolbar() {
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         getSupportActionBar().setTitle("");
         toolbarText.setText(getString(R.string.sign_in));
     }
 
+    @Override
+    public void onBackPressed() {
+        Utility.hideKeyboard(this, tv_error_mobile);
+        super.onBackPressed();
+    }
 }

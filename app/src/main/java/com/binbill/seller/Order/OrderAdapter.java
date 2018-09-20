@@ -1,5 +1,6 @@
 package com.binbill.seller.Order;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.v4.content.ContextCompat;
@@ -7,6 +8,7 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +17,9 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.applozic.mobicomkit.api.conversation.database.MessageDatabaseService;
+import com.applozic.mobicomkit.uiwidgets.conversation.ConversationUIService;
+import com.applozic.mobicomkit.uiwidgets.conversation.activity.ConversationActivity;
 import com.binbill.seller.Constants;
 import com.binbill.seller.Model.UserModel;
 import com.binbill.seller.R;
@@ -46,7 +51,7 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     public static class OrderHolder extends RecyclerView.ViewHolder {
         protected View mRootCard;
         protected TextView mUserName, mAddress, mItemCount, mDate, mStatus;
-        protected ImageView userImage, mStatusColor, mServiceType;
+        protected ImageView userImage, mStatusColor, mServiceType, mIconChat;
         protected RelativeLayout userImageLayout;
 
         public OrderHolder(View view) {
@@ -61,6 +66,7 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             mStatus = (TextView) view.findViewById(R.id.tv_status);
             mServiceType = (ImageView) view.findViewById(R.id.iv_service);
             userImageLayout = (RelativeLayout) view.findViewById(R.id.rl_user_image);
+            mIconChat = (ImageView) view.findViewById(R.id.ic_icon_chat);
         }
     }
 
@@ -92,6 +98,24 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         final Order model = mList.get(position);
 
         UserModel userModel = model.getUser();
+
+        int contactUnreadCount = new MessageDatabaseService(orderHolder.mUserName.getContext()).getUnreadMessageCountForContact("user_" + model.getUserId());
+        Log.d("SHRUTI","Message count: " + contactUnreadCount);
+        if (contactUnreadCount > 0) {
+            orderHolder.mIconChat.setVisibility(View.VISIBLE);
+            orderHolder.mIconChat.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(orderHolder.mIconChat.getContext(), ConversationActivity.class);
+                    intent.putExtra(ConversationUIService.USER_ID, "user_" + model.getUserId());
+                    intent.putExtra(ConversationUIService.TAKE_ORDER,true); //Skip chat list for showing on back press
+                    orderHolder.mIconChat.getContext().startActivity(intent);
+                }
+            });
+        }
+        else
+            orderHolder.mIconChat.setVisibility(View.GONE);
+
 
         if (userModel != null) {
 

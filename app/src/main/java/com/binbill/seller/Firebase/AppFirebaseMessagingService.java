@@ -11,6 +11,11 @@ import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.applozic.mobicomkit.Applozic;
+import com.applozic.mobicomkit.api.account.register.RegisterUserClientService;
+import com.applozic.mobicomkit.api.account.register.RegistrationResponse;
+import com.applozic.mobicomkit.api.account.user.MobiComUserPreference;
+import com.applozic.mobicomkit.api.notification.MobiComPushReceiver;
 import com.binbill.seller.Dashboard.DashboardActivity_;
 import com.binbill.seller.R;
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -26,14 +31,19 @@ public class AppFirebaseMessagingService extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
+        super.onMessageReceived(remoteMessage);
         Log.d(TAG, "From: " + remoteMessage.getFrom());
 
         if (remoteMessage.getData().size() > 0) {
             Log.d(TAG, "Message data payload: " + remoteMessage.getData());
+            if (MobiComPushReceiver.isMobiComPushNotification(remoteMessage.getData())) {
+                Log.i(TAG, "Applozic notification processing...");
+                MobiComPushReceiver.processMessageAsync(this, remoteMessage.getData());
+                return;
+            }
             handleNow("abc", "abc");
         }
 
-        // Check if message contains a notification payload.
         if (remoteMessage.getNotification() != null) {
             Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
 //            handleNow("abc", "abc");
@@ -46,6 +56,15 @@ public class AppFirebaseMessagingService extends FirebaseMessagingService {
         Log.d(TAG, "Refreshed token: " + token);
 
         sendRegistrationToServer(token);
+
+        Applozic.getInstance(this).setDeviceRegistrationId(token);
+        if (MobiComUserPreference.getInstance(this).isRegistered()) {
+            try {
+                RegistrationResponse registrationResponse = new RegisterUserClientService(this).updatePushNotificationId(token);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     /**
