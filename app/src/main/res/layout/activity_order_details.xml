@@ -70,7 +70,7 @@
                         android:paddingBottom="@dimen/dimen_5dp"
                         android:paddingLeft="@dimen/dimen_15dp"
                         android:paddingRight="@dimen/dimen_15dp"
-                        android:paddingTop="@dimen/dimen_5dp">
+                        android:paddingTop="@dimen/dimen_15dp">
 
                         <include
                             android:id="@+id/rl_user_image"
