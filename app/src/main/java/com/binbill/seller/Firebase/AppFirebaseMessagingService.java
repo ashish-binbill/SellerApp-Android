@@ -21,6 +21,8 @@ import com.binbill.seller.R;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
+import java.util.Map;
+
 /**
  * Created by shruti.vig on 8/20/18.
  */
@@ -41,12 +43,22 @@ public class AppFirebaseMessagingService extends FirebaseMessagingService {
                 MobiComPushReceiver.processMessageAsync(this, remoteMessage.getData());
                 return;
             }
-            handleNow("abc", "abc");
+
+            String title = "BinBill Partner";
+            String description = "";
+            Map<String, String> map = remoteMessage.getData();
+            if (map.containsKey("title"))
+                title = map.get("title");
+            if (map.containsKey("description"))
+                description = map.get("description");
+            if (map.containsKey("big_text"))
+                description = map.get("big_text");
+
+            handleNow(title, description);
         }
 
         if (remoteMessage.getNotification() != null) {
             Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
-//            handleNow("abc", "abc");
         }
 
     }

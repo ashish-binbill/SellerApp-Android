@@ -28,6 +28,11 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.applozic.mobicomkit.api.conversation.Message;
+import com.applozic.mobicomkit.api.conversation.MobiComConversationService;
+import com.applozic.mobicomkit.api.conversation.database.MessageDatabaseService;
+import com.applozic.mobicomkit.uiwidgets.conversation.ConversationUIService;
+import com.applozic.mobicomkit.uiwidgets.conversation.activity.ConversationActivity;
 import com.binbill.seller.AssistedService.AssistedUserModel;
 import com.binbill.seller.BaseActivity;
 import com.binbill.seller.BinBillSeller;
@@ -55,6 +60,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import io.socket.emitter.Emitter;
@@ -91,6 +97,12 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
 
     @ViewById
     RelativeLayout just_sec_layout;
+
+    @ViewById
+    FrameLayout fl_icon_chat;
+
+    @ViewById
+    TextView tv_unread_message;
 
     /**
      * Service agent layout
@@ -834,6 +846,37 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                     tv_name.setText(userModel.getUserEmail());
                 else
                     tv_name.setText(userModel.getUserMobile());
+
+
+                Calendar calendar = Calendar.getInstance();
+
+                Calendar last7days = Calendar.getInstance();
+                last7days.add(Calendar.DAY_OF_YEAR, -10);
+
+                List<Message> messageList = new MobiComConversationService(this).getMessages("user_" + userModel.getUserId(), last7days.getTimeInMillis(), calendar.getTimeInMillis());
+                int contactUnreadCount = new MessageDatabaseService(this).getUnreadMessageCountForContact("user_" + userModel.getUserId());
+                if (messageList != null && messageList.size() > 0) {
+                    Log.d("SHRUTI", "Message count: " + messageList.size());
+                    fl_icon_chat.setVisibility(View.VISIBLE);
+
+                    if (contactUnreadCount > 0) {
+                        tv_unread_message.setVisibility(View.VISIBLE);
+                        tv_unread_message.setText(contactUnreadCount);
+                    } else
+                        tv_unread_message.setVisibility(View.GONE);
+                } else
+                    fl_icon_chat.setVisibility(View.GONE);
+
+                fl_icon_chat.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(OrderDetailsActivity.this, ConversationActivity.class);
+                        intent.putExtra(ConversationUIService.USER_ID, "user_" + userModel.getUserId());
+                        intent.putExtra(ConversationUIService.TAKE_ORDER, true); //Skip chat list for showing on back press
+                        startActivity(intent);
+                    }
+                });
+
 
                 tv_address.setText(orderDetails.getAddress());
 

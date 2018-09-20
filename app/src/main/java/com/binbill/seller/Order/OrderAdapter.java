@@ -13,10 +13,13 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.applozic.mobicomkit.api.conversation.Message;
+import com.applozic.mobicomkit.api.conversation.MobiComConversationService;
 import com.applozic.mobicomkit.api.conversation.database.MessageDatabaseService;
 import com.applozic.mobicomkit.uiwidgets.conversation.ConversationUIService;
 import com.applozic.mobicomkit.uiwidgets.conversation.activity.ConversationActivity;
@@ -31,6 +34,8 @@ import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 import okhttp3.Authenticator;
 import okhttp3.OkHttpClient;
@@ -50,9 +55,10 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     public static class OrderHolder extends RecyclerView.ViewHolder {
         protected View mRootCard;
-        protected TextView mUserName, mAddress, mItemCount, mDate, mStatus;
-        protected ImageView userImage, mStatusColor, mServiceType, mIconChat;
+        protected TextView mUserName, mAddress, mStatus, mItemCount, mDate, mUnreadCount;
+        protected ImageView userImage, mStatusColor, mServiceType;
         protected RelativeLayout userImageLayout;
+        protected FrameLayout mIconChat;
 
         public OrderHolder(View view) {
             super(view);
@@ -66,7 +72,8 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             mStatus = (TextView) view.findViewById(R.id.tv_status);
             mServiceType = (ImageView) view.findViewById(R.id.iv_service);
             userImageLayout = (RelativeLayout) view.findViewById(R.id.rl_user_image);
-            mIconChat = (ImageView) view.findViewById(R.id.ic_icon_chat);
+            mIconChat = (FrameLayout) view.findViewById(R.id.fl_icon_chat);
+            mUnreadCount = (TextView) view.findViewById(R.id.tv_unread_message);
         }
     }
 
@@ -99,21 +106,33 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         UserModel userModel = model.getUser();
 
+        Calendar calendar = Calendar.getInstance();
+
+        Calendar last7days = Calendar.getInstance();
+        last7days.add(Calendar.DAY_OF_YEAR, -10);
+
+        List<Message> messageList = new MobiComConversationService(orderHolder.mUserName.getContext()).getMessages("user_" + model.getUserId(), last7days.getTimeInMillis(), calendar.getTimeInMillis());
         int contactUnreadCount = new MessageDatabaseService(orderHolder.mUserName.getContext()).getUnreadMessageCountForContact("user_" + model.getUserId());
-        Log.d("SHRUTI","Message count: " + contactUnreadCount);
-        if (contactUnreadCount > 0) {
+        if (messageList != null && messageList.size() > 0) {
+            Log.d("SHRUTI", "Message count: " + messageList.size());
             orderHolder.mIconChat.setVisibility(View.VISIBLE);
+
+            if (contactUnreadCount > 0) {
+                orderHolder.mUnreadCount.setVisibility(View.VISIBLE);
+                orderHolder.mUnreadCount.setText(contactUnreadCount);
+            } else
+                orderHolder.mUnreadCount.setVisibility(View.GONE);
+
             orderHolder.mIconChat.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(orderHolder.mIconChat.getContext(), ConversationActivity.class);
                     intent.putExtra(ConversationUIService.USER_ID, "user_" + model.getUserId());
-                    intent.putExtra(ConversationUIService.TAKE_ORDER,true); //Skip chat list for showing on back press
+                    intent.putExtra(ConversationUIService.TAKE_ORDER, true); //Skip chat list for showing on back press
                     orderHolder.mIconChat.getContext().startActivity(intent);
                 }
             });
-        }
-        else
+        } else
             orderHolder.mIconChat.setVisibility(View.GONE);
 
 

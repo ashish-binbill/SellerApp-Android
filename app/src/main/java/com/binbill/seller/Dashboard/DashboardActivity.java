@@ -34,6 +34,7 @@ import com.applozic.mobicomkit.api.account.user.MobiComUserPreference;
 import com.applozic.mobicomkit.api.account.user.PushNotificationTask;
 import com.applozic.mobicomkit.api.account.user.User;
 import com.applozic.mobicomkit.api.account.user.UserLoginTask;
+import com.applozic.mobicomkit.api.account.user.UserLogoutTask;
 import com.applozic.mobicomkit.uiwidgets.ApplozicSetting;
 import com.binbill.seller.APIHelper.ApiHelper;
 import com.binbill.seller.AppSession;
@@ -315,6 +316,19 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
                 just_sec_layout.setVisibility(View.VISIBLE);
                 SharedPref.clearSharedPreferences(DashboardActivity.this);
                 AppSession.setInstanceToNull();
+
+                UserLogoutTask.TaskListener userLogoutTaskListener = new UserLogoutTask.TaskListener() {
+                    @Override
+                    public void onSuccess(Context context) {
+                        //Logout success
+                    }
+                    @Override
+                    public void onFailure(Exception exception) {
+                        //Logout failure
+                    }
+                };
+                UserLogoutTask userLogoutTask = new UserLogoutTask(userLogoutTaskListener, DashboardActivity.this);
+                userLogoutTask.execute((Void) null);
 
                 new Handler().postDelayed(new Runnable() {
                     @Override

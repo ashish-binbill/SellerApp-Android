@@ -115,20 +115,40 @@
                         android:id="@+id/tv_date"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         android:layout_marginTop="@dimen/dimen_10dp"
+                        android:layout_weight="1"
                         android:lineSpacingExtra="7.5sp"
                         android:text=""
                         android:textColor="@color/text_44"
                         android:textSize="@dimen/dimen_12dp" />
 
-                    <ImageView
-                        android:id="@+id/ic_icon_chat"
+                    <FrameLayout
+                        android:id="@+id/fl_icon_chat"
                         android:layout_width="wrap_content"
-                        android:layout_gravity="end"
-                        android:visibility="gone"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_chat" />
+                        android:layout_gravity="end"
+                        android:visibility="gone">
+
+                        <ImageView
+                            android:layout_width="@dimen/dimen_35dp"
+                            android:layout_height="@dimen/dimen_35dp"
+                            android:src="@drawable/ic_chat" />
+
+                        <TextView
+                            android:id="@+id/tv_unread_message"
+                            android:layout_width="@dimen/dimen_20dp"
+                            android:layout_height="@dimen/dimen_20dp"
+                            android:layout_gravity="right"
+                            android:layout_marginLeft="@dimen/dimen_20dp"
+                            android:background="@drawable/circle_bg_grey"
+                            android:backgroundTint="@color/colorAccent"
+                            android:gravity="center"
+                            android:text=""
+                            android:textColor="#ffffff"
+                            android:textSize="@dimen/dimen_10dp"
+                            android:textStyle="bold" />
+
+                    </FrameLayout>
 
                 </LinearLayout>
             </LinearLayout>
