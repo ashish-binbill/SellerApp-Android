@@ -100,7 +100,7 @@ public class OTPLoginActivity extends BaseActivity {
             @Override
             public void afterTextChanged(Editable editable) {
 
-                otp_view.setSelection(editable.length()-1);
+                otp_view.setSelection(editable.length());
                 if(editable.length() == 4)
                     Utility.enableButton(OTPLoginActivity.this, btn_submit, true);
                 else
