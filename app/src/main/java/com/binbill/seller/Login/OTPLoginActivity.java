@@ -5,10 +5,13 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.text.SpannableString;
+import android.text.TextWatcher;
 import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -45,7 +48,7 @@ public class OTPLoginActivity extends BaseActivity {
 
 
     @ViewById
-    OtpView otp_view;
+    EditText otp_view;
 
     @ViewById
     TextView resend_otp, tv_auto_read;
@@ -83,15 +86,25 @@ public class OTPLoginActivity extends BaseActivity {
 
     private void setUpListeners() {
 
-        otp_view.setListener(new OtpListener() {
+        otp_view.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onOtpEntered(String otp) {
-                Utility.enableButton(OTPLoginActivity.this, btn_submit, true);
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
             }
 
             @Override
-            public void onOTPIncomplete() {
-                Utility.enableButton(OTPLoginActivity.this, btn_submit, false);
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+                otp_view.setSelection(editable.length()-1);
+                if(editable.length() == 4)
+                    Utility.enableButton(OTPLoginActivity.this, btn_submit, true);
+                else
+                    Utility.enableButton(OTPLoginActivity.this, btn_submit, false);
             }
         });
         checkPermission();
@@ -112,7 +125,7 @@ public class OTPLoginActivity extends BaseActivity {
                         isSmsReceiverOnReceiveCalled = true;
                         Log.d("Text", messageText);
                         auto_read.setVisibility(View.GONE);
-                        otp_view.setOTP(messageText.substring(messageText.indexOf("\"") + 1, messageText.lastIndexOf("\"")));
+                        otp_view.setText(messageText.substring(messageText.indexOf("\"") + 1, messageText.lastIndexOf("\"")));
 //                        s.callOnClick();
                         isSmsReceiverOnReceiveCalled = false;
                     }
@@ -184,7 +197,7 @@ public class OTPLoginActivity extends BaseActivity {
     private void makeVerifyOTPCall() {
 
         HashMap<String, String> map = new HashMap<>();
-        map.put("token", otp_view.getOTP());
+        map.put("token", otp_view.getText().toString());
         map.put("mobile_no", AppSession.getInstance(this).getMobile());
         map.put("fcm_id", SharedPref.getString(this, SharedPref.FIREBASE_TOKEN));
         map.put("platform", "1");

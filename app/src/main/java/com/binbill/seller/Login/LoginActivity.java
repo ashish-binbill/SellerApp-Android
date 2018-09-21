@@ -119,14 +119,10 @@ public class LoginActivity extends BaseActivity {
 
     private void checkPermission() {
         if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.READ_SMS)
+                Manifest.permission.RECEIVE_SMS)
                 != PackageManager.PERMISSION_GRANTED) {
-
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.READ_SMS)) {
-            }
             ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.READ_SMS},
+                    new String[]{Manifest.permission.RECEIVE_SMS},
                     Constants.PERMISSION_READ_SMS);
         } else {
             makeSendOTPRequest();
@@ -200,11 +196,22 @@ public class LoginActivity extends BaseActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case Constants.PERMISSION_READ_SMS: {
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    makeSendOTPRequest();
-                } else {
-                    makeSendOTPRequest();
+                if (grantResults.length > 0) {
+                    if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                        makeSendOTPRequest();
+                    } else if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                       /* if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.RECEIVE_SMS)) {
+                            //Show permission explanation dialog...
+                            ActivityCompat.requestPermissions(this,
+                                    new String[]{Manifest.permission.RECEIVE_SMS},
+                                    Constants.PERMISSION_READ_SMS);
+                        } else {
+                            //Never ask again selected, or device policy prohibits the app from having that permission.
+                            //So, disable that feature, or fall back to another situation...*/
+                            makeSendOTPRequest();
+
+
+                    }
                 }
             }
         }

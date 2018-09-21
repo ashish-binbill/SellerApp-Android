@@ -496,7 +496,7 @@ public class Utility {
     public static String fetchMobile(Context context) {
 
         if (ContextCompat.checkSelfPermission(context,
-                android.Manifest.permission.READ_SMS)
+                Manifest.permission.RECEIVE_SMS)
                 == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(context,
                 Manifest.permission.READ_PHONE_STATE)
                 == PackageManager.PERMISSION_GRANTED) {

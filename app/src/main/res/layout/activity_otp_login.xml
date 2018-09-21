@@ -32,38 +32,44 @@
         android:textColor="@color/text_44"
         android:textSize="@dimen/dimen_15dp" />
 
-    <com.binbill.seller.CustomViews.OtpView
+    <EditText
         android:id="@+id/otp_view"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="@dimen/dimen_70dp"
+        android:layout_marginRight="@dimen/dimen_70dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="@dimen/dimen_30dp"
+        android:paddingLeft="@dimen/dimen_15dp"
+        android:paddingRight="@dimen/dimen_15dp"
+        android:background="@drawable/otp_bg"
         android:inputType="number"
-        app:otpTextSize="@dimen/dimen_14dp"
+        android:maxLength="4"
+        android:text=""
+        android:letterSpacing="1"
+        android:gravity="center"
         android:textColor="@color/text_44"
-        app:background_drawable="@drawable/otp_bg"
-        app:length="4"
-        app:text_background_color="@color/color_white">
+        android:textSize="@dimen/dimen_30dp">
 
         <requestFocus />
-    </com.binbill.seller.CustomViews.OtpView>
+    </EditText>
 
     <LinearLayout
         android:id="@+id/auto_read"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dimen_30dp"
+        android:layout_marginRight="@dimen/dimen_30dp"
         android:layout_marginTop="@dimen/dimen_30dp"
         android:gravity="center"
         android:orientation="horizontal"
-        android:layout_marginLeft="@dimen/dimen_30dp"
-        android:layout_marginRight="@dimen/dimen_30dp"
         android:visibility="gone">
 
         <ProgressBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:foregroundGravity="center"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"
+            android:foregroundGravity="center" />
 
         <TextView
             android:id="@+id/tv_auto_read"
@@ -80,11 +86,11 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen_55dp"
         android:layout_below="@id/tv_error_mobile"
+        android:layout_marginLeft="@dimen/dimen_30dp"
+        android:layout_marginRight="@dimen/dimen_30dp"
         android:layout_marginTop="@dimen/dimen_40dp"
         android:lineSpacingExtra="-5.5sp"
         android:text="@string/submit"
-        android:layout_marginLeft="@dimen/dimen_30dp"
-        android:layout_marginRight="@dimen/dimen_30dp"
         android:textColor="@color/color_white"
         android:textSize="@dimen/dimen_20dp"
         android:visibility="visible" />
@@ -94,9 +100,9 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen_55dp"
         android:layout_below="@id/et_mobile"
-        android:layout_marginTop="@dimen/dimen_20dp"
         android:layout_marginLeft="@dimen/dimen_30dp"
         android:layout_marginRight="@dimen/dimen_30dp"
+        android:layout_marginTop="@dimen/dimen_20dp"
         android:background="@drawable/rounded_button"
         android:gravity="center"
         android:visibility="gone">
@@ -120,13 +126,13 @@
         android:id="@+id/resend_otp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/dimen_25dp"
         android:gravity="center_horizontal"
         android:lineSpacingExtra="-1sp"
-        android:layout_marginTop="@dimen/dimen_25dp"
-        android:layout_gravity="center"
         android:padding="@dimen/dimen_5dp"
+        android:text="@string/resend_otp"
         android:textColor="@color/colorPrimary"
-        android:textSize="@dimen/dimen_15dp"
-        android:text="@string/resend_otp" />
+        android:textSize="@dimen/dimen_15dp" />
 
 </LinearLayout>
