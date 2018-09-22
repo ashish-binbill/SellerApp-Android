@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/off_white"
     android:orientation="vertical"
     tools:context="com.binbill.seller.Dashboard.DashboardListActivity">
@@ -40,16 +40,13 @@
             <RelativeLayout
                 android:id="@+id/rl_recycler_data"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingBottom="@dimen/dimen_20dp">
+                android:layout_height="match_parent">
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/rv_credits_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_above="@+id/ll_user_action"
-                    android:padding="@dimen/dimen_20dp"
-                    android:paddingBottom="@dimen/dimen_10dp" />
+                    android:padding="@dimen/dimen_10dp" />
 
             </RelativeLayout>
         </FrameLayout>

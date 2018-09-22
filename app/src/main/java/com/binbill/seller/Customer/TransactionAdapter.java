@@ -89,16 +89,17 @@ public class TransactionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             homeDelivery = "Yes";
 
         transactionHolder.mHomeDelivery.setText(" " + homeDelivery);
+        String rupee = transactionHolder.mAmount.getContext().getString(R.string.rupee_sign);
 
         if (!Utility.isEmpty(transaction.getTotalCashback()))
-            transactionHolder.mBBCash.setText(" " + transaction.getTotalCashback());
+            transactionHolder.mBBCash.setText(" " + rupee + " " + transaction.getTotalCashback());
         else
-            transactionHolder.mBBCash.setText(" " + 0);
+            transactionHolder.mBBCash.setText(" " + rupee + " " + 0);
 
         if (!Utility.isEmpty(transaction.getTotalCredits()))
-            transactionHolder.mTotalCredits.setText(" " + transaction.getTotalCredits());
+            transactionHolder.mTotalCredits.setText(" " + rupee + " " + transaction.getTotalCredits());
         else
-            transactionHolder.mTotalCredits.setText(" " + 0);
+            transactionHolder.mTotalCredits.setText(" " + rupee + " " + 0);
 
         if (!Utility.isEmpty(transaction.getTotalLoyalty()))
             transactionHolder.mTotalPoints.setText(" " + transaction.getTotalLoyalty());

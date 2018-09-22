@@ -14,7 +14,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/color_white"
+        android:background="@drawable/edittext_bg_black"
         android:orientation="vertical">
 
         <LinearLayout
@@ -28,28 +28,60 @@
             <include layout="@layout/layout_no_user_image" />
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/dimen_15dp"
-                android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:orientation="vertical"
-                android:paddingRight="@dimen/dimen_35dp">
-
-                <TextView
-                    android:id="@+id/tv_user_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-medium"
-                    android:text="Arya Stark"
-                    android:textStyle="bold"
-                    android:textColor="@color/text_44"
-                    android:textSize="@dimen/dimen_16dp" />
+                android:paddingRight="@dimen/dimen_10dp">
 
                 <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tv_user_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="sans-serif-medium"
+                        android:text="Arya Stark"
+                        android:textColor="@color/text_44"
+                        android:textSize="@dimen/dimen_16dp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_user_status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_marginTop="@dimen/dimen_2dp"
+                        android:background="@drawable/verification_tag"
+                        android:paddingBottom="@dimen/dimen_2dp"
+                        android:paddingLeft="@dimen/dimen_5dp"
+                        android:paddingRight="@dimen/dimen_5dp"
+                        android:paddingTop="@dimen/dimen_2dp"
+                        android:text="@string/verified"
+                        android:textColor="@color/color_white"
+                        android:textSize="@dimen/dimen_10dp" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_distance"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimen_12dp">
+                    android:layout_gravity="end"
+                    android:drawablePadding="@dimen/dimen_5dp"
+                    android:drawableStart="@drawable/ic_location"
+                    android:text=""
+                    android:textColor="@color/text_77"
+                    android:textSize="@dimen/dimen_10dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -71,7 +103,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dimen_2dp">
 
@@ -95,7 +127,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dimen_2dp">
 
@@ -118,53 +150,20 @@
 
                 </LinearLayout>
 
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
                 <TextView
-                    android:id="@+id/tv_distance"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/tv_address"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawablePadding="@dimen/dimen_5dp"
-                    android:drawableStart="@drawable/ic_location"
-                    android:text="2.1 km"
-                    android:textColor="#777777"
-                    android:textSize="@dimen/dimen_10dp" />
-
-
-                <TextView
-                    android:id="@+id/tv_user_status"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dimen_7dp"
                     android:layout_marginTop="@dimen/dimen_5dp"
-                    android:background="@drawable/verification_tag"
-                    android:paddingLeft="@dimen/dimen_5dp"
-                    android:paddingRight="@dimen/dimen_5dp"
-                    android:paddingTop="@dimen/dimen_2dp"
-                    android:paddingBottom="@dimen/dimen_2dp"
-                    android:text="@string/verified"
-                    android:textColor="@color/color_white"
-                    android:textSize="@dimen/dimen_10dp" />
-
+                    android:fontFamily="sans-serif-light"
+                    android:textColor="@color/text_77"
+                    android:textSize="@dimen/dimen_12dp" />
 
             </LinearLayout>
 
         </LinearLayout>
 
-
-        <TextView
-            android:id="@+id/tv_address"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-light"
-            android:text=""
-            android:layout_marginLeft="@dimen/dimen_110dp"
-            android:textColor="@color/text_77"
-            android:textSize="@dimen/dimen_12dp" />
 
         <LinearLayout
             android:layout_width="match_parent"

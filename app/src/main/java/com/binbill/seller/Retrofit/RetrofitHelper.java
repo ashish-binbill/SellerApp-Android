@@ -11,6 +11,7 @@ import android.widget.Toast;
 import com.binbill.seller.AppSession;
 import com.binbill.seller.Constants;
 import com.binbill.seller.MultipartUtility;
+import com.binbill.seller.R;
 import com.binbill.seller.SharedPref;
 import com.binbill.seller.Utility;
 import com.google.gson.JsonObject;
@@ -20,8 +21,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -125,6 +129,12 @@ public class RetrofitHelper {
         void onErrorResponse();
     }
 
+    public interface RetrofitCallbackWithError {
+        void onResponse(String response);
+
+        void onErrorResponse(String error);
+    }
+
     class LongOperation extends AsyncTask<Object, Void, String> {
 
         private final RetrofitCallback mCallback;
@@ -213,7 +223,7 @@ public class RetrofitHelper {
         });
     }
 
-    public void validateOTPToLoginUser(final HashMap<String, String> map, final RetrofitCallback retrofitCallback) {
+    public void validateOTPToLoginUser(final HashMap<String, String> map, final RetrofitCallbackWithError retrofitCallback) {
         RetrofitApiInterface apiService =
                 RetrofitHelper.getClient(mContext).create(RetrofitApiInterface.class);
 
@@ -224,16 +234,34 @@ public class RetrofitHelper {
                 if (response.isSuccessful()) {
                     JsonObject body = response.body();
                     retrofitCallback.onResponse(body.toString());
-                } else
-                    retrofitCallback.onErrorResponse();
+                } else {
+                    String errorString = getErrorJSONString(response);
+                    retrofitCallback.onErrorResponse(errorString);
+                }
             }
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable throwable) {
-                retrofitCallback.onErrorResponse();
+                retrofitCallback.onErrorResponse(mContext.getString(R.string.something_went_wrong));
             }
         });
     }
+
+    private String getErrorJSONString(Response<JsonObject> responseBody) {
+        InputStream i = responseBody.errorBody().byteStream();
+        BufferedReader r = new BufferedReader(new InputStreamReader(i));
+        String finalline = "";
+        String line = "";
+        try {
+            while ((line = r.readLine()) != null) {
+                finalline = finalline + line;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return finalline;
+    }
+
 
     public void getUserState(final RetrofitCallback retrofitCallback) {
         getUserState(retrofitCallback, true);
@@ -1612,6 +1640,7 @@ public class RetrofitHelper {
             }
         });
     }
+
     public void getWalletTransactions(final RetrofitCallback retrofitCallback) {
         RetrofitApiInterface apiService =
                 RetrofitHelper.getClient(mContext).create(RetrofitApiInterface.class);

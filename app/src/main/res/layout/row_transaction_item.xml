@@ -65,7 +65,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/transaction_id"
                         android:textColor="@color/text_44"
-                        android:textSize="@dimen/dimen_10dp" />
+                        android:textSize="@dimen/dimen_12dp" />
 
                     <TextView
                         android:id="@+id/tv_txn_id"
@@ -74,7 +74,7 @@
                         android:fontFamily="sans-serif-medium"
                         android:text=""
                         android:textColor="@color/text_44"
-                        android:textSize="@dimen/dimen_10dp" />
+                        android:textSize="@dimen/dimen_12dp" />
 
                 </LinearLayout>
 
@@ -90,7 +90,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/customer_name"
                         android:textColor="@color/text_44"
-                        android:textSize="@dimen/dimen_10dp" />
+                        android:textSize="@dimen/dimen_12dp" />
 
                     <TextView
                         android:id="@+id/tv_customer_name"
@@ -99,7 +99,7 @@
                         android:fontFamily="sans-serif-medium"
                         android:text="Raj Kumar Rao"
                         android:textColor="@color/text_44"
-                        android:textSize="@dimen/dimen_10dp" />
+                        android:textSize="@dimen/dimen_12dp" />
 
                 </LinearLayout>
 
@@ -121,16 +121,16 @@
                             android:layout_height="wrap_content"
                             android:text="@string/amount_paid"
                             android:textColor="@color/text_44"
-                            android:textSize="@dimen/dimen_10dp" />
+                            android:textSize="@dimen/dimen_12dp" />
 
                         <TextView
                             android:id="@+id/tv_amount"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="sans-serif-medium"
-                            android:text="Rs. 5400"
+                            android:text=""
                             android:textColor="@color/text_44"
-                            android:textSize="@dimen/dimen_10dp" />
+                            android:textSize="@dimen/dimen_12dp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -145,16 +145,16 @@
                             android:layout_height="wrap_content"
                             android:text="@string/credit_due"
                             android:textColor="@color/text_44"
-                            android:textSize="@dimen/dimen_10dp" />
+                            android:textSize="@dimen/dimen_12dp" />
 
                         <TextView
                             android:id="@+id/tv_credit"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="sans-serif-medium"
-                            android:text="5"
+                            android:text=""
                             android:textColor="@color/text_44"
-                            android:textSize="@dimen/dimen_10dp" />
+                            android:textSize="@dimen/dimen_12dp" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -177,16 +177,16 @@
                             android:layout_height="wrap_content"
                             android:text="@string/home_delivery_job"
                             android:textColor="@color/text_44"
-                            android:textSize="@dimen/dimen_10dp" />
+                            android:textSize="@dimen/dimen_12dp" />
 
                         <TextView
                             android:id="@+id/tv_home_delivery"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="sans-serif-medium"
-                            android:text="Yes"
+                            android:text=""
                             android:textColor="@color/text_44"
-                            android:textSize="@dimen/dimen_10dp" />
+                            android:textSize="@dimen/dimen_12dp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -201,16 +201,16 @@
                             android:layout_height="wrap_content"
                             android:text="@string/points_given"
                             android:textColor="@color/text_44"
-                            android:textSize="@dimen/dimen_10dp" />
+                            android:textSize="@dimen/dimen_12dp" />
 
                         <TextView
                             android:id="@+id/tv_points"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="sans-serif-medium"
-                            android:text="5"
+                            android:text=""
                             android:textColor="@color/text_44"
-                            android:textSize="@dimen/dimen_10dp" />
+                            android:textSize="@dimen/dimen_12dp" />
                     </LinearLayout>
 
 
@@ -234,16 +234,16 @@
                             android:layout_height="wrap_content"
                             android:text="@string/earned_bbcash"
                             android:textColor="@color/text_44"
-                            android:textSize="@dimen/dimen_10dp" />
+                            android:textSize="@dimen/dimen_12dp" />
 
                         <TextView
                             android:id="@+id/tv_bb_cash"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="sans-serif-medium"
-                            android:text="600"
+                            android:text=""
                             android:textColor="@color/text_44"
-                            android:textSize="@dimen/dimen_10dp" />
+                            android:textSize="@dimen/dimen_12dp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -258,16 +258,16 @@
                             android:layout_height="wrap_content"
                             android:text="@string/no_of_items"
                             android:textColor="@color/text_44"
-                            android:textSize="@dimen/dimen_10dp" />
+                            android:textSize="@dimen/dimen_12dp" />
 
                         <TextView
                             android:id="@+id/tv_item_count"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="sans-serif-medium"
-                            android:text="5"
+                            android:text=""
                             android:textColor="@color/text_44"
-                            android:textSize="@dimen/dimen_10dp" />
+                            android:textSize="@dimen/dimen_12dp" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -283,7 +283,7 @@
                     android:paddingTop="@dimen/dimen_10dp"
                     android:text="@string/view_bill"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="@dimen/dimen_10dp" />
+                    android:textSize="@dimen/dimen_12dp" />
 
             </LinearLayout>
         </RelativeLayout>

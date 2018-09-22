@@ -20,8 +20,6 @@ import com.binbill.seller.AppSession;
 import com.binbill.seller.BaseActivity;
 import com.binbill.seller.Constants;
 import com.binbill.seller.CustomViews.AppButton;
-import com.binbill.seller.CustomViews.OtpListener;
-import com.binbill.seller.CustomViews.OtpView;
 import com.binbill.seller.Model.DashboardModel;
 import com.binbill.seller.R;
 import com.binbill.seller.Registration.RegistrationResolver;
@@ -101,7 +99,7 @@ public class OTPLoginActivity extends BaseActivity {
             public void afterTextChanged(Editable editable) {
 
                 otp_view.setSelection(editable.length());
-                if(editable.length() == 4)
+                if (editable.length() == 4)
                     Utility.enableButton(OTPLoginActivity.this, btn_submit, true);
                 else
                     Utility.enableButton(OTPLoginActivity.this, btn_submit, false);
@@ -203,24 +201,31 @@ public class OTPLoginActivity extends BaseActivity {
         map.put("fcm_id", SharedPref.getString(this, SharedPref.FIREBASE_TOKEN));
         map.put("platform", "1");
 
-        new RetrofitHelper(this).validateOTPToLoginUser(map, new RetrofitHelper.RetrofitCallback() {
+        new RetrofitHelper(this).validateOTPToLoginUser(map, new RetrofitHelper.RetrofitCallbackWithError() {
             @Override
             public void onResponse(String response) {
                 handleResponse(response, Constants.OTP_LOGIN);
             }
 
             @Override
-            public void onErrorResponse() {
-                handleError();
+            public void onErrorResponse(String error) {
+                handleError("");
             }
         });
     }
 
-    private void handleError() {
+    private void handleError(String error) {
+        String errorString = "";
+        try {
+            JSONObject jsonObject = new JSONObject(error);
+            errorString = jsonObject.optString("message");
+        } catch (JSONException e) {
+            errorString = getString(R.string.something_went_wrong);
+        }
         btn_submit.setVisibility(View.VISIBLE);
         btn_submit_progress.setVisibility(View.GONE);
 
-        showSnackBar(getString(R.string.something_went_wrong));
+        showSnackBar(errorString);
     }
 
     private void handleResponse(String value, int identifier) {
@@ -291,10 +296,10 @@ public class OTPLoginActivity extends BaseActivity {
                         break;
                 }
             } else {
-                handleError();
+                handleError(value);
             }
         } catch (JSONException e) {
-            handleError();
+            handleError("");
         }
 
     }
@@ -309,7 +314,7 @@ public class OTPLoginActivity extends BaseActivity {
 
             @Override
             public void onErrorResponse() {
-                handleError();
+                handleError("");
             }
         });
 

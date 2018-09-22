@@ -103,7 +103,7 @@ public class CreditPointsDashboardAdapter extends RecyclerView.Adapter<RecyclerV
         if (mType == 1)
             creditLoyaltyHolder.mValue.setText(" " + rupee + " " + model.getTotalCredit());
         else if (mType == 2)
-            creditLoyaltyHolder.mValue.setText(" " + rupee + " " + model.getTotalPoints());
+            creditLoyaltyHolder.mValue.setText(" " + model.getTotalPoints());
         else if (mType == 3)
             creditLoyaltyHolder.mValue.setText(" " + rupee + " " + model.getTotalTransactions());
         else
