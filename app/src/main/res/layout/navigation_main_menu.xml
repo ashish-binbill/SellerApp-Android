@@ -107,6 +107,7 @@
 
 
         <TextView
+            android:id="@+id/tv_call_us"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/ic_call"
@@ -120,6 +121,7 @@
 
 
         <TextView
+            android:id="@+id/tv_email_us"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/ic_email"
@@ -132,6 +134,7 @@
             android:textSize="@dimen/dimen_14dp" />
 
         <TextView
+            android:id="@+id/tv_share_app"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/ic_share_grey"
@@ -158,6 +161,7 @@
                 android:src="@drawable/ic_app_version" />
 
             <TextView
+                android:id="@+id/tv_app_version"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-medium"

@@ -194,7 +194,7 @@
     <string name="delivery_agents">Delivery Agents</string>
     <string name="loyalty_rules">Loyalty Rules</string>
     <string name="logout">Logout</string>
-    <string name="app_version">App Version: 1.0</string>
+    <string name="app_version">App Version: %1$s</string>
     <string name="share_app">Share App</string>
     <string name="email_us">Email Us</string>
     <string name="call_us">Call Us</string>
@@ -279,7 +279,7 @@
     <string name="select_service_type">Select Services Offered</string>
     <string name="select_pos_type">Billing Details</string>
     <string name="total_agents">Total Agents</string>
-    <string name="cashback_to_users">BBCash</string>
+    <string name="cashback_to_users">BinBill Cashback</string>
     <string name="wallet_points">%1$s Pts.</string>
     <string name="my_wallet">BB Wallet</string>
     <string name="available_bbcash">Available BB Cash</string>
@@ -312,5 +312,7 @@
     <string name="get_started">Get Started</string>
     <string name="default_media_location_folder">BinBillPartner</string>
     <string name="credit_pending">Credits Pending</string>
+    <string name="enable_permission_call">Please enable call permission from app settings.</string>
+    <string name="loyalty_discounts">Loyalty Discounts</string>
 
 </resources>

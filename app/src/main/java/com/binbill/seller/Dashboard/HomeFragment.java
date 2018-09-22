@@ -131,7 +131,9 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                startActivity(new Intent(getActivity(), DashboardListActivity_.class));
+                Intent intent = new Intent(getActivity(), DashboardListActivity_.class);
+                intent.putExtra(Constants.TYPE, Constants.CREDIT_PENDING);
+                startActivity(intent);
             }
         });
 
@@ -141,7 +143,7 @@ public class HomeFragment extends Fragment {
             public void onClick(View view) {
 
                 Intent intent = new Intent(getActivity(), DashboardListActivity_.class);
-                intent.putExtra(Constants.TYPE, "2");
+                intent.putExtra(Constants.TYPE, Constants.POINTS);
                 startActivity(intent);
             }
         });

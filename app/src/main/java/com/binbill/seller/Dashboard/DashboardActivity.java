@@ -1,14 +1,18 @@
 package com.binbill.seller.Dashboard;
 
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -18,6 +22,7 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -41,6 +46,7 @@ import com.binbill.seller.AppSession;
 import com.binbill.seller.AssistedService.AddAssistedServiceActivity_;
 import com.binbill.seller.AssistedService.AdditionalServiceDialogFragment;
 import com.binbill.seller.BaseActivity;
+import com.binbill.seller.BuildConfig;
 import com.binbill.seller.Constants;
 import com.binbill.seller.CustomViews.YesNoDialogFragment;
 import com.binbill.seller.Customer.AddCustomerActivity_;
@@ -307,6 +313,47 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
             }
         });
 
+        TextView callUs = (TextView) findViewById(R.id.tv_call_us);
+        callUs.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                checkPhonePermission();
+            }
+        });
+
+        TextView emailUs = (TextView) findViewById(R.id.tv_email_us);
+        emailUs.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_SENDTO);
+                intent.setData(Uri.parse("mailto:"));
+                //intent.setType("message/rfc822");
+                String[] recipients = {"support@binbill.com"};
+                String phone_no = AppSession.getInstance(DashboardActivity.this).getMobile();
+                intent.putExtra(Intent.EXTRA_EMAIL, recipients);
+                intent.putExtra(Intent.EXTRA_SUBJECT, "BinBill: Seller Feedback (" + phone_no + ")");
+                //intent.putExtra(Intent.EXTRA_TEXT, "BinBill Team");
+                intent.putExtra(Intent.EXTRA_BCC, new String[] { "sagar@binbill.com", "rohit@binbill.com","amar@binbill.com" });
+                startActivity(Intent.createChooser(intent, "Send email"));
+            }
+        });
+
+        TextView shareApp = (TextView) findViewById(R.id.tv_share_app);
+        shareApp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_TEXT,
+                        "Hey check out my app at: https://play.google.com/store/apps/details?id=com.binbill.seller");
+                sendIntent.setType("text/plain");
+                startActivity(sendIntent);
+            }
+        });
+
+        TextView apVersion = (TextView) findViewById(R.id.tv_app_version);
+        apVersion.setText(getString(R.string.app_version, BuildConfig.VERSION_NAME));
+
         TextView logout = nav_view.findViewById(R.id.tv_logout);
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -322,6 +369,7 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
                     public void onSuccess(Context context) {
                         //Logout success
                     }
+
                     @Override
                     public void onFailure(Exception exception) {
                         //Logout failure
@@ -546,6 +594,46 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
         toolbarText.setText(toolbarTitle);
 
         nav_view.setNavigationItemSelectedListener(this);
+    }
+
+    private void checkPhonePermission() {
+
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.CALL_PHONE)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this, new String[]{
+                            android.Manifest.permission.CALL_PHONE},
+                    Constants.PERMISSION_CALL);
+        } else {
+            Intent intent = new Intent("android.intent.action.CALL");
+            Uri data = Uri.parse("tel:7600919189");
+            intent.setData(data);
+            startActivity(intent);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case Constants.PERMISSION_CALL: {
+
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Intent intent = new Intent("android.intent.action.CALL");
+                    Uri data = Uri.parse("tel:7600919189");
+                    intent.setData(data);
+                    startActivity(intent);
+                } else {
+
+                    if (!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CALL_PHONE)) {
+                        showSnackBar(getString(R.string.enable_permission_call));
+                    }
+                    Log.d("SHRUTI", "Permission denied.. cannot use");
+                }
+                return;
+            }
+        }
     }
 
     @Override

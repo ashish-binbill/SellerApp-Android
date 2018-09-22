@@ -54,13 +54,13 @@ public class DashboardListActivity extends BaseActivity {
 
     @AfterViews
     public void initiateViews() {
+        mType = getIntent().getIntExtra(Constants.TYPE, 1);
+
         setUpToolbar();
         setUpListeners();
-
         btn_no_data.setVisibility(View.GONE);
         tv_no_data.setText(getString(R.string.no_credit));
 
-        mType = getIntent().getIntExtra(Constants.TYPE, 1);
     }
 
     private void setUpListeners() {
@@ -200,31 +200,15 @@ public class DashboardListActivity extends BaseActivity {
         rv_credits_view.setLayoutManager(llm);
 
         /**
-         * Only pickup pending credits
+         *  1 ---- credit
+         *  2 ---- points
          */
-        ArrayList<CreditLoyaltyDashboardModel> filteredList = new ArrayList<>();
-        if (mType == Constants.CREDIT_PENDING) {
 
-            for (CreditLoyaltyDashboardModel model : list) {
-                if (model.getTransactionType().equalsIgnoreCase("1"))
-                    filteredList.add(model);
-            }
-            /**
-             *  1 ---- credit
-             *  2 ---- points
-             */
-            CreditPointsDashboardAdapter mAdapter = new CreditPointsDashboardAdapter(1, filteredList);
+        if (mType == Constants.CREDIT_PENDING) {
+            CreditPointsDashboardAdapter mAdapter = new CreditPointsDashboardAdapter(1, list);
             rv_credits_view.setAdapter(mAdapter);
         } else {
-            for (CreditLoyaltyDashboardModel model : list) {
-                if (model.getTransactionType().equalsIgnoreCase("2"))
-                    filteredList.add(model);
-            }
-            /**
-             *  1 ---- credit
-             *  2 ---- points
-             */
-            CreditPointsDashboardAdapter mAdapter = new CreditPointsDashboardAdapter(2, filteredList);
+            CreditPointsDashboardAdapter mAdapter = new CreditPointsDashboardAdapter(2, list);
             rv_credits_view.setAdapter(mAdapter);
         }
 
@@ -240,7 +224,10 @@ public class DashboardListActivity extends BaseActivity {
 
         getSupportActionBar().setTitle("");
 
-        toolbarText.setText(getString(R.string.credit_pending));
+        if (mType == Constants.CREDIT_PENDING)
+            toolbarText.setText(getString(R.string.credit_pending));
+        else
+            toolbarText.setText(getString(R.string.loyalty_discounts));
     }
 
 }

@@ -191,7 +191,7 @@ public class DeliveryAgentActivity extends BaseActivity implements DeliveryAgent
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         getSupportActionBar().setTitle("");
-        toolbarText.setText(getString(R.string.assign_delivery_boy));
+        toolbarText.setText(getString(R.string.delivery_agents));
 
         iv_notification.setVisibility(View.VISIBLE);
         iv_notification.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_add_offer));

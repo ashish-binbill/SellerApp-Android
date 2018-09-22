@@ -62,6 +62,7 @@ public class Constants {
 
     public static final int PERMISSION_READ_SMS = 100;
     public static final int PERMISSION_CAMERA = 101;
+    public static final int PERMISSION_CALL = 102;
     public static final int INTENT_CALL_SELECT_DELIVERY_AGENT = 1;
 
     public static final Pattern PAN_PATTERN = Pattern.compile("[A-Z]{5}[0-9]{4}[A-Z]{1}");

@@ -37,14 +37,13 @@ public class CreditPointsDashboardAdapter extends RecyclerView.Adapter<RecyclerV
 
     public static class CreditPointsHolder extends RecyclerView.ViewHolder {
         protected View mRootCard;
-        protected TextView mValue, mRemarks, mName, mAddress, mTitle;
+        protected TextView mValue, mName, mAddress, mTitle;
         protected ImageView userImage;
 
         public CreditPointsHolder(View view) {
             super(view);
             mRootCard = view;
             mValue = (TextView) view.findViewById(R.id.tv_points);
-            mRemarks = (TextView) view.findViewById(R.id.tv_remarks);
             mAddress = (TextView) view.findViewById(R.id.tv_address);
             mName = (TextView) view.findViewById(R.id.tv_name);
             userImage = (ImageView) view.findViewById(R.id.iv_user_image);
@@ -79,13 +78,6 @@ public class CreditPointsDashboardAdapter extends RecyclerView.Adapter<RecyclerV
         final CreditLoyaltyDashboardModel model = mList.get(position);
         UserModel userModel = model.getUser();
 
-//        if (!Utility.isEmpty(model.())) {
-//            creditLoyaltyHolder.mRemarks.setText(model.getDescription());
-//            creditLoyaltyHolder.mRemarks.setVisibility(View.VISIBLE);
-//        } else
-//            creditLoyaltyHolder.mRemarks.setVisibility(View.GONE);
-
-
         if (mType == 1)
             creditLoyaltyHolder.mTitle.setText("Credit Pending : ");
         else
@@ -99,13 +91,16 @@ public class CreditPointsDashboardAdapter extends RecyclerView.Adapter<RecyclerV
         else
             creditLoyaltyHolder.mName.setText(userModel.getUserMobile());
 
-        if (!Utility.isEmpty(userModel.getAddress())) {
-            creditLoyaltyHolder.mAddress.setText(userModel.getAddress());
+        if (!Utility.isEmpty(model.getAddress())) {
+            creditLoyaltyHolder.mAddress.setText(model.getAddress());
             creditLoyaltyHolder.mAddress.setVisibility(View.VISIBLE);
         } else
             creditLoyaltyHolder.mAddress.setVisibility(View.GONE);
 
-        creditLoyaltyHolder.mValue.setText(model.getTotalCredit());
+        if (mType == 1)
+            creditLoyaltyHolder.mValue.setText(model.getTotalCredit());
+        else
+            creditLoyaltyHolder.mValue.setText(model.getTotalPoints());
 
         if (userModel.getUserImage() != null && !Utility.isEmpty(userModel.getUserImage())) {
 
