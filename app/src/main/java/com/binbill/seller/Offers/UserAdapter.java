@@ -123,7 +123,7 @@ public class UserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
     public static class MyCustomerHolder extends RecyclerView.ViewHolder {
         protected View mRootCard;
         protected CardView mCard;
-        protected TextView mUserName, mUserTransactions, mUserCredit,mUserAddress,  mUserPoints, mAddCredits, mAddPoints, mDistance, mStatus;
+        protected TextView mUserName, mUserTransactions, mUserCredit, mUserAddress, mUserPoints, mAddCredits, mAddPoints, mDistance, mStatus;
         protected ImageView userImage;
 
         public MyCustomerHolder(View view) {
@@ -202,12 +202,12 @@ public class UserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         else
             userHolder.mUserName.setText(model.getUserMobile());
         userHolder.mUserTransactions.setText(model.getTransactionCount());
-        userHolder.mUserCredit.setText(model.getUserCredit());
+        userHolder.mUserCredit.setText(userHolder.mUserCredit.getContext().getString(R.string.rupee_sign) + model.getUserCredit());
         userHolder.mUserPoints.setText(model.getUserLoyalty());
-        if(!Utility.isEmpty(model.getAddress())) {
+        if (!Utility.isEmpty(model.getAddress())) {
             userHolder.mUserAddress.setText(model.getAddress());
             userHolder.mUserAddress.setVisibility(View.VISIBLE);
-        }else
+        } else
             userHolder.mUserAddress.setVisibility(View.GONE);
 
         if (!Utility.isEmpty(model.getUserDistance())) {
@@ -303,10 +303,10 @@ public class UserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             transactionCount = Integer.parseInt(model.getTransactionCount());
 
         userHolder.mUserTransactions.setText(userHolder.userImage.getContext().getResources().getQuantityString(R.plurals.transaction, transactionCount, transactionCount));
-        if(!Utility.isEmpty(model.getAddress())) {
+        if (!Utility.isEmpty(model.getAddress())) {
             userHolder.mUserAddress.setText(model.getAddress());
             userHolder.mUserAddress.setVisibility(View.VISIBLE);
-        }else
+        } else
             userHolder.mUserAddress.setVisibility(View.GONE);
 
         if (model.getUserImage() != null && !Utility.isEmpty(model.getUserImage())) {

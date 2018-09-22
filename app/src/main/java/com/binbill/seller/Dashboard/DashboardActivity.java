@@ -84,7 +84,7 @@ import okhttp3.Response;
 import okhttp3.Route;
 
 @EActivity(R.layout.activity_dashboard)
-public class DashboardActivity extends BaseActivity implements YesNoDialogFragment.YesNoClickInterface,
+public class DashboardActivity extends BaseActivity implements YesNoDialogFragment.YesNoClickInterface, FragmentEventListener,
         AdditionalServiceDialogFragment.AdditionalServiceClickInterface, NavigationView.OnNavigationItemSelectedListener {
 
     private static final int FMCG_ASSISTED_USER_POS = 0;
@@ -333,7 +333,7 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
                 intent.putExtra(Intent.EXTRA_EMAIL, recipients);
                 intent.putExtra(Intent.EXTRA_SUBJECT, "BinBill: Seller Feedback (" + phone_no + ")");
                 //intent.putExtra(Intent.EXTRA_TEXT, "BinBill Team");
-                intent.putExtra(Intent.EXTRA_BCC, new String[] { "sagar@binbill.com", "rohit@binbill.com","amar@binbill.com" });
+                intent.putExtra(Intent.EXTRA_BCC, new String[]{"sagar@binbill.com", "rohit@binbill.com", "amar@binbill.com"});
                 startActivity(Intent.createChooser(intent, "Send email"));
             }
         });
@@ -345,7 +345,7 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
                 Intent sendIntent = new Intent();
                 sendIntent.setAction(Intent.ACTION_SEND);
                 sendIntent.putExtra(Intent.EXTRA_TEXT,
-                        "Hey check out my app at: https://play.google.com/store/apps/details?id=com.binbill.seller");
+                        getString(R.string.share_message) + " https://play.google.com/store/apps/details?id=com.binbill.seller");
                 sendIntent.setType("text/plain");
                 startActivity(sendIntent);
             }
@@ -680,5 +680,18 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         return false;
+    }
+
+    @Override
+    public void changeViewPagerFragment(int position) {
+        if (position == 4) {
+            assistedServiceFragment = AssistedServiceFragment.newInstance("", "");
+            replaceFragment(assistedServiceFragment, 4);
+            setUpToolbar(getString(R.string.assisted_services));
+
+            iv_notification.setVisibility(View.VISIBLE);
+            iv_notification.setImageDrawable(ContextCompat.getDrawable(DashboardActivity.this, R.drawable.ic_add_offer));
+            iv_search.setVisibility(View.VISIBLE);
+        }
     }
 }

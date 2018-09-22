@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import com.binbill.seller.Constants;
 import com.binbill.seller.Model.CreditLoyaltyDashboardModel;
-import com.binbill.seller.Model.UserModel;
 import com.binbill.seller.R;
 import com.binbill.seller.SharedPref;
 import com.binbill.seller.Utility;
@@ -76,20 +75,23 @@ public class CreditPointsDashboardAdapter extends RecyclerView.Adapter<RecyclerV
 
         final CreditPointsDashboardAdapter.CreditPointsHolder creditLoyaltyHolder = (CreditPointsHolder) holder;
         final CreditLoyaltyDashboardModel model = mList.get(position);
-        UserModel userModel = model.getUser();
 
         if (mType == 1)
             creditLoyaltyHolder.mTitle.setText("Credit Pending : ");
-        else
+        else if (mType == 2)
             creditLoyaltyHolder.mTitle.setText("Loyalty Discounts : ");
-
-
-        if (!Utility.isEmpty(userModel.getUserName()))
-            creditLoyaltyHolder.mName.setText(userModel.getUserName());
-        else if (!Utility.isEmpty(userModel.getUserEmail()))
-            creditLoyaltyHolder.mName.setText(userModel.getUserEmail());
+        else if (mType == 3)
+            creditLoyaltyHolder.mTitle.setText("Transaction Value : ");
         else
-            creditLoyaltyHolder.mName.setText(userModel.getUserMobile());
+            creditLoyaltyHolder.mTitle.setText("Cashback Given : ");
+
+
+        if (!Utility.isEmpty(model.getName()))
+            creditLoyaltyHolder.mName.setText(model.getName());
+        else if (!Utility.isEmpty(model.getEmail()))
+            creditLoyaltyHolder.mName.setText(model.getEmail());
+        else
+            creditLoyaltyHolder.mName.setText(model.getMobile());
 
         if (!Utility.isEmpty(model.getAddress())) {
             creditLoyaltyHolder.mAddress.setText(model.getAddress());
@@ -97,12 +99,17 @@ public class CreditPointsDashboardAdapter extends RecyclerView.Adapter<RecyclerV
         } else
             creditLoyaltyHolder.mAddress.setVisibility(View.GONE);
 
+        String rupee = creditLoyaltyHolder.mValue.getContext().getString(R.string.rupee_sign);
         if (mType == 1)
-            creditLoyaltyHolder.mValue.setText(model.getTotalCredit());
+            creditLoyaltyHolder.mValue.setText(" " + rupee + " " + model.getTotalCredit());
+        else if (mType == 2)
+            creditLoyaltyHolder.mValue.setText(" " + rupee + " " + model.getTotalPoints());
+        else if (mType == 3)
+            creditLoyaltyHolder.mValue.setText(" " + rupee + " " + model.getTotalTransactions());
         else
-            creditLoyaltyHolder.mValue.setText(model.getTotalPoints());
+            creditLoyaltyHolder.mValue.setText(" " + rupee + " " + model.getTotalCashback());
 
-        if (userModel.getUserImage() != null && !Utility.isEmpty(userModel.getUserImage())) {
+        if (model.getImage() != null && !Utility.isEmpty(model.getImage())) {
 
             final String authToken = SharedPref.getString(creditLoyaltyHolder.mAddress.getContext(), SharedPref.AUTH_TOKEN);
             OkHttpClient okHttpClient = new OkHttpClient.Builder()

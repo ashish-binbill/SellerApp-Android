@@ -113,6 +113,12 @@ public interface RetrofitApiInterface {
     @GET(Constants.ADD_SETTLE_POINTS)
     Call<JsonObject> getAllSellerPoints(@Path(value = "seller_id", encoded = true) String sellerId);
 
+    @GET(Constants.FETCH_SELLER_TRANSACTIONS)
+    Call<JsonObject> getAllSellerTransactions(@Path(value = "seller_id", encoded = true) String sellerId);
+
+    @GET(Constants.FETCH_SELLER_CASHBACKS)
+    Call<JsonObject> getAllSellerCashbacks(@Path(value = "seller_id", encoded = true) String sellerId);
+
     @GET(Constants.FETCH_SELLER_POINTS)
     Call<JsonObject> fetchUserLoyaltyPoints(@Path(value = "seller_id", encoded = true) String sellerId, @Path(value = "customer_id", encoded = true) String customerId);
 

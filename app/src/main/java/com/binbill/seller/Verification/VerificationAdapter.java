@@ -149,16 +149,16 @@ public class VerificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         } else
             verificationHolder.mLinkPoints.setVisibility(View.GONE);
 
-
+        String rupeeSymbol = verificationHolder.mTotalCredits.getContext().getString(R.string.rupee_sign);
         if (!Utility.isEmpty(model.getTotalCredits())) {
             verificationHolder.totalCredits.setVisibility(View.VISIBLE);
-            verificationHolder.mTotalCredits.setText(" " + model.getTotalCredits());
+            verificationHolder.mTotalCredits.setText(" " + rupeeSymbol + model.getTotalCredits());
         } else
             verificationHolder.totalCredits.setVisibility(View.GONE);
 
         if (!Utility.isEmpty(model.getRedeemedCredits())) {
             verificationHolder.redeemedCredits.setVisibility(View.VISIBLE);
-            verificationHolder.mRedeemedCredits.setText(" " + model.getRedeemedCredits());
+            verificationHolder.mRedeemedCredits.setText(" " + rupeeSymbol +model.getRedeemedCredits());
         } else
             verificationHolder.redeemedCredits.setVisibility(View.GONE);
 

@@ -93,7 +93,7 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        TextView tvLabelCustomer = (TextView) view.findViewById(R.id.tv_label_customer);
+        final TextView tvLabelCustomer = (TextView) view.findViewById(R.id.tv_label_customer);
         ImageView ivLabelCustomer = (ImageView) view.findViewById(R.id.iv_customer);
 
         switch (dashboardModel.getSellerType()) {
@@ -147,6 +147,34 @@ public class HomeFragment extends Fragment {
                 startActivity(intent);
             }
         });
+
+        LinearLayout allTransactions = (LinearLayout) view.findViewById(R.id.ll_transaction);
+        allTransactions.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent(getActivity(), DashboardListActivity_.class);
+                intent.putExtra(Constants.TYPE, Constants.TRANSACTIONS);
+                startActivity(intent);
+            }
+        });
+
+        LinearLayout allAgents = (LinearLayout) view.findViewById(R.id.ll_agent_cashback);
+        allAgents.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (tvLabelCustomer.getText().toString().equalsIgnoreCase(getString(R.string.cashback_to_users))) {
+                    Intent intent = new Intent(getActivity(), DashboardListActivity_.class);
+                    intent.putExtra(Constants.TYPE, Constants.CASHBACKS);
+                    startActivity(intent);
+                } else {
+                    FragmentEventListener eventListener = (FragmentEventListener) getActivity();
+                    eventListener.changeViewPagerFragment(4);
+                }
+            }
+        });
+
 
     }
 

@@ -59,6 +59,8 @@ public class Constants {
     public static final String FETCH_WALLET_TRANSACTIONS = "sellers/{seller_id}/wallet";
     public static final String REDEEM_WALLET_AMOUNT = "sellers/{seller_id}/wallet/redeem";
     public static final String GET_LOYALTY_POINTS = "sellers/{seller_id}/loyalty/rules";
+    public static final String FETCH_SELLER_TRANSACTIONS = "sellers/{seller_id}/users/transactions";
+    public static final String FETCH_SELLER_CASHBACKS = "sellers/{seller_id}/users/cashbacks";
 
     public static final int PERMISSION_READ_SMS = 100;
     public static final int PERMISSION_CAMERA = 101;
@@ -113,6 +115,8 @@ public class Constants {
     public static final String TYPE = "TYPE";
     public static final int CREDIT_PENDING = 1;
     public static final int POINTS = 2;
+    public static final int TRANSACTIONS = 3;
+    public static final int CASHBACKS = 4;
     public static final String ADD_USER_FOR_OFFER = "ADD_USER_FOR_OFFER";
     public static final String EDIT_OFFER = "EDIT_OFFER";
     public static final String DELETE_OFFER = "DELETE_OFFER";

@@ -298,7 +298,7 @@ public class Utility {
                     break;
                 case 17:
                     CharSequence custom1 = android.text.format.DateFormat.format("dd MMM, yyyy", date);
-                    CharSequence customTime1 = android.text.format.DateFormat.format("kk:mm a", date);
+                    CharSequence customTime1 = android.text.format.DateFormat.format("hh:mm aa", date);
                     if (custom1 != null)
                         formattedDate = custom1.toString() + " " + customTime1;
                     break;

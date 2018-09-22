@@ -224,7 +224,7 @@ public class CreditsFragment extends Fragment {
 
         final EditText amount = (EditText) dialogView.findViewById(R.id.et_add_credit);
         if (type == ADD_CREDIT)
-            amount.setHint(getString(R.string.add_credit));
+            amount.setHint(getString(R.string.add_credit_rupee));
         else if (type == SETTLE_CREDIT)
             amount.setHint(getString(R.string.settle_credit));
 

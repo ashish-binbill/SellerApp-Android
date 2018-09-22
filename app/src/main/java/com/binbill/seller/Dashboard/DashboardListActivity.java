@@ -76,6 +76,11 @@ public class DashboardListActivity extends BaseActivity {
                     makeCreditHistoryCall();
                 else if (mType == Constants.POINTS)
                     makePointsHistoryCall();
+                else if (mType == Constants.TRANSACTIONS)
+                    makeTransactionHistoryCall();
+                else
+                    makeCashbackHistoryCall();
+
                 sl_pull_to_refresh.setRefreshing(false);
             }
         });
@@ -126,6 +131,96 @@ public class DashboardListActivity extends BaseActivity {
         });
     }
 
+    private void makeTransactionHistoryCall() {
+        rv_credits_view.setVisibility(View.GONE);
+        shimmer_view_container.setVisibility(View.VISIBLE);
+        no_data_layout.setVisibility(View.GONE);
+
+        new RetrofitHelper(this).getSellerTransactions(new RetrofitHelper.RetrofitCallback() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    if (jsonObject.optBoolean("status")) {
+
+                        JSONArray userArray = jsonObject.getJSONArray("result");
+                        Type classType = new TypeToken<ArrayList<CreditLoyaltyDashboardModel>>() {
+                        }.getType();
+
+                        ArrayList<CreditLoyaltyDashboardModel> creditList = new Gson().fromJson(userArray.toString(), classType);
+                        handleResponse(creditList);
+
+                    } else {
+                        rv_credits_view.setVisibility(View.GONE);
+                        shimmer_view_container.setVisibility(View.GONE);
+                        no_data_layout.setVisibility(View.VISIBLE);
+
+                        showSnackBar(getString(R.string.something_went_wrong));
+                    }
+
+                } catch (JSONException e) {
+                    rv_credits_view.setVisibility(View.GONE);
+                    shimmer_view_container.setVisibility(View.GONE);
+                    no_data_layout.setVisibility(View.VISIBLE);
+                    showSnackBar(getString(R.string.something_went_wrong));
+                }
+            }
+
+            @Override
+            public void onErrorResponse() {
+                rv_credits_view.setVisibility(View.GONE);
+                shimmer_view_container.setVisibility(View.GONE);
+                no_data_layout.setVisibility(View.VISIBLE);
+                showSnackBar(getString(R.string.something_went_wrong));
+            }
+        });
+    }
+
+    private void makeCashbackHistoryCall() {
+        rv_credits_view.setVisibility(View.GONE);
+        shimmer_view_container.setVisibility(View.VISIBLE);
+        no_data_layout.setVisibility(View.GONE);
+
+        new RetrofitHelper(this).getSellerCashbacks(new RetrofitHelper.RetrofitCallback() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    if (jsonObject.optBoolean("status")) {
+
+                        JSONArray userArray = jsonObject.getJSONArray("result");
+                        Type classType = new TypeToken<ArrayList<CreditLoyaltyDashboardModel>>() {
+                        }.getType();
+
+                        ArrayList<CreditLoyaltyDashboardModel> creditList = new Gson().fromJson(userArray.toString(), classType);
+                        handleResponse(creditList);
+
+                    } else {
+                        rv_credits_view.setVisibility(View.GONE);
+                        shimmer_view_container.setVisibility(View.GONE);
+                        no_data_layout.setVisibility(View.VISIBLE);
+
+                        showSnackBar(getString(R.string.something_went_wrong));
+                    }
+
+                } catch (JSONException e) {
+                    rv_credits_view.setVisibility(View.GONE);
+                    shimmer_view_container.setVisibility(View.GONE);
+                    no_data_layout.setVisibility(View.VISIBLE);
+                    showSnackBar(getString(R.string.something_went_wrong));
+                }
+            }
+
+            @Override
+            public void onErrorResponse() {
+                rv_credits_view.setVisibility(View.GONE);
+                shimmer_view_container.setVisibility(View.GONE);
+                no_data_layout.setVisibility(View.VISIBLE);
+                showSnackBar(getString(R.string.something_went_wrong));
+            }
+        });
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -133,6 +228,10 @@ public class DashboardListActivity extends BaseActivity {
             makeCreditHistoryCall();
         else if (mType == Constants.POINTS)
             makePointsHistoryCall();
+        else if (mType == Constants.TRANSACTIONS)
+            makeTransactionHistoryCall();
+        else
+            makeCashbackHistoryCall();
     }
 
     private void makeCreditHistoryCall() {
@@ -202,15 +301,11 @@ public class DashboardListActivity extends BaseActivity {
         /**
          *  1 ---- credit
          *  2 ---- points
+         *  3 ----- transactions
+         *  4 ------ cashbacks
          */
-
-        if (mType == Constants.CREDIT_PENDING) {
-            CreditPointsDashboardAdapter mAdapter = new CreditPointsDashboardAdapter(1, list);
-            rv_credits_view.setAdapter(mAdapter);
-        } else {
-            CreditPointsDashboardAdapter mAdapter = new CreditPointsDashboardAdapter(2, list);
-            rv_credits_view.setAdapter(mAdapter);
-        }
+        CreditPointsDashboardAdapter mAdapter = new CreditPointsDashboardAdapter(mType, list);
+        rv_credits_view.setAdapter(mAdapter);
 
         rv_credits_view.setVisibility(View.VISIBLE);
         shimmer_view_container.setVisibility(View.GONE);
@@ -226,8 +321,12 @@ public class DashboardListActivity extends BaseActivity {
 
         if (mType == Constants.CREDIT_PENDING)
             toolbarText.setText(getString(R.string.credit_pending));
-        else
+        else if (mType == Constants.POINTS)
             toolbarText.setText(getString(R.string.loyalty_discounts));
+        else if (mType == Constants.TRANSACTIONS)
+            toolbarText.setText(getString(R.string.transactions));
+        else
+            toolbarText.setText(getString(R.string.cashback_to_users));
     }
 
 }

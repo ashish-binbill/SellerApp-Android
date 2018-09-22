@@ -276,7 +276,7 @@ public class MyCustomerFragment extends Fragment implements UserAdapter.CardInte
 
         final EditText amount = (EditText) dialogView.findViewById(R.id.et_add_credit);
         if (type == ADD_CREDIT)
-            amount.setHint(getString(R.string.add_credit));
+            amount.setHint(getString(R.string.add_credit_rupee));
         else if (type == ADD_POINTS)
             amount.setHint(getString(R.string.add_points));
 
