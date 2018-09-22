@@ -28,6 +28,7 @@
                     android:orientation="horizontal">
 
                     <LinearLayout
+                        android:id="@+id/ll_transaction"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_marginRight="@dimen/dimen_10dp"
@@ -66,6 +67,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/ll_agent_cashback"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_marginLeft="@dimen/dimen_10dp"
@@ -110,6 +112,7 @@
                     android:orientation="horizontal">
 
                     <LinearLayout
+                        android:id="@+id/ll_credit"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_marginRight="@dimen/dimen_10dp"
@@ -145,6 +148,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/ll_points"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_marginLeft="@dimen/dimen_10dp"

@@ -107,6 +107,12 @@ public interface RetrofitApiInterface {
     @PUT(Constants.ADD_SETTLE_CREDIT)
     Call<JsonObject> addSettleCredits(@Path(value = "seller_id", encoded = true) String sellerId, @Body HashMap<String, String> body);
 
+    @GET(Constants.ADD_SETTLE_CREDIT)
+    Call<JsonObject> getAllSellerCredits(@Path(value = "seller_id", encoded = true) String sellerId);
+
+    @GET(Constants.ADD_SETTLE_POINTS)
+    Call<JsonObject> getAllSellerPoints(@Path(value = "seller_id", encoded = true) String sellerId);
+
     @GET(Constants.FETCH_SELLER_POINTS)
     Call<JsonObject> fetchUserLoyaltyPoints(@Path(value = "seller_id", encoded = true) String sellerId, @Path(value = "customer_id", encoded = true) String customerId);
 
