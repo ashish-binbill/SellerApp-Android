@@ -119,7 +119,7 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
             if (contactUnreadCount > 0) {
                 orderHolder.mUnreadCount.setVisibility(View.VISIBLE);
-                orderHolder.mUnreadCount.setText(contactUnreadCount);
+                orderHolder.mUnreadCount.setText(contactUnreadCount + "");
             } else
                 orderHolder.mUnreadCount.setVisibility(View.GONE);
 

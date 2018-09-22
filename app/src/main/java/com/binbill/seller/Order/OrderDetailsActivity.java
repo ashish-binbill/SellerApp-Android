@@ -861,7 +861,7 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
 
                     if (contactUnreadCount > 0) {
                         tv_unread_message.setVisibility(View.VISIBLE);
-                        tv_unread_message.setText(contactUnreadCount);
+                        tv_unread_message.setText(contactUnreadCount + "");
                     } else
                         tv_unread_message.setVisibility(View.GONE);
                 } else

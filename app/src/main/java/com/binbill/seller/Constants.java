@@ -110,6 +110,8 @@ public class Constants {
     public static final String UPLOAD_TYPE_ASSISTED_DELIVERY_BOY = "0";
     public static final String FILE_URI = "FILE_URI";
     public static final String TYPE = "TYPE";
+    public static final int CREDIT_PENDING = 1;
+    public static final int POINTS = 2;
     public static final String ADD_USER_FOR_OFFER = "ADD_USER_FOR_OFFER";
     public static final String EDIT_OFFER = "EDIT_OFFER";
     public static final String DELETE_OFFER = "DELETE_OFFER";

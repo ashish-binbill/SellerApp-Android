@@ -1,0 +1,152 @@
+package com.binbill.seller.Dashboard;
+
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import com.binbill.seller.Constants;
+import com.binbill.seller.Model.CreditLoyaltyDashboardModel;
+import com.binbill.seller.Model.UserModel;
+import com.binbill.seller.R;
+import com.binbill.seller.SharedPref;
+import com.binbill.seller.Utility;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.OkHttp3Downloader;
+import com.squareup.picasso.Picasso;
+
+import java.io.IOException;
+import java.util.ArrayList;
+
+import okhttp3.Authenticator;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.Route;
+
+public class CreditPointsDashboardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+    private final int mType;
+
+    public static class CreditPointsHolder extends RecyclerView.ViewHolder {
+        protected View mRootCard;
+        protected TextView mValue, mRemarks, mName, mAddress, mTitle;
+        protected ImageView userImage;
+
+        public CreditPointsHolder(View view) {
+            super(view);
+            mRootCard = view;
+            mValue = (TextView) view.findViewById(R.id.tv_points);
+            mRemarks = (TextView) view.findViewById(R.id.tv_remarks);
+            mAddress = (TextView) view.findViewById(R.id.tv_address);
+            mName = (TextView) view.findViewById(R.id.tv_name);
+            userImage = (ImageView) view.findViewById(R.id.iv_user_image);
+            mTitle = (TextView) view.findViewById(R.id.tv_title);
+        }
+    }
+
+    private ArrayList<CreditLoyaltyDashboardModel> mList;
+
+    public CreditPointsDashboardAdapter(int type, ArrayList<CreditLoyaltyDashboardModel> list) {
+        this.mList = list;
+        this.mType = type;
+    }
+
+    @Override
+    public int getItemCount() {
+        return mList.size();
+    }
+
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View itemView = LayoutInflater.
+                from(parent.getContext()).
+                inflate(R.layout.row_credit_loyalty_dashboard_item, parent, false);
+        return new CreditPointsHolder(itemView);
+    }
+
+    @Override
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
+
+        final CreditPointsDashboardAdapter.CreditPointsHolder creditLoyaltyHolder = (CreditPointsHolder) holder;
+        final CreditLoyaltyDashboardModel model = mList.get(position);
+        UserModel userModel = model.getUser();
+
+//        if (!Utility.isEmpty(model.())) {
+//            creditLoyaltyHolder.mRemarks.setText(model.getDescription());
+//            creditLoyaltyHolder.mRemarks.setVisibility(View.VISIBLE);
+//        } else
+//            creditLoyaltyHolder.mRemarks.setVisibility(View.GONE);
+
+
+        if (mType == 1)
+            creditLoyaltyHolder.mTitle.setText("Credit Pending : ");
+        else
+            creditLoyaltyHolder.mTitle.setText("Loyalty Discounts : ");
+
+
+        if (!Utility.isEmpty(userModel.getUserName()))
+            creditLoyaltyHolder.mName.setText(userModel.getUserName());
+        else if (!Utility.isEmpty(userModel.getUserEmail()))
+            creditLoyaltyHolder.mName.setText(userModel.getUserEmail());
+        else
+            creditLoyaltyHolder.mName.setText(userModel.getUserMobile());
+
+        if (!Utility.isEmpty(userModel.getAddress())) {
+            creditLoyaltyHolder.mAddress.setText(userModel.getAddress());
+            creditLoyaltyHolder.mAddress.setVisibility(View.VISIBLE);
+        } else
+            creditLoyaltyHolder.mAddress.setVisibility(View.GONE);
+
+        creditLoyaltyHolder.mValue.setText(model.getTotalCredit());
+
+        if (userModel.getUserImage() != null && !Utility.isEmpty(userModel.getUserImage())) {
+
+            final String authToken = SharedPref.getString(creditLoyaltyHolder.mAddress.getContext(), SharedPref.AUTH_TOKEN);
+            OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                    .authenticator(new Authenticator() {
+                        @Override
+                        public Request authenticate(Route route, Response response) throws IOException {
+                            return response.request().newBuilder()
+                                    .header("Authorization", authToken)
+                                    .build();
+                        }
+                    }).build();
+
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                    RelativeLayout.LayoutParams.MATCH_PARENT,
+                    RelativeLayout.LayoutParams.MATCH_PARENT
+            );
+            params.setMargins(0, 0, 0, 0);
+            creditLoyaltyHolder.userImage.setLayoutParams(params);
+
+            Picasso picasso = new Picasso.Builder(creditLoyaltyHolder.mAddress.getContext())
+                    .downloader(new OkHttp3Downloader(okHttpClient))
+                    .build();
+            picasso.load(Constants.BASE_URL + "customer/" + model.getUserId() + "/images")
+                    .config(Bitmap.Config.RGB_565)
+                    .into(creditLoyaltyHolder.userImage, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            Bitmap imageBitmap = ((BitmapDrawable) creditLoyaltyHolder.userImage.getDrawable()).getBitmap();
+                            RoundedBitmapDrawable imageDrawable = RoundedBitmapDrawableFactory.create(creditLoyaltyHolder.userImage.getContext().getResources(), imageBitmap);
+                            imageDrawable.setCircular(true);
+                            imageDrawable.setCornerRadius(Math.max(imageBitmap.getWidth(), imageBitmap.getHeight()) / 2.0f);
+                            creditLoyaltyHolder.userImage.setImageDrawable(imageDrawable);
+                        }
+
+                        @Override
+                        public void onError(Exception e) {
+
+                        }
+                    });
+        }
+    }
+}

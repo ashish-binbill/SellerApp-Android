@@ -11,10 +11,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.binbill.seller.APIHelper.ApiHelper;
 import com.binbill.seller.AppSession;
+import com.binbill.seller.Constants;
 import com.binbill.seller.Model.DashboardModel;
 import com.binbill.seller.Offers.OfferActivity_;
 import com.binbill.seller.R;
@@ -112,6 +114,37 @@ public class HomeFragment extends Fragment {
                 ivLabelCustomer.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_cashback));
                 break;
         }
+        /**
+         * Layout listeners
+         */
+
+        LinearLayout transactionLayout = (LinearLayout) view.findViewById(R.id.ll_transaction);
+        transactionLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        LinearLayout allCredits = (LinearLayout) view.findViewById(R.id.ll_credit);
+        allCredits.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                startActivity(new Intent(getActivity(), DashboardListActivity_.class));
+            }
+        });
+
+        LinearLayout allPoints = (LinearLayout) view.findViewById(R.id.ll_points);
+        allPoints.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent(getActivity(), DashboardListActivity_.class);
+                intent.putExtra(Constants.TYPE, "2");
+                startActivity(intent);
+            }
+        });
 
     }
 
