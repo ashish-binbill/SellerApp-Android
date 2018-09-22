@@ -138,7 +138,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Credit Pending"
+                            android:text="Outstanding Credit"
                             android:textColor="@color/color_white"
                             android:textSize="@dimen/dimen_12dp"
                             android:textStyle="bold" />

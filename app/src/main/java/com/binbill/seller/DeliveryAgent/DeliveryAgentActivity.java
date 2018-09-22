@@ -83,8 +83,8 @@ public class DeliveryAgentActivity extends BaseActivity implements DeliveryAgent
     private void setUpData() {
         tv_no_data.setText(getString(R.string.no_delivery_boys));
         btn_no_data.setVisibility(View.VISIBLE);
-        btn_no_data.setText(getString(R.string.add_delivery_boy));
-        btn_no_data.setText(getString(R.string.add));
+        btn_no_data.setText(getString(R.string.add_delivery_boy_now));
+        //btn_no_data.setText(getString(R.string.add));
     }
 
     private void makeDeliveryBoyFetchApiCall() {

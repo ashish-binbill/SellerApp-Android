@@ -25,7 +25,7 @@
         android:fontFamily="sans-serif-medium"
         android:layout_marginTop="@dimen/dimen_40dp"
         android:layout_gravity="center"
-        android:text="You have not added any Customers as yet. Please add Customers."
+        android:text="Add Customers from BinBill Network or invite your Customers to connect."
         android:textColor="@color/text_44"
         android:textSize="@dimen/dimen_16dp" />
 

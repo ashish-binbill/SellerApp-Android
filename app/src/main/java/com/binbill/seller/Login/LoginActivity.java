@@ -89,9 +89,10 @@ public class LoginActivity extends BaseActivity {
                         tv_error_mobile.setVisibility(View.INVISIBLE);
                     }
 
-                    if (s.length() >= 10)
+                    if (s.length() >= 10) {
+                        Utility.hideKeyboard(LoginActivity.this, tv_error_mobile);
                         Utility.enableButton(LoginActivity.this, submit, true);
-                    else
+                    }else
                         Utility.enableButton(LoginActivity.this, submit, false);
                 } else {
                     Utility.enableButton(LoginActivity.this, submit, false);

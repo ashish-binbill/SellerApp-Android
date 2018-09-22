@@ -94,6 +94,7 @@ public class LoyaltyFragment extends Fragment {
 
         settleCredit = (AppButton) view.findViewById(R.id.btn_settle_credit);
         settleCredit.setText(getString(R.string.settle_points));
+        settleCredit.setVisibility(View.GONE);
 
         TextView noDataTitle = (TextView) noDataLayout.findViewById(R.id.tv_no_data);
         noDataTitle.setText(getString(R.string.no_points));

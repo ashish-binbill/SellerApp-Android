@@ -85,7 +85,7 @@
                 android:textColor="@color/text_44"
                 android:textSize="@dimen/dimen_15dp"
                 android:textStyle="bold"
-                android:text="Billing Software" />
+                android:text="Use Billing Software" />
 
             <RadioGroup
                 android:id="@+id/radio_group_pos"

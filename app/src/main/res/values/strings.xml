@@ -25,10 +25,10 @@
     <string name="city">City</string>
     <string name="upload_shop_image">Upload Shop Image</string>
     <string name="main_category_asterisk">Main Category *</string>
-    <string name="basic_details_1">Basic Details - 1</string>
+    <string name="basic_details_1">Shop Details</string>
     <string name="incorrect_pincode">Incorrect PIN Code</string>
 
-    <string name="basic_details_2">Basic Details - 2</string>
+    <string name="basic_details_2">Shop Details</string>
     <string name="monday">Mon</string>
     <string name="tuesday">Tue</string>
     <string name="wednesday">Wed</string>
@@ -37,7 +37,7 @@
     <string name="saturday">Sat</string>
     <string name="sunday">Sun</string>
     <string name="shop_open_days">Shop Open Days</string>
-    <string name="shop_opening_timings">Shop Opening Timings</string>
+    <string name="shop_opening_timings">Shop Open Hours</string>
     <string name="home_delivery">Home Delivery</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
@@ -58,7 +58,7 @@
     <string name="partnership_agreement">Partnership Agreement *</string>
     <string name="udhyog_adhaar">Udhyog Adhaar *</string>
     <string name="company_pan_card">Company Pan Card *</string>
-    <string name="select_services_you_provide">Select categories of items you sell</string>
+    <string name="select_services_you_provide">Select Product categories you sell</string>
     <string name="select_categories">Select Categories</string>
     <string name="select_services">Select Services</string>
     <string name="sell_electronics">Sell Electronics</string>
@@ -95,7 +95,7 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="manage_offers">Manage Offers</string>
+    <string name="manage_offers">Promote Offers</string>
     <string name="manage_your_products_categories">Manage Your Products Categories</string>
     <string name="no_offers_added">You have not added any Offers yet. Please add Offers.</string>
     <string name="add_offers">Add Offers</string>
@@ -118,12 +118,12 @@
     <string name="delete_service">Are you sure you want to delete this service?</string>
     <string name="string_no">No</string>
     <string name="string_yes">Yes</string>
-    <string name="select_user">Select User</string>
+    <string name="select_user">Select Customer</string>
     <string name="no_users_added">You donot have any other Customers to add. Please add Customers from My Customer section first.</string>
     <string name="no_users_linked">You have not published this offer for any Customers yet. Please add Customers for this offer.</string>
     <string name="add_users">Add Customer Now</string>
     <string name="publish">Publish</string>
-    <string name="offer_published_success">Your offer is successfully published!</string>
+    <string name="offer_published_success">Your offer is successfully published for the selected Customer!</string>
     <string name="offer_published">Offer Published</string>
     <string name="ok">Ok</string>
     <string name="linked_user">Users With The Offer</string>
@@ -142,7 +142,7 @@
     <string name="type_offer_title">Type your text here...</string>
     <string name="your_text">Your text here...</string>
     <string name="upload_banner">Upload Banner</string>
-    <string name="please_add_assisted_service">You have not added any services as yet. Please add assisted services.</string>
+    <string name="please_add_assisted_service">Boost your income by assisting your Customers with Home Services viz. Domestic Help, Cleaner, Carpenter etc.</string>
     <string name="add_service_now">Add Service Now</string>
     <string name="name_of_service">Name of Service Guide</string>
     <string name="phone_number">Phone Number</string>
@@ -177,7 +177,7 @@
     <string name="no_of_items">No. of Items : </string>
     <string name="amount_paid">Amount Paid : </string>
     <string name="home_delivery_job">Home Delivery : </string>
-    <string name="expected_bbcash">Expected BBCash : </string>
+    <string name="expected_bbcash">Expected BB Cash : </string>
     <string name="view_bill">View Bill</string>
     <string name="pending">Pending</string>
     <string name="link">Link</string>
@@ -185,7 +185,7 @@
     <string name="customer_name">Customer Name : </string>
     <string name="credit_due">Credit Due : </string>
     <string name="points_given">Loyalty Discount : </string>
-    <string name="earned_bbcash">Earned BBCash : </string>
+    <string name="earned_bbcash">Earned BB Cash : </string>
     <string name="no_copies">No Bill is attached</string>
     <string name="sku_management">SKU Management</string>
     <string name="manage_categories"> -   Manage Categories</string>
@@ -211,7 +211,7 @@
     <string name="new_order">New Order</string>
     <string name="my_order">Orders</string>
     <string name="order_complete">Completed</string>
-    <string name="no_active_orders">No active orders for now.</string>
+    <string name="no_active_orders">No Active Orders as of now.</string>
     <string name="no_past_orders">No Past Order history available.</string>
     <string name="in_progress">In Progress</string>
     <string name="order_cancelled">Cancelled</string>
@@ -225,14 +225,14 @@
     <string name="decline">Decline</string>
     <string name="accept">Accept</string>
     <string name="select_available">Select Available Option</string>
-    <string name="no_data_in_verification_fragment">You don\'t have any Verifications pending!</string>
+    <string name="no_data_in_verification_fragment">There are no pending Customer Bills to be verified.</string>
     <string name="send_for_approval">Send for Approval</string>
     <string name="quantity">Quantity</string>
     <string name="string_order_rejected">Order Rejected Successfully</string>
     <string name="waiting_for_approval">Waiting for approval</string>
     <string name="assign_delivery_boy">Assign Delivery</string>
     <string name="skip">Skip</string>
-    <string name="no_delivery_boys">You have not added any Agents as yet. Please add delivery agents.</string>
+    <string name="no_delivery_boys">Assign Deliveries to Agents and track Customer Orders.</string>
     <string name="tasks_already_assigned">%1$s tasks already assigned</string>
     <string name="rating_value">(%1$s)</string>
     <string name="no_task_assigned">No task assigned</string>
@@ -245,6 +245,7 @@
     <string name="found_shop">Found shop with same %1$s Number. Select from below.</string>
     <string name="active">Active</string>
     <string name="verified">Verified</string>
+    <string name="add_delivery_boy_now">Add Agent Now</string>
     <string name="add_delivery_boy">Add Delivery Agent</string>
     <string name="update_delivery_boy">Update Delivery Agent</string>
     <string name="delete_agent">Are you sure you want to delete this Agent?</string>
@@ -273,16 +274,17 @@
     <string name="add">Add</string>
     <string name="update">Update</string>
     <string name="fmcg_only">FMCG Only</string>
-    <string name="fmcg_and_assisted"><![CDATA[FMCG & Assisted Services]]></string>
-    <string name="assisted_only">Assisted Services Only</string>
-    <string name="select_service_type">Select Service Type</string>
+    <string name="fmcg_and_assisted"><![CDATA[FMCG & Home Services]]></string>
+    <string name="assisted_only">Home Services Only</string>
+    <string name="select_service_type">Select Services Offered</string>
+    <string name="select_pos_type">Billing Details</string>
     <string name="total_agents">Total Agents</string>
     <string name="cashback_to_users">Cashback To Users</string>
     <string name="wallet_points">%1$s Pts.</string>
-    <string name="my_wallet">My Wallet</string>
-    <string name="available_bbcash">Available BBCash</string>
+    <string name="my_wallet">BB Wallet</string>
+    <string name="available_bbcash">Available BB Cash</string>
     <string name="redeem_via_paytm">Redeem Via Paytm</string>
-    <string name="bbcash_transactions">BBCash Transactions</string>
+    <string name="bbcash_transactions">BB Cash Transactions</string>
     <string name="name_string">Name : %1$s</string>
     <string name="received_from_home_delivery">Received from BinBill for Home Delivery</string>
     <string name="received_from_customer">Received from Customer</string>

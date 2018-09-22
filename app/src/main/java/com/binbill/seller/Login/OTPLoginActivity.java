@@ -140,6 +140,7 @@ public class OTPLoginActivity extends BaseActivity {
         btn_submit.setVisibility(View.GONE);
         btn_submit_progress.setVisibility(View.VISIBLE);
 
+        Utility.hideKeyboard(this, btn_submit);
         makeVerifyOTPCall();
     }
 

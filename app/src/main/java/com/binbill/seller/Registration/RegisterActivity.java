@@ -425,7 +425,11 @@ public class RegisterActivity extends BaseActivity implements OptionListFragment
     }
 
     private void showSellerTypeFragment(int flow) {
-        toolbarText.setText(getString(R.string.select_service_type));
+        if (flow == 0)
+            toolbarText.setText(getString(R.string.select_service_type));
+        else
+            toolbarText.setText(getString(R.string.select_service_type));
+
 
         SellerTypeFragment sellerTypeFragment = SellerTypeFragment.newInstance(flow);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
