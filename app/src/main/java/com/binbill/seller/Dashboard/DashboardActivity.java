@@ -244,7 +244,7 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
                 RelativeLayout.LayoutParams.MATCH_PARENT,
                 RelativeLayout.LayoutParams.MATCH_PARENT
         );
-        params.setMargins(0, 0, 0, 0);
+        params.setMargins(-10, -10, -10, -10);
         iv_user_image.setLayoutParams(params);
 
         Picasso picasso = new Picasso.Builder(this)
@@ -340,7 +340,7 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
                 String[] recipients = {"support@binbill.com"};
                 String phone_no = AppSession.getInstance(DashboardActivity.this).getMobile();
                 intent.putExtra(Intent.EXTRA_EMAIL, recipients);
-                intent.putExtra(Intent.EXTRA_SUBJECT, "BinBill: Seller Feedback (" + phone_no + ")");
+                intent.putExtra(Intent.EXTRA_SUBJECT, "BinBill: Partner Feedback (" + phone_no + ")");
                 //intent.putExtra(Intent.EXTRA_TEXT, "BinBill Team");
                 intent.putExtra(Intent.EXTRA_BCC, new String[]{"sagar@binbill.com", "rohit@binbill.com", "amar@binbill.com"});
                 startActivity(Intent.createChooser(intent, "Send email"));
