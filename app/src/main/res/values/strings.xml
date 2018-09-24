@@ -130,7 +130,8 @@
     <string name="transaction">Transactions</string>
     <string name="credit">Credit: </string>
     <string name="points">Loyalty Discount: </string>
-    <string name="transactions">Transactions Report</string>
+    <string name="transactions">Transactions</string>
+    <string name="transactions_report">Transactions Report</string>
     <string name="add_credit">Add Credit</string>
     <string name="add_points">Add Loyalty Discount</string>
     <string name="add_customer">Add Customer Now</string>

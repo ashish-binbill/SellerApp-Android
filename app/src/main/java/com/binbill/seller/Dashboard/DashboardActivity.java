@@ -363,10 +363,13 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
         sellerAvailability = (TextView) findViewById(R.id.tv_availability);
 
         DashboardModel dashboardModel = AppSession.getInstance(this).getDashboardData();
-        if (dashboardModel.isRushHour())
-            sellerAvailability.setText(getString(R.string.available));
-        else
+        if (dashboardModel.isRushHour()) {
             sellerAvailability.setText(getString(R.string.busy));
+            sellerAvailability.setBackgroundColor(ContextCompat.getColor(DashboardActivity.this, R.color.status_red));
+        } else {
+            sellerAvailability.setText(getString(R.string.available));
+            sellerAvailability.setBackgroundColor(ContextCompat.getColor(DashboardActivity.this, R.color.status_green_light));
+        }
 
         sellerAvailability.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -525,11 +528,11 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int checked) {
                 int radioButtonID = radioGroup.getCheckedRadioButtonId();
-                String isAvailable = "true";
+                String isBusy = "false";
                 if (radioButtonID == R.id.busy)
-                    isAvailable = "false";
+                    isBusy = "true";
 
-                new RetrofitHelper(DashboardActivity.this).setSellerAvailability(isAvailable, new RetrofitHelper.RetrofitCallback() {
+                new RetrofitHelper(DashboardActivity.this).setSellerAvailability(isBusy, new RetrofitHelper.RetrofitCallback() {
                     @Override
                     public void onResponse(String response) {
                         /**
@@ -546,7 +549,7 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
                 });
 
 
-                if (isAvailable.equalsIgnoreCase("true")) {
+                if (isBusy.equalsIgnoreCase("false")) {
                     sellerAvailability.setText(getString(R.string.available));
                     sellerAvailability.setBackgroundColor(ContextCompat.getColor(DashboardActivity.this, R.color.status_green_light));
                 } else {

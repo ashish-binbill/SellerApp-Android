@@ -324,7 +324,7 @@ public class DashboardListActivity extends BaseActivity {
         else if (mType == Constants.POINTS)
             toolbarText.setText(getString(R.string.loyalty_discounts));
         else if (mType == Constants.TRANSACTIONS)
-            toolbarText.setText(getString(R.string.transactions));
+            toolbarText.setText(getString(R.string.transactions_report));
         else
             toolbarText.setText(getString(R.string.cashback_to_users));
     }

@@ -74,11 +74,11 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         final TextView transactionValue = (TextView) view.findViewById(R.id.transaction_value);
-        TextView customerCount = (TextView) view.findViewById(R.id.customers);
+        final TextView customerCount = (TextView) view.findViewById(R.id.customers);
         final TextView pendingCredit = (TextView) view.findViewById(R.id.pending_credit);
         final TextView loyalty = (TextView) view.findViewById(R.id.loyalty_points);
 
-        final String emptyValue = getString(R.string.rupee_sign) + "0";
+        final String emptyValue = getString(R.string.rupee_sign) + " 0";
 
         DashboardModel dashboardModel = AppSession.getInstance(getActivity()).getDashboardData();
         if (dashboardModel != null) {
@@ -110,9 +110,9 @@ public class HomeFragment extends Fragment {
             default:
                 tvLabelCustomer.setText(getString(R.string.cashback_to_users));
                 if (!Utility.isEmpty(dashboardModel.getTotalUserCashback()))
-                    customerCount.setText(getString(R.string.rupee_sign) + dashboardModel.getTotalUserCashback());
+                    customerCount.setText(getString(R.string.rupee_sign) + " " + dashboardModel.getTotalUserCashback());
                 else
-                    customerCount.setText(getString(R.string.rupee_sign) + "0");
+                    customerCount.setText(getString(R.string.rupee_sign) + " 0");
                 ivLabelCustomer.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_cashback));
                 break;
         }
@@ -170,9 +170,11 @@ public class HomeFragment extends Fragment {
             public void onClick(View view) {
 
                 if (tvLabelCustomer.getText().toString().equalsIgnoreCase(getString(R.string.cashback_to_users))) {
-                    Intent intent = new Intent(getActivity(), DashboardListActivity_.class);
-                    intent.putExtra(Constants.TYPE, Constants.CASHBACKS);
-                    startActivity(intent);
+                    if (!customerCount.getText().toString().equals(emptyValue)) {
+                        Intent intent = new Intent(getActivity(), DashboardListActivity_.class);
+                        intent.putExtra(Constants.TYPE, Constants.CASHBACKS);
+                        startActivity(intent);
+                    }
                 } else {
                     FragmentEventListener eventListener = (FragmentEventListener) getActivity();
                     eventListener.changeViewPagerFragment(4);
