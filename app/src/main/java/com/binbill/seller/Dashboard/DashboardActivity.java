@@ -805,6 +805,8 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
             iv_notification.setVisibility(View.VISIBLE);
             iv_notification.setImageDrawable(ContextCompat.getDrawable(DashboardActivity.this, R.drawable.ic_add_offer));
             iv_search.setVisibility(View.VISIBLE);
+
+            bottom_navigation.setSelectedItemId(R.id.action_assisted);
         }
     }
 }
