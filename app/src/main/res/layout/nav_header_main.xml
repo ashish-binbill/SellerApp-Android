@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-medium"
             android:lineSpacingExtra="-1sp"
-            android:text="Caputo’s Bake Shop"
+            android:text=""
             android:textColor="@color/color_white"
             android:textSize="@dimen/dimen_16dp" />
 
@@ -39,7 +39,7 @@
             android:layout_marginTop="@dimen/dimen_5dp"
             android:fontFamily="sans-serif-medium"
             android:lineSpacingExtra="1sp"
-            android:text="8010508661"
+            android:text=""
             android:textColor="@color/color_white"
             android:textSize="@dimen/dimen_14dp" />
 
@@ -49,17 +49,18 @@
             android:layout_height="wrap_content">
 
             <TextView
+                android:id="@+id/tv_availability"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dimen_10dp"
-                android:background="#3fed02"
+                android:background="@color/status_green_light"
                 android:gravity="center"
                 android:lineSpacingExtra="3.5sp"
                 android:paddingBottom="@dimen/dimen_5dp"
                 android:paddingLeft="@dimen/dimen_10dp"
                 android:paddingRight="@dimen/dimen_10dp"
                 android:paddingTop="@dimen/dimen_5dp"
-                android:text="Available"
+                android:text="@string/available"
                 android:textColor="#ffffff"
                 android:textSize="@dimen/dimen_12dp"
                 android:textStyle="bold" />

@@ -34,4 +34,5 @@
     <color name="status_orange">#FF732E</color>
     <color name="status_yellow">#CECE00</color>
     <color name="text_77_80">#80777777</color>
+    <color name="status_green_light">#3fed02</color>
 </resources>

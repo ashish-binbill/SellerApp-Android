@@ -1713,10 +1713,32 @@ public class RetrofitHelper {
 
         HashMap<String, String> map = new HashMap<>();
         map.put("id", id);
-        map.put("minimum_points", points);
-        map.put("points_per_item", minPoints);
+        map.put("minimum_points", minPoints);
+        map.put("points_per_item", points);
 
         Call<JsonObject> call = apiService.setLoyaltyPoints(AppSession.getInstance(mContext).getSellerId(), map);
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (response.isSuccessful()) {
+                    JsonObject body = response.body();
+                    retrofitCallback.onResponse(body.toString());
+                } else
+                    retrofitCallback.onErrorResponse();
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable throwable) {
+                retrofitCallback.onErrorResponse();
+            }
+        });
+    }
+
+    public void setSellerAvailability(String availability, final RetrofitCallback retrofitCallback) {
+        RetrofitApiInterface apiService =
+                RetrofitHelper.getClient(mContext).create(RetrofitApiInterface.class);
+
+        Call<JsonObject> call = apiService.setSellerAvailability(AppSession.getInstance(mContext).getSellerId(), availability);
         call.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {

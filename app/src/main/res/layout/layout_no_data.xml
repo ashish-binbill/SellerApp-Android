@@ -25,7 +25,7 @@
         android:fontFamily="sans-serif-medium"
         android:layout_marginTop="@dimen/dimen_40dp"
         android:layout_gravity="center"
-        android:text="Add Customers from BinBill Network or invite your Customers to connect."
+        android:text="@string/verification_no_jobs_string"
         android:textColor="@color/text_44"
         android:textSize="@dimen/dimen_16dp" />
 

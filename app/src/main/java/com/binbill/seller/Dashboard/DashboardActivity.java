@@ -2,11 +2,15 @@ package com.binbill.seller.Dashboard;
 
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -23,11 +27,15 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -124,6 +132,7 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
     private AssistedServiceFragment assistedServiceFragment;
     private MyCustomerFragment myCustomerFragment;
     public int sellerType;
+    private TextView sellerAvailability;
 
     @AfterViews
     public void setUpView() {
@@ -351,6 +360,14 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
             }
         });
 
+        sellerAvailability = (TextView) findViewById(R.id.tv_availability);
+        sellerAvailability.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                invokeAvailabilityDialog(sellerAvailability.getText().toString());
+            }
+        });
+
         TextView apVersion = (TextView) findViewById(R.id.tv_app_version);
         apVersion.setText(getString(R.string.app_version, BuildConfig.VERSION_NAME));
 
@@ -456,6 +473,86 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
                 }
             }
         });
+    }
+
+    private void invokeAvailabilityDialog(String isAvailable) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.dialog_show_available_options, null);
+
+        Rect displayRectangle = new Rect();
+        Window window = getWindow();
+        window.getDecorView().getWindowVisibleDisplayFrame(displayRectangle);
+
+        dialogView.setMinimumWidth((int) (displayRectangle.width() * 0.9f));
+
+        builder.setView(dialogView);
+        builder.setCancelable(false);
+
+        final AlertDialog dialog = builder.create();
+        dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        TextView headerTitle = (TextView) dialogView.findViewById(R.id.header);
+
+        RadioGroup radioGroup = (RadioGroup) dialogView.findViewById(R.id.radio_group_availability);
+        RadioButton available = (RadioButton) dialogView.findViewById(R.id.available);
+        RadioButton busy = (RadioButton) dialogView.findViewById(R.id.busy);
+
+        if (isAvailable.equalsIgnoreCase(getString(R.string.available))) {
+            available.setChecked(true);
+            busy.setChecked(false);
+        } else {
+            available.setChecked(false);
+            busy.setChecked(true);
+        }
+
+        headerTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int checked) {
+                int radioButtonID = radioGroup.getCheckedRadioButtonId();
+                String isAvailable = "true";
+                if (radioButtonID == R.id.busy)
+                    isAvailable = "false";
+
+                new RetrofitHelper(DashboardActivity.this).setSellerAvailability(isAvailable, new RetrofitHelper.RetrofitCallback() {
+                    @Override
+                    public void onResponse(String response) {
+                        /**
+                         * Do nothing
+                         */
+                    }
+
+                    @Override
+                    public void onErrorResponse() {
+                        /**
+                         * Do nothing
+                         */
+                    }
+                });
+
+
+                if (isAvailable.equalsIgnoreCase("true")) {
+                    sellerAvailability.setText(getString(R.string.available));
+                    sellerAvailability.setBackgroundColor(ContextCompat.getColor(DashboardActivity.this, R.color.status_green_light));
+                } else {
+                    sellerAvailability.setText(getString(R.string.busy));
+                    sellerAvailability.setBackgroundColor(ContextCompat.getColor(DashboardActivity.this, R.color.status_red));
+                }
+                dialog.dismiss();
+
+            }
+        });
+
+
+        dialog.show();
     }
 
     private void setUpNavigationView() {

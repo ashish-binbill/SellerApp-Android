@@ -204,4 +204,7 @@ public interface RetrofitApiInterface {
 
     @PUT(Constants.GET_LOYALTY_POINTS)
     Call<JsonObject> setLoyaltyPoints(@Path(value = "seller_id", encoded = true) String sellerId, @Body HashMap<String, String> body);
+
+    @PUT(Constants.SET_SELLER_AVAILABILITY)
+    Call<JsonObject> setSellerAvailability(@Path(value = "seller_id", encoded = true) String sellerId, @Path(value = "available", encoded = true) String availability);
 }
