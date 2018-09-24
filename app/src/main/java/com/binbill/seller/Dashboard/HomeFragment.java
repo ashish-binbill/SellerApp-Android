@@ -73,10 +73,12 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        TextView transactionValue = (TextView) view.findViewById(R.id.transaction_value);
+        final TextView transactionValue = (TextView) view.findViewById(R.id.transaction_value);
         TextView customerCount = (TextView) view.findViewById(R.id.customers);
-        TextView pendingCredit = (TextView) view.findViewById(R.id.pending_credit);
-        TextView loyalty = (TextView) view.findViewById(R.id.loyalty_points);
+        final TextView pendingCredit = (TextView) view.findViewById(R.id.pending_credit);
+        final TextView loyalty = (TextView) view.findViewById(R.id.loyalty_points);
+
+        final String emptyValue = getString(R.string.rupee_sign) + "0";
 
         DashboardModel dashboardModel = AppSession.getInstance(getActivity()).getDashboardData();
         if (dashboardModel != null) {
@@ -108,9 +110,9 @@ public class HomeFragment extends Fragment {
             default:
                 tvLabelCustomer.setText(getString(R.string.cashback_to_users));
                 if (!Utility.isEmpty(dashboardModel.getTotalUserCashback()))
-                    customerCount.setText(dashboardModel.getTotalUserCashback());
+                    customerCount.setText(getString(R.string.rupee_sign) + dashboardModel.getTotalUserCashback());
                 else
-                    customerCount.setText("0");
+                    customerCount.setText(getString(R.string.rupee_sign) + "0");
                 ivLabelCustomer.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_cashback));
                 break;
         }
@@ -118,22 +120,23 @@ public class HomeFragment extends Fragment {
          * Layout listeners
          */
 
-        LinearLayout transactionLayout = (LinearLayout) view.findViewById(R.id.ll_transaction);
+      /*  LinearLayout transactionLayout = (LinearLayout) view.findViewById(R.id.ll_transaction);
         transactionLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
             }
-        });
+        });*/
 
         LinearLayout allCredits = (LinearLayout) view.findViewById(R.id.ll_credit);
         allCredits.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                Intent intent = new Intent(getActivity(), DashboardListActivity_.class);
-                intent.putExtra(Constants.TYPE, Constants.CREDIT_PENDING);
-                startActivity(intent);
+                if (!pendingCredit.getText().toString().equals(emptyValue)) {
+                    Intent intent = new Intent(getActivity(), DashboardListActivity_.class);
+                    intent.putExtra(Constants.TYPE, Constants.CREDIT_PENDING);
+                    startActivity(intent);
+                }
             }
         });
 
@@ -141,10 +144,11 @@ public class HomeFragment extends Fragment {
         allPoints.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                Intent intent = new Intent(getActivity(), DashboardListActivity_.class);
-                intent.putExtra(Constants.TYPE, Constants.POINTS);
-                startActivity(intent);
+                if (!loyalty.getText().toString().equals("0")) {
+                    Intent intent = new Intent(getActivity(), DashboardListActivity_.class);
+                    intent.putExtra(Constants.TYPE, Constants.POINTS);
+                    startActivity(intent);
+                }
             }
         });
 
@@ -152,10 +156,11 @@ public class HomeFragment extends Fragment {
         allTransactions.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                Intent intent = new Intent(getActivity(), DashboardListActivity_.class);
-                intent.putExtra(Constants.TYPE, Constants.TRANSACTIONS);
-                startActivity(intent);
+                if (!transactionValue.getText().toString().equals(emptyValue)) {
+                    Intent intent = new Intent(getActivity(), DashboardListActivity_.class);
+                    intent.putExtra(Constants.TYPE, Constants.TRANSACTIONS);
+                    startActivity(intent);
+                }
             }
         });
 

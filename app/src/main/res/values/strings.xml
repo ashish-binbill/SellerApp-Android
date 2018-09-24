@@ -130,7 +130,7 @@
     <string name="transaction">Transactions</string>
     <string name="credit">Credit: </string>
     <string name="points">Loyalty Discount: </string>
-    <string name="transactions">Transactions</string>
+    <string name="transactions">Transactions Report</string>
     <string name="add_credit">Add Credit</string>
     <string name="add_points">Add Loyalty Discount</string>
     <string name="add_customer">Add Customer Now</string>
@@ -279,7 +279,7 @@
     <string name="select_service_type">Select Services Offered</string>
     <string name="select_pos_type">Billing Details</string>
     <string name="total_agents">Total Agents</string>
-    <string name="cashback_to_users">BinBill Cashback</string>
+    <string name="cashback_to_users">BB Cash to Customers</string>
     <string name="wallet_points">%1$s Pts.</string>
     <string name="my_wallet">BB Wallet</string>
     <string name="available_bbcash">Available BB Cash</string>
@@ -311,9 +311,9 @@
     <string name="onboarding_sub_title_4"><![CDATA[Gain insightful Customer Insights, Valuable Customer Feedback & Manage Methodical Credit Record.]]></string>
     <string name="get_started">Get Started</string>
     <string name="default_media_location_folder">BinBillPartner</string>
-    <string name="credit_pending">Credits Pending</string>
+    <string name="credit_pending">Outstanding Credit Report</string>
     <string name="enable_permission_call">Please enable call permission from app settings.</string>
-    <string name="loyalty_discounts">Loyalty Discounts</string>
+    <string name="loyalty_discounts">Loyalty Discount Report</string>
     <string name="add_credit_rupee">Add Credit (₹)</string>
     <string name="share_message">Install BinBill Partner on your phone and enter the digital world to steer your business ahead.</string>
     <string name="verification_no_jobs_string">Add Customers from BinBill Network or invite your Customers to connect with them for - online shopping orders, assisting home services, loyalty programs and communicating offers &amp; discounts.</string>
