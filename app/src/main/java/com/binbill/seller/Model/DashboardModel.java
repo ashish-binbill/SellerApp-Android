@@ -10,6 +10,12 @@ import java.io.Serializable;
 
 public class DashboardModel implements Serializable {
 
+    private static final int FMCG_ASSISTED_USER_POS = 0;
+    private static final int FMCG_ASSISTED_USER_NO_POS = 1;
+    private static final int FMCG_ONLY_USER_HAS_POS = 2;
+    private static final int FMCG_ONLY_USER_NO_POS = 3;
+    private static final int ASSISTED_ONLY_USER = 4;
+
     @SerializedName("total_transactions")
     String totalTransactionValue;
 
@@ -46,6 +52,9 @@ public class DashboardModel implements Serializable {
     @SerializedName("is_data_manually_added")
     boolean categoryBrandDataManuallyAdded;
 
+    @SerializedName("seller_type_id")
+    transient int sellerType;
+
     public boolean isCategoryBrandDataManuallyAdded() {
         return categoryBrandDataManuallyAdded;
     }
@@ -66,15 +75,26 @@ public class DashboardModel implements Serializable {
         return hasPos;
     }
 
-    transient int sellerType;
 
     public int getSellerType() {
-        return sellerType;
-    }
-
-
-    public void setSellerType(int sellerType) {
-        this.sellerType = sellerType;
+        int sellerType = 0;
+        if (this.isAssisted()) {
+            if (this.isFmcg()) {
+                if (this.isHasPos())
+                    sellerType = FMCG_ASSISTED_USER_POS;
+                else
+                    sellerType = FMCG_ASSISTED_USER_NO_POS;
+            } else
+                sellerType = ASSISTED_ONLY_USER;
+        } else {
+            if (this.isFmcg()) {
+                if (this.isHasPos())
+                    sellerType = FMCG_ONLY_USER_HAS_POS;
+                else
+                    sellerType = FMCG_ONLY_USER_NO_POS;
+            }
+        }
+        return this.sellerType = sellerType;
     }
 
     public boolean isAssisted() {

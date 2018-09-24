@@ -29,10 +29,11 @@ public class HomeFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private static final int FMCG_ASSISTED_USER = 0;
-    private static final int FMCG_ONLY_USER_HAS_POS = 1;
-    private static final int FMCG_ONLY_USER_NO_POS = 2;
-    private static final int ASSISTED_ONLY_USER = 3;
+    private static final int FMCG_ASSISTED_USER_POS = 0;
+    private static final int FMCG_ASSISTED_USER_NO_POS = 1;
+    private static final int FMCG_ONLY_USER_HAS_POS = 2;
+    private static final int FMCG_ONLY_USER_NO_POS = 3;
+    private static final int ASSISTED_ONLY_USER = 4;
 
 
     public HomeFragment() {

@@ -97,7 +97,7 @@ public class WalletActivity extends BaseActivity {
 
                         ll_wallet_layout.setVisibility(View.GONE);
                         rl_confirm_layout.setVisibility(View.VISIBLE);
-                    }else
+                    } else
                         showSnackBar(getString(R.string.insufficient_wallet_amount));
                 }
             }
@@ -256,11 +256,11 @@ public class WalletActivity extends BaseActivity {
         if (Utility.isEmpty(walletAmount)) {
             ProfileModel profileModel = AppSession.getInstance(this).getSellerProfile();
             if (!Utility.isEmpty(profileModel.getCashBack()))
-                tv_wallet.setText(profileModel.getCashBack());
+                tv_wallet.setText(getString(R.string.rupee_sign) + " " + profileModel.getCashBack());
             else
-                tv_wallet.setText("0");
+                tv_wallet.setText(getString(R.string.rupee_sign) + " 0");
         } else
-            tv_wallet.setText(walletAmount);
+            tv_wallet.setText(getString(R.string.rupee_sign) + " " + walletAmount);
     }
 
     private void setUpData() {

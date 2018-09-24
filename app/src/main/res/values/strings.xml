@@ -281,7 +281,7 @@
     <string name="select_pos_type">Billing Details</string>
     <string name="total_agents">Total Agents</string>
     <string name="cashback_to_users">BB Cash to Customers</string>
-    <string name="wallet_points">%1$s Pts.</string>
+    <string name="wallet_points">%1$s</string>
     <string name="my_wallet">BB Wallet</string>
     <string name="available_bbcash">Available BB Cash</string>
     <string name="redeem_via_paytm">Redeem Via Paytm</string>
@@ -290,7 +290,7 @@
     <string name="received_from_home_delivery">Received from BinBill for Home Delivery</string>
     <string name="received_from_customer">Received from Customer</string>
     <string name="success">Success</string>
-    <string name="no_wallet_txn">You dont have any wallet transactions</string>
+    <string name="no_wallet_txn">You don\'t have any wallet transactions</string>
     <string name="confirm_paytm">Please confirm your Paytm Number - %1$s Or go back to Redeem Via Seller.</string>
     <string name="confirm_number">Confirm Number</string>
     <string name="redeem_successfully">Request generated successfully to redeem wallet amount</string>

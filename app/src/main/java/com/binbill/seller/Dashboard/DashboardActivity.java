@@ -273,7 +273,7 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
         tv_shop_number.setText(model.getContactNo());
 
         TextView wallet = nav_view.findViewById(R.id.wallet_amount);
-        wallet.setText(getString(R.string.wallet_points, model.getCashBack()));
+        wallet.setText(getString(R.string.rupee_sign) + " " + getString(R.string.wallet_points, model.getCashBack()));
     }
 
     private void setUpListener() {
@@ -418,7 +418,7 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
             }
         });
 
-        TextView wallet = nav_view.findViewById(R.id.wallet_amount);
+        final TextView wallet = nav_view.findViewById(R.id.wallet_amount);
         wallet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -581,9 +581,9 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
 
         DashboardModel dashboardModel = AppSession.getInstance(this).getDashboardData();
 
-        sellerType = FMCG_ASSISTED_USER_POS;
+        sellerType = dashboardModel.getSellerType();
 
-        if (dashboardModel.isAssisted()) {
+        /*if (dashboardModel.isAssisted()) {
             if (dashboardModel.isFmcg()) {
                 if (dashboardModel.isHasPos())
                     sellerType = FMCG_ASSISTED_USER_POS;
@@ -600,7 +600,7 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
             }
         }
 
-        dashboardModel.setSellerType(sellerType);
+        dashboardModel.setSellerType(sellerType);*/
         AppSession.getInstance(this).setDashboardData(dashboardModel);
         Menu menu = bottom_navigation.getMenu();
         switch (sellerType) {
