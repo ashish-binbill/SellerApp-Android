@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">BinBillSeller</string>
+    <string name="app_name">BinBill Partner</string>
     <string name="submit">Submit</string>
     <string name="sign_in">Sign In</string>
 
@@ -75,7 +75,7 @@
     <string name="select_services_categories">Select categories of the services you provide</string>
     <string name="select_brand_you_select">Which brands do you sell?</string>
     <string name="sell_accessories">Sell Accessories</string>
-    <string name="default_notification_channel_id">BinBill Seller</string>
+    <string name="default_notification_channel_id">BinBill Partner</string>
     <string name="state">State</string>
     <string name="locality">Locality</string>
     <string name="view">View</string>
