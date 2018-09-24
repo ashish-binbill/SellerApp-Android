@@ -330,7 +330,7 @@ public class FMCGRegistrationActivity extends BaseActivity {
                     if (jsonObject.optBoolean("status")) {
 
                         JSONArray array = jsonObject.getJSONArray("seller_provider_types");
-                        ApiHelper.parseAndSaveUserBrands(FMCGRegistrationActivity.this, array);
+                        ApiHelper.parseAndSaveUserCategories(FMCGRegistrationActivity.this, array);
 
                         showSnackBar(getString(R.string.details_saved_successfully));
 

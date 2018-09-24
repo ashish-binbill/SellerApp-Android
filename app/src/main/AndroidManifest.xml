@@ -349,7 +349,7 @@
 
         <meta-data
             android:name="com.applozic.mobicomkit.notification.smallIcon"
-            android:resource="@drawable/ic_documentreceive" /> <!-- Launcher white Icon -->
+            android:resource="@mipmap/ic_launcher_round" /> <!-- Launcher white Icon -->
 
         <meta-data
             android:name="main_folder_name"

@@ -52,8 +52,9 @@ public class DashboardModel implements Serializable {
     @SerializedName("is_data_manually_added")
     boolean categoryBrandDataManuallyAdded;
 
-    @SerializedName("seller_type_id")
+
     transient int sellerType;
+
 
     public boolean isCategoryBrandDataManuallyAdded() {
         return categoryBrandDataManuallyAdded;
@@ -77,6 +78,7 @@ public class DashboardModel implements Serializable {
 
 
     public int getSellerType() {
+
         int sellerType = 0;
         if (this.isAssisted()) {
             if (this.isFmcg()) {
@@ -95,7 +97,9 @@ public class DashboardModel implements Serializable {
             }
         }
         return this.sellerType = sellerType;
+
     }
+
 
     public boolean isAssisted() {
         return assisted;

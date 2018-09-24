@@ -79,6 +79,7 @@ public class LoyaltyRulesActivity extends BaseActivity {
                                     String minPoints = ruleJson.getString("minimum_points");
                                     setDataInUI(pointsPerItem, minPoints);
 
+                                    showSnackBar(getString(R.string.details_saved_successfully));
 
                                 } else
                                     showSnackBar(getString(R.string.something_went_wrong));

@@ -67,6 +67,7 @@ import com.binbill.seller.R;
 import com.binbill.seller.Registration.RegistrationResolver;
 import com.binbill.seller.Retrofit.RetrofitHelper;
 import com.binbill.seller.SharedPref;
+import com.binbill.seller.Utility;
 import com.binbill.seller.Wallet.WalletActivity_;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -244,7 +245,9 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
                 RelativeLayout.LayoutParams.MATCH_PARENT,
                 RelativeLayout.LayoutParams.MATCH_PARENT
         );
-        params.setMargins(0, 0, 0, 0);
+
+        int integer15 = Utility.convertDPtoPx(this, 15);
+        params.setMargins(-integer15, -integer15, -integer15, -integer15);
         iv_user_image.setLayoutParams(params);
 
         Picasso picasso = new Picasso.Builder(this)
@@ -340,7 +343,7 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
                 String[] recipients = {"support@binbill.com"};
                 String phone_no = AppSession.getInstance(DashboardActivity.this).getMobile();
                 intent.putExtra(Intent.EXTRA_EMAIL, recipients);
-                intent.putExtra(Intent.EXTRA_SUBJECT, "BinBill: Seller Feedback (" + phone_no + ")");
+                intent.putExtra(Intent.EXTRA_SUBJECT, "BinBill: Partner Feedback (" + phone_no + ")");
                 //intent.putExtra(Intent.EXTRA_TEXT, "BinBill Team");
                 intent.putExtra(Intent.EXTRA_BCC, new String[]{"sagar@binbill.com", "rohit@binbill.com", "amar@binbill.com"});
                 startActivity(Intent.createChooser(intent, "Send email"));

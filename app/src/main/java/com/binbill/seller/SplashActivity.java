@@ -97,6 +97,7 @@ public class SplashActivity extends AppCompatActivity {
                                     Type classType = new TypeToken<DashboardModel>() {
                                     }.getType();
 
+
                                     DashboardModel dashboardModel = new Gson().fromJson(jsonObject.toString(), classType);
                                     AppSession.getInstance(SplashActivity.this).setDashboardData(dashboardModel);
 
