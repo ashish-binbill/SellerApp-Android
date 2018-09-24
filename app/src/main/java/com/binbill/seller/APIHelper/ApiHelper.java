@@ -243,22 +243,21 @@ public class ApiHelper {
             for (int i = 0; i < categoryArray.length(); i++) {
                 JSONObject categoryObject = categoryArray.getJSONObject(i);
                 String categoryId = categoryObject.getString("sub_category_id");
-                ArrayList<String> list = map.get(categoryId);
+                ArrayList<String> list = new ArrayList<>();
 
-                String catId = categoryObject.getString("category_4_id");
-                if (list != null)
+                JSONArray categoryBrands = categoryObject.getJSONArray("category_brands");
+
+                for (int j = 0; j < categoryBrands.length(); j++) {
+                    JSONObject jsonObject = (JSONObject) categoryBrands.get(j);
+                    String catId = jsonObject.getString("category_4_id");
                     list.add(catId);
-                else {
-                    list = new ArrayList<>();
-                    list.add(catId);
+
+                    JSONArray brandArray = jsonObject.optJSONArray("brand_ids");
+                    if (brandArray != null && brandArray.length() > 0)
+                        brandMap.put(catId, Utility.convert(brandArray));
                 }
 
-                JSONArray brandArray = categoryObject.optJSONArray("brand_ids");
-
                 map.put(categoryId, list);
-
-                if (brandArray != null && brandArray.length() > 0)
-                    brandMap.put(catId, Utility.convert(brandArray));
             }
 
             UserRegistrationDetails userRegistrationDetails = AppSession.getInstance(context).getUserRegistrationDetails();
