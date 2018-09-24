@@ -40,6 +40,20 @@ public class DashboardModel implements Serializable {
     @SerializedName("user_cashback")
     String totalUserCashback;
 
+    @SerializedName("rush_hours")
+    boolean rushHour;
+
+    @SerializedName("is_data_manually_added")
+    boolean categoryBrandDataManuallyAdded;
+
+    public boolean isCategoryBrandDataManuallyAdded() {
+        return categoryBrandDataManuallyAdded;
+    }
+
+    public boolean isRushHour() {
+        return rushHour;
+    }
+
     public String getAssistedUserCount() {
         return assistedUserCount;
     }
