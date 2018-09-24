@@ -86,7 +86,7 @@ public class MyCustomerFragment extends Fragment implements UserAdapter.CardInte
     @Override
     public void onResume() {
         super.onResume();
-        ApiHelper.fetchAllCustomer(getActivity());
+        onRefresh();
     }
 
     @Override
@@ -115,10 +115,7 @@ public class MyCustomerFragment extends Fragment implements UserAdapter.CardInte
             @Override
             public void onRefresh() {
 
-                userListView.setVisibility(View.GONE);
-                shimmerview.setVisibility(View.VISIBLE);
-                noDataLayout.setVisibility(View.GONE);
-                fetchCustomers();
+                onRefresh();
 
             }
         });
@@ -131,6 +128,16 @@ public class MyCustomerFragment extends Fragment implements UserAdapter.CardInte
             }
         });
     }
+
+
+    public void onRefresh() {
+
+        userListView.setVisibility(View.GONE);
+        shimmerview.setVisibility(View.VISIBLE);
+        noDataLayout.setVisibility(View.GONE);
+        fetchCustomers();
+    }
+
 
     private void fetchCustomers() {
         ApiHelper.fetchAllCustomer(getActivity(), new RetrofitHelper.RetrofitCallback() {
