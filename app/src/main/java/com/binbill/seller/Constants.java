@@ -61,6 +61,7 @@ public class Constants {
     public static final String GET_LOYALTY_POINTS = "sellers/{seller_id}/loyalty/rules";
     public static final String FETCH_SELLER_TRANSACTIONS = "sellers/{seller_id}/users/transactions";
     public static final String FETCH_SELLER_CASHBACKS = "sellers/{seller_id}/users/cashbacks";
+    public static final String SET_SELLER_AVAILABILITY = "sellers/{seller_id}/rush/{available}";
 
     public static final int PERMISSION_READ_SMS = 100;
     public static final int PERMISSION_CAMERA = 101;
