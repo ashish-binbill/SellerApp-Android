@@ -361,6 +361,13 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
         });
 
         sellerAvailability = (TextView) findViewById(R.id.tv_availability);
+
+        DashboardModel dashboardModel = AppSession.getInstance(this).getDashboardData();
+        if (dashboardModel.isRushHour())
+            sellerAvailability.setText(getString(R.string.available));
+        else
+            sellerAvailability.setText(getString(R.string.busy));
+
         sellerAvailability.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -613,6 +620,9 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
                 break;
         }
 
+        if (dashboardModel.isCategoryBrandDataManuallyAdded()) {
+            nav_view.findViewById(R.id.ll_sku_management).setVisibility(View.GONE);
+        }
 
         bottom_navigation.setOnNavigationItemSelectedListener(
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
