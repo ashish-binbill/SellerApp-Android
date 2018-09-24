@@ -295,6 +295,7 @@
     <string name="confirm_number">Confirm Number</string>
     <string name="redeem_successfully">Request generated successfully to redeem wallet amount</string>
     <string name="_1_rs">₹1 =</string>
+    <string name="new_version_text">The new version brings a whole host of fantastic features and improvements</string>
     <string name="points_string">Points</string>
     <string name="example_loyalty_points">Ex. 100 points for ₹10</string>
     <string name="minimum_points_for_redemption">Minimum points for redemption</string>
@@ -320,5 +321,8 @@
     <string name="verification_no_jobs_string">Add Customers from BinBill Network or invite your Customers to connect with them for - online shopping orders, assisting home services, loyalty programs and communicating offers &amp; discounts.</string>
     <string name="busy">Busy</string>
     <string name="available">Available</string>
+    <string name="binbill_got_upgraded">BinBill Partner got upgraded</string>
+    <string name="update_now">Update Now</string>
+    <string name="not_now">Not Now</string>
 
 </resources>

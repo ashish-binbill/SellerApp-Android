@@ -1,15 +1,20 @@
 package com.binbill.seller.Retrofit;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.applozic.mobicomkit.api.account.user.UserLogoutTask;
 import com.binbill.seller.AppSession;
 import com.binbill.seller.Constants;
+import com.binbill.seller.Dashboard.DashboardActivity;
+import com.binbill.seller.Login.LoginActivity_;
 import com.binbill.seller.MultipartUtility;
 import com.binbill.seller.R;
 import com.binbill.seller.SharedPref;
@@ -99,10 +104,35 @@ public class RetrofitHelper {
                     String bodyString = response.peekBody(Long.MAX_VALUE).string();
                     AppLogger.logResponse(request.url().toString(), response.code(), bodyString);
                     if (response.code() == 401) {
-
                         /**
                          * LOGOUT
                          */
+                        SharedPref.clearSharedPreferences(context);
+                        AppSession.setInstanceToNull();
+
+                        UserLogoutTask.TaskListener userLogoutTaskListener = new UserLogoutTask.TaskListener() {
+                            @Override
+                            public void onSuccess(Context context) {
+                                //Logout success
+                            }
+
+                            @Override
+                            public void onFailure(Exception exception) {
+                                //Logout failure
+                            }
+                        };
+                        UserLogoutTask userLogoutTask = new UserLogoutTask(userLogoutTaskListener, context);
+                        userLogoutTask.execute((Void) null);
+
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent intent = new Intent(context, LoginActivity_.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                context.startActivity(intent);
+                            }
+                        }, 2000);
+
                     }
 
                     return response;
