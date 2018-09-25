@@ -157,9 +157,18 @@ public class FMCGRegistrationActivity extends BaseActivity {
                                             if (selectedBrandId.equalsIgnoreCase(brandObject.getString("id")))
                                                 selected = true;
                                         }
+
                                     FMCGChildModel childModel = new FMCGChildModel(brandObject.getString("brandName"), brandObject.getString("id"), selected);
                                     childList.add(childModel);
                                 }
+
+                                boolean isSelectAll = true;
+                                for (FMCGChildModel subCat : childList) {
+                                    if (!subCat.isUserSelected())
+                                        isSelectAll = false;
+                                }
+
+                                model.setShowSelectAll(isSelectAll);
                                 map.put(model, (List) childList);
                             }
                         }

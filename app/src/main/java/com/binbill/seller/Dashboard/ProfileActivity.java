@@ -48,7 +48,7 @@ public class ProfileActivity extends BaseActivity {
     TextView tv_shop_name, tv_business_type, tv_shop_address, tv_main_category, tv_open_days, tv_timings, tv_delivery, tv_payment_modes, tv_view_attachment;
 
     @ViewById
-    TextView tv_other_details, tv_edit_business;
+    TextView tv_other_details, tv_edit_business, tv_basic_details;
     private ProfileModel profileDetails;
 
     @AfterViews
@@ -199,6 +199,18 @@ public class ProfileActivity extends BaseActivity {
     }
 
     private void setUpListeners() {
+
+        tv_basic_details.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = RegistrationResolver.getNextIntent(ProfileActivity.this, 0);
+                intent.putExtra(Constants.PROFILE_MODEL, profileDetails);
+                startActivity(intent);
+
+            }
+        });
+
         tv_other_details.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

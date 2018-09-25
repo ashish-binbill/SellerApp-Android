@@ -139,55 +139,58 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
     public void setUpView() {
         setUpNavigationView();
         setUpListener();
-        makeSellerProfileApiCall();
         ApiHelper.getUserSelectedCategories(this);
     }
 
     private void initialiseApplozic() {
-        UserLoginTask.TaskListener listener = new UserLoginTask.TaskListener() {
 
-            @Override
-            public void onSuccess(RegistrationResponse registrationResponse, Context context) {
-                //After successful registration with Applozic server the callback will come here
-                ApplozicSetting.getInstance(context).enableRegisteredUsersContactCall();
-                ApplozicClient.getInstance(context).showAppIconInNotification(true);
-                ApplozicClient.getInstance(context).enableNotification();
 
-                if (MobiComUserPreference.getInstance(context).isRegistered()) {
+        if (!MobiComUserPreference.getInstance(this).isLoggedIn()) {
+            UserLoginTask.TaskListener listener = new UserLoginTask.TaskListener() {
 
-                    PushNotificationTask pushNotificationTask = null;
-                    PushNotificationTask.TaskListener listener = new PushNotificationTask.TaskListener() {
-                        @Override
-                        public void onSuccess(RegistrationResponse registrationResponse) {
+                @Override
+                public void onSuccess(RegistrationResponse registrationResponse, Context context) {
+                    //After successful registration with Applozic server the callback will come here
+                    ApplozicSetting.getInstance(context).enableRegisteredUsersContactCall();
+                    ApplozicClient.getInstance(context).showAppIconInNotification(true);
+                    ApplozicClient.getInstance(context).enableNotification();
 
-                        }
+                    if (MobiComUserPreference.getInstance(context).isRegistered()) {
 
-                        @Override
-                        public void onFailure(RegistrationResponse registrationResponse, Exception exception) {
+                        PushNotificationTask pushNotificationTask = null;
+                        PushNotificationTask.TaskListener listener = new PushNotificationTask.TaskListener() {
+                            @Override
+                            public void onSuccess(RegistrationResponse registrationResponse) {
 
-                        }
-                    };
+                            }
 
-                    pushNotificationTask = new PushNotificationTask(Applozic.getInstance(context).getDeviceRegistrationId(), listener, DashboardActivity.this);
-                    pushNotificationTask.execute((Void) null);
+                            @Override
+                            public void onFailure(RegistrationResponse registrationResponse, Exception exception) {
+
+                            }
+                        };
+
+                        pushNotificationTask = new PushNotificationTask(Applozic.getInstance(context).getDeviceRegistrationId(), listener, DashboardActivity.this);
+                        pushNotificationTask.execute((Void) null);
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(RegistrationResponse registrationResponse, Exception exception) {
-                Toast.makeText(DashboardActivity.this, "Registration failed", Toast.LENGTH_LONG).show();
-            }
-        };
+                @Override
+                public void onFailure(RegistrationResponse registrationResponse, Exception exception) {
+                    Toast.makeText(DashboardActivity.this, "Registration failed", Toast.LENGTH_LONG).show();
+                }
+            };
 
-        String sellerId = AppSession.getInstance(this).getSellerId();
-        ProfileModel profileModel = AppSession.getInstance(DashboardActivity.this).getSellerProfile();
-        User user = new User();
-        user.setUserId("seller_" + sellerId);
-        user.setDisplayName(profileModel.getName());
-        user.setAuthenticationTypeId(User.AuthenticationType.APPLOZIC.getValue());
-        user.setPassword("");
-        user.setImageLink("");
-        new UserLoginTask(user, listener, DashboardActivity.this).execute((Void) null);
+            String sellerId = AppSession.getInstance(this).getSellerId();
+            ProfileModel profileModel = AppSession.getInstance(DashboardActivity.this).getSellerProfile();
+            User user = new User();
+            user.setUserId("seller_" + sellerId);
+            user.setDisplayName(profileModel.getName());
+            user.setAuthenticationTypeId(User.AuthenticationType.APPLOZIC.getValue());
+            user.setPassword("");
+            user.setImageLink("");
+            new UserLoginTask(user, listener, DashboardActivity.this).execute((Void) null);
+        }
     }
 
     private void makeSellerProfileApiCall() {
@@ -225,6 +228,12 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
 
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        makeSellerProfileApiCall();
     }
 
     private void setUpHamburger() {

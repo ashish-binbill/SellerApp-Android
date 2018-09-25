@@ -26,7 +26,7 @@ import com.binbill.seller.AppSession;
 import com.binbill.seller.BaseActivity;
 import com.binbill.seller.Constants;
 import com.binbill.seller.CustomViews.AppButton;
-import com.binbill.seller.Model.MainCategory;
+import com.binbill.seller.Dashboard.ProfileModel;
 import com.binbill.seller.Model.StateCityModel;
 import com.binbill.seller.Model.UserRegistrationDetails;
 import com.binbill.seller.R;
@@ -45,6 +45,7 @@ import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.regex.Matcher;
 
 @EActivity(R.layout.activity_basic_details1)
@@ -82,8 +83,18 @@ public class BasicDetails1Activity extends BaseActivity implements OptionListFra
     private ArrayList<StateCityModel.LocalityModel> localityList;
     private ArrayList<Uri> cameraFileUri = new ArrayList<>();
 
+    boolean isEditMode = false;
+    ProfileModel mProfileModel;
+
     @AfterViews
     public void initiateViews() {
+
+        if (getIntent().hasExtra(Constants.PROFILE_MODEL) && getIntent().getSerializableExtra(Constants.PROFILE_MODEL) != null) {
+            isEditMode = true;
+            mProfileModel = (ProfileModel) getIntent().getSerializableExtra(Constants.PROFILE_MODEL);
+            setUpData();
+        }
+
         userRegistrationDetails = AppSession.getInstance(this).getUserRegistrationDetails();
         setUpToolbar();
         setUpListeners();
@@ -96,6 +107,11 @@ public class BasicDetails1Activity extends BaseActivity implements OptionListFra
 
         enableDisableVerifyButton();
         Utility.hideKeyboard(this, btn_submit);
+    }
+
+    private void setUpData() {
+        et_shop_name.setText(mProfileModel.getName());
+        et_business_name.setText(mProfileModel.getSellerDetails().getBasicDetails().getBusinessName());
     }
 
     private void enableDisableVerifyButton() {
@@ -114,6 +130,68 @@ public class BasicDetails1Activity extends BaseActivity implements OptionListFra
             Utility.enableButton(this, btn_submit, true);
         else
             Utility.enableButton(this, btn_submit, false);
+    }
+
+    private void makeUploadCallInEditMode() {
+
+        saveUserProfileInLocalObject();
+
+        HashMap<String, String> map = new HashMap<>();
+        UserRegistrationDetails userRegistrationDetails = AppSession.getInstance(this).getUserRegistrationDetails();
+
+        if (!Utility.isEmpty(userRegistrationDetails.getShopName()))
+            map.put("seller_name", userRegistrationDetails.getShopName());
+        if (!Utility.isEmpty(userRegistrationDetails.getBusinessName()))
+            map.put("business_name", userRegistrationDetails.getBusinessName());
+        if (!Utility.isEmpty(userRegistrationDetails.getBusinessAddress()))
+            map.put("address", userRegistrationDetails.getBusinessAddress());
+        if (!Utility.isEmpty(userRegistrationDetails.getPincode()))
+            map.put("pincode", userRegistrationDetails.getPincode());
+        if (userRegistrationDetails.getState() != null)
+            map.put("state_id", userRegistrationDetails.getState().getStateId());
+        if (userRegistrationDetails.getCity() != null)
+            map.put("city_id", userRegistrationDetails.getCity().getCityId());
+        if (userRegistrationDetails.getLocality() != null)
+            map.put("locality_id", userRegistrationDetails.getLocality().getLocalityId());
+
+        new RetrofitHelper(this).updateBasicDetails(userRegistrationDetails.getId(), map, new RetrofitHelper.RetrofitCallback() {
+            @Override
+            public void onResponse(String response) {
+                handleResponse(response);
+            }
+
+            @Override
+            public void onErrorResponse() {
+                handleError();
+            }
+        });
+
+
+    }
+
+    private void handleError() {
+        btn_submit.setVisibility(View.VISIBLE);
+        btn_submit_progress.setVisibility(View.GONE);
+
+        showSnackBar(getString(R.string.something_went_wrong));
+    }
+
+    private void handleResponse(String response) {
+        try {
+            JSONObject jsonObject = new JSONObject(response);
+            if (jsonObject.getBoolean("status")) {
+
+                if (isEditMode) {
+                    finish();
+                }
+                btn_submit.setVisibility(View.VISIBLE);
+                btn_submit_progress.setVisibility(View.GONE);
+
+            } else
+                handleError();
+        } catch (JSONException e) {
+            handleError();
+        }
     }
 
     private void setUpListeners() {
@@ -276,7 +354,11 @@ public class BasicDetails1Activity extends BaseActivity implements OptionListFra
             btn_submit.setVisibility(View.GONE);
             btn_submit_progress.setVisibility(View.VISIBLE);
 
-            makeUploadDataToServerCall();
+            if (isEditMode) {
+                makeUploadCallInEditMode();
+            } else {
+                makeUploadDataToServerCall();
+            }
         }
     }
 
