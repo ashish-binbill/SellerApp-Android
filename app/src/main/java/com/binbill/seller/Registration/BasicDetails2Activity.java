@@ -71,6 +71,12 @@ public class BasicDetails2Activity extends BaseActivity implements OptionListFra
             start_time, end_time;
 
     @ViewById
+    TextView tv_delivery_header, tv_delivery_remark, tv_payment_modes_header;
+
+    @ViewById
+    LinearLayout ll_payment_2, ll_payment_1;
+
+    @ViewById
     CheckBox cb_paytm, cb_cod, cb_credit_debit, cb_other_wallets;
 
     @ViewById
@@ -103,6 +109,21 @@ public class BasicDetails2Activity extends BaseActivity implements OptionListFra
                 basicDetails = profileModel.getSellerDetails().getBasicDetails();
 
             setUpData();
+        }
+
+        /**
+         * Hide delivery and payment mode for assisted only sellers
+         * TODO: Set values from reference data here
+         */
+        if(userRegistrationDetails != null && userRegistrationDetails.isAssisted() && !userRegistrationDetails.isFmcg()){
+            tv_delivery_header.setVisibility(View.GONE);
+            radio_group_home_delivery.setVisibility(View.GONE);
+            tv_delivery_remark.setVisibility(View.GONE);
+            et_delivery_distance.setVisibility(View.GONE);
+
+            tv_payment_modes_header.setVisibility(View.GONE);
+            ll_payment_1.setVisibility(View.GONE);
+            ll_payment_2.setVisibility(View.GONE);
         }
     }
 

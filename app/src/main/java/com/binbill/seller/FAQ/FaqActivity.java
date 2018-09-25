@@ -1,15 +1,10 @@
 package com.binbill.seller.FAQ;
 
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.widget.ExpandableListView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.binbill.seller.BaseActivity;
-import com.binbill.seller.CustomViews.AppButton;
 import com.binbill.seller.R;
 import com.binbill.seller.Retrofit.RetrofitHelper;
 import com.google.gson.Gson;
@@ -63,7 +58,7 @@ public class FaqActivity extends BaseActivity {
                         Type classType = new TypeToken<ArrayList<FaqModel.FaqListItem>>() {
                         }.getType();
 
-                        ArrayList<FaqModel.FaqListItem> faqList= new Gson().fromJson(faqArray.toString(), classType);
+                        ArrayList<FaqModel.FaqListItem> faqList = new Gson().fromJson(faqArray.toString(), classType);
                         populateData(faqList);
                     } else
                         handleError();
@@ -92,11 +87,9 @@ public class FaqActivity extends BaseActivity {
                 valueList.put(item.getQuestion(), item.getAnswer());
             }
 
-            ExpandableListView faqListView = (ExpandableListView) findViewById(R.id.expandable_list);
-
             FaqExpandableAdapter adapter = new FaqExpandableAdapter(this, headerList, valueList);
-            faqListView.setAdapter(adapter);
-            faqListView.expandGroup(0);
+            elv_faq.setAdapter(adapter);
+            elv_faq.expandGroup(0);
         }
     }
 

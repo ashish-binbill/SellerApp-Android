@@ -21,9 +21,9 @@
 
     <FrameLayout
         android:id="@+id/container"
-        android:visibility="gone"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:visibility="gone" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -32,9 +32,9 @@
 
         <android.support.v4.widget.NestedScrollView
             android:id="@+id/scroll_view"
+            android:layout_marginBottom="@dimen/dimen_50dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/bottom_layout">
+            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -122,20 +122,23 @@
                 <!-- Home delivery layout -->
 
                 <TextView
+                    android:id="@+id/tv_delivery_header"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dimen_35dp"
                     android:lineSpacingExtra="-1sp"
                     android:text="@string/home_delivery"
                     android:textColor="@color/text_44"
-                    android:textSize="@dimen/dimen_15dp" />
+                    android:textSize="@dimen/dimen_15dp"
+                    android:visibility="visible" />
 
                 <RadioGroup
                     android:id="@+id/radio_group_home_delivery"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dimen_10dp"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="visible">
 
                     <android.support.v7.widget.AppCompatRadioButton
                         android:id="@+id/yes"
@@ -164,13 +167,15 @@
                 <!-- Home delivery distance -->
 
                 <TextView
+                    android:id="@+id/tv_delivery_remark"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dimen_35dp"
                     android:lineSpacingExtra="-1sp"
                     android:text="@string/home_delivery_distance"
                     android:textColor="@color/text_44"
-                    android:textSize="@dimen/dimen_15dp" />
+                    android:textSize="@dimen/dimen_15dp"
+                    android:visibility="visible" />
 
                 <EditText
                     android:id="@+id/et_delivery_distance"
@@ -188,24 +193,29 @@
                     android:paddingRight="@dimen/dimen_12dp"
                     android:textColor="@color/text_44"
                     android:textColorHint="@color/hint_color"
-                    android:textSize="@dimen/dimen_15dp" />
+                    android:textSize="@dimen/dimen_15dp"
+                    android:visibility="visible" />
 
                 <!-- Available Payment Options -->
 
                 <TextView
+                    android:id="@+id/tv_payment_modes_header"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dimen_35dp"
                     android:lineSpacingExtra="-1sp"
                     android:text="@string/available_payment_options"
                     android:textColor="@color/text_44"
-                    android:textSize="@dimen/dimen_15dp" />
+                    android:textSize="@dimen/dimen_15dp"
+                    android:visibility="visible" />
 
                 <LinearLayout
+                    android:id="@+id/ll_payment_1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dimen_15dp"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="visible">
 
                     <CheckBox
                         android:id="@+id/cb_paytm"
@@ -243,10 +253,12 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/ll_payment_2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dimen_10dp"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="visible">
 
                     <CheckBox
                         android:id="@+id/cb_other_wallets"
