@@ -108,7 +108,7 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
      * Service agent layout
      */
     @ViewById
-    CardView cv_root_delivery;
+    CardView cv_root_delivery, cv_root_fmcg_delivery;
 
     @ViewById
     AppButton btn_accept;
@@ -638,6 +638,12 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                     }, orderItem.getServiceTypeId());
                 }
             }
+        } else {
+
+            if (orderDetails.getDeliveryUser() != null) {
+                DeliveryAgentAdapter.DeliveryAgentHolder deliveryAgentHolder = new DeliveryAgentAdapter.DeliveryAgentHolder(cv_root_fmcg_delivery);
+                updateAgentLayout(deliveryAgentHolder, orderDetails.getDeliveryUser(), null);
+            }
         }
 
     }
@@ -664,22 +670,27 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
         userHolder.mBasePrice.setVisibility(View.GONE);
         userHolder.mAdditionalPrice.setVisibility(View.GONE);
 
-        ArrayList<AssistedUserModel.ServiceType> serviceTypes = model.getServiceType();
-        for (AssistedUserModel.ServiceType serviceType : serviceTypes) {
-            if (serviceType.getServiceTypeId().equalsIgnoreCase(serviceId)) {
-                ArrayList<AssistedUserModel.Price> priceList = serviceType.getPrice();
-                for (AssistedUserModel.Price price : priceList) {
-                    if (price.getPriceType().equalsIgnoreCase("1")) {
-                        userHolder.mBasePrice.setText(userHolder.mBasePrice.getContext().getString(R.string.base_price_value, price.getValue()));
-                        userHolder.mBasePrice.setVisibility(View.VISIBLE);
-                    }
+        if (!Utility.isEmpty(serviceId)) {
+            ArrayList<AssistedUserModel.ServiceType> serviceTypes = model.getServiceType();
+            for (AssistedUserModel.ServiceType serviceType : serviceTypes) {
+                if (serviceType.getServiceTypeId().equalsIgnoreCase(serviceId)) {
+                    ArrayList<AssistedUserModel.Price> priceList = serviceType.getPrice();
+                    for (AssistedUserModel.Price price : priceList) {
+                        if (price.getPriceType().equalsIgnoreCase("1")) {
+                            userHolder.mBasePrice.setText(userHolder.mBasePrice.getContext().getString(R.string.base_price_value, price.getValue()));
+                            userHolder.mBasePrice.setVisibility(View.VISIBLE);
+                        }
 
-                    if (price.getPriceType().equalsIgnoreCase("2")) {
-                        userHolder.mAdditionalPrice.setText(userHolder.mBasePrice.getContext().getString(R.string.additional_price_value, price.getValue()));
-                        userHolder.mAdditionalPrice.setVisibility(View.VISIBLE);
+                        if (price.getPriceType().equalsIgnoreCase("2")) {
+                            userHolder.mAdditionalPrice.setText(userHolder.mBasePrice.getContext().getString(R.string.additional_price_value, price.getValue()));
+                            userHolder.mAdditionalPrice.setVisibility(View.VISIBLE);
+                        }
                     }
                 }
             }
+        } else {
+            userHolder.mBasePrice.setVisibility(View.GONE);
+            userHolder.mAdditionalPrice.setVisibility(View.GONE);
         }
 
         if (model.getProfileImage() != null) {
@@ -735,7 +746,14 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
         }
 
         userHolder.mSelectedCardLayout.setVisibility(View.GONE);
-        cv_root_delivery.setVisibility(View.VISIBLE);
+
+        /**
+         * If serviceId is null ---> means FMCG order
+         */
+        if (!Utility.isEmpty(serviceId))
+            cv_root_delivery.setVisibility(View.VISIBLE);
+        else
+            cv_root_fmcg_delivery.setVisibility(View.VISIBLE);
     }
 
     public void changeButtonStateToApproval(int state) {

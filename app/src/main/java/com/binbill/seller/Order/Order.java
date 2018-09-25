@@ -45,6 +45,13 @@ public class Order implements Serializable {
     @SerializedName("user_address_detail")
     String address;
 
+    @SerializedName("delivery_user")
+    DeliveryModel deliveryUser;
+
+    public DeliveryModel getDeliveryUser() {
+        return deliveryUser;
+    }
+
     public String getItemCount() {
         return itemCount;
     }

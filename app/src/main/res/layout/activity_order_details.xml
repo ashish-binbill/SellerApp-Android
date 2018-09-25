@@ -188,6 +188,15 @@
 
                 </LinearLayout>
 
+
+                <include
+                    android:id="@+id/cv_root_fmcg_delivery"
+                    layout="@layout/row_delivery_agent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/dimen_15dp"
+                    android:visibility="gone" />
+
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/rv_shopping_list"
                     android:layout_width="match_parent"

@@ -183,6 +183,12 @@
             android:name=".Dashboard.DashboardListActivity_"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".FAQ.FaqActivity_"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name="com.applozic.mobicomkit.uiwidgets.conversation.activity.ConversationActivity"
             android:configChanges="keyboardHidden|screenSize|smallestScreenSize|screenLayout|orientation"
@@ -379,9 +385,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/applozic_provider_paths" />
         </provider>
-
-        <activity android:name=".Dashboard.DashboardListActivity" />
-        <activity android:name=".FAQ.FaqActivity"></activity>
     </application>
 
 </manifest>
