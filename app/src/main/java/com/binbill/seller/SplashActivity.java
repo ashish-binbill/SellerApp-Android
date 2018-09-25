@@ -8,10 +8,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import com.binbill.seller.APIHelper.ApiHelper;
-import com.binbill.seller.Login.LandingActivity;
 import com.binbill.seller.Login.LandingActivity_;
-import com.binbill.seller.Login.LoginActivity_;
 import com.binbill.seller.Model.DashboardModel;
+import com.binbill.seller.Model.UserRegistrationDetails;
 import com.binbill.seller.Registration.RegistrationResolver;
 import com.binbill.seller.Retrofit.RetrofitHelper;
 import com.google.gson.Gson;
@@ -73,11 +72,17 @@ public class SplashActivity extends AppCompatActivity {
         try {
             JSONObject jsonObject = new JSONObject(response);
             if (jsonObject.getBoolean("status")) {
-//                if (jsonObject.optBoolean("is_onboarded", true)) {
-//                    startActivity(new Intent(this, DashboardActivity_.class));
-//                } else {
+
+                UserRegistrationDetails userRegistrationDetails = AppSession.getInstance(SplashActivity.this).getUserRegistrationDetails();
+                userRegistrationDetails.setAssisted(jsonObject.optBoolean("is_assisted"));
+                userRegistrationDetails.setFmcg(jsonObject.optBoolean("is_fmcg"));
+
+                AppSession.getInstance(SplashActivity.this).setUserRegistrationDetails(userRegistrationDetails);
+
                 RegistrationResolver.parseAndSaveData(this, jsonObject.toString());
                 String nextStep = jsonObject.optString("next_step");
+
+
                 int currentIndex = RegistrationResolver.getResolvedIndexForNextScreen(nextStep);
 
                 final Intent intent = RegistrationResolver.getNextIntent(this, currentIndex);
@@ -101,8 +106,15 @@ public class SplashActivity extends AppCompatActivity {
                                     DashboardModel dashboardModel = new Gson().fromJson(jsonObject.toString(), classType);
                                     AppSession.getInstance(SplashActivity.this).setDashboardData(dashboardModel);
 
-                                    startActivity(intent);
-                                    finish();
+                                    if (dashboardModel.getForceUpdate() != null) {
+                                        if (dashboardModel.getForceUpdate().equalsIgnoreCase("TRUE"))
+                                            UpgradeHelper.invokeUpdateDialog(SplashActivity.this, true);
+                                        else if (dashboardModel.getForceUpdate().equalsIgnoreCase("FALSE"))
+                                            UpgradeHelper.invokeUpdateDialog(SplashActivity.this, false);
+                                    } else {
+                                        startActivity(intent);
+                                        finish();
+                                    }
                                 }
                             } catch (JSONException e) {
                                 finish();

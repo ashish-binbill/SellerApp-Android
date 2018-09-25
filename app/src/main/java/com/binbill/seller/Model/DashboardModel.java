@@ -22,6 +22,9 @@ public class DashboardModel implements Serializable {
     @SerializedName("credit_pending")
     String creditPending;
 
+    @SerializedName("forceUpdate")
+    String forceUpdate;
+
     @SerializedName("loyalty_points")
     String loyaltyPoints;
 
@@ -55,6 +58,10 @@ public class DashboardModel implements Serializable {
 
     transient int sellerType;
 
+
+    public String getForceUpdate() {
+        return forceUpdate;
+    }
 
     public boolean isCategoryBrandDataManuallyAdded() {
         return categoryBrandDataManuallyAdded;

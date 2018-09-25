@@ -30,6 +30,8 @@ import com.binbill.seller.Model.MainCategory;
 import com.binbill.seller.Model.UserRegistrationDetails;
 import com.binbill.seller.R;
 import com.binbill.seller.Retrofit.RetrofitHelper;
+import com.binbill.seller.SplashActivity;
+import com.binbill.seller.UpgradeHelper;
 import com.binbill.seller.Utility;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -666,9 +668,17 @@ public class BusinessDetailsActivity extends BaseActivity implements OptionListF
 
                         int registrationIndex = getIntent().getIntExtra(Constants.REGISTRATION_INDEX, -1);
                         Intent intent = RegistrationResolver.getNextIntent(BusinessDetailsActivity.this, registrationIndex);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
-                        finish();
+
+                        if(dashboardModel.getForceUpdate() != null){
+                            if (dashboardModel.getForceUpdate().equalsIgnoreCase("TRUE"))
+                                UpgradeHelper.invokeUpdateDialog(BusinessDetailsActivity.this, true);
+                            else if (dashboardModel.getForceUpdate().equalsIgnoreCase("FALSE"))
+                                UpgradeHelper.invokeUpdateDialog(BusinessDetailsActivity.this, false);
+                        }else {
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                            finish();
+                        }
                     }
                 } catch (JSONException e) {
                     finish();

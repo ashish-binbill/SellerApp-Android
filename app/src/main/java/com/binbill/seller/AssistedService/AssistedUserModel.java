@@ -129,6 +129,13 @@ public class AssistedUserModel implements Serializable{
         @SerializedName("feedback")
         String feedback;
 
+        @SerializedName("updated_by")
+        String userID;
+
+        public String getUserID() {
+            return userID;
+        }
+
         public String getFeedback() {
             return feedback;
         }

@@ -107,35 +107,39 @@ public class ProfileActivity extends BaseActivity {
 
         tv_open_days.setText(displayOpenDays);
 
-        ArrayList<MainCategory> paymentModesModel = AppSession.getInstance(this).getPaymentModes();
-        String paymentModes = basicDetails.getPaymentModes();
-        StringBuilder displayPaymentModes = new StringBuilder();
-        if (!Utility.isEmpty(paymentModes)) {
-            ArrayList<String> list = new ArrayList<>(Arrays.asList(paymentModes.split(",")));
-            for (String pay : list) {
 
-                for (MainCategory paymentMode : paymentModesModel) {
-                    if (pay.equalsIgnoreCase(paymentMode.getId())) {
-                        displayPaymentModes = displayPaymentModes.append(paymentMode.getName());
-                        displayPaymentModes = displayPaymentModes.append(" | ");
+        if (!userRegistrationDetails.isFmcg() && userRegistrationDetails.isAssisted()) {
+            ArrayList<MainCategory> paymentModesModel = AppSession.getInstance(this).getPaymentModes();
+            String paymentModes = basicDetails.getPaymentModes();
+            StringBuilder displayPaymentModes = new StringBuilder();
+            if (!Utility.isEmpty(paymentModes)) {
+                ArrayList<String> list = new ArrayList<>(Arrays.asList(paymentModes.split(",")));
+                for (String pay : list) {
+
+                    for (MainCategory paymentMode : paymentModesModel) {
+                        if (pay.equalsIgnoreCase(paymentMode.getId())) {
+                            displayPaymentModes = displayPaymentModes.append(paymentMode.getName());
+                            displayPaymentModes = displayPaymentModes.append(" | ");
+                        }
                     }
                 }
+
             }
 
+            tv_payment_modes.setText(displayPaymentModes);
+
+            StringBuilder homeDelivery = new StringBuilder();
+
+            if (basicDetails.getHomeDelivery().equalsIgnoreCase("true"))
+                homeDelivery.append("Yes");
+            else
+                homeDelivery.append("No");
+
+            if (!Utility.isEmpty(basicDetails.getHomeDeliveryRemarks()))
+                homeDelivery.append("\nWithin " + basicDetails.getHomeDeliveryRemarks());
         }
 
-        tv_payment_modes.setText(displayPaymentModes);
         tv_timings.setText(basicDetails.getStartTime() + " - " + basicDetails.getCloseTime());
-
-        StringBuilder homeDelivery = new StringBuilder();
-
-        if (basicDetails.getHomeDelivery().equalsIgnoreCase("true"))
-            homeDelivery.append("Yes");
-        else
-            homeDelivery.append("No");
-
-        if (!Utility.isEmpty(basicDetails.getHomeDeliveryRemarks()))
-            homeDelivery.append("\nWithin " + basicDetails.getHomeDeliveryRemarks());
 
         String sellerId = AppSession.getInstance(this).getSellerId();
 

@@ -21,12 +21,14 @@ import com.binbill.seller.BaseActivity;
 import com.binbill.seller.Constants;
 import com.binbill.seller.CustomViews.AppButton;
 import com.binbill.seller.Model.DashboardModel;
+import com.binbill.seller.Model.UserRegistrationDetails;
 import com.binbill.seller.R;
 import com.binbill.seller.Registration.RegistrationResolver;
 import com.binbill.seller.Retrofit.RetrofitHelper;
 import com.binbill.seller.SMS.SMSListener;
 import com.binbill.seller.SMS.SMSReceiver;
 import com.binbill.seller.SharedPref;
+import com.binbill.seller.UpgradeHelper;
 import com.binbill.seller.Utility;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -244,9 +246,12 @@ public class OTPLoginActivity extends BaseActivity {
                         break;
                     case Constants.GET_USER_STATE:
 
-//                        if (jsonObject.optBoolean("is_onboarded", true)) {
-//                            startActivity(new Intent(this, DashboardActivity_.class));
-//                        } else {
+                        UserRegistrationDetails userRegistrationDetails = AppSession.getInstance(OTPLoginActivity.this).getUserRegistrationDetails();
+                        userRegistrationDetails.setAssisted(jsonObject.optBoolean("is_assisted"));
+                        userRegistrationDetails.setFmcg(jsonObject.optBoolean("is_fmcg"));
+
+                        AppSession.getInstance(OTPLoginActivity.this).setUserRegistrationDetails(userRegistrationDetails);
+
                         RegistrationResolver.parseAndSaveData(this, jsonObject.toString());
                         String nextStep = jsonObject.optString("next_step");
                         int currentIndex = RegistrationResolver.getResolvedIndexForNextScreen(nextStep);
@@ -271,9 +276,16 @@ public class OTPLoginActivity extends BaseActivity {
                                             DashboardModel dashboardModel = new Gson().fromJson(jsonObject.toString(), classType);
                                             AppSession.getInstance(OTPLoginActivity.this).setDashboardData(dashboardModel);
 
-                                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                            startActivity(intent);
-                                            finish();
+                                            if (dashboardModel.getForceUpdate() != null) {
+                                                if (dashboardModel.getForceUpdate().equalsIgnoreCase("TRUE"))
+                                                    UpgradeHelper.invokeUpdateDialog(OTPLoginActivity.this, true);
+                                                else if (dashboardModel.getForceUpdate().equalsIgnoreCase("FALSE"))
+                                                    UpgradeHelper.invokeUpdateDialog(OTPLoginActivity.this, false);
+                                            } else {
+                                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                                startActivity(intent);
+                                                finish();
+                                            }
                                         }
                                     } catch (JSONException e) {
                                         finish();

@@ -1,5 +1,6 @@
 package com.binbill.seller.APIHelper;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 
@@ -10,6 +11,7 @@ import com.binbill.seller.Model.UserModel;
 import com.binbill.seller.Model.UserRegistrationDetails;
 import com.binbill.seller.Order.Order;
 import com.binbill.seller.Retrofit.RetrofitHelper;
+import com.binbill.seller.UpgradeHelper;
 import com.binbill.seller.Utility;
 import com.binbill.seller.Verification.RejectReasonModel;
 import com.binbill.seller.Verification.VerificationModel;
@@ -54,6 +56,13 @@ public class ApiHelper {
 
                         DashboardModel dashboardModel = new Gson().fromJson(jsonObject.toString(), classType);
                         AppSession.getInstance(context).setDashboardData(dashboardModel);
+
+                        if(dashboardModel.getForceUpdate() != null){
+                            if (dashboardModel.getForceUpdate().equalsIgnoreCase("TRUE"))
+                                UpgradeHelper.invokeUpdateDialog((Activity) context, true);
+                            else if (dashboardModel.getForceUpdate().equalsIgnoreCase("FALSE"))
+                                UpgradeHelper.invokeUpdateDialog((Activity) context, false);
+                        }
                     }
                 } catch (JSONException e) {
 

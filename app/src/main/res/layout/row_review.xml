@@ -1,44 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
     android:padding="@dimen/dimen_10dp">
 
-    <TextView
-        android:id="@+id/tv_review_text"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/rl_image_layout"
+        android:layout_width="@dimen/dimen_60dp"
+        android:layout_height="@dimen/dimen_60dp"
+        android:layout_centerVertical="true"
+        android:background="@drawable/circle_bg_grey"
+        android:visibility="visible">
+
+        <ImageView
+            android:id="@+id/iv_user_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:layout_margin="@dimen/dimen_15dp"
+            android:src="@drawable/ic_user" />
+    </RelativeLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text=""
-        android:textColor="@color/text_44"
-        android:textSize="@dimen/dimen_14dp" />
+        android:layout_marginLeft="@dimen/dimen_20dp"
+        android:layout_toRightOf="@id/rl_image_layout"
+        android:orientation="vertical"
+        android:padding="@dimen/dimen_10dp">
 
-    <android.support.v7.widget.AppCompatRatingBar
-        android:id="@+id/rb_rating"
-        style="?android:attr/ratingBarStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dimen_10dp"
-        android:isIndicator="true"
-        android:max="5"
-        android:rating="3"
-        android:theme="@style/RatingBar" />
+        <TextView
+            android:id="@+id/tv_review_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="@color/text_44"
+            android:textSize="@dimen/dimen_14dp" />
 
-    <TextView
-        android:id="@+id/tv_review_user"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:layout_marginTop="@dimen/dimen_10dp"
-        android:text=""
-        android:textColor="@color/text_44"
-        android:textSize="@dimen/dimen_14dp" />
+        <android.support.v7.widget.AppCompatRatingBar
+            android:id="@+id/rb_rating"
+            style="?android:attr/ratingBarStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_10dp"
+            android:isIndicator="true"
+            android:max="5"
+            android:rating="3"
+            android:theme="@style/RatingBar" />
+
+        <TextView
+            android:id="@+id/tv_review_user"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_10dp"
+            android:text=""
+            android:textColor="@color/text_44"
+            android:textSize="@dimen/dimen_14dp"
+            android:textStyle="bold" />
+    </LinearLayout>
 
     <View
         android:layout_width="@dimen/dimen_200dp"
         android:layout_height="@dimen/dimen_1dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/dimen_10dp"
         android:background="@color/divider" />
 
-</LinearLayout>
+</RelativeLayout>

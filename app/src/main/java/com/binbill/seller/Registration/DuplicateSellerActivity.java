@@ -19,6 +19,8 @@ import com.binbill.seller.Model.UserRegistrationDetails;
 import com.binbill.seller.R;
 import com.binbill.seller.Retrofit.RetrofitHelper;
 import com.binbill.seller.SharedPref;
+import com.binbill.seller.SplashActivity;
+import com.binbill.seller.UpgradeHelper;
 import com.binbill.seller.Utility;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -225,8 +227,16 @@ public class DuplicateSellerActivity extends BaseActivity implements DuplicateSh
                         AppSession.getInstance(DuplicateSellerActivity.this).setDashboardData(dashboardModel);
 
                         Intent intent = RegistrationResolver.getNextIntent(DuplicateSellerActivity.this, 3);
-                        startActivity(intent);
-                        finish();
+
+                        if(dashboardModel.getForceUpdate() != null){
+                            if (dashboardModel.getForceUpdate().equalsIgnoreCase("TRUE"))
+                                UpgradeHelper.invokeUpdateDialog(DuplicateSellerActivity.this, true);
+                            else if (dashboardModel.getForceUpdate().equalsIgnoreCase("FALSE"))
+                                UpgradeHelper.invokeUpdateDialog(DuplicateSellerActivity.this, false);
+                        }else {
+                            startActivity(intent);
+                            finish();
+                        }
                     }
                 } catch (JSONException e) {
                     finish();
