@@ -86,7 +86,7 @@ public class MyCustomerFragment extends Fragment implements UserAdapter.CardInte
     @Override
     public void onResume() {
         super.onResume();
-        onRefresh();
+        onRefreshPage();
     }
 
     @Override
@@ -115,7 +115,7 @@ public class MyCustomerFragment extends Fragment implements UserAdapter.CardInte
             @Override
             public void onRefresh() {
 
-                onRefresh();
+                onRefreshPage();
 
             }
         });
@@ -130,7 +130,7 @@ public class MyCustomerFragment extends Fragment implements UserAdapter.CardInte
     }
 
 
-    public void onRefresh() {
+    public void onRefreshPage() {
 
         userListView.setVisibility(View.GONE);
         shimmerview.setVisibility(View.VISIBLE);

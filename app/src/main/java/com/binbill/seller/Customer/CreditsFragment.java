@@ -99,7 +99,7 @@ public class CreditsFragment extends Fragment {
         userModel = (UserModel) getArguments().getSerializable(Constants.USER_MODEL);
 
         if (userModel != null) {
-            totalCredits.setText(userModel.getUserCredit());
+            totalCredits.setText(getString(R.string.rupee_symbol) + " " + userModel.getUserCredit());
             makeCreditHistoryCall();
         }
 
@@ -125,7 +125,7 @@ public class CreditsFragment extends Fragment {
                     if (jsonObject.optBoolean("status")) {
 
                         String total = jsonObject.optString("total_credits");
-                        totalCredits.setText(total);
+                        totalCredits.setText(getString(R.string.rupee_symbol) + " " + total);
 
                         JSONArray userArray = jsonObject.getJSONArray("result");
                         Type classType = new TypeToken<ArrayList<CreditLoyaltyModel>>() {
