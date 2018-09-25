@@ -111,8 +111,7 @@ public class BasicDetails1Activity extends BaseActivity implements OptionListFra
 
     private void setUpData() {
         et_shop_name.setText(mProfileModel.getName());
-        et_business_name.setText(mProfileModel.getOwnerName());
-        et_business_address.setText(mProfileModel.getAddress());
+        et_business_name.setText(mProfileModel.getSellerDetails().getBasicDetails().getBusinessName());
     }
 
     private void enableDisableVerifyButton() {
