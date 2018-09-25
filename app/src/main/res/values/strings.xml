@@ -86,7 +86,7 @@
     <string name="verification">Verification</string>
     <string name="orders">Orders</string>
     <string name="my_customers">My Customers</string>
-    <string name="assisted_services">Assisted Services</string>
+    <string name="assisted_services">Home Services</string>
     <string name="rupee_sign">₹</string>
     <plurals name="file_uploaded">
         <item quantity="one">%d File Uploaded</item>
