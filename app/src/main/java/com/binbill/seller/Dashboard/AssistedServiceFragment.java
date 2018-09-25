@@ -341,7 +341,8 @@ public class AssistedServiceFragment extends Fragment implements AssistedService
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        mAdapter.getFilter().filter(newText);
+        if (!newText.isEmpty() && mAdapter != null)
+            mAdapter.getFilter().filter(newText);
         return true;
     }
 }

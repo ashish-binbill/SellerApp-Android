@@ -27,7 +27,7 @@
             android:layout_marginTop="@dimen/dimen_5dp"
             android:text="Flat 20% OFF on shopping upto 2000"
             android:textColor="@color/text_44"
-            android:textSize="@dimen/dimen_12dp" />
+            android:textSize="@dimen/dimen_16dp" />
 
         <TextView
             android:id="@+id/tv_offer_description"
@@ -38,7 +38,7 @@
             android:paddingRight="@dimen/dimen_10dp"
             android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tem incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip."
             android:textColor="@color/text_44"
-            android:textSize="@dimen/dimen_9dp" />
+            android:textSize="@dimen/dimen_12dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -56,7 +56,7 @@
                 android:layout_weight="1"
                 android:text="Expire on : 22 Jul, 2018"
                 android:textColor="@color/color_999999"
-                android:textSize="@dimen/dimen_9dp" />
+                android:textSize="@dimen/dimen_12dp" />
 
             <ImageView
                 android:id="@+id/iv_offer_add_user"
