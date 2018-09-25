@@ -466,7 +466,7 @@ public class VerificationFragment extends Fragment implements VerificationAdapte
 
     private void makeCreditHistoryCall(final String userId, final String jobId) {
 
-        new RetrofitHelper(getActivity()).getUserCredits(userId,jobId,  new RetrofitHelper.RetrofitCallback() {
+        new RetrofitHelper(getActivity()).getUserCredits(userId, jobId, new RetrofitHelper.RetrofitCallback() {
             @Override
             public void onResponse(String response) {
                 try {
@@ -508,6 +508,7 @@ public class VerificationFragment extends Fragment implements VerificationAdapte
             jobListView.setVisibility(View.GONE);
             shimmerview.setVisibility(View.GONE);
             noDataLayout.setVisibility(View.VISIBLE);
+            ((TextView) noDataLayout.findViewById(R.id.tv_no_data)).setText(getString(R.string.no_data_in_verification_fragment));
         }
     }
 

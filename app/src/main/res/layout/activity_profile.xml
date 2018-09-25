@@ -29,8 +29,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="@dimen/dimen_20dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/dimen_20dp">
 
             <ImageView
                 android:id="@+id/iv_shop_image"
@@ -59,6 +59,7 @@
                         android:lineSpacingExtra="2.5sp"
                         android:padding="@dimen/dimen_12dp"
                         android:text="@string/basic_details"
+                        android:textAllCaps="true"
                         android:textColor="@color/text_44"
                         android:textSize="@dimen/dimen_10dp" />
 
@@ -86,12 +87,12 @@
                             android:id="@+id/tv_shop_address"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="center"
                             android:layout_marginTop="@dimen/dimen_15dp"
                             android:gravity="center"
                             android:lineSpacingExtra="2.5sp"
                             android:paddingLeft="@dimen/dimen_15dp"
                             android:paddingRight="@dimen/dimen_15dp"
-                            android:layout_gravity="center"
                             android:text="C-534A, Ground Floor, HSB Building, Dr. Ambedkar Road, New Delhi - 110015"
                             android:textColor="@color/text_44"
                             android:textSize="@dimen/dimen_10dp" />
@@ -150,6 +151,7 @@
                         android:lineSpacingExtra="2.5sp"
                         android:padding="@dimen/dimen_12dp"
                         android:text="@string/other_details"
+                        android:textAllCaps="true"
                         android:textColor="@color/text_44"
                         android:textSize="@dimen/dimen_10dp" />
 
@@ -298,6 +300,7 @@
                         android:lineSpacingExtra="2.5sp"
                         android:padding="@dimen/dimen_12dp"
                         android:text="@string/business_details"
+                        android:textAllCaps="true"
                         android:textColor="@color/text_44"
                         android:textSize="@dimen/dimen_10dp" />
 
@@ -310,9 +313,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:paddingTop="@dimen/dimen_15dp"
                         android:paddingLeft="@dimen/dimen_15dp"
-                        android:paddingRight="@dimen/dimen_15dp">
+                        android:paddingRight="@dimen/dimen_15dp"
+                        android:paddingTop="@dimen/dimen_15dp">
 
                         <TextView
                             android:layout_width="0dp"
@@ -343,15 +346,15 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:visibility="invisible"
                             android:textColor="@color/text_44"
-                            android:textSize="@dimen/dimen_10dp" />
+                            android:textSize="@dimen/dimen_10dp"
+                            android:visibility="invisible" />
 
                         <TextView
                             android:id="@+id/tv_view_attachment"
                             android:layout_width="0dp"
-                            android:layout_weight="2"
                             android:layout_height="wrap_content"
+                            android:layout_weight="2"
                             android:drawablePadding="@dimen/dimen_5dp"
                             android:drawableStart="@drawable/ic_file"
                             android:lineSpacingExtra="10sp"
@@ -360,7 +363,6 @@
                             android:text="@string/view_attachment"
                             android:textColor="@color/colorPrimary"
                             android:textSize="@dimen/dimen_10dp" />
-
 
 
                     </LinearLayout>
