@@ -11,7 +11,6 @@
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
 
-
     <application
         android:name=".BinBillSeller"
         android:allowBackup="true"
@@ -381,7 +380,8 @@
                 android:resource="@xml/applozic_provider_paths" />
         </provider>
 
-        <activity android:name=".Dashboard.DashboardListActivity"></activity>
+        <activity android:name=".Dashboard.DashboardListActivity" />
+        <activity android:name=".FAQ.FaqActivity"></activity>
     </application>
 
 </manifest>

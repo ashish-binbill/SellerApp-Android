@@ -207,4 +207,7 @@ public interface RetrofitApiInterface {
 
     @PUT(Constants.SET_SELLER_AVAILABILITY)
     Call<JsonObject> setSellerAvailability(@Path(value = "seller_id", encoded = true) String sellerId, @Path(value = "available", encoded = true) String availability);
+
+    @GET(Constants.FETCH_FAQ)
+    Call<JsonObject> getFaq();
 }

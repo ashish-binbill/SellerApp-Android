@@ -324,5 +324,6 @@
     <string name="binbill_got_upgraded">BinBill Partner got upgraded</string>
     <string name="update_now">Update Now</string>
     <string name="not_now">Not Now</string>
+    <string name="faqs">FAQs</string>
 
 </resources>
