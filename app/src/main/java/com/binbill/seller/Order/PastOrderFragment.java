@@ -15,7 +15,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.binbill.seller.BaseActivity;
-import com.binbill.seller.BinBillSeller;
 import com.binbill.seller.Constants;
 import com.binbill.seller.CustomViews.AppButton;
 import com.binbill.seller.Customer.AddCustomerActivity_;
@@ -30,8 +29,6 @@ import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-
-import io.socket.emitter.Emitter;
 
 /**
  * Created by shruti.vig on 9/6/18.

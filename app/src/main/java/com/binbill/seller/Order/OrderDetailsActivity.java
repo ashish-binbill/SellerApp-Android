@@ -590,54 +590,61 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
             }
         });
 
-        if (orderDetails.getOrderType().equalsIgnoreCase(Constants.ORDER_TYPE_SERVICE) &&
-                (orderDetails.getOrderStatus() == Constants.STATUS_JOB_ENDED) || orderDetails.getOrderStatus() == Constants.STATUS_COMPLETE) {
-            if (orderDetails.getOrderItems() != null && orderDetails.getOrderItems().size() > 0) {
+        if (orderDetails.getOrderType().equalsIgnoreCase(Constants.ORDER_TYPE_SERVICE)
+                && orderDetails.getOrderItems() != null && orderDetails.getOrderItems().size() > 0) {
+
                 final OrderItem orderItem = orderDetails.getOrderItems().get(0);
-                if (!Utility.isEmpty(orderItem.getStartDate())) {
-                    tv_start_time.setText(Utility.getFormattedDate(17, orderItem.getStartDate(), 0));
-                    tv_end_time.setText(Utility.getFormattedDate(17, orderItem.getEndDate(), 0));
-                    tv_time_elapsed.setText(Utility.getDateDifference(orderItem.getStartDate(), orderItem.getEndDate()));
-                    tv_total_amount.setText(getString(R.string.rupee_sign) + " " + orderItem.getTotalAmount());
-                    ll_bill_layout.setVisibility(View.VISIBLE);
+
+            if (orderDetails.getOrderStatus() == Constants.STATUS_JOB_ENDED || orderDetails.getOrderStatus() == Constants.STATUS_COMPLETE) {
+
+                    if (!Utility.isEmpty(orderItem.getStartDate())) {
+                        tv_start_time.setText(Utility.getFormattedDate(17, orderItem.getStartDate(), 0));
+                        tv_end_time.setText(Utility.getFormattedDate(17, orderItem.getEndDate(), 0));
+                        tv_time_elapsed.setText(Utility.getDateDifference(orderItem.getStartDate(), orderItem.getEndDate()));
+                        tv_total_amount.setText(getString(R.string.rupee_sign) + " " + orderItem.getTotalAmount());
+                        ll_bill_layout.setVisibility(View.VISIBLE);
+                    }
                 }
 
-                if (orderItem.getServiceUser() != null) {
+                if (orderDetails.getOrderStatus() != Constants.STATUS_NEW_ORDER) {
 
-                    new RetrofitHelper(this).fetchDeliveryBoysForSeller(new RetrofitHelper.RetrofitCallback() {
-                        @Override
-                        public void onResponse(String response) {
-                            try {
-                                JSONObject jsonObject = new JSONObject(response);
-                                if (jsonObject.getBoolean("status")) {
-                                    if (jsonObject.optJSONArray("result") != null) {
-                                        JSONArray userArray = jsonObject.getJSONArray("result");
-                                        Type classType = new TypeToken<ArrayList<DeliveryModel>>() {
-                                        }.getType();
+                    if (orderItem.getServiceUser() != null) {
 
-                                        ArrayList<DeliveryModel> deliveryList = new Gson().fromJson(userArray.toString(), classType);
-                                        if (deliveryList != null && deliveryList.size() > 0) {
-                                            for (DeliveryModel deliveryModel : deliveryList) {
-                                                if (deliveryModel.getDeliveryBoyId().equalsIgnoreCase(orderItem.getServiceUser().getId())) {
-                                                    DeliveryAgentAdapter.DeliveryAgentHolder deliveryAgentHolder = new DeliveryAgentAdapter.DeliveryAgentHolder(cv_root_delivery);
-                                                    updateAgentLayout(deliveryAgentHolder, deliveryModel, orderItem.getServiceTypeId());
+                        new RetrofitHelper(this).fetchDeliveryBoysForSeller(new RetrofitHelper.RetrofitCallback() {
+                            @Override
+                            public void onResponse(String response) {
+                                try {
+                                    JSONObject jsonObject = new JSONObject(response);
+                                    if (jsonObject.getBoolean("status")) {
+                                        if (jsonObject.optJSONArray("result") != null) {
+                                            JSONArray userArray = jsonObject.getJSONArray("result");
+                                            Type classType = new TypeToken<ArrayList<DeliveryModel>>() {
+                                            }.getType();
+
+                                            ArrayList<DeliveryModel> deliveryList = new Gson().fromJson(userArray.toString(), classType);
+                                            if (deliveryList != null && deliveryList.size() > 0) {
+                                                for (DeliveryModel deliveryModel : deliveryList) {
+                                                    if (deliveryModel.getDeliveryBoyId().equalsIgnoreCase(orderItem.getServiceUser().getId())) {
+                                                        DeliveryAgentAdapter.DeliveryAgentHolder deliveryAgentHolder = new DeliveryAgentAdapter.DeliveryAgentHolder(cv_root_delivery);
+                                                        updateAgentLayout(deliveryAgentHolder, deliveryModel, orderItem.getServiceTypeId());
+                                                    }
                                                 }
                                             }
                                         }
                                     }
+                                } catch (JSONException e) {
+
                                 }
-                            } catch (JSONException e) {
+                            }
+
+                            @Override
+                            public void onErrorResponse() {
 
                             }
-                        }
-
-                        @Override
-                        public void onErrorResponse() {
-
-                        }
-                    }, orderItem.getServiceTypeId());
+                        }, orderItem.getServiceTypeId());
+                    }
                 }
-            }
+
         } else {
 
             if (orderDetails.getDeliveryUser() != null) {
