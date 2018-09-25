@@ -53,6 +53,7 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/tv_basic_details"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:drawableRight="@drawable/ic_edit"
@@ -78,7 +79,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_horizontal"
-                            android:text="Caputo’s Bake Shop"
+                            android:text=""
                             android:textColor="@color/text_44"
                             android:textSize="@dimen/dimen_14dp" />
 
@@ -92,7 +93,7 @@
                             android:paddingLeft="@dimen/dimen_15dp"
                             android:paddingRight="@dimen/dimen_15dp"
                             android:layout_gravity="center"
-                            android:text="C-534A, Ground Floor, HSB Building, Dr. Ambedkar Road, New Delhi - 110015"
+                            android:text=""
                             android:textColor="@color/text_44"
                             android:textSize="@dimen/dimen_10dp" />
 
@@ -117,7 +118,7 @@
                                 android:lineSpacingExtra="2.5sp"
                                 android:textColor="@color/text_44"
                                 android:textSize="@dimen/dimen_10dp"
-                                tools:text="Food &amp; Restaurant" />
+                                tools:text="" />
                         </LinearLayout>
                     </LinearLayout>
 
