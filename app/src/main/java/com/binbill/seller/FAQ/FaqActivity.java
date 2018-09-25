@@ -4,16 +4,27 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.binbill.seller.BaseActivity;
 import com.binbill.seller.CustomViews.AppButton;
 import com.binbill.seller.R;
+import com.binbill.seller.Retrofit.RetrofitHelper;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 @EActivity(R.layout.activity_faq)
 public class FaqActivity extends BaseActivity {
@@ -25,28 +36,72 @@ public class FaqActivity extends BaseActivity {
     TextView toolbarText;
 
     @ViewById
-    SwipeRefreshLayout sl_pull_to_refresh;
-
-    @ViewById
-    LinearLayout shimmer_view_container, no_data_layout;
-
-    @ViewById
-    TextView tv_no_data;
-
-    @ViewById
-    RecyclerView rv_credits_view;
-
-    @ViewById
-    AppButton btn_no_data;
+    ExpandableListView elv_faq;
 
     @AfterViews
     public void initiateViews() {
 
         setUpToolbar();
         setUpListeners();
-        btn_no_data.setVisibility(View.GONE);
-        tv_no_data.setText(getString(R.string.something_went_wrong));
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        fetchAllFaqs();
+    }
+
+    private void fetchAllFaqs() {
+        new RetrofitHelper(this).fetchFaq(new RetrofitHelper.RetrofitCallback() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    if (jsonObject.optBoolean("status")) {
+                        JSONArray faqArray = jsonObject.getJSONArray("faq");
+                        Type classType = new TypeToken<ArrayList<FaqModel.FaqListItem>>() {
+                        }.getType();
+
+                        ArrayList<FaqModel.FaqListItem> faqList= new Gson().fromJson(faqArray.toString(), classType);
+                        populateData(faqList);
+                    } else
+                        handleError();
+
+                } catch (JSONException e) {
+                    handleError();
+                }
+            }
+
+            @Override
+            public void onErrorResponse() {
+                handleError();
+            }
+        });
+    }
+
+    private void populateData(ArrayList<FaqModel.FaqListItem> faqList) {
+
+        if (faqList != null && faqList.size() > 0) {
+
+            ArrayList<String> headerList = new ArrayList<>();
+            HashMap<String, String> valueList = new HashMap<>();
+
+            for (FaqModel.FaqListItem item : faqList) {
+                headerList.add(item.getQuestion());
+                valueList.put(item.getQuestion(), item.getAnswer());
+            }
+
+            ExpandableListView faqListView = (ExpandableListView) findViewById(R.id.expandable_list);
+
+            FaqExpandableAdapter adapter = new FaqExpandableAdapter(this, headerList, valueList);
+            faqListView.setAdapter(adapter);
+            faqListView.expandGroup(0);
+        }
+    }
+
+    private void handleError() {
+        showSnackBar(getString(R.string.something_went_wrong));
     }
 
     private void setUpListeners() {

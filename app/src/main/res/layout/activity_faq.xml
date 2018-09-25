@@ -19,37 +19,12 @@
         <include layout="@layout/app_toolbar" />
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/sl_pull_to_refresh"
+
+    <ExpandableListView
+        android:id="@+id/elv_faq"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:layoutDirection="rtl"
+        android:padding="@dimen/dimen_10dp" />
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/off_white">
-
-            <include layout="@layout/layout_shimmer_holder" />
-
-            <include
-                layout="@layout/layout_no_data"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/dimen_40dp" />
-
-            <RelativeLayout
-                android:id="@+id/rl_recycler_data"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <ExpandableListView
-                    android:id="@+id/elv_faq"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layoutDirection="rtl"
-                    android:padding="@dimen/dimen_10dp" />
-
-            </RelativeLayout>
-        </FrameLayout>
-    </android.support.v4.widget.SwipeRefreshLayout>
 </LinearLayout>

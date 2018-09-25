@@ -9,7 +9,7 @@
         android:id="@+id/tv_review_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Too good ... ha ah aha ha"
+        android:text=""
         android:textColor="@color/text_44"
         android:textSize="@dimen/dimen_14dp" />
 
@@ -23,6 +23,16 @@
         android:max="5"
         android:rating="3"
         android:theme="@style/RatingBar" />
+
+    <TextView
+        android:id="@+id/tv_review_user"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:layout_marginTop="@dimen/dimen_10dp"
+        android:text=""
+        android:textColor="@color/text_44"
+        android:textSize="@dimen/dimen_14dp" />
 
     <View
         android:layout_width="@dimen/dimen_200dp"

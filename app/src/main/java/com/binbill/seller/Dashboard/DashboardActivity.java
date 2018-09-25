@@ -59,6 +59,8 @@ import com.binbill.seller.Constants;
 import com.binbill.seller.CustomViews.YesNoDialogFragment;
 import com.binbill.seller.Customer.AddCustomerActivity_;
 import com.binbill.seller.DeliveryAgent.DeliveryAgentActivity_;
+import com.binbill.seller.FAQ.FaqActivity;
+import com.binbill.seller.FAQ.FaqActivity_;
 import com.binbill.seller.Login.LoginActivity_;
 import com.binbill.seller.Loyalty.LoyaltyRulesActivity_;
 import com.binbill.seller.Model.DashboardModel;
@@ -297,6 +299,16 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
                 if (drawer_layout.isDrawerOpen(GravityCompat.START))
                     drawer_layout.closeDrawer(GravityCompat.START);
                 startActivity(new Intent(DashboardActivity.this, DeliveryAgentActivity_.class));
+            }
+        });
+
+        TextView faq = nav_view.findViewById(R.id.tv_faq);
+        faq.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (drawer_layout.isDrawerOpen(GravityCompat.START))
+                    drawer_layout.closeDrawer(GravityCompat.START);
+                startActivity(new Intent(DashboardActivity.this, FaqActivity_.class));
             }
         });
 

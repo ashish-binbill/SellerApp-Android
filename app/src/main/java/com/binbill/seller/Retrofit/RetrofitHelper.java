@@ -319,7 +319,7 @@ public class RetrofitHelper {
         });
     }
 
-    public void fetchFaq(final RetrofitCallback retrofitCallback, boolean isFullDataRequired) {
+    public void fetchFaq(final RetrofitCallback retrofitCallback) {
         RetrofitApiInterface apiService =
                 RetrofitHelper.getClient(mContext).create(RetrofitApiInterface.class);
 

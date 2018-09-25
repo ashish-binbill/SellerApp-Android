@@ -47,12 +47,14 @@ public class ReviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         protected View mRootCard;
         protected TextView mReview;
         protected AppCompatRatingBar mRating;
+        protected  TextView mUser;
 
         public ReviewHolder(View view) {
             super(view);
             mRootCard = view;
             mReview = (TextView) view.findViewById(R.id.tv_review_text);
             mRating = (AppCompatRatingBar) view.findViewById(R.id.rb_rating);
+            mUser = (TextView) view.findViewById(R.id.tv_review_user);
         }
     }
 
@@ -82,5 +84,6 @@ public class ReviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         final AssistedUserModel.Review model = mList.get(position);
 
         reviewHolder.mReview.setText(model.getFeedback());
+        reviewHolder.mUser.setText("From " + model.getRating());
     }
 }

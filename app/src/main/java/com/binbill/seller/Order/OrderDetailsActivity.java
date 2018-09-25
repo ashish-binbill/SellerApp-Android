@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.content.ContextCompat;
@@ -655,7 +656,7 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
 
     }
 
-    private void updateAgentLayout(final DeliveryAgentAdapter.DeliveryAgentHolder userHolder, DeliveryModel model, String serviceId) {
+    private void updateAgentLayout(final DeliveryAgentAdapter.DeliveryAgentHolder userHolder, final DeliveryModel model, String serviceId) {
         userHolder.mUserName.setText(model.getName());
 
         float rating = 0;
@@ -669,6 +670,16 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
             userHolder.mReviews.setText(userHolder.mReviews.getContext().getString(R.string.reviews, String.valueOf(userReviews.size())));
         else
             userHolder.mReviews.setText(userHolder.mReviews.getContext().getString(R.string.reviews, "0"));
+
+        userHolder.mCall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (model.getMobile() != null) {
+                    Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + model.getMobile()));
+                    userHolder.mCall.getContext().startActivity(intent);
+                }
+            }
+        });
 
         userHolder.statusText.setVisibility(View.GONE);
         userHolder.mActionLayout.setVisibility(View.GONE);
@@ -700,57 +711,55 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
             userHolder.mAdditionalPrice.setVisibility(View.GONE);
         }
 
-        if (model.getProfileImage() != null) {
 
-            final String authToken = SharedPref.getString(userHolder.userImage.getContext(), SharedPref.AUTH_TOKEN);
-            OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                    .authenticator(new Authenticator() {
-                        @Override
-                        public Request authenticate(Route route, Response response) throws IOException {
-                            return response.request().newBuilder()
-                                    .header("Authorization", authToken)
-                                    .build();
-                        }
-                    }).build();
+        final String authToken = SharedPref.getString(userHolder.userImage.getContext(), SharedPref.AUTH_TOKEN);
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .authenticator(new Authenticator() {
+                    @Override
+                    public Request authenticate(Route route, Response response) throws IOException {
+                        return response.request().newBuilder()
+                                .header("Authorization", authToken)
+                                .build();
+                    }
+                }).build();
 
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-                    RelativeLayout.LayoutParams.MATCH_PARENT,
-                    RelativeLayout.LayoutParams.MATCH_PARENT
-            );
-            params.setMargins(0, 0, 0, 0);
-            userHolder.userImage.setLayoutParams(params);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.MATCH_PARENT,
+                RelativeLayout.LayoutParams.MATCH_PARENT
+        );
+        params.setMargins(0, 0, 0, 0);
+        userHolder.userImage.setLayoutParams(params);
 
-            userHolder.userImage.setScaleType(ImageView.ScaleType.FIT_XY);
+        userHolder.userImage.setScaleType(ImageView.ScaleType.FIT_XY);
 
-            Picasso picasso = new Picasso.Builder(userHolder.userImage.getContext())
-                    .downloader(new OkHttp3Downloader(okHttpClient))
-                    .build();
-            picasso.load(Constants.BASE_URL + "assisted/" + model.getDeliveryBoyId() + "/profile")
-                    .config(Bitmap.Config.RGB_565)
-                    .into(userHolder.userImage, new Callback() {
-                        @Override
-                        public void onSuccess() {
-                            Bitmap imageBitmap = ((BitmapDrawable) userHolder.userImage.getDrawable()).getBitmap();
-                            RoundedBitmapDrawable imageDrawable = RoundedBitmapDrawableFactory.create(userHolder.userImage.getContext().getResources(), imageBitmap);
-                            imageDrawable.setCircular(true);
-                            userHolder.userImage.setImageDrawable(imageDrawable);
-                        }
+        Picasso picasso = new Picasso.Builder(userHolder.userImage.getContext())
+                .downloader(new OkHttp3Downloader(okHttpClient))
+                .build();
+        picasso.load(Constants.BASE_URL + "assisted/" + model.getDeliveryBoyId() + "/profile")
+                .config(Bitmap.Config.RGB_565)
+                .into(userHolder.userImage, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        Bitmap imageBitmap = ((BitmapDrawable) userHolder.userImage.getDrawable()).getBitmap();
+                        RoundedBitmapDrawable imageDrawable = RoundedBitmapDrawableFactory.create(userHolder.userImage.getContext().getResources(), imageBitmap);
+                        imageDrawable.setCircular(true);
+                        userHolder.userImage.setImageDrawable(imageDrawable);
+                    }
 
-                        @Override
-                        public void onError(Exception e) {
-                            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-                                    RelativeLayout.LayoutParams.MATCH_PARENT,
-                                    RelativeLayout.LayoutParams.MATCH_PARENT
-                            );
+                    @Override
+                    public void onError(Exception e) {
+                        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                                RelativeLayout.LayoutParams.MATCH_PARENT,
+                                RelativeLayout.LayoutParams.MATCH_PARENT
+                        );
 
-                            int margins = Utility.convertDPtoPx(userHolder.userImage.getContext(), 15);
-                            params.setMargins(margins, margins, margins, margins);
-                            userHolder.userImage.setLayoutParams(params);
+                        int margins = Utility.convertDPtoPx(userHolder.userImage.getContext(), 15);
+                        params.setMargins(margins, margins, margins, margins);
+                        userHolder.userImage.setLayoutParams(params);
 
-                            userHolder.userImage.setImageDrawable(ContextCompat.getDrawable(userHolder.userImage.getContext(), R.drawable.ic_user));
-                        }
-                    });
-        }
+                        userHolder.userImage.setImageDrawable(ContextCompat.getDrawable(userHolder.userImage.getContext(), R.drawable.ic_user));
+                    }
+                });
 
         userHolder.mSelectedCardLayout.setVisibility(View.GONE);
 
