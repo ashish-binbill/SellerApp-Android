@@ -78,8 +78,9 @@
             android:textColor="@color/text_44"
             android:textSize="@dimen/dimen_14dp" />
 
+
         <TextView
-            android:id="@+id/tv_faq"
+            android:id="@+id/tv_layalty_rules"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/ic_loyalty_rules"
@@ -92,15 +93,15 @@
             android:textSize="@dimen/dimen_14dp" />
 
         <TextView
-            android:id="@+id/tv_layalty_rules"
+            android:id="@+id/tv_faq"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_loyalty_rules"
+            android:drawableLeft="@drawable/ic_logout"
             android:drawablePadding="@dimen/dimen_15dp"
             android:fontFamily="sans-serif-medium"
             android:lineSpacingExtra="1sp"
             android:padding="@dimen/dimen_15dp"
-            android:text="@string/loyalty_rules"
+            android:text="@string/faqs"
             android:textColor="@color/text_44"
             android:textSize="@dimen/dimen_14dp" />
 
