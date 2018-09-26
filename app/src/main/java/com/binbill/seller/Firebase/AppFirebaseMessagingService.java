@@ -9,6 +9,7 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import com.applozic.mobicomkit.Applozic;
@@ -16,8 +17,9 @@ import com.applozic.mobicomkit.api.account.register.RegisterUserClientService;
 import com.applozic.mobicomkit.api.account.register.RegistrationResponse;
 import com.applozic.mobicomkit.api.account.user.MobiComUserPreference;
 import com.applozic.mobicomkit.api.notification.MobiComPushReceiver;
-import com.binbill.seller.Dashboard.DashboardActivity_;
+import com.binbill.seller.Constants;
 import com.binbill.seller.R;
+import com.binbill.seller.SplashActivity;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -46,6 +48,7 @@ public class AppFirebaseMessagingService extends FirebaseMessagingService {
 
             String title = "BinBill Partner";
             String description = "";
+            String notificationType = "0";
             Map<String, String> map = remoteMessage.getData();
             if (map.containsKey("title"))
                 title = map.get("title");
@@ -54,7 +57,10 @@ public class AppFirebaseMessagingService extends FirebaseMessagingService {
             if (map.containsKey("big_text"))
                 description = map.get("big_text");
 
-            handleNow(title, description);
+            if (map.containsKey("notification_type"))
+                notificationType = map.get("notification_type");
+
+            handleNow(title, description, notificationType);
         }
 
         if (remoteMessage.getNotification() != null) {
@@ -82,18 +88,19 @@ public class AppFirebaseMessagingService extends FirebaseMessagingService {
     /**
      * Handle time allotted to BroadcastReceivers.
      */
-    private void handleNow(String title, String message) {
+    private void handleNow(String title, String message, String notificationType) {
         Log.d(TAG, "Short lived task is done.");
-        sendNotification(title, message);
+        sendNotification(title, message, notificationType);
     }
 
     private void sendRegistrationToServer(String token) {
         // TODO: Implement this method to send token to your app server.
     }
 
-    private void sendNotification(String title, String messageBody) {
-        Intent intent = new Intent(this, DashboardActivity_.class);
+    private void sendNotification(String title, String messageBody, String notificationType) {
+        Intent intent = new Intent(this, SplashActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra(Constants.NOTIFICATION_DEEPLINK, notificationType);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);
 
@@ -105,6 +112,7 @@ public class AppFirebaseMessagingService extends FirebaseMessagingService {
                         .setContentTitle(title)
                         .setContentText(messageBody)
                         .setAutoCancel(true)
+                        .setColor(ContextCompat.getColor(this, R.color.colorPrimary))
                         .setSound(defaultSoundUri)
                         .setContentIntent(pendingIntent);
 

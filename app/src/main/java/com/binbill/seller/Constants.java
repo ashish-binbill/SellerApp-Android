@@ -162,4 +162,5 @@ public class Constants {
     public static final String EDIT_MODE = "EDIT_MODE";
     public static final int TYPE_URL_FILE = 3;
     public static final String UPDATE_POPUP_NOT_NOW_CLICKED = "UPDATE_POPUP_NOT_NOW_CLICKED";
+    public static final String NOTIFICATION_DEEPLINK = "NOTIFICATION_DEEPLINK";
 }

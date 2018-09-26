@@ -2,6 +2,7 @@ package com.binbill.seller.Dashboard;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
@@ -21,6 +22,7 @@ import com.binbill.seller.SharedPref;
 import com.binbill.seller.Utility;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 
@@ -160,7 +162,19 @@ public class ProfileActivity extends BaseActivity {
 
         picasso.load(Constants.BASE_URL + "sellers/" + sellerId + "/upload/2/images/" + 0)
                 .config(Bitmap.Config.RGB_565)
-                .into(iv_shop_image);
+                .into(iv_shop_image, new Callback() {
+                    @Override
+                    public void onSuccess() {
+
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+
+                        iv_shop_image.setImageDrawable(ContextCompat.getDrawable(ProfileActivity.this, R.drawable.offer_banner_3));
+
+                    }
+                });
 
 
         ProfileModel.BusinessDetails businessDetails = profileDetails.getSellerDetails().getBusinessDetails();

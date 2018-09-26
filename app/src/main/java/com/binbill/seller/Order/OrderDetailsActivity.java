@@ -91,7 +91,7 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
     ImageView iv_user_image;
 
     @ViewById
-    TextView tv_start_time_header, tv_end_time_header, tv_time_elapsed_header;
+    TextView tv_start_time_header, tv_end_time_header, tv_time_elapsed_header, tv_delivery_header_fmcg, tv_delivery_header_service;
     @ViewById
     RecyclerView rv_shopping_list;
 
@@ -104,6 +104,9 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
 
     @ViewById
     FrameLayout fl_icon_chat;
+
+    @ViewById
+    View v_divider;
 
     @ViewById
     TextView tv_unread_message;
@@ -643,6 +646,7 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                 tv_start_time_header.setVisibility(View.GONE);
                 tv_end_time_header.setVisibility(View.GONE);
                 tv_time_elapsed_header.setVisibility(View.GONE);
+                v_divider.setVisibility(View.GONE);
                 tv_total_amount.setText(getString(R.string.rupee_sign) + " " + orderDetails.getTotalAmount());
                 ll_bill_layout.setVisibility(View.VISIBLE);
             }
@@ -769,10 +773,13 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
         /**
          * If serviceId is null ---> means FMCG order
          */
-        if (!Utility.isEmpty(serviceId))
+        if (!Utility.isEmpty(serviceId)) {
             cv_root_delivery.setVisibility(View.VISIBLE);
-        else
+            tv_delivery_header_service.setVisibility(View.VISIBLE);
+        } else {
             cv_root_fmcg_delivery.setVisibility(View.VISIBLE);
+            tv_delivery_header_fmcg.setVisibility(View.VISIBLE);
+        }
     }
 
     private void onShowReviews(DeliveryModel deliveryModel) {

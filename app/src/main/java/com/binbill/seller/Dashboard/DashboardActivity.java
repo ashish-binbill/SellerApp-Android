@@ -143,6 +143,49 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
         ApiHelper.getUserSelectedCategories(this);
     }
 
+    private void checkNotificationDeeplink() {
+
+        String notificationType = AppSession.getInstance(this).getNotificationIntent();
+        switch (notificationType) {
+            case "1":
+                /**
+                 * Order
+                 */
+                changeViewPagerFragment(1);
+                break;
+
+            case "2":
+                /**
+                 * Verification Tab
+                 */
+                changeViewPagerFragment(2);
+                break;
+            case "3":
+                /**
+                 * My customer
+                 */
+                changeViewPagerFragment(3);
+                break;
+            case "4":
+                /**
+                 * assisted users
+                 */
+                changeViewPagerFragment(4);
+                break;
+            case "5":
+                /**
+                 * Manage categories
+                 */
+                Intent intent = RegistrationResolver.getNextIntent(DashboardActivity.this, 4);
+                if (intent != null)
+                    startActivity(intent);
+                break;
+
+        }
+
+        AppSession.getInstance(this).setNotificationIntent(null);
+    }
+
     private void initialiseApplozic() {
 
 
@@ -593,8 +636,7 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
         HomeFragment homeFragment = HomeFragment.newInstance("", "");
         replaceFragment(homeFragment, 0);
         setUpToolbar(getString(R.string.dashboard));
-        iv_notification.setImageDrawable(ContextCompat.getDrawable(DashboardActivity.this, R.drawable.ic_notify_bell));
-        iv_notification.setVisibility(View.VISIBLE);
+        iv_notification.setVisibility(View.GONE);
 
         bottom_navigation.setSelectedItemId(R.id.action_home);
         /**
@@ -607,25 +649,6 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
         if (dashboardModel == null)
             finish();
         sellerType = dashboardModel.getSellerType();
-
-        /*if (dashboardModel.isAssisted()) {
-            if (dashboardModel.isFmcg()) {
-                if (dashboardModel.isHasPos())
-                    sellerType = FMCG_ASSISTED_USER_POS;
-                else
-                    sellerType = FMCG_ASSISTED_USER_NO_POS;
-            } else
-                sellerType = ASSISTED_ONLY_USER;
-        } else {
-            if (dashboardModel.isFmcg()) {
-                if (dashboardModel.isHasPos())
-                    sellerType = FMCG_ONLY_USER_HAS_POS;
-                else
-                    sellerType = FMCG_ONLY_USER_NO_POS;
-            }
-        }
-
-        dashboardModel.setSellerType(sellerType);*/
         AppSession.getInstance(this).setDashboardData(dashboardModel);
         Menu menu = bottom_navigation.getMenu();
         switch (sellerType) {
@@ -662,8 +685,7 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
                                 replaceFragment(homeFragment, 0);
                                 setUpToolbar(getString(R.string.dashboard));
 
-                                iv_notification.setImageDrawable(ContextCompat.getDrawable(DashboardActivity.this, R.drawable.ic_notify_bell));
-                                iv_notification.setVisibility(View.VISIBLE);
+                                iv_notification.setVisibility(View.INVISIBLE);
                                 iv_search.setVisibility(View.GONE);
                                 break;
                             case R.id.action_verification:
@@ -705,6 +727,11 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
                         return true;
                     }
                 });
+
+
+        if (AppSession.getInstance(this).getNotificationIntent() != null) {
+            checkNotificationDeeplink();
+        }
     }
 
     @Override
@@ -819,7 +846,36 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
 
     @Override
     public void changeViewPagerFragment(int position) {
-        if (position == 4) {
+
+        if (position == 1) {
+            OrderFragment orderFragment = OrderFragment.newInstance();
+            replaceFragment(orderFragment, 2);
+            setUpToolbar(getString(R.string.my_order));
+
+            iv_notification.setVisibility(View.INVISIBLE);
+            iv_search.setVisibility(View.GONE);
+
+            bottom_navigation.setSelectedItemId(R.id.action_chat);
+        } else if (position == 2) {
+            VerificationFragment verificationFragment = VerificationFragment.newInstance();
+            replaceFragment(verificationFragment, 1);
+            setUpToolbar(getString(R.string.verification));
+
+            iv_notification.setVisibility(View.INVISIBLE);
+            iv_search.setVisibility(View.GONE);
+
+            bottom_navigation.setSelectedItemId(R.id.action_verification);
+        } else if (position == 3) {
+            myCustomerFragment = MyCustomerFragment.newInstance();
+            replaceFragment(myCustomerFragment, 3);
+            setUpToolbar(getString(R.string.my_customers));
+
+            iv_notification.setVisibility(View.VISIBLE);
+            iv_notification.setImageDrawable(ContextCompat.getDrawable(DashboardActivity.this, R.drawable.ic_add_offer));
+            iv_search.setVisibility(View.VISIBLE);
+
+            bottom_navigation.setSelectedItemId(R.id.action_customers);
+        } else if (position == 4) {
             assistedServiceFragment = AssistedServiceFragment.newInstance("", "");
             replaceFragment(assistedServiceFragment, 4);
             setUpToolbar(getString(R.string.assisted_services));
