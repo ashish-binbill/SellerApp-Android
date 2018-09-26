@@ -636,7 +636,7 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
         HomeFragment homeFragment = HomeFragment.newInstance("", "");
         replaceFragment(homeFragment, 0);
         setUpToolbar(getString(R.string.dashboard));
-        iv_notification.setVisibility(View.GONE);
+        iv_notification.setVisibility(View.INVISIBLE);
 
         bottom_navigation.setSelectedItemId(R.id.action_home);
         /**
