@@ -59,7 +59,6 @@ import com.binbill.seller.Constants;
 import com.binbill.seller.CustomViews.YesNoDialogFragment;
 import com.binbill.seller.Customer.AddCustomerActivity_;
 import com.binbill.seller.DeliveryAgent.DeliveryAgentActivity_;
-import com.binbill.seller.FAQ.FaqActivity;
 import com.binbill.seller.FAQ.FaqActivity_;
 import com.binbill.seller.Login.LoginActivity_;
 import com.binbill.seller.Loyalty.LoyaltyRulesActivity_;
@@ -605,6 +604,8 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
 
         DashboardModel dashboardModel = AppSession.getInstance(this).getDashboardData();
 
+        if (dashboardModel == null)
+            finish();
         sellerType = dashboardModel.getSellerType();
 
         /*if (dashboardModel.isAssisted()) {

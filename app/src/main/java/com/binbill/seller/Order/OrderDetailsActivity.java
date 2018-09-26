@@ -40,6 +40,7 @@ import com.binbill.seller.BinBillSeller;
 import com.binbill.seller.Constants;
 import com.binbill.seller.CustomViews.AppButton;
 import com.binbill.seller.CustomViews.AppButtonGreyed;
+import com.binbill.seller.CustomViews.ReviewsDialogFragment;
 import com.binbill.seller.Model.UserModel;
 import com.binbill.seller.R;
 import com.binbill.seller.Retrofit.RetrofitHelper;
@@ -89,6 +90,8 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
     @ViewById
     ImageView iv_user_image;
 
+    @ViewById
+    TextView tv_start_time_header, tv_end_time_header, tv_time_elapsed_header;
     @ViewById
     RecyclerView rv_shopping_list;
 
@@ -594,63 +597,42 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
         if (orderDetails.getOrderType().equalsIgnoreCase(Constants.ORDER_TYPE_SERVICE)
                 && orderDetails.getOrderItems() != null && orderDetails.getOrderItems().size() > 0) {
 
-                final OrderItem orderItem = orderDetails.getOrderItems().get(0);
+            final OrderItem orderItem = orderDetails.getOrderItems().get(0);
 
             if (orderDetails.getOrderStatus() == Constants.STATUS_JOB_ENDED || orderDetails.getOrderStatus() == Constants.STATUS_COMPLETE) {
 
-                    if (!Utility.isEmpty(orderItem.getStartDate())) {
-                        tv_start_time.setText(Utility.getFormattedDate(17, orderItem.getStartDate(), 0));
-                        tv_end_time.setText(Utility.getFormattedDate(17, orderItem.getEndDate(), 0));
-                        tv_time_elapsed.setText(Utility.getDateDifference(orderItem.getStartDate(), orderItem.getEndDate()));
-                        tv_total_amount.setText(getString(R.string.rupee_sign) + " " + orderItem.getTotalAmount());
-                        ll_bill_layout.setVisibility(View.VISIBLE);
-                    }
+                if (!Utility.isEmpty(orderItem.getStartDate())) {
+                    tv_start_time.setText(Utility.getFormattedDate(17, orderItem.getStartDate(), 0));
+                    tv_end_time.setText(Utility.getFormattedDate(17, orderItem.getEndDate(), 0));
+                    tv_time_elapsed.setText(Utility.getDateDifference(orderItem.getStartDate(), orderItem.getEndDate()));
+                    tv_total_amount.setText(getString(R.string.rupee_sign) + " " + orderItem.getTotalAmount());
+                    ll_bill_layout.setVisibility(View.VISIBLE);
                 }
+            }
 
-                if (orderDetails.getOrderStatus() != Constants.STATUS_NEW_ORDER) {
-
-                    if (orderItem.getServiceUser() != null) {
-
-                        new RetrofitHelper(this).fetchDeliveryBoysForSeller(new RetrofitHelper.RetrofitCallback() {
-                            @Override
-                            public void onResponse(String response) {
-                                try {
-                                    JSONObject jsonObject = new JSONObject(response);
-                                    if (jsonObject.getBoolean("status")) {
-                                        if (jsonObject.optJSONArray("result") != null) {
-                                            JSONArray userArray = jsonObject.getJSONArray("result");
-                                            Type classType = new TypeToken<ArrayList<DeliveryModel>>() {
-                                            }.getType();
-
-                                            ArrayList<DeliveryModel> deliveryList = new Gson().fromJson(userArray.toString(), classType);
-                                            if (deliveryList != null && deliveryList.size() > 0) {
-                                                for (DeliveryModel deliveryModel : deliveryList) {
-                                                    if (deliveryModel.getDeliveryBoyId().equalsIgnoreCase(orderItem.getServiceUser().getId())) {
-                                                        DeliveryAgentAdapter.DeliveryAgentHolder deliveryAgentHolder = new DeliveryAgentAdapter.DeliveryAgentHolder(cv_root_delivery);
-                                                        updateAgentLayout(deliveryAgentHolder, deliveryModel, orderItem.getServiceTypeId());
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                } catch (JSONException e) {
-
-                                }
-                            }
-
-                            @Override
-                            public void onErrorResponse() {
-
-                            }
-                        }, orderItem.getServiceTypeId());
-                    }
+            if (orderDetails.getOrderStatus() != Constants.STATUS_NEW_ORDER) {
+                if (orderDetails.getDeliveryUser() != null) {
+                    DeliveryAgentAdapter.DeliveryAgentHolder deliveryAgentHolder = new DeliveryAgentAdapter.DeliveryAgentHolder(cv_root_delivery);
+                    updateAgentLayout(deliveryAgentHolder, orderDetails.getDeliveryUser(), orderItem.getServiceTypeId());
                 }
+            }
 
         } else {
 
             if (orderDetails.getDeliveryUser() != null) {
                 DeliveryAgentAdapter.DeliveryAgentHolder deliveryAgentHolder = new DeliveryAgentAdapter.DeliveryAgentHolder(cv_root_fmcg_delivery);
                 updateAgentLayout(deliveryAgentHolder, orderDetails.getDeliveryUser(), null);
+            }
+
+            if (orderDetails.getTotalAmount() != null) {
+                tv_start_time.setVisibility(View.GONE);
+                tv_end_time.setVisibility(View.GONE);
+                tv_time_elapsed.setVisibility(View.GONE);
+                tv_start_time_header.setVisibility(View.GONE);
+                tv_end_time_header.setVisibility(View.GONE);
+                tv_time_elapsed_header.setVisibility(View.GONE);
+                tv_total_amount.setText(getString(R.string.rupee_sign) + " " + orderDetails.getTotalAmount());
+                ll_bill_layout.setVisibility(View.VISIBLE);
             }
         }
 
@@ -663,7 +645,7 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
         if (!Utility.isEmpty(model.getRating()))
             rating = Float.parseFloat(model.getRating());
         userHolder.mRating.setRating(rating);
-        userHolder.ratingText.setText(userHolder.mReviews.getContext().getString(R.string.rating_value, String.valueOf(rating)));
+        userHolder.ratingText.setText(userHolder.mReviews.getContext().getString(R.string.rating_value, String.format("%.2f", rating)));
 
         ArrayList<AssistedUserModel.Review> userReviews = model.getReviews();
         if (userReviews != null)
@@ -709,6 +691,15 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
         } else {
             userHolder.mBasePrice.setVisibility(View.GONE);
             userHolder.mAdditionalPrice.setVisibility(View.GONE);
+        }
+
+        if (userReviews != null && userReviews.size() > 0) {
+            userHolder.mReviews.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onShowReviews(model);
+                }
+            });
         }
 
 
@@ -770,6 +761,12 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
             cv_root_delivery.setVisibility(View.VISIBLE);
         else
             cv_root_fmcg_delivery.setVisibility(View.VISIBLE);
+    }
+
+    private void onShowReviews(DeliveryModel deliveryModel) {
+        android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
+        ReviewsDialogFragment fragment = ReviewsDialogFragment.newInstance(getString(R.string.reviews_string), deliveryModel.getReviews());
+        fragment.show(fm, "ReviewsDialogFragment");
     }
 
     public void changeButtonStateToApproval(int state) {

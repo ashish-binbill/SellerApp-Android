@@ -42,6 +42,9 @@ public class Order implements Serializable {
     @SerializedName("created_at")
     String orderCreationDate;
 
+    @SerializedName("total_amount")
+    String totalAmount;
+
     @SerializedName("user_address_detail")
     String address;
 
@@ -62,6 +65,10 @@ public class Order implements Serializable {
 
     public boolean isModified() {
         return modified;
+    }
+
+    public String getTotalAmount() {
+        return totalAmount;
     }
 
     public String getOrderCreationDate() {

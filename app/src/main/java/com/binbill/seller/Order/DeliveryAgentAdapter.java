@@ -128,7 +128,7 @@ public class DeliveryAgentAdapter extends RecyclerView.Adapter<RecyclerView.View
         if (!Utility.isEmpty(model.getRating()))
             rating = Float.parseFloat(model.getRating());
         userHolder.mRating.setRating(rating);
-        userHolder.ratingText.setText(userHolder.mReviews.getContext().getString(R.string.rating_value, String.valueOf(rating)));
+        userHolder.ratingText.setText(userHolder.mReviews.getContext().getString(R.string.rating_value, String.format("%.2f", rating)));
 
         ArrayList<AssistedUserModel.Review> userReviews = model.getReviews();
         if (userReviews != null)

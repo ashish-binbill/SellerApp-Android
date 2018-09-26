@@ -2,6 +2,7 @@ package com.binbill.seller.CustomViews;
 
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.AppCompatRatingBar;
@@ -17,6 +18,7 @@ import com.binbill.seller.AssistedService.AssistedUserModel;
 import com.binbill.seller.Constants;
 import com.binbill.seller.R;
 import com.binbill.seller.SharedPref;
+import com.binbill.seller.Utility;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
@@ -79,7 +81,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         final AssistedUserModel.Review model = mList.get(position);
 
         reviewHolder.mReview.setText(model.getFeedback());
-        reviewHolder.mUser.setText("From " + model.getRating());
+        reviewHolder.mUser.setText("From " + model.getUserName());
 
         final String authToken = SharedPref.getString(reviewHolder.mUserImage.getContext(), SharedPref.AUTH_TOKEN);
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
@@ -116,7 +118,16 @@ public class ReviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
                     @Override
                     public void onError(Exception e) {
+                        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                                RelativeLayout.LayoutParams.MATCH_PARENT,
+                                RelativeLayout.LayoutParams.MATCH_PARENT
+                        );
 
+                        int margins = Utility.convertDPtoPx(reviewHolder.mUserImage.getContext(), 15);
+                        params.setMargins(margins, margins, margins, margins);
+                        reviewHolder.mUserImage.setLayoutParams(params);
+
+                        reviewHolder.mUserImage.setImageDrawable(ContextCompat.getDrawable(reviewHolder.mUserImage.getContext(), R.drawable.ic_user));
                     }
                 });
     }

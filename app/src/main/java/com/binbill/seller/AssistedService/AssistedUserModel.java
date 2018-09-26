@@ -132,6 +132,13 @@ public class AssistedUserModel implements Serializable{
         @SerializedName("updated_by")
         String userID;
 
+        @SerializedName("user_name")
+        String userName;
+
+        public String getUserName() {
+            return userName;
+        }
+
         public String getUserID() {
             return userID;
         }
