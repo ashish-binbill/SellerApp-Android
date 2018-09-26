@@ -111,11 +111,7 @@ public class BasicDetails2Activity extends BaseActivity implements OptionListFra
             setUpData();
         }
 
-        /**
-         * Hide delivery and payment mode for assisted only sellers
-         * TODO: Set values from reference data here
-         */
-        if(userRegistrationDetails != null && userRegistrationDetails.isAssisted() && !userRegistrationDetails.isFmcg()){
+        if (userRegistrationDetails != null && userRegistrationDetails.isAssisted() && !userRegistrationDetails.isFmcg()) {
             tv_delivery_header.setVisibility(View.GONE);
             radio_group_home_delivery.setVisibility(View.GONE);
             tv_delivery_remark.setVisibility(View.GONE);
@@ -184,7 +180,7 @@ public class BasicDetails2Activity extends BaseActivity implements OptionListFra
         if (!Utility.isEmpty(basicDetails.getHomeDeliveryRemarks()))
             et_delivery_distance.setText(basicDetails.getHomeDeliveryRemarks());
 
-
+        enableDisableVerifyButton();
     }
 
     private void setUpViews() {

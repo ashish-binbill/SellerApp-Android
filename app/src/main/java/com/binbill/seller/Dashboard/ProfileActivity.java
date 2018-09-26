@@ -6,6 +6,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.binbill.seller.AppSession;
@@ -62,6 +63,9 @@ public class ProfileActivity extends BaseActivity {
     TextView tv_other_details, tv_edit_business, tv_basic_details;
     private ProfileModel profileDetails;
 
+    @ViewById
+    LinearLayout ll_payment_mode, ll_delivery;
+
     @AfterViews
     public void initiateViews() {
         setUpToolbar();
@@ -110,7 +114,7 @@ public class ProfileActivity extends BaseActivity {
         tv_open_days.setText(displayOpenDays);
 
 
-        if (!userRegistrationDetails.isFmcg() && userRegistrationDetails.isAssisted()) {
+        if (userRegistrationDetails.isFmcg()) {
             ArrayList<MainCategory> paymentModesModel = AppSession.getInstance(this).getPaymentModes();
             String paymentModes = basicDetails.getPaymentModes();
             StringBuilder displayPaymentModes = new StringBuilder();
@@ -139,6 +143,14 @@ public class ProfileActivity extends BaseActivity {
 
             if (!Utility.isEmpty(basicDetails.getHomeDeliveryRemarks()))
                 homeDelivery.append("\nWithin " + basicDetails.getHomeDeliveryRemarks());
+
+            tv_delivery.setText(homeDelivery);
+
+            ll_payment_mode.setVisibility(View.VISIBLE);
+            ll_payment_mode.setVisibility(View.VISIBLE);
+        } else {
+            ll_payment_mode.setVisibility(View.GONE);
+            ll_payment_mode.setVisibility(View.GONE);
         }
 
         tv_timings.setText(basicDetails.getStartTime() + " - " + basicDetails.getCloseTime());
@@ -281,6 +293,7 @@ public class ProfileActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = RegistrationResolver.getNextIntent(ProfileActivity.this, 2);
+                intent.putExtra(Constants.BUSINESS_MODEL, profileDetails.getSellerDetails().getBusinessDetails().getBusinessType());
                 startActivity(intent);
             }
         });

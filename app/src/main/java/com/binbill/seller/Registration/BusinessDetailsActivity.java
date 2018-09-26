@@ -90,14 +90,33 @@ public class BusinessDetailsActivity extends BaseActivity implements OptionListF
     NestedScrollView scroll_view;
     private BusinessDetailsModel selectedModel;
     private HashMap<String, ArrayList<Uri>> cameraFileUriMap = new HashMap<>();
+    private boolean mEditMode;
+    private String businessType;
 
     @AfterViews
     public void initiateViews() {
+
+        if (getIntent().hasExtra(Constants.BUSINESS_MODEL)) {
+            mEditMode = true;
+            businessType = getIntent().getStringExtra(Constants.BUSINESS_MODEL);
+            setUpData();
+        }
         setUpToolbar();
         setUpListeners();
 
         enableDisableVerifyButton();
         Utility.hideKeyboard(this, btn_submit);
+    }
+
+    private void setUpData() {
+        ArrayList<BusinessDetailsModel> businessDetails = AppSession.getInstance(BusinessDetailsActivity.this).getBusinessDetails();
+
+        for (BusinessDetailsModel businessDetailsModel : businessDetails) {
+
+            if (businessDetailsModel.getBusinessId().equalsIgnoreCase(businessType)) {
+                onListItemSelected(businessDetailsModel.getBusinessName(), 0);
+            }
+        }
     }
 
     private void enableDisableVerifyButton() {
@@ -726,48 +745,52 @@ public class BusinessDetailsActivity extends BaseActivity implements OptionListF
          * This API is to fetch categories from server
          */
 
-        btn_submit.setVisibility(View.VISIBLE);
-        btn_submit_progress.setVisibility(View.GONE);
+        if (mEditMode) {
+            finish();
+        } else {
+            btn_submit.setVisibility(View.VISIBLE);
+            btn_submit_progress.setVisibility(View.GONE);
 
 
-        ApiHelper.makeDashboardDataCall(this, new RetrofitHelper.RetrofitCallback() {
-            @Override
-            public void onResponse(String response) {
+            ApiHelper.makeDashboardDataCall(this, new RetrofitHelper.RetrofitCallback() {
+                @Override
+                public void onResponse(String response) {
 
-                try {
-                    JSONObject jsonObject = new JSONObject(response);
-                    if (jsonObject.getBoolean("status")) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(response);
+                        if (jsonObject.getBoolean("status")) {
 
-                        Type classType = new TypeToken<DashboardModel>() {
-                        }.getType();
+                            Type classType = new TypeToken<DashboardModel>() {
+                            }.getType();
 
-                        DashboardModel dashboardModel = new Gson().fromJson(jsonObject.toString(), classType);
-                        AppSession.getInstance(BusinessDetailsActivity.this).setDashboardData(dashboardModel);
+                            DashboardModel dashboardModel = new Gson().fromJson(jsonObject.toString(), classType);
+                            AppSession.getInstance(BusinessDetailsActivity.this).setDashboardData(dashboardModel);
 
-                        int registrationIndex = getIntent().getIntExtra(Constants.REGISTRATION_INDEX, -1);
-                        Intent intent = RegistrationResolver.getNextIntent(BusinessDetailsActivity.this, registrationIndex);
+                            int registrationIndex = getIntent().getIntExtra(Constants.REGISTRATION_INDEX, -1);
+                            Intent intent = RegistrationResolver.getNextIntent(BusinessDetailsActivity.this, registrationIndex);
 
-                        if (dashboardModel.getForceUpdate() != null) {
-                            if (dashboardModel.getForceUpdate().equalsIgnoreCase("TRUE"))
-                                UpgradeHelper.invokeUpdateDialog(BusinessDetailsActivity.this, true);
-                            else if (dashboardModel.getForceUpdate().equalsIgnoreCase("FALSE"))
-                                UpgradeHelper.invokeUpdateDialog(BusinessDetailsActivity.this, false);
-                        } else {
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(intent);
-                            finish();
+                            if (dashboardModel.getForceUpdate() != null) {
+                                if (dashboardModel.getForceUpdate().equalsIgnoreCase("TRUE"))
+                                    UpgradeHelper.invokeUpdateDialog(BusinessDetailsActivity.this, true);
+                                else if (dashboardModel.getForceUpdate().equalsIgnoreCase("FALSE"))
+                                    UpgradeHelper.invokeUpdateDialog(BusinessDetailsActivity.this, false);
+                            } else {
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(intent);
+                                finish();
+                            }
                         }
+                    } catch (JSONException e) {
+                        finish();
                     }
-                } catch (JSONException e) {
+                }
+
+                @Override
+                public void onErrorResponse() {
                     finish();
                 }
-            }
-
-            @Override
-            public void onErrorResponse() {
-                finish();
-            }
-        });
+            });
+        }
     }
 
 
@@ -816,9 +839,9 @@ public class BusinessDetailsActivity extends BaseActivity implements OptionListF
                 sole_proprietorship.setVisibility(View.VISIBLE);
             } else if (selectedModel.getBusinessId().equalsIgnoreCase("2")) {
                 partnership.setVisibility(View.VISIBLE);
-            } else if (selectedModel.getBusinessId().equalsIgnoreCase("3")){
+            } else if (selectedModel.getBusinessId().equalsIgnoreCase("3")) {
                 public_private_company.setVisibility(View.VISIBLE);
-        }else if (selectedModel.getBusinessId().equalsIgnoreCase("4"))
+            } else if (selectedModel.getBusinessId().equalsIgnoreCase("4"))
                 individual.setVisibility(View.VISIBLE);
         }
 
@@ -842,7 +865,7 @@ public class BusinessDetailsActivity extends BaseActivity implements OptionListF
                 tv_pp_1.setText(businessDocTypes.get(0).getName());
                 tv_pp_2.setText(businessDocTypes.get(1).getName());
                 tv_pp_3.setText(businessDocTypes.get(2).getName());
-            }else if (selectedModel.getBusinessId().equalsIgnoreCase("4")) {
+            } else if (selectedModel.getBusinessId().equalsIgnoreCase("4")) {
                 tv_in_1.setText(businessDocTypes.get(0).getName());
                 tv_in_2.setText(businessDocTypes.get(1).getName());
             }

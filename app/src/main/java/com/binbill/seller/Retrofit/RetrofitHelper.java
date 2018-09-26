@@ -344,7 +344,10 @@ public class RetrofitHelper {
         RetrofitApiInterface apiService =
                 RetrofitHelper.getClient(mContext).create(RetrofitApiInterface.class);
 
-        Call<JsonObject> call = apiService.logoutUser();
+        HashMap<String, String> map = new HashMap<>();
+        map.put("platform", "1");
+
+        Call<JsonObject> call = apiService.logoutUser(map);
         call.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {

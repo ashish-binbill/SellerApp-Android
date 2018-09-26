@@ -112,6 +112,7 @@ public class BasicDetails1Activity extends BaseActivity implements OptionListFra
     private void setUpData() {
         et_shop_name.setText(mProfileModel.getName());
         et_business_name.setText(mProfileModel.getSellerDetails().getBasicDetails().getBusinessName());
+        et_business_address.setText(mProfileModel.getBusinessAddress());
 
         et_city.setText(mProfileModel.getCity().getCityName());
         mCitySelected = mProfileModel.getCity();
@@ -123,6 +124,8 @@ public class BasicDetails1Activity extends BaseActivity implements OptionListFra
         mLocalitySelected = mProfileModel.getLocality();
 
         et_pincode.setText(mProfileModel.getLocality().getPinCode());
+
+        enableDisableVerifyButton();
     }
 
     private void enableDisableVerifyButton() {

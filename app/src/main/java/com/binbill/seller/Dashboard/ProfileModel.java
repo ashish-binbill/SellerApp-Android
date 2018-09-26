@@ -41,6 +41,9 @@ public class ProfileModel implements Serializable {
     @SerializedName("address_detail")
     String address;
 
+    @SerializedName("address")
+    String businessAddress;
+
     @SerializedName("latitude")
     String latitude;
 
@@ -64,6 +67,10 @@ public class ProfileModel implements Serializable {
 
     @SerializedName("rating")
     String rating;
+
+    public String getBusinessAddress() {
+        return businessAddress;
+    }
 
     @SerializedName("city")
     StateCityModel.CityModel city;

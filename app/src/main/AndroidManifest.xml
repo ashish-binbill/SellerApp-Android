@@ -385,6 +385,9 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/applozic_provider_paths" />
         </provider>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="a2f9f425c376fed5837ac624523c3c48d6ed8171" />
     </application>
 
 </manifest>

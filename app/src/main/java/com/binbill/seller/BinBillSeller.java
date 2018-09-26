@@ -6,8 +6,10 @@ import android.os.StrictMode;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.firebase.FirebaseApp;
 
+import io.fabric.sdk.android.Fabric;
 import java.net.URISyntaxException;
 
 import io.socket.client.IO;
@@ -30,6 +32,7 @@ public class BinBillSeller extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+        Fabric.with(this, new Crashlytics());
 
         FirebaseApp.initializeApp(this);
 
