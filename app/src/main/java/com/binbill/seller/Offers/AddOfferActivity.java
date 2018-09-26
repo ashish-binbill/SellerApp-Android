@@ -1,11 +1,13 @@
 package com.binbill.seller.Offers;
 
+import android.Manifest;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
@@ -480,10 +482,10 @@ public class AddOfferActivity extends BaseActivity implements BottomSheetHelper.
 
         getSupportActionBar().setTitle("");
 
-        if(mType == EDIT_OFFER)
+        if (mType == EDIT_OFFER)
             toolbarText.setText(getString(R.string.create_new_offer));
         else
-        toolbarText.setText(getString(R.string.create_new_offer));
+            toolbarText.setText(getString(R.string.create_new_offer));
     }
 
     private void enableDisableVerifyButton() {
@@ -566,5 +568,28 @@ public class AddOfferActivity extends BaseActivity implements BottomSheetHelper.
         } else {
             cameraFileUri = Utility.proceedToTakePicture(this);
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case Constants.PERMISSION_CAMERA: {
+
+                if (grantResults.length > 1
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+
+                    cameraFileUri = Utility.proceedToTakePicture(this);
+
+                } else {
+
+                    if (!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)
+                            || !ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                        showSnackBar("Please give permissions to take picture");
+                    }
+                }
+                return;
+            }
+        }
+
     }
 }
