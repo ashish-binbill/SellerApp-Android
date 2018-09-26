@@ -244,6 +244,9 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                         /**
                          * Modification call
                          */
+                        btn_accept_progress.setVisibility(View.VISIBLE);
+                        btn_accept.setVisibility(View.GONE);
+
                         Gson gson = new Gson();
                         Type type = new TypeToken<List<OrderItem>>() {
                         }.getType();
@@ -273,6 +276,8 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                         /**
                          * Approval call
                          */
+                        btn_accept_progress.setVisibility(View.VISIBLE);
+                        btn_accept.setVisibility(View.GONE);
 
                         Gson gson = new Gson();
                         Type type = new TypeToken<List<OrderItem>>() {
@@ -303,7 +308,8 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                         /**
                          * Out for delivery call
                          */
-
+                        btn_accept_progress.setVisibility(View.VISIBLE);
+                        btn_accept.setVisibility(View.GONE);
                         Intent intent = new Intent(OrderDetailsActivity.this, SelectDeliveryAgentActivity_.class);
                         startActivityForResult(intent, Constants.INTENT_CALL_SELECT_DELIVERY_AGENT);
 
@@ -312,6 +318,9 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                 } else if (orderDetails.getOrderType().equalsIgnoreCase(Constants.ORDER_TYPE_SERVICE)) {
 
                     if (textOnButton.equalsIgnoreCase(getString(R.string.accept))) {
+                        btn_accept_progress.setVisibility(View.VISIBLE);
+                        btn_accept.setVisibility(View.GONE);
+
                         Intent intent = new Intent(OrderDetailsActivity.this, SelectDeliveryAgentActivity_.class);
 
                         ArrayList<OrderItem> orderItems = orderDetails.getOrderItems();
@@ -320,6 +329,9 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                         }
                         startActivityForResult(intent, Constants.INTENT_CALL_SELECT_DELIVERY_AGENT);
                     } else {
+                        btn_accept_progress.setVisibility(View.VISIBLE);
+                        btn_accept.setVisibility(View.GONE);
+
                         new RetrofitHelper(OrderDetailsActivity.this).sendOrderOutForDeliveryCall(orderDetails.getOrderId(), orderDetails.getUserId(), null, null, new RetrofitHelper.RetrofitCallback() {
                             @Override
                             public void onResponse(String response) {
