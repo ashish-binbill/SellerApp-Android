@@ -310,6 +310,7 @@
                         android:background="@color/border_grey" />
 
                     <LinearLayout
+                        android:id="@+id/lv_total_amount"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/dimen_15dp"
