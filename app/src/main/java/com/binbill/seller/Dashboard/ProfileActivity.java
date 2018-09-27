@@ -2,9 +2,11 @@ package com.binbill.seller.Dashboard;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.binbill.seller.AppSession;
@@ -21,6 +23,7 @@ import com.binbill.seller.SharedPref;
 import com.binbill.seller.Utility;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 
@@ -59,6 +62,9 @@ public class ProfileActivity extends BaseActivity {
     @ViewById
     TextView tv_other_details, tv_edit_business, tv_basic_details;
     private ProfileModel profileDetails;
+
+    @ViewById
+    LinearLayout ll_payment_mode, ll_delivery;
 
     @AfterViews
     public void initiateViews() {
@@ -108,7 +114,7 @@ public class ProfileActivity extends BaseActivity {
         tv_open_days.setText(displayOpenDays);
 
 
-        if (!userRegistrationDetails.isFmcg() && userRegistrationDetails.isAssisted()) {
+        if (userRegistrationDetails.isFmcg()) {
             ArrayList<MainCategory> paymentModesModel = AppSession.getInstance(this).getPaymentModes();
             String paymentModes = basicDetails.getPaymentModes();
             StringBuilder displayPaymentModes = new StringBuilder();
@@ -137,6 +143,14 @@ public class ProfileActivity extends BaseActivity {
 
             if (!Utility.isEmpty(basicDetails.getHomeDeliveryRemarks()))
                 homeDelivery.append("\nWithin " + basicDetails.getHomeDeliveryRemarks());
+
+            tv_delivery.setText(homeDelivery);
+
+            ll_payment_mode.setVisibility(View.VISIBLE);
+            ll_payment_mode.setVisibility(View.VISIBLE);
+        } else {
+            ll_payment_mode.setVisibility(View.GONE);
+            ll_payment_mode.setVisibility(View.GONE);
         }
 
         tv_timings.setText(basicDetails.getStartTime() + " - " + basicDetails.getCloseTime());
@@ -160,7 +174,19 @@ public class ProfileActivity extends BaseActivity {
 
         picasso.load(Constants.BASE_URL + "sellers/" + sellerId + "/upload/2/images/" + 0)
                 .config(Bitmap.Config.RGB_565)
-                .into(iv_shop_image);
+                .into(iv_shop_image, new Callback() {
+                    @Override
+                    public void onSuccess() {
+
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+
+                        iv_shop_image.setImageDrawable(ContextCompat.getDrawable(ProfileActivity.this, R.drawable.offer_banner_3));
+
+                    }
+                });
 
 
         ProfileModel.BusinessDetails businessDetails = profileDetails.getSellerDetails().getBusinessDetails();
@@ -267,6 +293,7 @@ public class ProfileActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = RegistrationResolver.getNextIntent(ProfileActivity.this, 2);
+                intent.putExtra(Constants.BUSINESS_MODEL, profileDetails.getSellerDetails().getBusinessDetails().getBusinessType());
                 startActivity(intent);
             }
         });

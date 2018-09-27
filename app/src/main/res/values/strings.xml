@@ -52,12 +52,12 @@
     <string name="business_details">Business Details</string>
     <string name="type_of_business_asterisk">Type of Business *</string>
     <string name="next">Next</string>
-    <string name="shop_establishment_certificate"><![CDATA[Shops & Establishment Act Certificate *]]></string>
+    <string name="shop_establishment_certificate"><![CDATA[Shops & Establishment Act Certificate]]></string>
     <string name="upload_file">Upload File</string>
-    <string name="photo_of_business_pan">Photo of Business Pan Card for Verification *</string>
-    <string name="partnership_agreement">Partnership Agreement *</string>
-    <string name="udhyog_adhaar">Udhyog Adhaar *</string>
-    <string name="company_pan_card">Company Pan Card *</string>
+    <string name="photo_of_business_pan">Photo of Business Pan Card for Verification</string>
+    <string name="partnership_agreement">Partnership Agreement</string>
+    <string name="udhyog_adhaar">Udhyog Adhaar</string>
+    <string name="company_pan_card">Company Pan Card</string>
     <string name="select_services_you_provide">Select Product categories you sell</string>
     <string name="select_categories">Select Categories</string>
     <string name="select_services">Select Services</string>
@@ -325,5 +325,8 @@
     <string name="update_now">Update Now</string>
     <string name="not_now">Not Now</string>
     <string name="faqs">FAQs</string>
+    <string name="delivery_agent">Delivery Agent</string>
+    <string name="pan_card">Pan Card</string>
+    <string name="aadhar_card">Aadhar Card</string>
 
 </resources>

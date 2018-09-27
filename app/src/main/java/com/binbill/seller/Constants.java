@@ -62,7 +62,8 @@ public class Constants {
     public static final String FETCH_SELLER_TRANSACTIONS = "sellers/{seller_id}/users/transactions";
     public static final String FETCH_SELLER_CASHBACKS = "sellers/{seller_id}/users/cashbacks";
     public static final String SET_SELLER_AVAILABILITY = "sellers/{seller_id}/rush/{available}";
-    public static final String FETCH_FAQ = "/faqs";
+    public static final String FETCH_FAQ = "faqs";
+    public static final String LOGOUT = "sellers/logout";
 
     public static final int PERMISSION_READ_SMS = 100;
     public static final int PERMISSION_CAMERA = 101;
@@ -162,4 +163,6 @@ public class Constants {
     public static final String EDIT_MODE = "EDIT_MODE";
     public static final int TYPE_URL_FILE = 3;
     public static final String UPDATE_POPUP_NOT_NOW_CLICKED = "UPDATE_POPUP_NOT_NOW_CLICKED";
+    public static final String NOTIFICATION_DEEPLINK = "NOTIFICATION_DEEPLINK";
+    public static final String BUSINESS_MODEL = "BUSINESS_MODEL";
 }

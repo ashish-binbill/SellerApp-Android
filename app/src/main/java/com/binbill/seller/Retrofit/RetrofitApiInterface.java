@@ -210,4 +210,7 @@ public interface RetrofitApiInterface {
 
     @GET(Constants.FETCH_FAQ)
     Call<JsonObject> getFaq();
+
+    @POST(Constants.LOGOUT)
+    Call<JsonObject> logoutUser(@Body HashMap<String, String> body);
 }

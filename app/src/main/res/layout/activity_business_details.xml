@@ -90,6 +90,16 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dimen_20dp" />
 
+                <include
+                    android:id="@+id/individual"
+                    layout="@layout/layout_individual"
+                    android:layout_width="match_parent"
+                    android:visibility="gone"
+                    android:layout_marginLeft="@dimen/dimen_10dp"
+                    android:layout_marginRight="@dimen/dimen_10dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimen_20dp" />
+
 
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>

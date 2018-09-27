@@ -60,6 +60,7 @@ public class AppSession {
         private ArrayList<RejectReasonModel> rejectReasonList;
         private ArrayList<Order> orderList;
         private ProfileModel profile;
+        private String notificationType;
 
         private void setSellerId(String id) {
             this.sellerId = id;
@@ -189,6 +190,22 @@ public class AppSession {
         private void setSellerProfile(ProfileModel list) {
             this.profile = list;
         }
+
+        public void setNotificationIntent(String stringExtra) {
+            this.notificationType = stringExtra;
+        }
+
+        public String getNotificationIntent() {
+            return this.notificationType;
+        }
+    }
+
+    public void setNotificationIntent(String stringExtra) {
+        mAppSessionData.setNotificationIntent(stringExtra);
+    }
+
+    public String getNotificationIntent() {
+        return mAppSessionData.getNotificationIntent();
     }
 
     public ProfileModel getSellerProfile() {

@@ -2,6 +2,7 @@ package com.binbill.seller.Dashboard;
 
 import com.binbill.seller.Model.FileItem;
 import com.binbill.seller.Model.JobCopy;
+import com.binbill.seller.Model.StateCityModel;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
@@ -40,6 +41,9 @@ public class ProfileModel implements Serializable {
     @SerializedName("address_detail")
     String address;
 
+    @SerializedName("address")
+    String businessAddress;
+
     @SerializedName("latitude")
     String latitude;
 
@@ -64,8 +68,34 @@ public class ProfileModel implements Serializable {
     @SerializedName("rating")
     String rating;
 
+    public String getBusinessAddress() {
+        return businessAddress;
+    }
+
+    @SerializedName("city")
+    StateCityModel.CityModel city;
+
+    @SerializedName("state")
+    StateCityModel state;
+
+    @SerializedName("location")
+    StateCityModel.LocalityModel locality;
+
     @SerializedName("seller_details")
     SellerDetails sellerDetails;
+
+
+    public StateCityModel.CityModel getCity() {
+        return city;
+    }
+
+    public StateCityModel.LocalityModel getLocality() {
+        return locality;
+    }
+
+    public StateCityModel getState() {
+        return state;
+    }
 
     public SellerDetails getSellerDetails() {
         return sellerDetails;

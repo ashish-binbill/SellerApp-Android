@@ -188,6 +188,17 @@
 
                 </LinearLayout>
 
+                <TextView
+                    android:id="@+id/tv_delivery_header_fmcg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dimen_15dp"
+                    android:layout_marginTop="@dimen/dimen_15dp"
+                    android:layout_marginBottom="@dimen/dimen_5dp"
+                    android:visibility="gone"
+                    android:text="@string/delivery_agent"
+                    android:textSize="@dimen/dimen_14dp"
+                    android:textStyle="bold" />
 
                 <include
                     android:id="@+id/cv_root_fmcg_delivery"
@@ -204,6 +215,19 @@
                     android:background="@color/color_white"
                     android:nestedScrollingEnabled="false"
                     app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+                <TextView
+                    android:id="@+id/tv_delivery_header_service"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dimen_15dp"
+                    android:layout_marginTop="@dimen/dimen_15dp"
+                    android:layout_marginBottom="@dimen/dimen_5dp"
+                    android:text="@string/delivery_agent"
+                    android:visibility="gone"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/dimen_14dp"
+                    android:textStyle="bold" />
 
                 <include
                     android:id="@+id/cv_root_delivery"
@@ -307,6 +331,7 @@
                     </LinearLayout>
 
                     <View
+                        android:id="@+id/v_divider"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/dimen_2dp"
                         android:layout_marginTop="@dimen/dimen_15dp"

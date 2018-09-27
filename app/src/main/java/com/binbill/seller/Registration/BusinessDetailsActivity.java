@@ -25,12 +25,10 @@ import com.binbill.seller.Constants;
 import com.binbill.seller.CustomViews.AppButton;
 import com.binbill.seller.Model.BusinessDetailsModel;
 import com.binbill.seller.Model.DashboardModel;
-import com.binbill.seller.Model.FMCGHeaderModel;
 import com.binbill.seller.Model.MainCategory;
 import com.binbill.seller.Model.UserRegistrationDetails;
 import com.binbill.seller.R;
 import com.binbill.seller.Retrofit.RetrofitHelper;
-import com.binbill.seller.SplashActivity;
 import com.binbill.seller.UpgradeHelper;
 import com.binbill.seller.Utility;
 import com.google.gson.Gson;
@@ -40,7 +38,6 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -68,38 +65,58 @@ public class BusinessDetailsActivity extends BaseActivity implements OptionListF
     EditText et_business_type;
 
     @ViewById
-    LinearLayout btn_submit_progress, sole_proprietorship, partnership, public_private_company;
+    LinearLayout btn_submit_progress, sole_proprietorship, partnership, public_private_company, individual;
 
     @ViewById
     FrameLayout container;
 
     @ViewById
-    TextView tv_sole_1, tv_sole_2, tv_partner_1, tv_partner_2, tv_partner_3, tv_partner_4, tv_pp_1, tv_pp_2, tv_pp_3;
+    TextView tv_sole_1, tv_sole_2, tv_partner_1, tv_partner_2, tv_partner_3, tv_partner_4, tv_pp_1, tv_pp_2, tv_pp_3, tv_in_1, tv_in_2;
 
     @ViewById
     TextView view_partner_image_1, view_partner_image_2, view_partner_image_3, view_partner_image_4, view_sole_image_1,
-            view_sole_image_2, view_pp_image_1, view_pp_image_2, view_pp_image_3;
+            view_sole_image_2, view_pp_image_1, view_pp_image_2, view_pp_image_3, view_in_image_1, view_in_image_2;
 
     @ViewById
     TextView upload_partner_1, upload_partner_2, upload_partner_3, upload_partner_4, upload_sole_1,
-            upload_sole_2, upload_pp_1, upload_pp_2, upload_pp_3;
+            upload_sole_2, upload_pp_1, upload_pp_2, upload_pp_3, upload_in_1, upload_in_2;
 
     @ViewById
     TextView image_partner_count_1, image_partner_count_2, image_partner_count_3, image_partner_count_4,
-            image_sole_count_1, image_sole_count_2, image_pp_count_1, image_pp_count_2, image_pp_count_3;
+            image_sole_count_1, image_sole_count_2, image_pp_count_1, image_pp_count_2, image_pp_count_3,
+            image_in_count_1, image_in_count_2;
 
     @ViewById
     NestedScrollView scroll_view;
     private BusinessDetailsModel selectedModel;
     private HashMap<String, ArrayList<Uri>> cameraFileUriMap = new HashMap<>();
+    private boolean mEditMode;
+    private String businessType;
 
     @AfterViews
     public void initiateViews() {
+
+        if (getIntent().hasExtra(Constants.BUSINESS_MODEL)) {
+            mEditMode = true;
+            businessType = getIntent().getStringExtra(Constants.BUSINESS_MODEL);
+            setUpData();
+        }
         setUpToolbar();
         setUpListeners();
 
         enableDisableVerifyButton();
         Utility.hideKeyboard(this, btn_submit);
+    }
+
+    private void setUpData() {
+        ArrayList<BusinessDetailsModel> businessDetails = AppSession.getInstance(BusinessDetailsActivity.this).getBusinessDetails();
+
+        for (BusinessDetailsModel businessDetailsModel : businessDetails) {
+
+            if (businessDetailsModel.getBusinessId().equalsIgnoreCase(businessType)) {
+                onListItemSelected(businessDetailsModel.getBusinessName(), 0);
+            }
+        }
     }
 
     private void enableDisableVerifyButton() {
@@ -124,6 +141,9 @@ public class BusinessDetailsActivity extends BaseActivity implements OptionListF
         upload_pp_2.setOnClickListener(uploadImageListener);
         upload_pp_3.setOnClickListener(uploadImageListener);
 
+        upload_in_1.setOnClickListener(uploadImageListener);
+        upload_in_2.setOnClickListener(uploadImageListener);
+
         view_sole_image_1.setOnClickListener(viewImageListener);
         view_sole_image_2.setOnClickListener(viewImageListener);
 
@@ -135,6 +155,9 @@ public class BusinessDetailsActivity extends BaseActivity implements OptionListF
         view_pp_image_1.setOnClickListener(viewImageListener);
         view_pp_image_2.setOnClickListener(viewImageListener);
         view_pp_image_3.setOnClickListener(viewImageListener);
+
+        view_in_image_1.setOnClickListener(viewImageListener);
+        view_in_image_2.setOnClickListener(viewImageListener);
 
         et_business_type.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -286,6 +309,13 @@ public class BusinessDetailsActivity extends BaseActivity implements OptionListF
                 if (tag == 8 && image.getName().equalsIgnoreCase(tv_pp_2.getText().toString()))
                     return image.getId();
                 if (tag == 9 && image.getName().equalsIgnoreCase(tv_pp_3.getText().toString()))
+                    return image.getId();
+            }
+        } else if (selectedModel.getBusinessId().equalsIgnoreCase("4")) {
+            for (MainCategory image : imageTypes) {
+                if (tag == 10 && image.getName().equalsIgnoreCase(tv_in_1.getText().toString()))
+                    return image.getId();
+                if (tag == 11 && image.getName().equalsIgnoreCase(tv_in_2.getText().toString()))
                     return image.getId();
             }
         }
@@ -606,6 +636,73 @@ public class BusinessDetailsActivity extends BaseActivity implements OptionListF
                             ContextCompat.getDrawable(this, R.drawable.wait), null);
                 }
                 break;
+            /**
+             * Individual
+             */
+            case 10:
+
+                if (status == SUCCESS) {
+                    upload_in_1.setText("");
+                    showSnackBar("Upload Success");
+                    image_in_count_1.setText(getResources().getQuantityString(R.plurals.file_uploaded, imageList.size(), imageList.size()));
+                    image_in_count_1.setVisibility(View.VISIBLE);
+                    view_in_image_1.setVisibility(View.VISIBLE);
+                    upload_in_1.setCompoundDrawablesWithIntrinsicBounds(null, null,
+                            ContextCompat.getDrawable(this, R.drawable.attachment), null);
+                } else if (status == FAILURE) {
+                    upload_in_1.setText("");
+                    imageList.remove(imageList.size() - 1);
+                    cameraFileUriMap.put(mSelectedSectionTag, imageList);
+                    showSnackBar("Upload Fail");
+
+                    if (imageList.size() > 0) {
+                        view_in_image_1.setVisibility(View.VISIBLE);
+                        image_in_count_1.setText(getResources().getQuantityString(R.plurals.file_uploaded, imageList.size(), imageList.size()));
+                        image_in_count_1.setVisibility(View.VISIBLE);
+                    } else {
+                        view_in_image_1.setVisibility(View.GONE);
+                        image_in_count_1.setVisibility(View.GONE);
+                    }
+                    upload_in_1.setCompoundDrawablesWithIntrinsicBounds(null, null,
+                            ContextCompat.getDrawable(this, R.drawable.attachment), null);
+                } else if (status == PENDING) {
+                    upload_in_1.setText("Uploading image...");
+                    upload_in_1.setCompoundDrawablesWithIntrinsicBounds(null, null,
+                            ContextCompat.getDrawable(this, R.drawable.wait), null);
+                }
+                break;
+            case 11:
+
+                if (status == SUCCESS) {
+                    upload_in_2.setText("");
+                    showSnackBar("Upload Success");
+                    image_in_count_2.setText(getResources().getQuantityString(R.plurals.file_uploaded, imageList.size(), imageList.size()));
+                    image_in_count_2.setVisibility(View.VISIBLE);
+                    view_in_image_2.setVisibility(View.VISIBLE);
+                    upload_in_2.setCompoundDrawablesWithIntrinsicBounds(null, null,
+                            ContextCompat.getDrawable(this, R.drawable.attachment), null);
+                } else if (status == FAILURE) {
+                    upload_in_2.setText("");
+                    imageList.remove(imageList.size() - 1);
+                    cameraFileUriMap.put(mSelectedSectionTag, imageList);
+                    showSnackBar("Upload Fail");
+
+                    if (imageList.size() > 0) {
+                        view_in_image_2.setVisibility(View.VISIBLE);
+                        image_in_count_2.setText(getResources().getQuantityString(R.plurals.file_uploaded, imageList.size(), imageList.size()));
+                        image_in_count_2.setVisibility(View.VISIBLE);
+                    } else {
+                        view_in_image_2.setVisibility(View.GONE);
+                        image_in_count_2.setVisibility(View.GONE);
+                    }
+                    upload_in_2.setCompoundDrawablesWithIntrinsicBounds(null, null,
+                            ContextCompat.getDrawable(this, R.drawable.attachment), null);
+                } else if (status == PENDING) {
+                    upload_in_2.setText("Uploading image...");
+                    upload_in_2.setCompoundDrawablesWithIntrinsicBounds(null, null,
+                            ContextCompat.getDrawable(this, R.drawable.wait), null);
+                }
+                break;
         }
     }
 
@@ -648,48 +745,52 @@ public class BusinessDetailsActivity extends BaseActivity implements OptionListF
          * This API is to fetch categories from server
          */
 
-        btn_submit.setVisibility(View.VISIBLE);
-        btn_submit_progress.setVisibility(View.GONE);
+        if (mEditMode) {
+            finish();
+        } else {
+            btn_submit.setVisibility(View.VISIBLE);
+            btn_submit_progress.setVisibility(View.GONE);
 
 
-        ApiHelper.makeDashboardDataCall(this, new RetrofitHelper.RetrofitCallback() {
-            @Override
-            public void onResponse(String response) {
+            ApiHelper.makeDashboardDataCall(this, new RetrofitHelper.RetrofitCallback() {
+                @Override
+                public void onResponse(String response) {
 
-                try {
-                    JSONObject jsonObject = new JSONObject(response);
-                    if (jsonObject.getBoolean("status")) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(response);
+                        if (jsonObject.getBoolean("status")) {
 
-                        Type classType = new TypeToken<DashboardModel>() {
-                        }.getType();
+                            Type classType = new TypeToken<DashboardModel>() {
+                            }.getType();
 
-                        DashboardModel dashboardModel = new Gson().fromJson(jsonObject.toString(), classType);
-                        AppSession.getInstance(BusinessDetailsActivity.this).setDashboardData(dashboardModel);
+                            DashboardModel dashboardModel = new Gson().fromJson(jsonObject.toString(), classType);
+                            AppSession.getInstance(BusinessDetailsActivity.this).setDashboardData(dashboardModel);
 
-                        int registrationIndex = getIntent().getIntExtra(Constants.REGISTRATION_INDEX, -1);
-                        Intent intent = RegistrationResolver.getNextIntent(BusinessDetailsActivity.this, registrationIndex);
+                            int registrationIndex = getIntent().getIntExtra(Constants.REGISTRATION_INDEX, -1);
+                            Intent intent = RegistrationResolver.getNextIntent(BusinessDetailsActivity.this, registrationIndex);
 
-                        if(dashboardModel.getForceUpdate() != null){
-                            if (dashboardModel.getForceUpdate().equalsIgnoreCase("TRUE"))
-                                UpgradeHelper.invokeUpdateDialog(BusinessDetailsActivity.this, true);
-                            else if (dashboardModel.getForceUpdate().equalsIgnoreCase("FALSE"))
-                                UpgradeHelper.invokeUpdateDialog(BusinessDetailsActivity.this, false);
-                        }else {
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(intent);
-                            finish();
+                            if (dashboardModel.getForceUpdate() != null) {
+                                if (dashboardModel.getForceUpdate().equalsIgnoreCase("TRUE"))
+                                    UpgradeHelper.invokeUpdateDialog(BusinessDetailsActivity.this, true);
+                                else if (dashboardModel.getForceUpdate().equalsIgnoreCase("FALSE"))
+                                    UpgradeHelper.invokeUpdateDialog(BusinessDetailsActivity.this, false);
+                            } else {
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(intent);
+                                finish();
+                            }
                         }
+                    } catch (JSONException e) {
+                        finish();
                     }
-                } catch (JSONException e) {
+                }
+
+                @Override
+                public void onErrorResponse() {
                     finish();
                 }
-            }
-
-            @Override
-            public void onErrorResponse() {
-                finish();
-            }
-        });
+            });
+        }
     }
 
 
@@ -729,6 +830,7 @@ public class BusinessDetailsActivity extends BaseActivity implements OptionListF
         sole_proprietorship.setVisibility(View.GONE);
         partnership.setVisibility(View.GONE);
         public_private_company.setVisibility(View.GONE);
+        individual.setVisibility(View.GONE);
 
         selectedModel = getModelByName(selectedBusinessType);
 
@@ -737,8 +839,10 @@ public class BusinessDetailsActivity extends BaseActivity implements OptionListF
                 sole_proprietorship.setVisibility(View.VISIBLE);
             } else if (selectedModel.getBusinessId().equalsIgnoreCase("2")) {
                 partnership.setVisibility(View.VISIBLE);
-            } else if (selectedModel.getBusinessId().equalsIgnoreCase("3"))
+            } else if (selectedModel.getBusinessId().equalsIgnoreCase("3")) {
                 public_private_company.setVisibility(View.VISIBLE);
+            } else if (selectedModel.getBusinessId().equalsIgnoreCase("4"))
+                individual.setVisibility(View.VISIBLE);
         }
 
         setSectionNamesFromServerData();
@@ -761,6 +865,9 @@ public class BusinessDetailsActivity extends BaseActivity implements OptionListF
                 tv_pp_1.setText(businessDocTypes.get(0).getName());
                 tv_pp_2.setText(businessDocTypes.get(1).getName());
                 tv_pp_3.setText(businessDocTypes.get(2).getName());
+            } else if (selectedModel.getBusinessId().equalsIgnoreCase("4")) {
+                tv_in_1.setText(businessDocTypes.get(0).getName());
+                tv_in_2.setText(businessDocTypes.get(1).getName());
             }
         }
     }

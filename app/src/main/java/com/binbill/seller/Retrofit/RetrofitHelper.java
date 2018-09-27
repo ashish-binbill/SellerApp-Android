@@ -13,7 +13,6 @@ import android.widget.Toast;
 import com.applozic.mobicomkit.api.account.user.UserLogoutTask;
 import com.binbill.seller.AppSession;
 import com.binbill.seller.Constants;
-import com.binbill.seller.Dashboard.DashboardActivity;
 import com.binbill.seller.Login.LoginActivity_;
 import com.binbill.seller.MultipartUtility;
 import com.binbill.seller.R;
@@ -337,6 +336,28 @@ public class RetrofitHelper {
             @Override
             public void onFailure(Call<JsonObject> call, Throwable throwable) {
                 retrofitCallback.onErrorResponse();
+            }
+        });
+    }
+
+    public void logoutUser() {
+        RetrofitApiInterface apiService =
+                RetrofitHelper.getClient(mContext).create(RetrofitApiInterface.class);
+
+        HashMap<String, String> map = new HashMap<>();
+        map.put("platform", "1");
+
+        Call<JsonObject> call = apiService.logoutUser(map);
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (response.isSuccessful()) {
+                    JsonObject body = response.body();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable throwable) {
             }
         });
     }

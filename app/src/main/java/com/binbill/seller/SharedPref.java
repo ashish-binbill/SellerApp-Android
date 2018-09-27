@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 
+import com.binbill.seller.Retrofit.RetrofitHelper;
+
 import java.io.File;
 import java.util.logging.Handler;
 
@@ -25,6 +27,8 @@ public class SharedPref {
     }
 
     public static void clearSharedPreferences(Context context) {
+
+        new RetrofitHelper(context).logoutUser();
         File sharedPreferenceFile = new File("/data/data/" + context.getApplicationContext().getPackageName() + "/shared_prefs/");
         File[] listFiles = sharedPreferenceFile.listFiles();
         if (listFiles != null) {
