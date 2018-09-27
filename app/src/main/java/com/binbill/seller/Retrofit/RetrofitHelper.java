@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.applozic.mobicomkit.api.account.user.UserLogoutTask;
 import com.binbill.seller.AppSession;
+import com.binbill.seller.BuildConfig;
 import com.binbill.seller.Constants;
 import com.binbill.seller.Login.LoginActivity_;
 import com.binbill.seller.MultipartUtility;
@@ -139,9 +140,11 @@ public class RetrofitHelper {
             };
             client.addInterceptor(interceptor);
 
-            HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-            logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-            client.addInterceptor(logging);
+            if (BuildConfig.DEBUG) {
+                HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+                logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+                client.addInterceptor(logging);
+            }
 
             retrofit = new Retrofit.Builder()
                     .baseUrl(Constants.BASE_URL)
