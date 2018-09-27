@@ -416,7 +416,8 @@ public class MyCustomerFragment extends Fragment implements UserAdapter.CardInte
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        mAdapter.getFilter().filter(newText);
+        if (mAdapter != null)
+            mAdapter.getFilter().filter(newText);
         return true;
     }
 }

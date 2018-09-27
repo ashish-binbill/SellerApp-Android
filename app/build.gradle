@@ -2,6 +2,14 @@ apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'binbill_partner'
+            keyPassword 'binbill@123'
+            storeFile file('/Users/shruti.vig/Documents/Shruti/keystore:binbillSeller/android.jks')
+            storePassword 'seller@123'
+        }
+    }
     compileSdkVersion 26
     defaultConfig {
         applicationId "com.binbill.seller"
@@ -11,12 +19,15 @@ android {
         versionName "1.0"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        signingConfig signingConfigs.config
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    productFlavors {
     }
 }
 
@@ -44,7 +55,7 @@ repositories {
 def AAVersion = '4.4.0'
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:26.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'
     implementation 'com.android.support:support-annotations:27.1.1'
@@ -52,10 +63,8 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-
     annotationProcessor "org.androidannotations:androidannotations:$AAVersion"
     implementation "org.androidannotations:androidannotations-api:$AAVersion"
-
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.0.0'
     implementation 'com.squareup.retrofit2:converter-scalars:2.3.0'
@@ -75,10 +84,8 @@ dependencies {
     implementation 'com.nex3z:flow-layout:1.2.2'
     implementation 'com.github.Haegon:ParallaxViewPager:1.0.1'
     implementation 'com.romandanylyk:pageindicatorview:0.2.0@aar'
-
     implementation 'com.applozic.communication.uiwidget:mobicomkitui:5.9.1'
     compile 'com.android.support:multidex:1.0.3'
-
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.7.0'
     implementation 'com.github.bumptech.glide:glide:4.7.1'
