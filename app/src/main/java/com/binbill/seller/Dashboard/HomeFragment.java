@@ -103,7 +103,7 @@ public class HomeFragment extends Fragment {
             case ASSISTED_ONLY_USER:
                 tvLabelCustomer.setText(getString(R.string.total_agents));
                 if (!Utility.isEmpty(dashboardModel.getAssistedUserCount()))
-                    customerCount.setText(dashboardModel.getTotalUserCashback());
+                    customerCount.setText(dashboardModel.getAssistedUserCount());
                 else
                     customerCount.setText("0");
                 ivLabelCustomer.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_customer_icon));

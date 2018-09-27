@@ -279,7 +279,7 @@
     <string name="assisted_only">Home Services Only</string>
     <string name="select_service_type">Select Services Offered</string>
     <string name="select_pos_type">Billing Details</string>
-    <string name="total_agents">Total Agents</string>
+    <string name="total_agents">Service Providers</string>
     <string name="cashback_to_users">BB Cash to Customers</string>
     <string name="wallet_points">%1$s</string>
     <string name="my_wallet">BB Wallet</string>
