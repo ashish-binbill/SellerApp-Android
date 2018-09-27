@@ -256,11 +256,11 @@ public class WalletActivity extends BaseActivity {
         if (Utility.isEmpty(walletAmount)) {
             ProfileModel profileModel = AppSession.getInstance(this).getSellerProfile();
             if (!Utility.isEmpty(profileModel.getCashBack()))
-                tv_wallet.setText(getString(R.string.rupee_sign) + " " + String.format("%.2f", profileModel.getCashBack()));
+                tv_wallet.setText(getString(R.string.rupee_sign) + " " + String.format("%.2f", Float.parseFloat(profileModel.getCashBack())));
             else
                 tv_wallet.setText(getString(R.string.rupee_sign) + " 0");
         } else
-            tv_wallet.setText(getString(R.string.rupee_sign) + " " + String.format("%.2f", walletAmount));
+            tv_wallet.setText(getString(R.string.rupee_sign) + " " + String.format("%.2f", Float.parseFloat(walletAmount)));
     }
 
     private void setUpData() {
