@@ -15,7 +15,7 @@
         <com.github.chrisbanes.photoview.PhotoView
             android:id="@+id/iv_offer"
             android:layout_width="match_parent"
-            android:scaleType="fitXY"
+            android:scaleType="fitCenter"
             android:layout_height="@dimen/dimen_150dp" />
 
         <TextView
