@@ -366,6 +366,10 @@
                 android:resource="@xml/applozic_provider_paths" />
         </provider>
 
+        <meta-data
+            android:name="com.applozic.module.key"
+            android:value="Default" />
+
     </application>
 
 </manifest>
