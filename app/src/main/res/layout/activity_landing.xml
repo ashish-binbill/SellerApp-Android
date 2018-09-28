@@ -6,6 +6,17 @@
     android:background="@color/color_white"
     android:orientation="vertical">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/dimen_20dp"
+        android:gravity="center_horizontal"
+        android:text="@string/landing_header"
+        android:textColor="@color/text_44"
+        android:textSize="@dimen/dimen_20dp"
+        android:textStyle="bold" />
+
     <com.gohn.parallaxviewpager.ParallaxViewPager
         android:id="@+id/vp_pager"
         android:layout_width="match_parent"
@@ -31,9 +42,9 @@
             android:layout_gravity="center"
             android:foregroundGravity="center"
             android:gravity="center_vertical"
-            app:piv_count="4"
             android:visibility="visible"
             app:piv_animationType="worm"
+            app:piv_count="4"
             app:piv_interactiveAnimation="true"
             app:piv_selectedColor="@color/colorAccent"
             app:piv_unselectedColor="#fdd4c0"
@@ -45,9 +56,9 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/dimen_50dp"
             android:layout_gravity="center_vertical"
-            android:layout_marginTop="@dimen/dimen_15dp"
             android:layout_marginLeft="@dimen/dimen_30dp"
             android:layout_marginRight="@dimen/dimen_30dp"
+            android:layout_marginTop="@dimen/dimen_15dp"
             android:letterSpacing="0.03"
             android:text="@string/next"
             android:textColor="@color/color_white"

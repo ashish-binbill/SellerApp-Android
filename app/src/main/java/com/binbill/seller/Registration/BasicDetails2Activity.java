@@ -77,7 +77,7 @@ public class BasicDetails2Activity extends BaseActivity implements OptionListFra
     LinearLayout ll_payment_2, ll_payment_1;
 
     @ViewById
-    CheckBox cb_paytm, cb_cod, cb_credit_debit, cb_other_wallets;
+    CheckBox cb_paytm, cb_cod, cb_credit_debit, cb_other_wallets, cb_sodexo;
 
     @ViewById
     EditText et_delivery_distance;
@@ -170,6 +170,8 @@ public class BasicDetails2Activity extends BaseActivity implements OptionListFra
                 cb_credit_debit.setChecked(true);
             if (cb_other_wallets.getTag() != null && cb_other_wallets.getTag().toString().equalsIgnoreCase(mode))
                 cb_other_wallets.setChecked(true);
+            if (cb_sodexo.getTag() != null && cb_sodexo.getTag().toString().equalsIgnoreCase(mode))
+                cb_sodexo.setChecked(true);
         }
 
         if (!Utility.isEmpty(basicDetails.getHomeDelivery()) && basicDetails.getHomeDelivery().equalsIgnoreCase("true"))
@@ -211,6 +213,12 @@ public class BasicDetails2Activity extends BaseActivity implements OptionListFra
                 cb_other_wallets.setTag(payments.get(3).getId());
             } else
                 cb_other_wallets.setVisibility(View.GONE);
+
+            if (payments.get(4) != null) {
+                cb_sodexo.setText(payments.get(4).getName());
+                cb_sodexo.setTag(payments.get(4).getId());
+            } else
+                cb_sodexo.setVisibility(View.GONE);
         }
 
     }
@@ -275,7 +283,8 @@ public class BasicDetails2Activity extends BaseActivity implements OptionListFra
 
     private boolean isAnyModeOfPaymentSelected() {
 
-        if (cb_paytm.isChecked() || cb_cod.isChecked() || cb_credit_debit.isChecked() || cb_other_wallets.isChecked())
+        if (cb_paytm.isChecked() || cb_cod.isChecked() || cb_credit_debit.isChecked() || cb_other_wallets.isChecked()
+                || cb_sodexo.isChecked())
             return true;
         return false;
     }
@@ -401,6 +410,9 @@ public class BasicDetails2Activity extends BaseActivity implements OptionListFra
         if (cb_other_wallets.isChecked())
             paymentModes.add(cb_other_wallets.getTag().toString());
 
+        if(cb_sodexo.isChecked())
+            paymentModes.add(cb_sodexo.getTag().toString());
+
         if (cb_credit_debit.isChecked())
             paymentModes.add(cb_credit_debit.getTag().toString());
 
@@ -431,6 +443,7 @@ public class BasicDetails2Activity extends BaseActivity implements OptionListFra
         cb_cod.setOnCheckedChangeListener(checkBoxCheckedChangeListener);
         cb_credit_debit.setOnCheckedChangeListener(checkBoxCheckedChangeListener);
         cb_other_wallets.setOnCheckedChangeListener(checkBoxCheckedChangeListener);
+        cb_sodexo.setOnCheckedChangeListener(checkBoxCheckedChangeListener);
 
         radio_group_home_delivery.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override

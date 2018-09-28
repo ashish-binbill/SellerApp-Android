@@ -40,6 +40,10 @@ public class SharedPref {
                 file.delete();
             }
         }
+        /**
+         * Specifically remove auth token
+         */
+        SharedPref.removePref(context, SharedPref.AUTH_TOKEN);
     }
 
     public static boolean hasKey(Context context, String pref) {
