@@ -95,7 +95,7 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 //Toast.makeText(getApplicationContext(), "Terms of services Clicked", Toast.LENGTH_SHORT).show();
-                String url = "https://www.binbill.com/term";
+                String url = "https://www.binbill.com/termSeller";
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                 startActivity(intent);
             }
