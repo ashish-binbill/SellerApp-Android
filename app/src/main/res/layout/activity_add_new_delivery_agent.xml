@@ -87,7 +87,6 @@
                 android:layout_below="@id/iv_binbill"
                 android:layout_marginTop="@dimen/dimen_20dp"
                 android:background="@drawable/edittext_bg"
-                android:drawableRight="@drawable/ic_mobile"
                 android:hint="@string/mobile_number"
                 android:inputType="phone"
                 android:lineSpacingExtra="-1sp"

@@ -128,6 +128,9 @@ public class LoyaltyFragment extends Fragment {
                     JSONObject jsonObject = new JSONObject(response);
                     if (jsonObject.optBoolean("status")) {
                         JSONArray userArray = jsonObject.getJSONArray("result");
+                        if (jsonObject.has("total_points") && !jsonObject.isNull("total_points")) {
+                            totalCredits.setText("" + jsonObject.get("total_points"));
+                        }
                         Type classType = new TypeToken<ArrayList<CreditLoyaltyModel>>() {
                         }.getType();
 
