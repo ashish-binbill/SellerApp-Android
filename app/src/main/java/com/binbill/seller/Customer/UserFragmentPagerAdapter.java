@@ -15,7 +15,7 @@ public class UserFragmentPagerAdapter extends FragmentStatePagerAdapter {
 
     final int PAGE_COUNT = 3;
     private final UserModel userModel;
-    private String tabTitles[] = new String[]{"Credit Details", "Loyalty Points", "Transactions"};
+    private String tabTitles[] = new String[]{"Credit Details", "Loyalty Discount", "Transactions"};
 
     public UserFragmentPagerAdapter(FragmentManager fm, UserModel model) {
         super(fm);
