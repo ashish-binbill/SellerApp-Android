@@ -219,7 +219,7 @@
     <string name="order_rejected">Rejected</string>
     <string name="out_for_delivery">Out For Delivery</string>
     <string name="order_details">Order Details</string>
-    <string name="add_price">Add Price</string>
+    <string name="add_price">Total Amount</string>
     <string name="item_not_available">Item Not Available</string>
     <string name="available_quantity">Available Quantity</string>
     <string name="shopping_list">Shopping List</string>
