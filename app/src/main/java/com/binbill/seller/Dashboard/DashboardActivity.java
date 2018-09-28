@@ -144,7 +144,13 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
     }
 
     private void checkNotificationDeeplink() {
-
+/**
+ * 2| My Customer
+ 3| Cash Back
+ 4| Loyalty Points
+ 5| Seller Verification
+ 6| Cash Back Verification
+ */
         String notificationType = AppSession.getInstance(this).getNotificationIntent();
         switch (notificationType) {
             case "1":
@@ -156,23 +162,36 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
 
             case "2":
                 /**
+                 * My customer
+                 */
+                changeViewPagerFragment(3);
+
+                break;
+            case "3":
+                startActivity(new Intent(this, WalletActivity_.class));
+                break;
+            case "4":
+                /**
+                 * Loyalty Rules
+                 */
+                startActivity(new Intent(this, LoyaltyRulesActivity_.class));
+                break;
+            case "5":
+                startActivity(new Intent(this, ProfileActivity_.class));
+                break;
+            case "6":
+                /**
                  * Verification Tab
                  */
                 changeViewPagerFragment(2);
                 break;
-            case "3":
-                /**
-                 * My customer
-                 */
-                changeViewPagerFragment(3);
-                break;
-            case "4":
+            case "7":
                 /**
                  * assisted users
                  */
                 changeViewPagerFragment(4);
                 break;
-            case "5":
+            case "8":
                 /**
                  * Manage categories
                  */
@@ -299,7 +318,7 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
                 RelativeLayout.LayoutParams.MATCH_PARENT
         );
 
-        int integer15 = Utility.convertDPtoPx(this, 15);
+        int integer15 = Utility.convertDPtoPx(this, 25);
         params.setMargins(-integer15, -integer15, -integer15, -integer15);
         iv_user_image.setLayoutParams(params);
 
@@ -454,7 +473,7 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
                 if (drawer_layout.isDrawerOpen(GravityCompat.START))
                     drawer_layout.closeDrawer(GravityCompat.START);
                 just_sec_layout.setVisibility(View.VISIBLE);
-                SharedPref.clearSharedPreferences(DashboardActivity.this);
+                SharedPref.clearSharedPreferences(DashboardActivity.this, true);
                 AppSession.setInstanceToNull();
 
                 UserLogoutTask.TaskListener userLogoutTaskListener = new UserLogoutTask.TaskListener() {

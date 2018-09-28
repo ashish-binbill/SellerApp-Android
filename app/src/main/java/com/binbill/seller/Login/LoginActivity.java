@@ -3,13 +3,18 @@ package com.binbill.seller.Login;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -57,7 +62,7 @@ public class LoginActivity extends BaseActivity {
     TextView toolbarText;
 
     @ViewById
-    TextView tv_error_mobile;
+    TextView tv_error_mobile, terms_privacy_tv;
 
     @AfterViews
     public void initiateViews() {
@@ -70,7 +75,36 @@ public class LoginActivity extends BaseActivity {
         Utility.enableButton(LoginActivity.this, submit, false);
     }
 
+    public void makeLinks(TextView textView, String[] links, ClickableSpan[] clickableSpans) {
+        SpannableString spannableString = new SpannableString(textView.getText());
+        for (int i = 0; i < links.length; i++) {
+            ClickableSpan clickableSpan = clickableSpans[i];
+            String link = links[i];
+
+            int startIndexOfLink = textView.getText().toString().indexOf(link);
+            spannableString.setSpan(clickableSpan, startIndexOfLink, startIndexOfLink + link.length(),
+                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+        textView.setMovementMethod(LinkMovementMethod.getInstance());
+        textView.setText(spannableString, TextView.BufferType.SPANNABLE);
+    }
+
     private void setUpListeners() {
+
+        ClickableSpan termsOfServicesClick = new ClickableSpan() {
+            @Override
+            public void onClick(View view) {
+                //Toast.makeText(getApplicationContext(), "Terms of services Clicked", Toast.LENGTH_SHORT).show();
+                String url = "https://www.binbill.com/term";
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                startActivity(intent);
+            }
+        };
+
+        makeLinks(terms_privacy_tv, new String[]{getString(R.string.terms_of_use)}, new ClickableSpan[]{
+                termsOfServicesClick
+        });
+
         mobileNumber.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -92,7 +126,7 @@ public class LoginActivity extends BaseActivity {
                     if (s.length() >= 10) {
                         Utility.hideKeyboard(LoginActivity.this, tv_error_mobile);
                         Utility.enableButton(LoginActivity.this, submit, true);
-                    }else
+                    } else
                         Utility.enableButton(LoginActivity.this, submit, false);
                 } else {
                     Utility.enableButton(LoginActivity.this, submit, false);
@@ -209,7 +243,7 @@ public class LoginActivity extends BaseActivity {
                         } else {
                             //Never ask again selected, or device policy prohibits the app from having that permission.
                             //So, disable that feature, or fall back to another situation...*/
-                            makeSendOTPRequest();
+                        makeSendOTPRequest();
 
 
                     }

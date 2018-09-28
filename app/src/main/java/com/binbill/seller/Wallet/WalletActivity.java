@@ -65,6 +65,7 @@ public class WalletActivity extends BaseActivity {
     @ViewById
     SwipeRefreshLayout sl_pull_to_refresh;
     private ArrayList<WalletTransaction> walletTransactionList;
+    private String walletAmount;
 
     @AfterViews
     public void initiateViews() {
@@ -87,7 +88,6 @@ public class WalletActivity extends BaseActivity {
         btn_redeem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String walletAmount = tv_wallet.getText().toString();
                 if (!Utility.isEmpty(walletAmount) && !walletAmount.equalsIgnoreCase("null")) {
                     float amountFloat = Float.parseFloat(walletAmount);
                     if (amountFloat > 0) {
@@ -190,7 +190,8 @@ public class WalletActivity extends BaseActivity {
                     JSONObject jsonObject = new JSONObject(response);
                     if (jsonObject.getBoolean("status")) {
 
-                        setUpData(jsonObject.optString("total_cashback"));
+                        walletAmount = jsonObject.optString("total_cashback");
+                        setUpData(walletAmount);
                         if (jsonObject.optJSONArray("result") != null) {
                             JSONArray userArray = jsonObject.getJSONArray("result");
                             Type classType = new TypeToken<ArrayList<WalletTransaction>>() {

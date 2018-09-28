@@ -96,7 +96,7 @@
             android:id="@+id/tv_faq"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_logout"
+            android:drawableLeft="@drawable/ic_faq"
             android:drawablePadding="@dimen/dimen_15dp"
             android:fontFamily="sans-serif-medium"
             android:lineSpacingExtra="1sp"

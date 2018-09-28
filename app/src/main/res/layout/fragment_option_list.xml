@@ -11,14 +11,15 @@
         android:id="@+id/cancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@android:drawable/ic_menu_close_clear_cancel" />
+        android:alpha="0.5"
+        android:src="@drawable/ic_close_black" />
 
     <android.support.v7.widget.SearchView
         android:id="@+id/search_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/dimen_10dp"
-        android:layout_marginTop="@dimen/dimen_10dp"
+        android:layout_marginTop="@dimen/dimen_20dp"
         android:background="@drawable/edittext_bg"
         android:gravity="center"
         android:textColor="@color/text_44"

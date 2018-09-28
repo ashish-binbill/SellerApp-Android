@@ -27,7 +27,7 @@
 
 
 -keepattributes SourceFile,LineNumberTable
-
+-dontwarn com.bumptech.glide.load.resource.bitmap.VideoDecoder
 #- for GCm
 -keepattributes Signature
 -keepattributes *Annotation*
@@ -44,6 +44,8 @@
 -keep interface android.support.v7.** { *; }
 -keep class android.support.** { *; }
 
+
+-dontwarn com.squareup.picasso.**
 ####################################################################  REMOVE WARNINGS
 
 
