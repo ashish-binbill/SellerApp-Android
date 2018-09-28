@@ -318,7 +318,7 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
                 RelativeLayout.LayoutParams.MATCH_PARENT
         );
 
-        int integer15 = Utility.convertDPtoPx(this, 17);
+        int integer15 = Utility.convertDPtoPx(this, 25);
         params.setMargins(-integer15, -integer15, -integer15, -integer15);
         iv_user_image.setLayoutParams(params);
 
