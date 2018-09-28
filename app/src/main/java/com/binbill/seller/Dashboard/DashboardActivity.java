@@ -473,7 +473,7 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
                 if (drawer_layout.isDrawerOpen(GravityCompat.START))
                     drawer_layout.closeDrawer(GravityCompat.START);
                 just_sec_layout.setVisibility(View.VISIBLE);
-                SharedPref.clearSharedPreferences(DashboardActivity.this);
+                SharedPref.clearSharedPreferences(DashboardActivity.this, true);
                 AppSession.setInstanceToNull();
 
                 UserLogoutTask.TaskListener userLogoutTaskListener = new UserLogoutTask.TaskListener() {

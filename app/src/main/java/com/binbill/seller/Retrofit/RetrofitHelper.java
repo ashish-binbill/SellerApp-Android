@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.Toast;
@@ -124,14 +123,9 @@ public class RetrofitHelper {
                         UserLogoutTask userLogoutTask = new UserLogoutTask(userLogoutTaskListener, context);
                         userLogoutTask.execute((Void) null);
 
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                Intent intent = new Intent(context, LoginActivity_.class);
-                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                context.startActivity(intent);
-                            }
-                        }, 2000);
+                        Intent intent = new Intent(context, LoginActivity_.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        context.startActivity(intent);
 
                     }
 

@@ -328,5 +328,7 @@
     <string name="delivery_agent">Delivery Agent</string>
     <string name="pan_card">Pan Card</string>
     <string name="aadhar_card">Aadhar Card</string>
+    <string name="privacy_policy">By signing up you agree to our Terms of Use</string>
+    <string name="terms_of_use">Terms of Use</string>
 
 </resources>
