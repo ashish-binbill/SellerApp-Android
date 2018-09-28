@@ -113,7 +113,7 @@ public class AppFirebaseMessagingService extends FirebaseMessagingService {
                         .setContentText(messageBody)
                         .setAutoCancel(true)
                         .setColor(ContextCompat.getColor(this, R.color.colorPrimary))
-                        .setSound(defaultSoundUri)
+                        .setSound(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.notify_order))
                         .setContentIntent(pendingIntent);
 
         NotificationManager notificationManager =

@@ -117,10 +117,10 @@ public class WalletActivity extends BaseActivity {
                             if (jsonObject.optBoolean("status")) {
                                 invokeSuccessDialog();
                             } else {
-                                showSnackBar(getString(R.string.something_went_wrong));
+                                showSnackBar(getString(R.string.unable_to_redeem));
                             }
                         } catch (JSONException e) {
-                            showSnackBar(getString(R.string.something_went_wrong));
+                            showSnackBar(getString(R.string.unable_to_redeem));
                         }
                         btn_confirm.setVisibility(View.VISIBLE);
                         progress.setVisibility(View.GONE);
@@ -130,7 +130,7 @@ public class WalletActivity extends BaseActivity {
                     public void onErrorResponse() {
                         btn_confirm.setVisibility(View.VISIBLE);
                         progress.setVisibility(View.GONE);
-                        showSnackBar(getString(R.string.something_went_wrong));
+                        showSnackBar(getString(R.string.unable_to_redeem));
                     }
                 });
             }
@@ -221,7 +221,7 @@ public class WalletActivity extends BaseActivity {
                 rv_wallet_txn.setVisibility(View.GONE);
                 shimmer_view_container.setVisibility(View.GONE);
 
-                showSnackBar(getString(R.string.something_went_wrong));
+                showSnackBar(getString(R.string.unable_to_redeem));
 
                 sl_pull_to_refresh.setRefreshing(false);
             }
