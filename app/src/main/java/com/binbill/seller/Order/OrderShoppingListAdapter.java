@@ -137,7 +137,11 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
 
             orderHolder.mItemName.setText(model.getItemTitle());
             orderHolder.mQuantity.setText(model.getQuantity());
-            orderHolder.mMeasurement.setText(skuModel.getSkuMeasurementValue() + " " + skuModel.getSkuMeasurementAcronym());
+
+            if (skuModel != null)
+                orderHolder.mMeasurement.setText(skuModel.getSkuMeasurementValue() + " " + skuModel.getSkuMeasurementAcronym());
+            else
+                orderHolder.mMeasurement.setText("");
 
             if (!Utility.isEmpty(model.getUpdatedPrice()))
                 orderHolder.mItemPrice.setText(model.getUpdatedPrice());
@@ -165,7 +169,10 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
                         textView.setTag("0");
                         updateItemAvailability(orderHolder.mItemAvailability.getContext(), orderHolder.mItemAvailability);
 
-                        orderHolder.mAvailableQuantity.setText(model.getOrderSKU().getSkuMeasurementValue() + " " + model.getOrderSKU().getSkuMeasurementAcronym());
+                        if (model.getOrderSKU() != null)
+                            orderHolder.mAvailableQuantity.setText(model.getOrderSKU().getSkuMeasurementValue() + " " + model.getOrderSKU().getSkuMeasurementAcronym());
+                        else
+                            orderHolder.mAvailableQuantity.setText("");
                     } else {
 
                         if (model.getUpdatedSKUMeasurement() != null) {
@@ -203,19 +210,25 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
                 updateStateMap[position] = updateState;
                 checkStateMap();
             } else {
-                orderHolder.mAvailableQuantity.setText(model.getOrderSKU().getSkuMeasurementValue() + " " + model.getOrderSKU().getSkuMeasurementAcronym());
+
+                if (model.getOrderSKU() != null)
+                    orderHolder.mAvailableQuantity.setText(model.getOrderSKU().getSkuMeasurementValue() + " " + model.getOrderSKU().getSkuMeasurementAcronym());
+                else
+                    orderHolder.mAvailableQuantity.setText("");
             }
 
             orderHolder.mAvailableQuantity.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
-                    model.setUpdateItemAvailable(true);
-                    orderHolder.mItemAvailability.setTag("1");
-                    updateItemAvailability(orderHolder.mItemAvailability.getContext(), orderHolder.mItemAvailability);
+                    if (skuModel != null) {
+                        model.setUpdateItemAvailable(true);
+                        orderHolder.mItemAvailability.setTag("1");
+                        updateItemAvailability(orderHolder.mItemAvailability.getContext(), orderHolder.mItemAvailability);
 
-                    if (listener != null)
-                        listener.onOrderItemQuantitySelected(position);
+                        if (listener != null)
+                            listener.onOrderItemQuantitySelected(position);
+                    }
                 }
             });
 
