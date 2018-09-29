@@ -45,6 +45,7 @@ import com.binbill.seller.SharedPref;
 import com.binbill.seller.Utility;
 import com.nex3z.flowlayout.FlowLayout;
 import com.squareup.picasso.Callback;
+import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 
@@ -163,6 +164,7 @@ public class AddAssistedServiceActivity extends BaseActivity implements OptionLi
                     .build();
             picasso.load(Constants.BASE_URL + "assisted/" + userModel.getId() + "/profile")
                     .config(Bitmap.Config.RGB_565)
+                    .memoryPolicy(MemoryPolicy.NO_CACHE)
                     .into(iv_user_image, new Callback() {
                         @Override
                         public void onSuccess() {
@@ -475,7 +477,7 @@ public class AddAssistedServiceActivity extends BaseActivity implements OptionLi
                 }
                 return false;
             }
-            if(fileDetailsJson.length() == 0){
+            if (fileDetailsJson.length() == 0) {
                 if (showErrorOnUI) {
                     showSnackBar(getString(R.string.upload_adhar));
                 }
@@ -601,8 +603,9 @@ public class AddAssistedServiceActivity extends BaseActivity implements OptionLi
                     iv_user_image.setScaleType(ImageView.ScaleType.FIT_XY);
 
                     Picasso.get().
-                            load("file://" + uriString)
+                            load(Constants.BASE_URL + "assisted/" + mAssistedServiceId + "/profile")
                             .config(Bitmap.Config.RGB_565)
+                            .memoryPolicy(MemoryPolicy.NO_CACHE)
                             .into(iv_user_image, new Callback() {
                                 @Override
                                 public void onSuccess() {
@@ -640,6 +643,17 @@ public class AddAssistedServiceActivity extends BaseActivity implements OptionLi
                     /**
                      * /assisted/{id}/profile
                      */
+                    String index = "";
+                    try {
+                        JSONObject jsonObject = new JSONObject(response);
+                        JSONObject fileDetailsJsonProfile = jsonObject.optJSONObject("file_details");
+
+                        index = fileDetailsJsonProfile.getString("index");
+
+
+                    } catch (JSONException e) {
+
+                    }
 
                     RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
                             RelativeLayout.LayoutParams.MATCH_PARENT,
@@ -651,8 +665,10 @@ public class AddAssistedServiceActivity extends BaseActivity implements OptionLi
                     iv_user_image.setScaleType(ImageView.ScaleType.FIT_XY);
 
                     Picasso.get().
-                            load("file://" + uriString)
+                            load(Constants.BASE_URL + "sellers/" + AppSession.getInstance(AddAssistedServiceActivity.this).getSellerId() + "/upload/"
+                                    + Constants.UPLOAD_TYPE_ASSISTED_SERVICE_PROFILE + "/images/" + index)
                             .config(Bitmap.Config.RGB_565)
+                            .memoryPolicy(MemoryPolicy.NO_CACHE)
                             .into(iv_user_image, new Callback() {
                                 @Override
                                 public void onSuccess() {

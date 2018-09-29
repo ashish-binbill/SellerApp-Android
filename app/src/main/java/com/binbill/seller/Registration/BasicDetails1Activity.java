@@ -137,10 +137,9 @@ public class BasicDetails1Activity extends BaseActivity implements OptionListFra
         String city = et_city.getText().toString();
         String pincode = et_pincode.getText().toString();
         String state = et_state.getText().toString();
-        String locality = et_locality.getText().toString();
 
         if (!Utility.isEmpty(shopName.trim()) && !Utility.isEmpty(businessName.trim()) && !Utility.isEmpty(businessAddress.trim()) &&
-                !Utility.isEmpty(city.trim()) && !Utility.isEmpty(locality) && !Utility.isEmpty(state.trim()) && !Utility.isEmpty(pincode.trim()))
+                !Utility.isEmpty(city.trim()) && !Utility.isEmpty(state.trim()) && !Utility.isEmpty(pincode.trim()))
             Utility.enableButton(this, btn_submit, true);
         else
             Utility.enableButton(this, btn_submit, false);
@@ -551,13 +550,17 @@ public class BasicDetails1Activity extends BaseActivity implements OptionListFra
         /**
          * LOCALITY
          */
-        String locality = et_locality.getText().toString().trim();
-        if (TextUtils.isEmpty(locality)) {
-            tv_error_locality.setText(getString(R.string.error_field_cannot_be_empty));
-            tv_error_locality.setVisibility(View.VISIBLE);
-            scroll_view.scrollTo(0, et_locality.getBottom());
-            return false;
-        }
+
+
+        // removing locality validity
+
+//        String locality = et_locality.getText().toString().trim();
+//        if (TextUtils.isEmpty(locality)) {
+//            tv_error_locality.setText(getString(R.string.error_field_cannot_be_empty));
+//            tv_error_locality.setVisibility(View.VISIBLE);
+//            scroll_view.scrollTo(0, et_locality.getBottom());
+//            return false;
+//        }
 
         /**
          * PINCODE

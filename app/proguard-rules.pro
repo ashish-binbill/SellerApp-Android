@@ -44,6 +44,8 @@
 -keep interface android.support.v7.** { *; }
 -keep class android.support.** { *; }
 
+-keep class com.binbill.seller.Order.OrderItem { *; }
+-keep class com.binbill.seller.Order.OrderItem$OrderSKU { *; }
 
 -dontwarn com.squareup.picasso.**
 ####################################################################  REMOVE WARNINGS

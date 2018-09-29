@@ -38,7 +38,7 @@
                 android:layout_height="@dimen/dimen_150dp"
                 android:minHeight="@dimen/dimen_150dp"
                 android:scaleType="fitXY"
-                android:src="@drawable/offer_banner_3" />
+                android:src="@drawable/default_profile" />
 
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"

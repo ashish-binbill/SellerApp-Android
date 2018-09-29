@@ -14,6 +14,7 @@ import com.binbill.seller.R;
 import com.binbill.seller.SharedPref;
 import com.binbill.seller.Utility;
 import com.github.chrisbanes.photoview.PhotoView;
+import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 
@@ -104,6 +105,7 @@ public class OfferAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         picasso.load(Constants.BASE_URL + "offer/" + model.getOfferId() + "/images/0")
                 .config(Bitmap.Config.RGB_565)
                 .fit()
+                .memoryPolicy(MemoryPolicy.NO_CACHE)
                 .placeholder(ContextCompat.getDrawable(offerHolder.mDescription.getContext(), R.drawable.ic_default_offer_image))
                 .into(offerHolder.mImage);
 

@@ -18,6 +18,7 @@ import com.binbill.seller.R;
 import com.binbill.seller.SharedPref;
 import com.binbill.seller.Utility;
 import com.squareup.picasso.Callback;
+import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 
@@ -132,6 +133,7 @@ public class WalletAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                         .build();
                 picasso.load(Constants.BASE_URL + "customer/" + model.getUserId() + "/images")
                         .config(Bitmap.Config.RGB_565)
+                        .memoryPolicy(MemoryPolicy.NO_CACHE)
                         .into(walletHolder.userImage, new Callback() {
                             @Override
                             public void onSuccess() {

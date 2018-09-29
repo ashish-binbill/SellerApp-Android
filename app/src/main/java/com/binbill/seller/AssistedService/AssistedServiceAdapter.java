@@ -24,6 +24,7 @@ import com.binbill.seller.SharedPref;
 import com.binbill.seller.Utility;
 import com.nex3z.flowlayout.FlowLayout;
 import com.squareup.picasso.Callback;
+import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 
@@ -228,6 +229,7 @@ public class AssistedServiceAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     .build();
             picasso.load(Constants.BASE_URL + "assisted/" + model.getId() + "/profile")
                     .config(Bitmap.Config.RGB_565)
+                    .memoryPolicy(MemoryPolicy.NO_CACHE)
                     .into(userHolder.userImage, new Callback() {
                         @Override
                         public void onSuccess() {

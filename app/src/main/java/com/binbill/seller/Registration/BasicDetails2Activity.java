@@ -224,18 +224,21 @@ public class BasicDetails2Activity extends BaseActivity implements OptionListFra
     }
 
     private void enableDisableVerifyButton() {
-        int radioButtonID = radio_group_home_delivery.getCheckedRadioButtonId();
-        AppCompatRadioButton radioButton = (AppCompatRadioButton) radio_group_home_delivery.findViewById(radioButtonID);
-        final String isHomeDelivery = radioButton.getText().toString();
-
         boolean isdeliveryValidated = false;
+        if (radio_group_home_delivery.getVisibility() == View.VISIBLE) {
 
-        if (isHomeDelivery.equalsIgnoreCase(getString(R.string.yes))) {
-            if (!Utility.isEmpty(et_delivery_distance.getText().toString()))
+            int radioButtonID = radio_group_home_delivery.getCheckedRadioButtonId();
+            AppCompatRadioButton radioButton = (AppCompatRadioButton) radio_group_home_delivery.findViewById(radioButtonID);
+            final String isHomeDelivery = radioButton.getText().toString();
+
+            if (isHomeDelivery.equalsIgnoreCase(getString(R.string.yes))) {
+                if (!Utility.isEmpty(et_delivery_distance.getText().toString()))
+                    isdeliveryValidated = true;
+            } else
                 isdeliveryValidated = true;
+
         } else
             isdeliveryValidated = true;
-
 
         if (isAnyDaySelected() && isdeliveryValidated
                 && isAnyModeOfPaymentSelected())
@@ -283,10 +286,13 @@ public class BasicDetails2Activity extends BaseActivity implements OptionListFra
 
     private boolean isAnyModeOfPaymentSelected() {
 
-        if (cb_paytm.isChecked() || cb_cod.isChecked() || cb_credit_debit.isChecked() || cb_other_wallets.isChecked()
-                || cb_sodexo.isChecked())
+        if (tv_payment_modes_header.getVisibility() == View.VISIBLE) {
+            if (cb_paytm.isChecked() || cb_cod.isChecked() || cb_credit_debit.isChecked() || cb_other_wallets.isChecked()
+                    || cb_sodexo.isChecked())
+                return true;
+            return false;
+        } else
             return true;
-        return false;
     }
 
     @Click(R.id.btn_submit)
@@ -410,7 +416,7 @@ public class BasicDetails2Activity extends BaseActivity implements OptionListFra
         if (cb_other_wallets.isChecked())
             paymentModes.add(cb_other_wallets.getTag().toString());
 
-        if(cb_sodexo.isChecked())
+        if (cb_sodexo.isChecked())
             paymentModes.add(cb_sodexo.getTag().toString());
 
         if (cb_credit_debit.isChecked())
@@ -571,16 +577,19 @@ public class BasicDetails2Activity extends BaseActivity implements OptionListFra
     }
 
     public boolean isValid() {
-        int radioButtonID = radio_group_home_delivery.getCheckedRadioButtonId();
-        AppCompatRadioButton radioButton = (AppCompatRadioButton) radio_group_home_delivery.findViewById(radioButtonID);
-        final String isHomeDelivery = radioButton.getText().toString();
 
         boolean isdeliveryValidated = false;
+        if (radio_group_home_delivery.getVisibility() == View.VISIBLE) {
+            int radioButtonID = radio_group_home_delivery.getCheckedRadioButtonId();
+            AppCompatRadioButton radioButton = (AppCompatRadioButton) radio_group_home_delivery.findViewById(radioButtonID);
+            final String isHomeDelivery = radioButton.getText().toString();
 
-        if (isHomeDelivery.equalsIgnoreCase(getString(R.string.yes))) {
-            if (!Utility.isEmpty(et_delivery_distance.getText().toString())) {
+            if (isHomeDelivery.equalsIgnoreCase(getString(R.string.yes))) {
+                if (!Utility.isEmpty(et_delivery_distance.getText().toString())) {
+                    isdeliveryValidated = true;
+                }
+            } else
                 isdeliveryValidated = true;
-            }
         } else
             isdeliveryValidated = true;
 

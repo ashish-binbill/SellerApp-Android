@@ -39,6 +39,7 @@ import com.binbill.seller.Retrofit.RetrofitHelper;
 import com.binbill.seller.SharedPref;
 import com.binbill.seller.Utility;
 import com.squareup.picasso.Callback;
+import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 
@@ -134,6 +135,7 @@ public class AddNewDeliveryAgentActivity extends BaseActivity {
                     .build();
             picasso.load(Constants.BASE_URL + "assisted/" + userModel.getDeliveryBoyId() + "/profile")
                     .config(Bitmap.Config.RGB_565)
+                    .memoryPolicy(MemoryPolicy.NO_CACHE)
                     .into(iv_user_image, new Callback() {
                         @Override
                         public void onSuccess() {
@@ -415,7 +417,7 @@ public class AddNewDeliveryAgentActivity extends BaseActivity {
                     iv_user_image.setScaleType(ImageView.ScaleType.FIT_XY);
 
                     Picasso.get().
-                            load("file://" + uriString)
+                            load(Constants.BASE_URL + "assisted/" + assistedServiceId + "/profile")
                             .config(Bitmap.Config.RGB_565)
                             .into(iv_user_image, new Callback() {
                                 @Override
@@ -464,8 +466,9 @@ public class AddNewDeliveryAgentActivity extends BaseActivity {
 
                     iv_user_image.setScaleType(ImageView.ScaleType.FIT_XY);
 
+                    String sellerId = AppSession.getInstance(AddNewDeliveryAgentActivity.this).getSellerId();
                     Picasso.get().
-                            load("file://" + uriString)
+                            load(Constants.BASE_URL + "sellers/" + sellerId + "/upload/" + Constants.UPLOAD_TYPE_ASSISTED_SERVICE + "/images/0")
                             .config(Bitmap.Config.RGB_565)
                             .into(iv_user_image, new Callback() {
                                 @Override

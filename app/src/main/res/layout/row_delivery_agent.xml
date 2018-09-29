@@ -160,7 +160,6 @@
                 android:id="@+id/iv_call"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/dimen_10dp"
                 android:src="@drawable/ic_call_big" />
 
         </LinearLayout>

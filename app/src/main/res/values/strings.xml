@@ -313,9 +313,9 @@
     <string name="onboarding_sub_title_4"><![CDATA[Gain insightful Customer Insights, Valuable Customer Feedback & Manage Methodical Credit Record.]]></string>
     <string name="get_started">Get Started</string>
     <string name="default_media_location_folder">BinBillPartner</string>
-    <string name="credit_pending">Outstanding Credit Report</string>
+    <string name="credit_pending">Outstanding Credit</string>
     <string name="enable_permission_call">Please enable call permission from app settings.</string>
-    <string name="loyalty_discounts">Loyalty Discount Report</string>
+    <string name="loyalty_discounts">Loyalty Discount</string>
     <string name="add_credit_rupee">Add Credit (₹)</string>
     <string name="share_message">Install BinBill Partner on your phone and enter the digital world to steer your business ahead.</string>
     <string name="verification_no_jobs_string">Add Customers from BinBill Network or invite your Customers to connect with them for - online shopping orders, assisting home services, loyalty programs and communicating offers &amp; discounts.</string>

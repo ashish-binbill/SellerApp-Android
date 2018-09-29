@@ -214,7 +214,7 @@ public class RegistrationResolver {
                         intent = new Intent(context, AutoEEServicesActivity_.class);
                         intent.putExtra(Constants.REGISTRATION_INDEX, indexToOpen);
 
-                    } else if (mainCategory.getId().equalsIgnoreCase("26")) {
+                    } else if (mainCategory.getId().equalsIgnoreCase("28")) {
                         /**
                          * KIRANA STORE
                          */
@@ -264,7 +264,7 @@ public class RegistrationResolver {
                             }
                         }
 
-                    } else if (mainCategory.getId().equalsIgnoreCase("26")) {
+                    } else if (mainCategory.getId().equalsIgnoreCase("28")) {
                         /**
                          * KIRANA STORE
                          */

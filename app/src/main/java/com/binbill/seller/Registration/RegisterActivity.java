@@ -189,7 +189,7 @@ public class RegisterActivity extends BaseActivity implements OptionListFragment
         /**
          * Hardcoding catgeory id, since we are supporting only FMCG For now
          */
-        map.put("category_id", "26");
+        map.put("category_id", "28");
         map.put("is_fmcg", String.valueOf(userRegistrationDetails.isFmcg()));
         map.put("is_assisted", String.valueOf(userRegistrationDetails.isAssisted()));
         map.put("has_pos", String.valueOf(userRegistrationDetails.isHasPos()));

@@ -24,6 +24,7 @@ import com.binbill.seller.Utility;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Callback;
+import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 
@@ -172,8 +173,9 @@ public class ProfileActivity extends BaseActivity {
                 .downloader(new OkHttp3Downloader(okHttpClient))
                 .build();
 
-        picasso.load(Constants.BASE_URL + "sellers/" + sellerId + "/upload/2/images/" + 0)
+        picasso.load(Constants.BASE_URL + "sellers/" + sellerId + "/upload/1/images/" + 0)
                 .config(Bitmap.Config.RGB_565)
+                .memoryPolicy(MemoryPolicy.NO_CACHE)
                 .into(iv_shop_image, new Callback() {
                     @Override
                     public void onSuccess() {
@@ -183,7 +185,7 @@ public class ProfileActivity extends BaseActivity {
                     @Override
                     public void onError(Exception e) {
 
-                        iv_shop_image.setImageDrawable(ContextCompat.getDrawable(ProfileActivity.this, R.drawable.offer_banner_3));
+                        iv_shop_image.setImageDrawable(ContextCompat.getDrawable(ProfileActivity.this, R.drawable.default_profile));
 
                     }
                 });
@@ -194,7 +196,8 @@ public class ProfileActivity extends BaseActivity {
 
         if (business != null && business.size() > 0)
             for (BusinessDetailsModel model : business) {
-                if (model.getBusinessId().equalsIgnoreCase(businessDetails.getBusinessType())) {
+                if (model != null && !Utility.isEmpty(model.getBusinessId()) && !Utility.isEmpty(businessDetails.getBusinessType())
+                        && model.getBusinessId().equalsIgnoreCase(businessDetails.getBusinessType())) {
                     tv_business_type.setText(model.getBusinessName());
                 }
             }

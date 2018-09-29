@@ -73,6 +73,7 @@ import com.binbill.seller.Wallet.WalletActivity_;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Callback;
+import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 
@@ -318,23 +319,24 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
                 RelativeLayout.LayoutParams.MATCH_PARENT
         );
 
-        int integer15 = Utility.convertDPtoPx(this, 25);
-        params.setMargins(-integer15, -integer15, -integer15, -integer15);
+        int margin = Utility.convertDPtoPx(this, 10);
+        params.setMargins(-margin, -margin, -margin, -margin);
         iv_user_image.setLayoutParams(params);
 
+        String sellerID = AppSession.getInstance(this).getSellerId();
         Picasso picasso = new Picasso.Builder(this)
                 .downloader(new OkHttp3Downloader(okHttpClient))
                 .build();
-
-        String sellerID = AppSession.getInstance(this).getSellerId();
-        picasso.load(Constants.BASE_URL + "sellers/" + sellerID + "/upload/2/images/" + 0)
+        picasso.load(Constants.BASE_URL + "sellers/" + sellerID + "/upload/1/images/" + 0)
                 .config(Bitmap.Config.RGB_565)
+                .memoryPolicy(MemoryPolicy.NO_CACHE)
                 .into(iv_user_image, new Callback() {
                     @Override
                     public void onSuccess() {
                         Bitmap imageBitmap = ((BitmapDrawable) iv_user_image.getDrawable()).getBitmap();
                         RoundedBitmapDrawable imageDrawable = RoundedBitmapDrawableFactory.create(getResources(), imageBitmap);
                         imageDrawable.setCircular(true);
+//                        imageDrawable.setCornerRadius(Math.max(imageBitmap.getWidth(), imageBitmap.getHeight()));
                         iv_user_image.setImageDrawable(imageDrawable);
                     }
 

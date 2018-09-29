@@ -36,6 +36,7 @@ import com.binbill.seller.Utility;
 import com.github.chrisbanes.photoview.PhotoView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 
@@ -135,6 +136,7 @@ public class AddOfferActivity extends BaseActivity implements BottomSheetHelper.
 
         picasso.load(Constants.BASE_URL + "offer/" + offer.getOfferId() + "/images/0")
                 .config(Bitmap.Config.RGB_565)
+                .memoryPolicy(MemoryPolicy.NO_CACHE)
                 .into(iv_offer);
 
         et_offer_name.setText(offer.getOfferTitle());

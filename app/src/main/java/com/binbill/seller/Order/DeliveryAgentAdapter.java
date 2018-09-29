@@ -24,6 +24,7 @@ import com.binbill.seller.R;
 import com.binbill.seller.SharedPref;
 import com.binbill.seller.Utility;
 import com.squareup.picasso.Callback;
+import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 
@@ -202,6 +203,7 @@ public class DeliveryAgentAdapter extends RecyclerView.Adapter<RecyclerView.View
                     .build();
             picasso.load(Constants.BASE_URL + "assisted/" + model.getDeliveryBoyId() + "/profile")
                     .config(Bitmap.Config.RGB_565)
+                    .memoryPolicy(MemoryPolicy.NO_CACHE)
                     .into(userHolder.userImage, new Callback() {
                         @Override
                         public void onSuccess() {

@@ -6,6 +6,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +35,7 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
     }
 
     public static class OrderShoppingListHolder extends RecyclerView.ViewHolder {
+        private final ItemPriceEditTextListener itemPriceListener;
         protected View mRootCard;
         protected TextView mItemName, mQuantity, mItemAvailability, mMeasurement, mServiceName;
         protected EditText mItemPrice, mAvailableQuantity;
@@ -41,9 +43,11 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
         protected ImageView mServiceImage;
         protected LinearLayout layoutService, layoutFMCG;
 
-        public OrderShoppingListHolder(View view) {
+        public OrderShoppingListHolder(View view, ItemPriceEditTextListener itemPriceEditTextListener) {
             super(view);
             mRootCard = view;
+
+            this.itemPriceListener = itemPriceEditTextListener;
             mItemName = (TextView) view.findViewById(R.id.tv_item_name);
             mQuantity = (TextView) view.findViewById(R.id.tv_item_quantity);
             mMeasurement = (TextView) view.findViewById(R.id.tv_item_measurement);
@@ -55,7 +59,37 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
             layoutFMCG = (LinearLayout) view.findViewById(R.id.ll_fmcg_order);
             mServiceImage = (ImageView) view.findViewById(R.id.iv_service_image);
             mServiceName = (TextView) view.findViewById(R.id.tv_service_name);
+            this.mItemPrice.addTextChangedListener(itemPriceEditTextListener);
+        }
+    }
 
+    private class ItemPriceEditTextListener implements TextWatcher {
+        private int position;
+
+        public void updatePosition(int position) {
+            this.position = position;
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+            // no op
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+
+            if (!Utility.isEmpty(editable.toString())) {
+                String newPrice = editable.toString();
+
+                Log.d("SHRUTI", "Value updated " + position + " Amount " + newPrice.trim());
+                mList.get(position).setUpdatedPrice(newPrice.trim());
+//                        model.setUpdatedPrice(newPrice.trim());
+            }
         }
     }
 
@@ -85,7 +119,7 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
         View itemView = LayoutInflater.
                 from(parent.getContext()).
                 inflate(R.layout.row_order_shopping_list_item, parent, false);
-        return new OrderShoppingListHolder(itemView);
+        return new OrderShoppingListHolder(itemView, new ItemPriceEditTextListener());
     }
 
     @Override
@@ -96,6 +130,7 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
         final OrderItem.OrderSKU skuModel = model.getOrderSKU();
 
         if (mOrderType.equalsIgnoreCase(Constants.ORDER_TYPE_FMCG)) {
+            ((OrderShoppingListHolder) holder).itemPriceListener.updatePosition(holder.getAdapterPosition());
 
             orderHolder.layoutService.setVisibility(View.GONE);
             orderHolder.layoutFMCG.setVisibility(View.VISIBLE);
@@ -184,28 +219,6 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
                 }
             });
 
-            orderHolder.mItemPrice.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-                }
-
-                @Override
-                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-                }
-
-                @Override
-                public void afterTextChanged(Editable editable) {
-
-                    if (!Utility.isEmpty(editable.toString())) {
-                        String newPrice = editable.toString();
-                        model.setUpdatedPrice(newPrice.trim());
-                    }
-                }
-            });
-
-
             if (mStatus == Constants.STATUS_CANCEL || mStatus == Constants.STATUS_COMPLETE ||
                     mStatus == Constants.STATUS_OUT_FOR_DELIVERY || mStatus == Constants.STATUS_REJECTED) {
 
@@ -292,7 +305,8 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
 
     }
 
-    public void refreshEvents() {
+    public void refreshEvents(ArrayList<OrderItem> itemList) {
+        mList = itemList;
         notifyDataSetChanged();
     }
 

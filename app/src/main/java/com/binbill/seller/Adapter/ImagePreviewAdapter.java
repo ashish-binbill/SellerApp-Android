@@ -17,6 +17,7 @@ import com.binbill.seller.R;
 import com.binbill.seller.SharedPref;
 import com.binbill.seller.Utility;
 import com.github.chrisbanes.photoview.PhotoView;
+import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 
@@ -93,6 +94,7 @@ public class ImagePreviewAdapter extends PagerAdapter {
             Picasso.get()
                     .load("file://" + uriString)
                     .config(Bitmap.Config.RGB_565)
+                    .memoryPolicy(MemoryPolicy.NO_CACHE)
                     .fit().centerCrop()
                     .into(imageView);
         } else if (mType == Constants.TYPE_URL) {
@@ -115,6 +117,7 @@ public class ImagePreviewAdapter extends PagerAdapter {
             picasso.load(Constants.BASE_URL + "jobs/" + copy.getJobId() + "/files/" + copy.getCopyId())
                     .config(Bitmap.Config.RGB_565)
                     .fit().centerCrop()
+                    .memoryPolicy(MemoryPolicy.NO_CACHE)
                     .into(imageView);
         } else if (mType == Constants.TYPE_URL_FILE) {
             final String authToken = SharedPref.getString(context, SharedPref.AUTH_TOKEN);
@@ -138,6 +141,7 @@ public class ImagePreviewAdapter extends PagerAdapter {
             picasso.load(Constants.BASE_URL + "sellers/" + sellerId + "/upload/2/images/" + position)
                     .config(Bitmap.Config.RGB_565)
                     .fit().centerCrop()
+                    .memoryPolicy(MemoryPolicy.NO_CACHE)
                     .into(imageView);
         }
 

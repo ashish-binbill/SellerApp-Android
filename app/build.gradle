@@ -14,6 +14,10 @@ android {
             storePassword keystoreProperties['storePassword']
         }
     }
+    dexOptions {
+        preDexLibraries = false
+        javaMaxHeapSize "4g"
+    }
     compileSdkVersion 27
     defaultConfig {
         applicationId "com.binbill.seller"
@@ -36,7 +40,7 @@ android {
         release {
             shrinkResources true
             minifyEnabled true
-            debuggable false
+            debuggable true
             signingConfig signingConfigs.config
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }

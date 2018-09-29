@@ -49,6 +49,7 @@ import com.binbill.seller.Utility;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Callback;
+import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 
@@ -744,6 +745,7 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                 .build();
         picasso.load(Constants.BASE_URL + "assisted/" + model.getDeliveryBoyId() + "/profile")
                 .config(Bitmap.Config.RGB_565)
+                .memoryPolicy(MemoryPolicy.NO_CACHE)
                 .into(userHolder.userImage, new Callback() {
                     @Override
                     public void onSuccess() {
@@ -961,6 +963,7 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                                     .build();
                             picasso.load(Constants.BASE_URL + "customer/" + userModel.getUserId() + "/images")
                                     .config(Bitmap.Config.RGB_565)
+                                    .memoryPolicy(MemoryPolicy.NO_CACHE)
                                     .into(iv_user_image, new Callback() {
                                         @Override
                                         public void onSuccess() {
@@ -1108,7 +1111,7 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
         }
 
         if (mAdapter != null) {
-            mAdapter.refreshEvents();
+            mAdapter.refreshEvents(itemList);
         }
 
         if (mSKUDialog != null)
