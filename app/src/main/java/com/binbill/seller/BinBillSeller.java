@@ -32,12 +32,12 @@ public class BinBillSeller extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
-        Fabric.with(this, new Crashlytics());
-
-        FirebaseApp.initializeApp(this);
 
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
+
+        FirebaseApp.initializeApp(this);
+        Fabric.with(this, new Crashlytics());
     }
 
     public static Socket getSocket(Context context) {

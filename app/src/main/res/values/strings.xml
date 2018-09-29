@@ -333,5 +333,7 @@
     <string name="sodexo">Sodexo</string>
     <string name="landing_header">Lo Aa Gaye Achhe Din</string>
     <string name="unable_to_redeem">Unable to redeem amount in wallet.</string>
+    <string name="assign">Assign</string>
+    <string name="please_select_categories_first">Please select categories first</string>
 
 </resources>

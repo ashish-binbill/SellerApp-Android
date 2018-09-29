@@ -100,17 +100,17 @@ public class DefaultBannerActivity extends BaseActivity implements DefaultBanner
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         switch (position) {
             case 0:
-                params.setMargins(Utility.convertDPtoPx(this, 40), Utility.convertDPtoPx(this, 30), Utility.convertDPtoPx(this, 150), 0);
+                params.setMargins(Utility.convertDPtoPx(this, 40), Utility.convertDPtoPx(this, 30), Utility.convertDPtoPx(this, 200), 0);
                 fl_image_text.setLayoutParams(params);
                 tv_banner_text.setTextColor(ContextCompat.getColor(this, R.color.color_black));
                 break;
             case 1:
-                params.setMargins(Utility.convertDPtoPx(this, 40), Utility.convertDPtoPx(this, 30), Utility.convertDPtoPx(this, 150), 0);
+                params.setMargins(Utility.convertDPtoPx(this, 40), Utility.convertDPtoPx(this, 30), Utility.convertDPtoPx(this, 200), 0);
                 fl_image_text.setLayoutParams(params);
                 tv_banner_text.setTextColor(ContextCompat.getColor(this, R.color.color_white));
                 break;
             case 2:
-                params.setMargins(Utility.convertDPtoPx(this, 150), Utility.convertDPtoPx(this, 30), Utility.convertDPtoPx(this, 40), 0);
+                params.setMargins(Utility.convertDPtoPx(this, 200), Utility.convertDPtoPx(this, 30), Utility.convertDPtoPx(this, 40), 0);
                 fl_image_text.setLayoutParams(params);
                 tv_banner_text.setTextColor(ContextCompat.getColor(this, R.color.color_black));
                 break;

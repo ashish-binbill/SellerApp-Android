@@ -370,6 +370,9 @@
             android:name="com.applozic.module.key"
             android:value="Default" />
 
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="a2f9f425c376fed5837ac624523c3c48d6ed8171" />
     </application>
 
 </manifest>

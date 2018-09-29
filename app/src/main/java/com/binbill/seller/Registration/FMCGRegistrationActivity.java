@@ -36,6 +36,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Handler;
 
 @EActivity(R.layout.activity_fmcg_registration)
 public class FMCGRegistrationActivity extends BaseActivity {
@@ -186,8 +187,14 @@ public class FMCGRegistrationActivity extends BaseActivity {
 
                     } catch (JSONException e) {
                         just_sec_layout.setVisibility(View.GONE);
-                        showSnackBar(getString(R.string.something_went_wrong));
-                        finish();
+                        showSnackBar(getString(R.string.please_select_categories_first));
+
+                        new android.os.Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                finish();
+                            }
+                        }, 2000);
                     }
 
                 }
@@ -195,8 +202,14 @@ public class FMCGRegistrationActivity extends BaseActivity {
                 @Override
                 public void onErrorResponse() {
                     just_sec_layout.setVisibility(View.GONE);
-                    showSnackBar(getString(R.string.something_went_wrong));
-                    finish();
+                    showSnackBar(getString(R.string.please_select_categories_first));
+
+                    new android.os.Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            finish();
+                        }
+                    }, 2000);
                 }
             });
         }

@@ -321,7 +321,7 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
 
                 } else if (orderDetails.getOrderType().equalsIgnoreCase(Constants.ORDER_TYPE_SERVICE)) {
 
-                    if (textOnButton.equalsIgnoreCase(getString(R.string.accept))) {
+                    if (textOnButton.equalsIgnoreCase(getString(R.string.assign))) {
                         btn_accept_progress.setVisibility(View.VISIBLE);
                         btn_accept.setVisibility(View.GONE);
 
@@ -587,6 +587,7 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
         if (orderDetails.getOrderType().equalsIgnoreCase(Constants.ORDER_TYPE_SERVICE)) {
             header_shopping_list.setText(getString(R.string.service_requested));
             header_quantity.setVisibility(View.GONE);
+            btn_accept.setText(getString(R.string.assign));
         }
 
         Utility.hideKeyboard(this, rv_shopping_list);
@@ -810,7 +811,11 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                 } else
                     ll_user_action.setVisibility(View.GONE);
                 frame_decline.setVisibility(View.VISIBLE);
-                btn_accept.setText(getString(R.string.accept));
+
+                if (orderDetails.getOrderType().equalsIgnoreCase(Constants.ORDER_TYPE_SERVICE))
+                    btn_accept.setText(getString(R.string.assign));
+                else
+                    btn_accept.setText(getString(R.string.accept));
                 break;
             case 2:
                 if (orderDetails.getOrderStatus() == Constants.STATUS_OUT_FOR_DELIVERY)

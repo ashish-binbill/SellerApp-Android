@@ -282,7 +282,7 @@ public class ProfileActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 ProfileModel.BusinessDetails businessDetails = profileDetails.getSellerDetails().getBusinessDetails();
-                if (businessDetails.getDocuments() != null && businessDetails.getDocuments().size() > 0) {
+                if (businessDetails != null && businessDetails.getDocuments() != null && businessDetails.getDocuments().size() > 0) {
                     Intent intent = new Intent(ProfileActivity.this, ImagePreviewActivity_.class);
                     intent.putExtra(Constants.FILE_URI, businessDetails.getDocuments());
                     intent.putExtra(Constants.IMAGE_TYPE, Constants.TYPE_URL_FILE);
@@ -295,9 +295,12 @@ public class ProfileActivity extends BaseActivity {
         tv_edit_business.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = RegistrationResolver.getNextIntent(ProfileActivity.this, 2);
-                intent.putExtra(Constants.BUSINESS_MODEL, profileDetails.getSellerDetails().getBusinessDetails().getBusinessType());
-                startActivity(intent);
+
+                if (profileDetails.getSellerDetails().getBusinessDetails() != null) {
+                    Intent intent = RegistrationResolver.getNextIntent(ProfileActivity.this, 2);
+                    intent.putExtra(Constants.BUSINESS_MODEL, profileDetails.getSellerDetails().getBusinessDetails().getBusinessType());
+                    startActivity(intent);
+                }
             }
         });
     }
