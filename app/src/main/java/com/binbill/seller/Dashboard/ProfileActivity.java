@@ -194,7 +194,7 @@ public class ProfileActivity extends BaseActivity {
         ProfileModel.BusinessDetails businessDetails = profileDetails.getSellerDetails().getBusinessDetails();
         ArrayList<BusinessDetailsModel> business = AppSession.getInstance(ProfileActivity.this).getBusinessDetails();
 
-        if (business != null && business.size() > 0)
+        if (business != null && business.size() > 0 && businessDetails != null)
             for (BusinessDetailsModel model : business) {
                 if (model != null && !Utility.isEmpty(model.getBusinessId()) && !Utility.isEmpty(businessDetails.getBusinessType())
                         && model.getBusinessId().equalsIgnoreCase(businessDetails.getBusinessType())) {

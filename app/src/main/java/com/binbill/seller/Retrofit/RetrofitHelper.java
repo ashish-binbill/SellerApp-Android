@@ -78,10 +78,12 @@ public class RetrofitHelper {
                             if (Utility.isEmpty(authToken)) {
                                 newRequest = request.newBuilder()
                                         .addHeader("Content-Type", "application/json")
+                                        .addHeader("APP_VERSION", Constants.APP_VERSION)
                                         .build();
                             } else {
                                 newRequest = request.newBuilder()
                                         .addHeader("Authorization", authToken)
+                                        .addHeader("APP_VERSION", Constants.APP_VERSION)
                                         .addHeader("Content-Type", "application/json")
                                         .build();
                             }
