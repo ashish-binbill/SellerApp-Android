@@ -180,14 +180,16 @@ public class ActiveOrderFragment extends Fragment implements OrderAdapter.OrderS
                         shimmerview.setVisibility(View.GONE);
                         noDataLayout.setVisibility(View.VISIBLE);
 
-                        ((BaseActivity) getActivity()).showSnackBar(getString(R.string.something_went_wrong));
+                        if (isAdded())
+                            ((BaseActivity) getActivity()).showSnackBar(getString(R.string.something_went_wrong));
                     }
                 } catch (JSONException e) {
                     orderListView.setVisibility(View.GONE);
                     shimmerview.setVisibility(View.GONE);
                     noDataLayout.setVisibility(View.VISIBLE);
 
-                    ((BaseActivity) getActivity()).showSnackBar(getString(R.string.something_went_wrong));
+                    if (isAdded())
+                        ((BaseActivity) getActivity()).showSnackBar(getString(R.string.something_went_wrong));
                 }
 
                 swipeRefreshLayout.setRefreshing(false);
@@ -200,7 +202,8 @@ public class ActiveOrderFragment extends Fragment implements OrderAdapter.OrderS
                 shimmerview.setVisibility(View.GONE);
                 noDataLayout.setVisibility(View.VISIBLE);
 
-                ((BaseActivity) getActivity()).showSnackBar(getString(R.string.something_went_wrong));
+                if (isAdded())
+                    ((BaseActivity) getActivity()).showSnackBar(getString(R.string.something_went_wrong));
                 swipeRefreshLayout.setRefreshing(false);
 
             }

@@ -73,6 +73,10 @@ public class DefaultBannerActivity extends BaseActivity implements DefaultBanner
     }
 
     private void setUpDefaultBanners() {
+
+        if(bannerList != null && bannerList.size() > 0)
+            bannerList.clear();
+
         bannerList.add(ContextCompat.getDrawable(this, R.drawable.offer_banner_1));
         bannerList.add(ContextCompat.getDrawable(this, R.drawable.offer_banner_2));
         bannerList.add(ContextCompat.getDrawable(this, R.drawable.offer_banner_3));
