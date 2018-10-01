@@ -61,6 +61,7 @@ public class AppSession {
         private ArrayList<Order> orderList;
         private ProfileModel profile;
         private String notificationType;
+        private String notificationOrderId;
 
         private void setSellerId(String id) {
             this.sellerId = id;
@@ -191,12 +192,20 @@ public class AppSession {
             this.profile = list;
         }
 
-        public void setNotificationIntent(String stringExtra) {
+        private void setNotificationIntent(String stringExtra) {
             this.notificationType = stringExtra;
         }
 
-        public String getNotificationIntent() {
+        private String getNotificationIntent() {
             return this.notificationType;
+        }
+
+        private void setNotificationOrderId(String notificationOrderId) {
+            this.notificationOrderId = notificationOrderId;
+        }
+
+        private String getNotificationOrderId() {
+            return notificationOrderId;
         }
     }
 
@@ -206,6 +215,14 @@ public class AppSession {
 
     public String getNotificationIntent() {
         return mAppSessionData.getNotificationIntent();
+    }
+
+    public void setNotificationOrderId(String id) {
+        mAppSessionData.setNotificationOrderId(id);
+    }
+
+    public String getNotificationOrderId() {
+        return mAppSessionData.getNotificationOrderId();
     }
 
     public ProfileModel getSellerProfile() {

@@ -124,15 +124,17 @@ public class CreditsFragment extends Fragment {
                     JSONObject jsonObject = new JSONObject(response);
                     if (jsonObject.optBoolean("status")) {
 
-                        String total = jsonObject.optString("total_credits");
-                        totalCredits.setText(getString(R.string.rupee_symbol) + " " + total);
+                        if(isAdded()) {
+                            String total = jsonObject.optString("total_credits");
+                            totalCredits.setText(getString(R.string.rupee_symbol) + " " + total);
 
-                        JSONArray userArray = jsonObject.getJSONArray("result");
-                        Type classType = new TypeToken<ArrayList<CreditLoyaltyModel>>() {
-                        }.getType();
+                            JSONArray userArray = jsonObject.getJSONArray("result");
+                            Type classType = new TypeToken<ArrayList<CreditLoyaltyModel>>() {
+                            }.getType();
 
-                        ArrayList<CreditLoyaltyModel> creditList = new Gson().fromJson(userArray.toString(), classType);
-                        handleResponse(creditList);
+                            ArrayList<CreditLoyaltyModel> creditList = new Gson().fromJson(userArray.toString(), classType);
+                            handleResponse(creditList);
+                        }
 
                     } else {
                         recyclerData.setVisibility(View.GONE);

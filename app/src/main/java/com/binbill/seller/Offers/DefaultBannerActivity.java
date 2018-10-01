@@ -1,10 +1,14 @@
 package com.binbill.seller.Offers;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -64,6 +68,7 @@ public class DefaultBannerActivity extends BaseActivity implements DefaultBanner
     AppButton btn_upload;
 
     ArrayList<Drawable> bannerList = new ArrayList<>();
+    private int bannerPosition = 0;
 
 
     @AfterViews
@@ -74,7 +79,7 @@ public class DefaultBannerActivity extends BaseActivity implements DefaultBanner
 
     private void setUpDefaultBanners() {
 
-        if(bannerList != null && bannerList.size() > 0)
+        if (bannerList != null && bannerList.size() > 0)
             bannerList.clear();
 
         bannerList.add(ContextCompat.getDrawable(this, R.drawable.offer_banner_1));
@@ -92,8 +97,43 @@ public class DefaultBannerActivity extends BaseActivity implements DefaultBanner
 
     @Override
     public void onBannerSelected(int position) {
-        Drawable drawable = bannerList.get(position);
-        setUpBannerText(position, drawable);
+        this.bannerPosition = position;
+        checkPermission();
+    }
+
+    private void checkPermission() {
+        if (ContextCompat.checkSelfPermission(this,
+                android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this, new String[]{
+                            android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                            android.Manifest.permission.MANAGE_DOCUMENTS},
+                    Constants.PERMISSION_CAMERA);
+        } else {
+            Drawable drawable = bannerList.get(bannerPosition);
+            setUpBannerText(bannerPosition, drawable);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case Constants.PERMISSION_CAMERA: {
+
+                if (grantResults.length > 1
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Drawable drawable = bannerList.get(bannerPosition);
+                    setUpBannerText(bannerPosition, drawable);
+                } else {
+
+                    if (!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                        showSnackBar("Please give permissions to create Banner");
+                    }
+                }
+                return;
+            }
+        }
     }
 
     private void setUpBannerText(int position, Drawable drawable) {
@@ -182,7 +222,7 @@ public class DefaultBannerActivity extends BaseActivity implements DefaultBanner
 
         }
 
-        if(file != null){
+        if (file != null) {
             Intent resultIntent = new Intent();
             resultIntent.putExtra(Constants.DEFAULT_BANNER, file);
             setResult(Activity.RESULT_OK, resultIntent);

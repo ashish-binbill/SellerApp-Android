@@ -64,6 +64,7 @@ import com.binbill.seller.Login.LoginActivity_;
 import com.binbill.seller.Loyalty.LoyaltyRulesActivity_;
 import com.binbill.seller.Model.DashboardModel;
 import com.binbill.seller.Model.MainCategory;
+import com.binbill.seller.Order.OrderDetailsActivity_;
 import com.binbill.seller.R;
 import com.binbill.seller.Registration.RegistrationResolver;
 import com.binbill.seller.Retrofit.RetrofitHelper;
@@ -159,6 +160,11 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
                  * Order
                  */
                 changeViewPagerFragment(1);
+
+                Intent intent = new Intent(this, OrderDetailsActivity_.class);
+                intent.putExtra(Constants.ORDER_ID, AppSession.getInstance(this).getNotificationOrderId());
+                startActivity(intent);
+
                 break;
 
             case "2":
@@ -196,9 +202,9 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
                 /**
                  * Manage categories
                  */
-                Intent intent = RegistrationResolver.getNextIntent(DashboardActivity.this, 4);
-                if (intent != null)
-                    startActivity(intent);
+                Intent intent1 = RegistrationResolver.getNextIntent(DashboardActivity.this, 4);
+                if (intent1 != null)
+                    startActivity(intent1);
                 break;
 
         }
@@ -298,6 +304,10 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
     protected void onResume() {
         super.onResume();
         makeSellerProfileApiCall();
+
+        if (AppSession.getInstance(this).getNotificationIntent() != null) {
+            checkNotificationDeeplink();
+        }
     }
 
     private void setUpHamburger() {
@@ -748,11 +758,6 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
                         return true;
                     }
                 });
-
-
-        if (AppSession.getInstance(this).getNotificationIntent() != null) {
-            checkNotificationDeeplink();
-        }
     }
 
     @Override

@@ -31,6 +31,9 @@ public class SplashActivity extends AppCompatActivity {
 
         if (getIntent() != null && getIntent().hasExtra(Constants.NOTIFICATION_DEEPLINK))
             AppSession.getInstance(this).setNotificationIntent(getIntent().getStringExtra(Constants.NOTIFICATION_DEEPLINK));
+
+        if(getIntent() != null && getIntent().hasExtra(Constants.ORDER_ID))
+            AppSession.getInstance(this).setNotificationOrderId(getIntent().getStringExtra(Constants.ORDER_ID));
     }
 
     public void setUpFlow() {

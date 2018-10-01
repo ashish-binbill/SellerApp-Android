@@ -20,6 +20,7 @@ import com.applozic.mobicomkit.api.notification.MobiComPushReceiver;
 import com.binbill.seller.Constants;
 import com.binbill.seller.R;
 import com.binbill.seller.SplashActivity;
+import com.binbill.seller.Utility;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -49,6 +50,7 @@ public class AppFirebaseMessagingService extends FirebaseMessagingService {
             String title = "BinBill Partner";
             String description = "";
             String notificationType = "0";
+            String orderId = "";
             Map<String, String> map = remoteMessage.getData();
             if (map.containsKey("title"))
                 title = map.get("title");
@@ -60,7 +62,10 @@ public class AppFirebaseMessagingService extends FirebaseMessagingService {
             if (map.containsKey("notification_type"))
                 notificationType = map.get("notification_type");
 
-            handleNow(title, description, notificationType);
+            if (map.containsKey("order_id"))
+                orderId = map.get("order_id");
+
+            handleNow(title, description, notificationType, orderId);
         }
 
         if (remoteMessage.getNotification() != null) {
@@ -85,22 +90,21 @@ public class AppFirebaseMessagingService extends FirebaseMessagingService {
         }
     }
 
-    /**
-     * Handle time allotted to BroadcastReceivers.
-     */
-    private void handleNow(String title, String message, String notificationType) {
+    private void handleNow(String title, String message, String notificationType, String orderId) {
         Log.d(TAG, "Short lived task is done.");
-        sendNotification(title, message, notificationType);
+        sendNotification(title, message, notificationType, orderId);
     }
 
     private void sendRegistrationToServer(String token) {
         // TODO: Implement this method to send token to your app server.
     }
 
-    private void sendNotification(String title, String messageBody, String notificationType) {
+    private void sendNotification(String title, String messageBody, String notificationType, String orderId) {
         Intent intent = new Intent(this, SplashActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra(Constants.NOTIFICATION_DEEPLINK, notificationType);
+        if (!Utility.isEmpty(orderId))
+            intent.putExtra(Constants.ORDER_ID, orderId);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);
 
