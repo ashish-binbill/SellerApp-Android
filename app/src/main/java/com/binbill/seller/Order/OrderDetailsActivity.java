@@ -382,8 +382,8 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
 
                         @Override
                         public void onErrorResponse() {
-                            btn_accept.setVisibility(View.GONE);
-                            btn_accept_progress.setVisibility(View.VISIBLE);
+                            btn_accept.setVisibility(View.VISIBLE);
+                            btn_accept_progress.setVisibility(View.GONE);
                             shimmer_view_container.setVisibility(View.GONE);
 
                             showSnackBar(getString(R.string.something_went_wrong));
@@ -413,14 +413,17 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
 
                         @Override
                         public void onErrorResponse() {
-                            btn_accept.setVisibility(View.GONE);
-                            btn_accept_progress.setVisibility(View.VISIBLE);
+                            btn_accept.setVisibility(View.VISIBLE);
+                            btn_accept_progress.setVisibility(View.GONE);
                             shimmer_view_container.setVisibility(View.GONE);
 
                             showSnackBar(getString(R.string.something_went_wrong));
                         }
                     });
                 }
+            }else{
+                btn_accept.setVisibility(View.VISIBLE);
+                btn_accept_progress.setVisibility(View.GONE);
             }
         }
     }
