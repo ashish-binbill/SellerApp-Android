@@ -143,10 +143,17 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
             else
                 orderHolder.mMeasurement.setText("");
 
-            if (!Utility.isEmpty(model.getUpdatedPrice()))
-                orderHolder.mItemPrice.setText(model.getUpdatedPrice());
-            else
-                orderHolder.mItemPrice.setText("");
+            if (mStatus == Constants.STATUS_OUT_FOR_DELIVERY || mStatus == Constants.STATUS_COMPLETE) {
+                if (!Utility.isEmpty(model.getSellingPrice()))
+                    orderHolder.mItemPrice.setText(model.getSellingPrice());
+                else
+                    orderHolder.mItemPrice.setText("");
+            } else {
+                if (!Utility.isEmpty(model.getUpdatedPrice()))
+                    orderHolder.mItemPrice.setText(model.getUpdatedPrice());
+                else
+                    orderHolder.mItemPrice.setText("");
+            }
 
             if (model.isUpdateItemAvailable()) {
                 orderHolder.mItemAvailability.setTag("1");

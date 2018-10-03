@@ -38,8 +38,11 @@ public class OrderItem implements Serializable {
     @SerializedName("sku_measurement")
     OrderSKU orderSKU;
 
-    @SerializedName("selling_price")
+    @SerializedName("unit_price")
     String updatedPrice;
+
+    @SerializedName("selling_price")
+    String sellingPrice;
 
     @SerializedName("updated_measurement")
     OrderSKU updatedSKUMeasurement;
@@ -106,6 +109,10 @@ public class OrderItem implements Serializable {
 
     public void setUpdatedPrice(String updatedPrice) {
         this.updatedPrice = updatedPrice;
+    }
+
+    public String getSellingPrice(){
+        return sellingPrice;
     }
 
     public boolean isUpdateItemAvailable() {
