@@ -80,6 +80,17 @@ public class OrderItem implements Serializable {
     @SerializedName("total_amount")
     String totalAmount;
 
+    @SerializedName("suggestion")
+    Suggestion suggestion;
+
+    public Suggestion getSuggestion() {
+        return suggestion;
+    }
+
+    public void setSuggestion(Suggestion suggestion) {
+        this.suggestion = suggestion;
+    }
+
     public String getTotalAmount() {
         return totalAmount;
     }

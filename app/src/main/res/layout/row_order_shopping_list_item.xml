@@ -122,6 +122,23 @@
                 android:textSize="@dimen/dimen_10dp" />
 
             <EditText
+                android:id="@+id/et_quantity_other_item"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/edittext_bg"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:hint="e.g. 250 gm"
+                android:visibility="gone"
+                android:inputType="textNoSuggestions"
+                android:lineSpacingExtra="-1sp"
+                android:padding="@dimen/dimen_10dp"
+                android:textColor="@color/text_77"
+                android:textColorHint="@color/text_77"
+                android:textSize="@dimen/dimen_10dp" />
+
+            <EditText
                 android:id="@+id/et_quantity_number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
