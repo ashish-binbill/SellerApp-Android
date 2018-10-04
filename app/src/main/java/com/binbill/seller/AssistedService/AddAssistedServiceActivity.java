@@ -582,8 +582,7 @@ public class AddAssistedServiceActivity extends BaseActivity implements OptionLi
             }
             case Constants.PERMISSION_READ_CONTACT: {
 
-                if (grantResults.length > 1
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
                     startActivityForResult(intent, Constants.INTENT_SELECT_PHONE_BOOK_CONTACT);
 

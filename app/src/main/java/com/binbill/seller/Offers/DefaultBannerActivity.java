@@ -121,7 +121,7 @@ public class DefaultBannerActivity extends BaseActivity implements DefaultBanner
         switch (requestCode) {
             case Constants.PERMISSION_CAMERA: {
 
-                if (grantResults.length > 1
+                if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Drawable drawable = bannerList.get(bannerPosition);
                     setUpBannerText(bannerPosition, drawable);
