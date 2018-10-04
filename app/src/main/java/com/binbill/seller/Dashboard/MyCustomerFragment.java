@@ -160,15 +160,15 @@ public class MyCustomerFragment extends Fragment implements UserAdapter.CardInte
                         userListView.setVisibility(View.GONE);
                         shimmerview.setVisibility(View.GONE);
                         noDataLayout.setVisibility(View.VISIBLE);
-
-                        ((BaseActivity) getActivity()).showSnackBar(getString(R.string.something_went_wrong));
+                        if (isAdded())
+                            ((BaseActivity) getActivity()).showSnackBar(getString(R.string.something_went_wrong));
                     }
                 } catch (JSONException e) {
                     userListView.setVisibility(View.GONE);
                     shimmerview.setVisibility(View.GONE);
                     noDataLayout.setVisibility(View.VISIBLE);
-
-                    ((BaseActivity) getActivity()).showSnackBar(getString(R.string.something_went_wrong));
+                    if (isAdded())
+                        ((BaseActivity) getActivity()).showSnackBar(getString(R.string.something_went_wrong));
                 }
 
                 swipeRefreshLayout.setRefreshing(false);
@@ -181,7 +181,8 @@ public class MyCustomerFragment extends Fragment implements UserAdapter.CardInte
                 shimmerview.setVisibility(View.GONE);
                 noDataLayout.setVisibility(View.VISIBLE);
 
-                ((BaseActivity) getActivity()).showSnackBar(getString(R.string.something_went_wrong));
+                if (isAdded())
+                    ((BaseActivity) getActivity()).showSnackBar(getString(R.string.something_went_wrong));
                 swipeRefreshLayout.setRefreshing(false);
 
             }

@@ -219,10 +219,10 @@
     <string name="order_rejected">Rejected</string>
     <string name="out_for_delivery">Out For Delivery</string>
     <string name="order_details">Order Details</string>
-    <string name="add_price">Total Amount</string>
-    <string name="item_not_available">Item Not Available</string>
+    <string name="add_price">Unit Amount</string>
+    <string name="item_not_available">N/A</string>
     <string name="available_quantity">Available Quantity</string>
-    <string name="shopping_list">Shopping List</string>
+    <string name="shopping_list">Shopping List (Total Items %1$s)</string>
     <string name="decline">Decline</string>
     <string name="accept">Accept</string>
     <string name="select_available">Select Available Option</string>
@@ -335,5 +335,6 @@
     <string name="unable_to_redeem">Unable to redeem amount in wallet.</string>
     <string name="assign">Assign</string>
     <string name="please_select_categories_first">Please select categories first</string>
+    <string name="suggest_replacement">Suggest Replacement</string>
 
 </resources>

@@ -50,6 +50,9 @@ public class OrderItem implements Serializable {
     @SerializedName("service_name")
     String serviceName;
 
+    @SerializedName("updated_quantity")
+    String updatedQuantityCount;
+
     /******************************************** TYPE_SERVICE ****************************************/
     /**
      *  "end_date": "2018-09-14T09:46:55.891Z",
@@ -102,6 +105,14 @@ public class OrderItem implements Serializable {
     }
 
     transient boolean updateItemAvailable = true;
+
+    public String getUpdatedQuantityCount() {
+        return updatedQuantityCount;
+    }
+
+    public void setUpdatedQuantityCount(String updatedQuantityCount) {
+        this.updatedQuantityCount = updatedQuantityCount;
+    }
 
     public String getUpdatedPrice() {
         return updatedPrice;

@@ -34,6 +34,7 @@ import com.applozic.mobicomkit.api.conversation.MobiComConversationService;
 import com.applozic.mobicomkit.api.conversation.database.MessageDatabaseService;
 import com.applozic.mobicomkit.uiwidgets.conversation.ConversationUIService;
 import com.applozic.mobicomkit.uiwidgets.conversation.activity.ConversationActivity;
+import com.binbill.seller.Adapter.DeliveryDistanceAdapter;
 import com.binbill.seller.AssistedService.AssistedUserModel;
 import com.binbill.seller.BaseActivity;
 import com.binbill.seller.BinBillSeller;
@@ -41,6 +42,7 @@ import com.binbill.seller.Constants;
 import com.binbill.seller.CustomViews.AppButton;
 import com.binbill.seller.CustomViews.AppButtonGreyed;
 import com.binbill.seller.CustomViews.ReviewsDialogFragment;
+import com.binbill.seller.Interface.ItemSelectedInterface;
 import com.binbill.seller.Model.UserModel;
 import com.binbill.seller.R;
 import com.binbill.seller.Retrofit.RetrofitHelper;
@@ -421,7 +423,7 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                         }
                     });
                 }
-            }else{
+            } else {
                 btn_accept.setVisibility(View.VISIBLE);
                 btn_accept_progress.setVisibility(View.GONE);
             }
@@ -591,6 +593,8 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
             header_shopping_list.setText(getString(R.string.service_requested));
             header_quantity.setVisibility(View.GONE);
             btn_accept.setText(getString(R.string.assign));
+        } else {
+            header_shopping_list.setText(getString(R.string.shopping_list, String.valueOf(orderDetails.getOrderItems().size())));
         }
 
         Utility.hideKeyboard(this, rv_shopping_list);
@@ -1067,6 +1071,16 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
         }
     }
 
+    @Override
+    public void onOrderItemQuantityDenominationSelected(int pos) {
+        if (orderDetails != null && orderDetails.getOrderItems() != null &&
+                orderDetails.getOrderItems().size() > 0) {
+            final OrderItem orderItem = orderDetails.getOrderItems().get(pos);
+
+            invokeQuantityPopUp(orderItem.getItemId());
+        }
+    }
+
     private void invokeSkuPopUp(ArrayList<OrderItem.OrderSKU> skuList, String itemId) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
@@ -1097,6 +1111,86 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
         } else {
             mSKUDialog.dismiss();
         }
+
+        TextView headerTitle = (TextView) dialogView.findViewById(R.id.header);
+        headerTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mSKUDialog.dismiss();
+            }
+        });
+
+        mSKUDialog.show();
+    }
+
+    private void invokeQuantityPopUp(final String itemId) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.dialog_show_available_sku, null);
+
+        Rect displayRectangle = new Rect();
+        Window window = getWindow();
+        window.getDecorView().getWindowVisibleDisplayFrame(displayRectangle);
+
+        dialogView.setMinimumWidth((int) (displayRectangle.width() * 0.9f));
+
+        builder.setView(dialogView);
+        builder.setCancelable(false);
+
+        mSKUDialog = builder.create();
+        mSKUDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        mSKUDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        ArrayList<String> mDisplayList = new ArrayList<>();
+        mDisplayList.add("1 Nos.");
+        mDisplayList.add("2 Nos.");
+        mDisplayList.add("3 Nos.");
+        mDisplayList.add("4 Nos.");
+        mDisplayList.add("5 Nos.");
+        mDisplayList.add("6 Nos.");
+        mDisplayList.add("7 Nos.");
+        mDisplayList.add("8 Nos.");
+        mDisplayList.add("9 Nos.");
+        mDisplayList.add("10 Nos.");
+        mDisplayList.add("11 Nos.");
+        mDisplayList.add("12 Nos.");
+        mDisplayList.add("13 Nos.");
+        mDisplayList.add("14 Nos.");
+        mDisplayList.add("15 Nos.");
+        mDisplayList.add("16 Nos.");
+        mDisplayList.add("17 Nos.");
+        mDisplayList.add("18 Nos.");
+        mDisplayList.add("19 Nos.");
+        mDisplayList.add("20 Nos.");
+
+        RecyclerView recyclerView = (RecyclerView) dialogView.findViewById(R.id.rv_list);
+        LinearLayoutManager llm = new LinearLayoutManager(this);
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(llm);
+        DeliveryDistanceAdapter adapter = new DeliveryDistanceAdapter(mDisplayList, new ItemSelectedInterface() {
+            @Override
+            public void onItemSelected(Object object) {
+
+                ArrayList<OrderItem> itemList = orderDetails.getOrderItems();
+                for (OrderItem item : itemList) {
+                    if (item.getItemId().equalsIgnoreCase(itemId)) {
+
+                        String quantitySelected = (String) object;
+                        quantitySelected = quantitySelected.substring(0, quantitySelected.length() - 5);
+                        item.setUpdatedQuantityCount(quantitySelected);
+                    }
+                }
+
+                if (mAdapter != null) {
+                    mAdapter.refreshEvents(itemList);
+                }
+
+                if (mSKUDialog != null)
+                    mSKUDialog.dismiss();
+
+            }
+        });
+        recyclerView.setAdapter(adapter);
 
         TextView headerTitle = (TextView) dialogView.findViewById(R.id.header);
         headerTitle.setOnClickListener(new View.OnClickListener() {

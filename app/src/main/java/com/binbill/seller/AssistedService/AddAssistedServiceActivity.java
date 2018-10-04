@@ -1,15 +1,18 @@
 package com.binbill.seller.AssistedService;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -95,7 +98,7 @@ public class AddAssistedServiceActivity extends BaseActivity implements OptionLi
     FlowLayout fl_tag_layout;
 
     @ViewById
-    ImageView iv_user_image, iv_sub_image;
+    ImageView iv_user_image, iv_sub_image, iv_open_phonebook;
 
     @ViewById
     TextView view_image, image_count, tv_error_mobile, tv_error_upload_adhar;
@@ -233,6 +236,14 @@ public class AddAssistedServiceActivity extends BaseActivity implements OptionLi
             public void onClick(View view) {
                 mProfileImage = true;
                 checkCameraPermission();
+            }
+        });
+
+        iv_open_phonebook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+                startActivityForResult(intent, Constants.INTENT_SELECT_PHONE_BOOK_CONTACT);
             }
         });
         et_type_of_service.setOnClickListener(new View.OnClickListener() {
@@ -577,6 +588,34 @@ public class AddAssistedServiceActivity extends BaseActivity implements OptionLi
                     fileUri = null;
                 else
                     cameraFileUri.remove(cameraFileUri.size() - 1);
+            }
+        }
+
+        if (requestCode == Constants.INTENT_SELECT_PHONE_BOOK_CONTACT) {
+            if (resultCode == Activity.RESULT_OK) {
+                Uri contactData = data.getData();
+                String number = "";
+                Cursor cursor = getContentResolver().query(contactData, null, null, null, null);
+                cursor.moveToFirst();
+                String hasPhone = cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.Contacts.HAS_PHONE_NUMBER));
+                String contactId = cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.Contacts._ID));
+                if (hasPhone.equals("1")) {
+                    Cursor phones = getContentResolver().query
+                            (ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
+                                    ContactsContract.CommonDataKinds.Phone.CONTACT_ID
+                                            + " = " + contactId, null, null);
+                    while (phones.moveToNext()) {
+                        number = phones.getString(phones.getColumnIndex
+                                (ContactsContract.CommonDataKinds.Phone.NUMBER)).replaceAll("[-() ]", "");
+                        Long mobileNumber = Utility.isValidMobileNumber(number);
+                        et_mobile.setText(String.valueOf(mobileNumber));
+                    }
+                    phones.close();
+                }
+                String name = cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.Contacts.DISPLAY_NAME));
+                et_service_guide.setText(name);
+
+                cursor.close();
             }
         }
     }

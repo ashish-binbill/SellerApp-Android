@@ -72,6 +72,7 @@ public class Constants {
     public static final int PERMISSION_CAMERA = 101;
     public static final int PERMISSION_CALL = 102;
     public static final int INTENT_CALL_SELECT_DELIVERY_AGENT = 1;
+    public static final int INTENT_SELECT_PHONE_BOOK_CONTACT = 20;
 
     public static final Pattern PAN_PATTERN = Pattern.compile("[A-Z]{5}[0-9]{4}[A-Z]{1}");
     public static final Pattern ZIP_CODE_PATTERN = Pattern.compile("[1-9][0-9]{5}");

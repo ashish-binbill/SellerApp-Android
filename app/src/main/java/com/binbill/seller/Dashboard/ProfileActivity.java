@@ -137,7 +137,7 @@ public class ProfileActivity extends BaseActivity {
 
             StringBuilder homeDelivery = new StringBuilder();
 
-            if (basicDetails.getHomeDelivery().equalsIgnoreCase("true"))
+            if (basicDetails != null && basicDetails.getHomeDelivery() != null && basicDetails.getHomeDelivery().equalsIgnoreCase("true"))
                 homeDelivery.append("Yes");
             else
                 homeDelivery.append("No");

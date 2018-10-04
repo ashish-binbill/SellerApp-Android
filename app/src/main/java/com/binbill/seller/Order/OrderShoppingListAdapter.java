@@ -32,13 +32,15 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
         void onOrderItemQuantitySelected(int pos);
 
         void onItemInteraction(boolean enable);
+
+        void onOrderItemQuantityDenominationSelected(int pos);
     }
 
     public static class OrderShoppingListHolder extends RecyclerView.ViewHolder {
         private final ItemPriceEditTextListener itemPriceListener;
         protected View mRootCard;
         protected TextView mItemName, mQuantity, mItemAvailability, mMeasurement, mServiceName;
-        protected EditText mItemPrice, mAvailableQuantity;
+        protected EditText mItemPrice, mAvailableQuantity, mQuantityNumber, mAlternateItem;
         protected View mDivider;
         protected ImageView mServiceImage;
         protected LinearLayout layoutService, layoutFMCG;
@@ -50,11 +52,13 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
             this.itemPriceListener = itemPriceEditTextListener;
             mItemName = (TextView) view.findViewById(R.id.tv_item_name);
             mQuantity = (TextView) view.findViewById(R.id.tv_item_quantity);
+            mQuantityNumber = (EditText) view.findViewById(R.id.et_quantity_number);
             mMeasurement = (TextView) view.findViewById(R.id.tv_item_measurement);
             mItemPrice = (EditText) view.findViewById(R.id.et_item_price);
             mItemAvailability = (TextView) view.findViewById(R.id.tv_item_unavailable);
             mAvailableQuantity = (EditText) view.findViewById(R.id.et_quantity);
             mDivider = (View) view.findViewById(R.id.v_divider);
+            mAlternateItem = (EditText) view.findViewById(R.id.et_alternate_item);
             layoutService = (LinearLayout) view.findViewById(R.id.ll_service_order);
             layoutFMCG = (LinearLayout) view.findViewById(R.id.ll_fmcg_order);
             mServiceImage = (ImageView) view.findViewById(R.id.iv_service_image);
@@ -88,7 +92,6 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
 
                 Log.d("SHRUTI", "Value updated " + position + " Amount " + newPrice.trim());
                 mList.get(position).setUpdatedPrice(newPrice.trim());
-//                        model.setUpdatedPrice(newPrice.trim());
             }
         }
     }
@@ -136,12 +139,23 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
             orderHolder.layoutFMCG.setVisibility(View.VISIBLE);
 
             orderHolder.mItemName.setText(model.getItemTitle());
-            orderHolder.mQuantity.setText(model.getQuantity());
+            orderHolder.mQuantity.setText("x " + model.getQuantity() + " Nos.");
 
             if (skuModel != null)
                 orderHolder.mMeasurement.setText(skuModel.getSkuMeasurementValue() + " " + skuModel.getSkuMeasurementAcronym());
             else
                 orderHolder.mMeasurement.setText("");
+
+            if (model.getUpdatedQuantityCount() != null) {
+                orderHolder.mQuantityNumber.setText(model.getUpdatedQuantityCount() + " Nos.");
+
+                if (model.getUpdatedQuantityCount().equalsIgnoreCase(model.getQuantity()))
+                    updateStateMap[position] = false;
+                else
+                    updateStateMap[position] = true;
+                checkStateMap();
+            } else
+                orderHolder.mQuantityNumber.setText(model.getQuantity() + " Nos.");
 
             if (mStatus == Constants.STATUS_OUT_FOR_DELIVERY || mStatus == Constants.STATUS_COMPLETE) {
                 if (!Utility.isEmpty(model.getSellingPrice()))
@@ -157,7 +171,9 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
 
             if (model.isUpdateItemAvailable()) {
                 orderHolder.mItemAvailability.setTag("1");
+                orderHolder.mAlternateItem.setVisibility(View.GONE);
             } else {
+                orderHolder.mAlternateItem.setVisibility(View.VISIBLE);
                 orderHolder.mItemAvailability.setTag("0");
             }
 
@@ -174,12 +190,15 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
                         updateState = true;
                         model.setUpdateItemAvailable(false);
                         textView.setTag("0");
+                        orderHolder.mAlternateItem.setVisibility(View.VISIBLE);
                         updateItemAvailability(orderHolder.mItemAvailability.getContext(), orderHolder.mItemAvailability);
 
                         if (model.getOrderSKU() != null)
                             orderHolder.mAvailableQuantity.setText(model.getOrderSKU().getSkuMeasurementValue() + " " + model.getOrderSKU().getSkuMeasurementAcronym());
                         else
                             orderHolder.mAvailableQuantity.setText("");
+
+                        orderHolder.mQuantityNumber.setText(model.getQuantity() + " Nos.");
                     } else {
 
                         if (model.getUpdatedSKUMeasurement() != null) {
@@ -192,8 +211,12 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
                         } else
                             updateState = false;
 
+                        if (!updateState && model.getUpdatedQuantityCount() != null)
+                            updateState = true;
+
                         model.setUpdateItemAvailable(true);
                         textView.setTag("1");
+                        orderHolder.mAlternateItem.setVisibility(View.GONE);
                         updateItemAvailability(orderHolder.mItemAvailability.getContext(), orderHolder.mItemAvailability);
                     }
 
@@ -228,14 +251,28 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
                 @Override
                 public void onClick(View view) {
 
-                    if (skuModel != null) {
-                        model.setUpdateItemAvailable(true);
-                        orderHolder.mItemAvailability.setTag("1");
-                        updateItemAvailability(orderHolder.mItemAvailability.getContext(), orderHolder.mItemAvailability);
+//                    if (skuModel != null) {
+//                        model.setUpdateItemAvailable(true);
+//                        orderHolder.mItemAvailability.setTag("1");
+//                        orderHolder.mAlternateItem.setVisibility(View.GONE);
+//                        updateItemAvailability(orderHolder.mItemAvailability.getContext(), orderHolder.mItemAvailability);
+//                    }
 
-                        if (listener != null)
-                            listener.onOrderItemQuantitySelected(position);
-                    }
+                    if (listener != null)
+                        listener.onOrderItemQuantitySelected(position);
+                }
+            });
+
+            orderHolder.mQuantityNumber.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+//                    model.setUpdateItemAvailable(true);
+//                    orderHolder.mItemAvailability.setTag("1");
+//                    orderHolder.mAlternateItem.setVisibility(View.GONE);
+//                    updateItemAvailability(orderHolder.mItemAvailability.getContext(), orderHolder.mItemAvailability);
+
+                    if (listener != null)
+                        listener.onOrderItemQuantityDenominationSelected(position);
                 }
             });
 
@@ -283,6 +320,19 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
                     orderHolder.mAvailableQuantity.setEnabled(false);
                     orderHolder.mAvailableQuantity.setTextColor(ContextCompat.getColor(orderHolder.mItemAvailability.getContext(), R.color.text_77));
                     orderHolder.mAvailableQuantity.setBackground(ContextCompat.getDrawable(orderHolder.mItemAvailability.getContext(), R.drawable.edittext_bg));
+                }
+
+                if (orderModified && mStatus == Constants.STATUS_NEW_ORDER && model.getUpdatedQuantityCount() != null) {
+                    orderHolder.mQuantityNumber.setVisibility(View.VISIBLE);
+                    orderHolder.mQuantityNumber.setEnabled(false);
+                    orderHolder.mQuantityNumber.setTextColor(ContextCompat.getColor(orderHolder.mItemAvailability.getContext(), R.color.color_white));
+                    orderHolder.mQuantityNumber.setBackground(ContextCompat.getDrawable(orderHolder.mItemAvailability.getContext(), R.drawable.edittext_bg_red));
+
+                } else {
+                    orderHolder.mQuantityNumber.setVisibility(View.VISIBLE);
+                    orderHolder.mQuantityNumber.setEnabled(false);
+                    orderHolder.mQuantityNumber.setTextColor(ContextCompat.getColor(orderHolder.mItemAvailability.getContext(), R.color.text_77));
+                    orderHolder.mQuantityNumber.setBackground(ContextCompat.getDrawable(orderHolder.mItemAvailability.getContext(), R.drawable.edittext_bg));
                 }
 
                 orderHolder.mDivider.setVisibility(View.GONE);

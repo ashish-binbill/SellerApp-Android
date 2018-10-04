@@ -21,40 +21,82 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/tv_item_name"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:drawablePadding="@dimen/dimen_10dp"
-                android:drawableStart="@drawable/ic_small_check"
-                android:fontFamily="sans-serif-medium"
-                android:text="Baker Street Toast Pita Chips Jalapeno Chips"
-                android:textColor="@color/text_44"
-                android:textSize="@dimen/dimen_12dp" />
-
-            <TextView
-                android:id="@+id/tv_item_quantity"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="sans-serif-medium"
-                android:text="X 2"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_item_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawablePadding="@dimen/dimen_10dp"
+                    android:drawableStart="@drawable/ic_small_check"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="Baker Street Toast Pita Chips Jalapeno Chips"
+                    android:textColor="@color/text_44"
+                    android:textSize="@dimen/dimen_12dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dimen_25dp"
+                    android:layout_marginTop="@dimen/dimen_5dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tv_item_measurement"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="(250g)"
+                        android:textColor="@color/text_77"
+                        android:textSize="@dimen/dimen_11dp" />
+
+                    <TextView
+                        android:id="@+id/tv_item_quantity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dimen_10dp"
+                        android:text="X 2"
+                        android:textColor="@color/text_77"
+                        android:textSize="@dimen/dimen_11dp" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_item_unavailable"
+                android:layout_width="@dimen/dimen_50dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edittext_bg"
+                android:gravity="center"
+                android:padding="@dimen/dimen_10dp"
+                android:tag="1"
+                android:text="@string/item_not_available"
                 android:textColor="@color/text_77"
-                android:textSize="@dimen/dimen_12dp" />
+                android:textSize="@dimen/dimen_14dp" />
 
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/tv_item_measurement"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dimen_25dp"
-            android:layout_marginTop="@dimen/dimen_5dp"
-            android:text="(250g)"
+        <EditText
+            android:id="@+id/et_alternate_item"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_35dp"
+            android:layout_marginTop="@dimen/dimen_10dp"
+            android:background="@drawable/edittext_bg"
+            android:hint="@string/suggest_replacement"
+            android:inputType="textNoSuggestions"
+            android:paddingLeft="@dimen/dimen_15dp"
+            android:paddingRight="@dimen/dimen_10dp"
             android:textColor="@color/text_77"
-            android:textSize="@dimen/dimen_11dp" />
+            android:visibility="gone"
+            android:textColorHint="@color/text_77_80"
+            android:textSize="@dimen/dimen_14dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -66,15 +108,34 @@
                 android:id="@+id/et_quantity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:background="@drawable/edittext_bg"
                 android:drawableRight="@drawable/ic_dropdown"
                 android:focusable="false"
                 android:focusableInTouchMode="false"
-                android:hint="@string/available_quantity"
+                android:hint="e.g. 250 gm"
+                android:inputType="textNoSuggestions"
                 android:lineSpacingExtra="-1sp"
                 android:padding="@dimen/dimen_10dp"
                 android:textColor="@color/text_77"
+                android:textColorHint="@color/text_77"
+                android:textSize="@dimen/dimen_10dp" />
+
+            <EditText
+                android:id="@+id/et_quantity_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_10dp"
                 android:layout_weight="1"
+                android:background="@drawable/edittext_bg"
+                android:drawableRight="@drawable/ic_dropdown"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:hint="2 Nos"
+                android:inputType="textNoSuggestions"
+                android:lineSpacingExtra="-1sp"
+                android:padding="@dimen/dimen_10dp"
+                android:textColor="@color/text_77"
                 android:textColorHint="@color/text_77"
                 android:textSize="@dimen/dimen_10dp" />
 
@@ -95,19 +156,6 @@
                 app:prefix_string="@string/rupee_sign" />
 
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/tv_item_unavailable"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dimen_10dp"
-            android:background="@drawable/edittext_bg"
-            android:gravity="center_horizontal"
-            android:padding="@dimen/dimen_10dp"
-            android:tag="1"
-            android:text="@string/item_not_available"
-            android:textColor="@color/text_77"
-            android:textSize="@dimen/dimen_10dp" />
 
         <View
             android:id="@+id/v_divider"

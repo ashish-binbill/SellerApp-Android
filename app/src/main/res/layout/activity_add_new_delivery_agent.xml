@@ -80,33 +80,52 @@
                 android:textColorHint="@color/hint_color"
                 android:textSize="@dimen/dimen_15dp" />
 
-            <com.binbill.seller.CustomViews.PrefixEditText
-                android:id="@+id/et_mobile"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dimen_55dp"
-                android:layout_below="@id/iv_binbill"
                 android:layout_marginTop="@dimen/dimen_20dp"
                 android:background="@drawable/edittext_bg"
-                android:hint="@string/mobile_number"
-                android:inputType="phone"
-                android:lineSpacingExtra="-1sp"
-                android:maxLength="10"
-                android:paddingLeft="@dimen/dimen_12dp"
-                android:paddingRight="@dimen/dimen_12dp"
-                android:textColor="@color/text_44"
-                android:textColorHint="@color/hint_color"
-                android:textSize="@dimen/dimen_15dp" />
+                android:orientation="horizontal">
+
+                <com.binbill.seller.CustomViews.PrefixEditText
+                    android:id="@+id/et_mobile"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/dimen_55dp"
+                    android:layout_marginRight="@dimen/dimen_10dp"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:hint="@string/mobile_number"
+                    android:inputType="phone"
+                    android:lineSpacingExtra="-1sp"
+                    android:maxLength="10"
+                    android:paddingLeft="@dimen/dimen_12dp"
+                    android:paddingRight="@dimen/dimen_12dp"
+                    android:textColor="@color/text_44"
+                    android:textColorHint="@color/hint_color"
+                    android:textSize="@dimen/dimen_15dp" />
+
+                <ImageView
+                    android:id="@+id/iv_open_phonebook"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="@dimen/dimen_10dp"
+                    android:paddingLeft="@dimen/dimen_10dp"
+                    android:paddingRight="@dimen/dimen_10dp"
+                    android:src="@drawable/ic_call" />
+
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/tv_error_mobile"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/et_mobile"
+                android:layout_gravity="left"
                 android:layout_marginTop="@dimen/dimen_5dp"
                 android:fontFamily="sans-serif"
-                android:layout_below="@id/et_mobile"
                 android:textColor="@android:color/holo_red_light"
                 android:textSize="@dimen/dimen_10dp"
-                android:layout_gravity="left"
                 android:textStyle="normal"
                 android:visibility="gone" />
 

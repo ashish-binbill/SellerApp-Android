@@ -23,9 +23,9 @@
 
     <FrameLayout
         android:id="@+id/container"
-        android:visibility="gone"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:visibility="gone" />
 
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/scroll_view"
@@ -44,11 +44,12 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center">
 
-               <include layout="@layout/layout_no_user_image"
-                   android:id="@+id/profile_pic"
-                   android:layout_width="@dimen/dimen_120dp"
-                   android:layout_gravity="center"
-                   android:layout_height="@dimen/dimen_120dp"/>
+                <include
+                    android:id="@+id/profile_pic"
+                    layout="@layout/layout_no_user_image"
+                    android:layout_width="@dimen/dimen_120dp"
+                    android:layout_height="@dimen/dimen_120dp"
+                    android:layout_gravity="center" />
 
                 <FrameLayout
                     android:id="@+id/frame_camera"
@@ -73,11 +74,11 @@
             <com.nex3z.flowlayout.FlowLayout
                 android:id="@+id/fl_tag_layout"
                 android:layout_width="match_parent"
-                android:visibility="gone"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/dimen_40dp"
                 android:layout_marginRight="@dimen/dimen_40dp"
                 android:layout_marginTop="@dimen/dimen_15dp"
-                android:layout_height="wrap_content"
+                android:visibility="gone"
                 app:flChildSpacing="@dimen/dimen_10dp"
                 app:flRowSpacing="@dimen/dimen_5dp" />
 
@@ -96,34 +97,52 @@
                 android:textColorHint="@color/hint_color"
                 android:textSize="@dimen/dimen_15dp" />
 
-            <com.binbill.seller.CustomViews.PrefixEditText
-                android:id="@+id/et_mobile"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dimen_55dp"
-                android:layout_below="@id/iv_binbill"
-                android:paddingLeft="@dimen/dimen_12dp"
                 android:layout_marginTop="@dimen/dimen_15dp"
                 android:background="@drawable/edittext_bg"
-                android:textColor="@color/text_44"
-                android:textSize="@dimen/dimen_15dp"
-                android:maxLength="10"
-                android:inputType="phone"
-                android:hint="@string/mobile_number"
-                android:textColorHint="@color/hint_color"
-                android:lineSpacingExtra="-1sp"
-                android:drawableRight="@drawable/ic_mobile"
-                android:paddingRight="@dimen/dimen_12dp" />
+                android:orientation="horizontal">
+
+                <com.binbill.seller.CustomViews.PrefixEditText
+                    android:id="@+id/et_mobile"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/dimen_55dp"
+                    android:layout_marginRight="@dimen/dimen_10dp"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:hint="@string/mobile_number"
+                    android:inputType="phone"
+                    android:lineSpacingExtra="-1sp"
+                    android:maxLength="10"
+                    android:paddingLeft="@dimen/dimen_12dp"
+                    android:paddingRight="@dimen/dimen_12dp"
+                    android:textColor="@color/text_44"
+                    android:textColorHint="@color/hint_color"
+                    android:textSize="@dimen/dimen_15dp" />
+
+                <ImageView
+                    android:id="@+id/iv_open_phonebook"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="@dimen/dimen_10dp"
+                    android:paddingLeft="@dimen/dimen_10dp"
+                    android:paddingRight="@dimen/dimen_10dp"
+                    android:src="@drawable/ic_mobile" />
+
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/tv_error_mobile"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/et_mobile"
+                android:layout_gravity="left"
                 android:layout_marginTop="@dimen/dimen_5dp"
                 android:fontFamily="sans-serif"
-                android:layout_below="@id/et_mobile"
                 android:textColor="@android:color/holo_red_light"
                 android:textSize="@dimen/dimen_10dp"
-                android:layout_gravity="left"
                 android:textStyle="normal"
                 android:visibility="gone" />
 
@@ -131,22 +150,22 @@
                 android:id="@+id/upload_image_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimen_15dp"
                 android:layout_below="@id/tv_error_pincode"
+                android:layout_marginTop="@dimen/dimen_15dp"
                 android:orientation="horizontal">
 
                 <EditText
                     android:id="@+id/et_adhar_image"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/dimen_55dp"
+                    android:layout_weight="1"
                     android:background="@drawable/edittext_bg"
+                    android:drawableRight="@drawable/ic_camera"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
                     android:hint="@string/upload_adhar"
                     android:inputType="text"
-                    android:layout_weight="1"
-                    android:focusableInTouchMode="false"
-                    android:focusable="false"
                     android:lineSpacingExtra="-1sp"
-                    android:drawableRight="@drawable/ic_camera"
                     android:paddingLeft="@dimen/dimen_12dp"
                     android:paddingRight="@dimen/dimen_12dp"
                     android:textColor="@color/text_44"
@@ -159,14 +178,14 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:gravity="center"
-                    android:textStyle="bold"
-                    android:visibility="gone"
                     android:paddingLeft="@dimen/dimen_10dp"
                     android:paddingRight="@dimen/dimen_10dp"
                     android:text="@string/view"
                     android:textAllCaps="true"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="@dimen/dimen_14dp" />
+                    android:textSize="@dimen/dimen_14dp"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
 
             </LinearLayout>
 
@@ -174,26 +193,26 @@
                 android:id="@+id/image_count"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="left"
-                android:layout_marginTop="@dimen/dimen_5dp"
                 android:layout_below="@id/upload_image_layout"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/dimen_5dp"
+                android:gravity="left"
                 android:paddingLeft="@dimen/dimen_10dp"
                 android:paddingRight="@dimen/dimen_10dp"
                 android:text=""
                 android:textAllCaps="true"
-                android:visibility="gone"
                 android:textColor="@color/colorAccent"
-                android:textSize="@dimen/dimen_12dp" />
+                android:textSize="@dimen/dimen_12dp"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/tv_error_upload_adhar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimen_5dp"
-                android:fontFamily="sans-serif"
                 android:layout_below="@id/et_mobile"
                 android:layout_gravity="left"
+                android:layout_marginTop="@dimen/dimen_5dp"
+                android:fontFamily="sans-serif"
                 android:textColor="@android:color/holo_red_light"
                 android:textSize="@dimen/dimen_10dp"
                 android:textStyle="normal"
@@ -205,12 +224,12 @@
                 android:layout_height="@dimen/dimen_55dp"
                 android:layout_marginTop="@dimen/dimen_15dp"
                 android:background="@drawable/edittext_bg"
+                android:drawableRight="@drawable/ic_dropdown"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
                 android:hint="@string/type_of_service"
                 android:inputType="text"
-                android:focusableInTouchMode="false"
-                android:focusable="false"
                 android:lineSpacingExtra="-1sp"
-                android:drawableRight="@drawable/ic_dropdown"
                 android:paddingLeft="@dimen/dimen_12dp"
                 android:paddingRight="@dimen/dimen_12dp"
                 android:textColor="@color/text_44"
