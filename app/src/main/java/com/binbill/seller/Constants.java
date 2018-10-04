@@ -71,6 +71,7 @@ public class Constants {
     public static final int PERMISSION_READ_SMS = 100;
     public static final int PERMISSION_CAMERA = 101;
     public static final int PERMISSION_CALL = 102;
+    public static final int PERMISSION_READ_CONTACT =  103;
     public static final int INTENT_CALL_SELECT_DELIVERY_AGENT = 1;
     public static final int INTENT_SELECT_PHONE_BOOK_CONTACT = 20;
 

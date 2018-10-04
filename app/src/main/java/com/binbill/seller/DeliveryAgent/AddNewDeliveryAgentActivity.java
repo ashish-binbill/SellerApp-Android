@@ -183,8 +183,8 @@ public class AddNewDeliveryAgentActivity extends BaseActivity {
         iv_open_phonebook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
-                startActivityForResult(intent, Constants.INTENT_SELECT_PHONE_BOOK_CONTACT);
+
+                checkpermission();
             }
         });
 
@@ -227,6 +227,20 @@ public class AddNewDeliveryAgentActivity extends BaseActivity {
                 enableDisableSaveButton();
             }
         });
+    }
+
+    private void checkpermission() {
+        if (ContextCompat.checkSelfPermission(this,
+                android.Manifest.permission.READ_CONTACTS)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this, new String[]{
+                            Manifest.permission.READ_CONTACTS},
+                    Constants.PERMISSION_READ_CONTACT);
+        } else {
+            Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+            startActivityForResult(intent, Constants.INTENT_SELECT_PHONE_BOOK_CONTACT);
+        }
     }
 
     private void makeCreateAssistedServiceApiCall() {
@@ -388,6 +402,17 @@ public class AddNewDeliveryAgentActivity extends BaseActivity {
                             || !ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                         showSnackBar("Please give permissions to take picture");
                     }
+
+                }
+                return;
+            }
+
+            case Constants.PERMISSION_READ_CONTACT: {
+
+                if (grantResults.length > 1
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                    Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+                    startActivityForResult(intent, Constants.INTENT_SELECT_PHONE_BOOK_CONTACT);
 
                 }
                 return;
