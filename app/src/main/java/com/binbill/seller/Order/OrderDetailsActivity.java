@@ -588,10 +588,9 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
     }
 
     private void setUpData() {
-
+        header_quantity.setVisibility(View.GONE);
         if (orderDetails.getOrderType().equalsIgnoreCase(Constants.ORDER_TYPE_SERVICE)) {
             header_shopping_list.setText(getString(R.string.service_requested));
-            header_quantity.setVisibility(View.GONE);
             btn_accept.setText(getString(R.string.assign));
         } else {
             header_shopping_list.setText(getString(R.string.shopping_list, String.valueOf(orderDetails.getOrderItems().size())));
