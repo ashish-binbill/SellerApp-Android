@@ -117,6 +117,8 @@ public class BusinessDetailsActivity extends BaseActivity implements OptionListF
                 onListItemSelected(businessDetailsModel.getBusinessName(), 0);
             }
         }
+
+        btn_submit.setText(getString(R.string.save));
     }
 
     private void enableDisableVerifyButton() {

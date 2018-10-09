@@ -1,10 +1,12 @@
 package com.binbill.seller.Dashboard;
 
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -49,6 +51,9 @@ public class DashboardListActivity extends BaseActivity {
     RecyclerView rv_credits_view;
 
     @ViewById
+    ImageView iv_no_data_image;
+
+    @ViewById
     AppButton btn_no_data;
     private int mType;
 
@@ -59,6 +64,20 @@ public class DashboardListActivity extends BaseActivity {
         setUpToolbar();
         setUpListeners();
         btn_no_data.setVisibility(View.GONE);
+
+        switch (mType) {
+            case Constants.CREDIT_PENDING:
+                iv_no_data_image.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_no_credit));
+                break;
+            case Constants.POINTS:
+                iv_no_data_image.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_no_points));
+                break;
+            case Constants.TRANSACTIONS:
+                iv_no_data_image.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_no_txn));
+                break;
+            default:
+                iv_no_data_image.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_no_cashback));
+        }
         tv_no_data.setText(getString(R.string.no_credit));
 
     }

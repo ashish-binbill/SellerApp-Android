@@ -253,6 +253,17 @@ public class AssistedServiceAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                             userHolder.userImage.setImageDrawable(ContextCompat.getDrawable(userHolder.userImage.getContext(), R.drawable.ic_user));
                         }
                     });
+        }else{
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                    RelativeLayout.LayoutParams.MATCH_PARENT,
+                    RelativeLayout.LayoutParams.MATCH_PARENT
+            );
+
+            int margins = Utility.convertDPtoPx(userHolder.userImage.getContext(), 15);
+            params.setMargins(margins, margins, margins, margins);
+            userHolder.userImage.setLayoutParams(params);
+
+            userHolder.userImage.setImageDrawable(ContextCompat.getDrawable(userHolder.userImage.getContext(), R.drawable.ic_user));
         }
 
         userHolder.mCall.setOnClickListener(new View.OnClickListener() {

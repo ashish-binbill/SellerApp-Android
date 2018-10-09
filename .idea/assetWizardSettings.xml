@@ -18,6 +18,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
+                                      <entry key="foregroundImage" value="$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/ic_launcher.png" />
                                       <entry key="legacyIconShape" value="CIRCLE" />
                                       <entry key="webIconShape" value="CIRCLE" />
                                     </map>

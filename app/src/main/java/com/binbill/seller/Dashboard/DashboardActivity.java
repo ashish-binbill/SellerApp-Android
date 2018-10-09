@@ -352,7 +352,16 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
 
                     @Override
                     public void onError(Exception e) {
+                        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                                RelativeLayout.LayoutParams.MATCH_PARENT,
+                                RelativeLayout.LayoutParams.MATCH_PARENT
+                        );
 
+                        int margins = Utility.convertDPtoPx(DashboardActivity.this, 15);
+                        params.setMargins(margins, margins, margins, margins);
+                        iv_user_image.setLayoutParams(params);
+
+                        iv_user_image.setImageDrawable(ContextCompat.getDrawable(DashboardActivity.this, R.drawable.ic_user));
                     }
                 });
 

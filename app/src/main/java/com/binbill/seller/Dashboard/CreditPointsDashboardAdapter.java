@@ -2,6 +2,7 @@ package com.binbill.seller.Dashboard;
 
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.RecyclerView;
@@ -148,9 +149,29 @@ public class CreditPointsDashboardAdapter extends RecyclerView.Adapter<RecyclerV
 
                         @Override
                         public void onError(Exception e) {
+                            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                                    RelativeLayout.LayoutParams.MATCH_PARENT,
+                                    RelativeLayout.LayoutParams.MATCH_PARENT
+                            );
 
+                            int margins = Utility.convertDPtoPx(creditLoyaltyHolder.userImage.getContext(), 15);
+                            params.setMargins(margins, margins, margins, margins);
+                            creditLoyaltyHolder.userImage.setLayoutParams(params);
+
+                            creditLoyaltyHolder.userImage.setImageDrawable(ContextCompat.getDrawable(creditLoyaltyHolder.userImage.getContext(), R.drawable.ic_user));
                         }
                     });
+        } else {
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                    RelativeLayout.LayoutParams.MATCH_PARENT,
+                    RelativeLayout.LayoutParams.MATCH_PARENT
+            );
+
+            int margins = Utility.convertDPtoPx(creditLoyaltyHolder.userImage.getContext(), 15);
+            params.setMargins(margins, margins, margins, margins);
+            creditLoyaltyHolder.userImage.setLayoutParams(params);
+
+            creditLoyaltyHolder.userImage.setImageDrawable(ContextCompat.getDrawable(creditLoyaltyHolder.userImage.getContext(), R.drawable.ic_user));
         }
     }
 }

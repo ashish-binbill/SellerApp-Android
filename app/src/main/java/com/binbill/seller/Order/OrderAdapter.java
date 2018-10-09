@@ -256,6 +256,17 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                                 orderHolder.userImage.setImageDrawable(ContextCompat.getDrawable(orderHolder.userImage.getContext(), R.drawable.ic_user));
                             }
                         });
+            }else{
+                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                        RelativeLayout.LayoutParams.MATCH_PARENT,
+                        RelativeLayout.LayoutParams.MATCH_PARENT
+                );
+
+                int margins = Utility.convertDPtoPx(orderHolder.userImage.getContext(), 15);
+                params.setMargins(margins, margins, margins, margins);
+                orderHolder.userImage.setLayoutParams(params);
+
+                orderHolder.userImage.setImageDrawable(ContextCompat.getDrawable(orderHolder.userImage.getContext(), R.drawable.ic_user));
             }
 
             orderHolder.mItemCount.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);

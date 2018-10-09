@@ -182,6 +182,8 @@ public class BasicDetails2Activity extends BaseActivity implements OptionListFra
         if (!Utility.isEmpty(basicDetails.getHomeDeliveryRemarks()))
             et_delivery_distance.setText(basicDetails.getHomeDeliveryRemarks());
 
+        btn_submit.setText(getString(R.string.save));
+
         enableDisableVerifyButton();
     }
 

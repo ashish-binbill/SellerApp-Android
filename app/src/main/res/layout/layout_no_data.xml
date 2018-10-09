@@ -5,6 +5,7 @@
     android:padding="@dimen/dimen_20dp"
     android:orientation="vertical"
     android:gravity="top"
+    android:background="@color/color_white"
     android:visibility="gone"
     android:layout_height="match_parent">
 

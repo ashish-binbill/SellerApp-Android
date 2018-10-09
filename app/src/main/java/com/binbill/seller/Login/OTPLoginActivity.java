@@ -200,7 +200,10 @@ public class OTPLoginActivity extends BaseActivity {
         HashMap<String, String> map = new HashMap<>();
         map.put("token", otp_view.getText().toString());
         map.put("mobile_no", AppSession.getInstance(this).getMobile());
-        map.put("fcm_id", SharedPref.getString(this, SharedPref.FIREBASE_TOKEN));
+
+        String firebaseToken = SharedPref.getString(this, SharedPref.FIREBASE_TOKEN);
+        if (!Utility.isEmpty(firebaseToken))
+            map.put("fcm_id", SharedPref.getString(this, SharedPref.FIREBASE_TOKEN));
         map.put("platform", "1");
 
         new RetrofitHelper(this).validateOTPToLoginUser(map, new RetrofitHelper.RetrofitCallbackWithError() {

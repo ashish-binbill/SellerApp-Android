@@ -133,11 +133,9 @@ public class HomeFragment extends Fragment {
         allCredits.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!pendingCredit.getText().toString().equals(emptyValue)) {
-                    Intent intent = new Intent(getActivity(), DashboardListActivity_.class);
-                    intent.putExtra(Constants.TYPE, Constants.CREDIT_PENDING);
-                    startActivity(intent);
-                }
+                Intent intent = new Intent(getActivity(), DashboardListActivity_.class);
+                intent.putExtra(Constants.TYPE, Constants.CREDIT_PENDING);
+                startActivity(intent);
             }
         });
 
@@ -145,11 +143,9 @@ public class HomeFragment extends Fragment {
         allPoints.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!loyalty.getText().toString().equals("0")) {
-                    Intent intent = new Intent(getActivity(), DashboardListActivity_.class);
-                    intent.putExtra(Constants.TYPE, Constants.POINTS);
-                    startActivity(intent);
-                }
+                Intent intent = new Intent(getActivity(), DashboardListActivity_.class);
+                intent.putExtra(Constants.TYPE, Constants.POINTS);
+                startActivity(intent);
             }
         });
 
@@ -157,11 +153,9 @@ public class HomeFragment extends Fragment {
         allTransactions.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!transactionValue.getText().toString().equals(emptyValue)) {
-                    Intent intent = new Intent(getActivity(), DashboardListActivity_.class);
-                    intent.putExtra(Constants.TYPE, Constants.TRANSACTIONS);
-                    startActivity(intent);
-                }
+                Intent intent = new Intent(getActivity(), DashboardListActivity_.class);
+                intent.putExtra(Constants.TYPE, Constants.TRANSACTIONS);
+                startActivity(intent);
             }
         });
 
@@ -171,11 +165,9 @@ public class HomeFragment extends Fragment {
             public void onClick(View view) {
 
                 if (tvLabelCustomer.getText().toString().equalsIgnoreCase(getString(R.string.cashback_to_users))) {
-                    if (!customerCount.getText().toString().equals(emptyValue)) {
-                        Intent intent = new Intent(getActivity(), DashboardListActivity_.class);
-                        intent.putExtra(Constants.TYPE, Constants.CASHBACKS);
-                        startActivity(intent);
-                    }
+                    Intent intent = new Intent(getActivity(), DashboardListActivity_.class);
+                    intent.putExtra(Constants.TYPE, Constants.CASHBACKS);
+                    startActivity(intent);
                 } else {
                     FragmentEventListener eventListener = (FragmentEventListener) getActivity();
                     eventListener.changeViewPagerFragment(4);

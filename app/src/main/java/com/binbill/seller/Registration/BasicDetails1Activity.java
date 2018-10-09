@@ -125,6 +125,7 @@ public class BasicDetails1Activity extends BaseActivity implements OptionListFra
 
         et_pincode.setText(mProfileModel.getLocality().getPinCode());
 
+        btn_submit.setText(getString(R.string.save));
         enableDisableVerifyButton();
     }
 
