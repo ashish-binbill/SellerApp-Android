@@ -7,9 +7,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.binbill.seller.R;
+import com.binbill.seller.Utility;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by shruti.vig on 9/6/18.
@@ -61,7 +61,10 @@ class OrderSKUAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         final OrderSKUHolder orderSKUHolder = (OrderSKUHolder) holder;
         final OrderItem.OrderSKU model = mList.get(position);
 
-        orderSKUHolder.mValue.setText(model.getSkuMeasurementValue() + " " + model.getSkuMeasurementAcronym());
+        if (!Utility.isEmpty(model.getSkuPackNumber()) && Integer.parseInt(model.getSkuPackNumber()) > 0)
+            orderSKUHolder.mValue.setText(model.getSkuMeasurementValue() + " " + model.getSkuMeasurementAcronym() + " x " + model.getSkuPackNumber());
+        else
+            orderSKUHolder.mValue.setText(model.getSkuMeasurementValue() + " " + model.getSkuMeasurementAcronym());
 
         orderSKUHolder.mRootCard.setOnClickListener(new View.OnClickListener() {
             @Override

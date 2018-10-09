@@ -218,9 +218,12 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
             orderHolder.mItemName.setText(model.getItemTitle());
             orderHolder.mQuantity.setText("x " + model.getQuantity() + " Nos.");
 
-            if (skuModel != null)
-                orderHolder.mMeasurement.setText(skuModel.getSkuMeasurementValue() + " " + skuModel.getSkuMeasurementAcronym());
-            else
+            if (skuModel != null) {
+                if (!Utility.isEmpty(skuModel.getSkuPackNumber()) && Integer.parseInt(skuModel.getSkuPackNumber()) > 0)
+                    orderHolder.mMeasurement.setText(skuModel.getSkuMeasurementValue() + " " + skuModel.getSkuMeasurementAcronym() + " x " + skuModel.getSkuPackNumber());
+                else
+                    orderHolder.mMeasurement.setText(skuModel.getSkuMeasurementValue() + " " + skuModel.getSkuMeasurementAcronym());
+            } else
                 orderHolder.mMeasurement.setText("");
 
             if (model.getUpdatedQuantityCount() != null) {
@@ -300,9 +303,12 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
                         orderHolder.mAvailableQuantity.setVisibility(View.VISIBLE);
                         updateItemAvailability(orderHolder.mItemAvailability.getContext(), orderHolder.mItemAvailability);
 
-                        if (model.getOrderSKU() != null)
-                            orderHolder.mAvailableQuantity.setText(model.getOrderSKU().getSkuMeasurementValue() + " " + model.getOrderSKU().getSkuMeasurementAcronym());
-                        else
+                        if (model.getOrderSKU() != null) {
+                            if (!Utility.isEmpty(model.getOrderSKU().getSkuPackNumber()) && Integer.parseInt(model.getOrderSKU().getSkuPackNumber()) > 0)
+                                orderHolder.mAvailableQuantity.setText(model.getOrderSKU().getSkuMeasurementValue() + " " + model.getOrderSKU().getSkuMeasurementAcronym() + " x " + model.getOrderSKU().getSkuPackNumber());
+                            else
+                                orderHolder.mAvailableQuantity.setText(model.getOrderSKU().getSkuMeasurementValue() + " " + model.getOrderSKU().getSkuMeasurementAcronym());
+                        } else
                             orderHolder.mAvailableQuantity.setText("");
                     }
 
@@ -315,7 +321,10 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
                 boolean updateState = false;
                 OrderItem.OrderSKU sku = model.getUpdatedSKUMeasurement();
 
-                orderHolder.mAvailableQuantity.setText(sku.getSkuMeasurementValue() + " " + sku.getSkuMeasurementAcronym());
+                if (!Utility.isEmpty(sku.getSkuPackNumber()) && Integer.parseInt(sku.getSkuPackNumber()) > 0)
+                    orderHolder.mAvailableQuantity.setText(sku.getSkuMeasurementValue() + " " + sku.getSkuMeasurementAcronym() + " x " + sku.getSkuPackNumber());
+                else
+                    orderHolder.mAvailableQuantity.setText(sku.getSkuMeasurementValue() + " " + sku.getSkuMeasurementAcronym());
 
                 OrderItem.OrderSKU requestedSku = model.getOrderSKU();
                 if (sku.getSkuId() == null || requestedSku.getSkuId().equalsIgnoreCase(sku.getSkuId())) {
@@ -327,9 +336,12 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
                 checkStateMap();
             } else {
 
-                if (model.getOrderSKU() != null)
-                    orderHolder.mAvailableQuantity.setText(model.getOrderSKU().getSkuMeasurementValue() + " " + model.getOrderSKU().getSkuMeasurementAcronym());
-                else
+                if (model.getOrderSKU() != null) {
+                    if (!Utility.isEmpty(model.getOrderSKU().getSkuPackNumber()) && Integer.parseInt(model.getOrderSKU().getSkuPackNumber()) > 0)
+                        orderHolder.mAvailableQuantity.setText(model.getOrderSKU().getSkuMeasurementValue() + " " + model.getOrderSKU().getSkuMeasurementAcronym() + " x " + model.getOrderSKU().getSkuPackNumber());
+                    else
+                        orderHolder.mAvailableQuantity.setText(model.getOrderSKU().getSkuMeasurementValue() + " " + model.getOrderSKU().getSkuMeasurementAcronym());
+                } else
                     orderHolder.mAvailableQuantity.setText("");
             }
 
