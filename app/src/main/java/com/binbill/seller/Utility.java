@@ -643,4 +643,17 @@ public class Utility {
         }
         return json;
     }
+
+    public static boolean isValueNonZero(String priceString) {
+
+        try {
+            int price = Integer.parseInt(priceString);
+            if (price > 0)
+                return true;
+        } catch (Exception e) {
+
+        }
+
+        return false;
+    }
 }

@@ -1071,12 +1071,12 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
     }
 
     @Override
-    public void onOrderItemQuantityDenominationSelected(int pos) {
+    public void onOrderItemQuantityDenominationSelected(int pos, String quantity) {
         if (orderDetails != null && orderDetails.getOrderItems() != null &&
                 orderDetails.getOrderItems().size() > 0) {
             final OrderItem orderItem = orderDetails.getOrderItems().get(pos);
 
-            invokeQuantityPopUp(orderItem.getItemId());
+            invokeQuantityPopUp(orderItem.getItemId(), quantity);
         }
     }
 
@@ -1122,7 +1122,7 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
         mSKUDialog.show();
     }
 
-    private void invokeQuantityPopUp(final String itemId) {
+    private void invokeQuantityPopUp(final String itemId, String quantity) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout.dialog_show_available_sku, null);
@@ -1141,26 +1141,16 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
         mSKUDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         ArrayList<String> mDisplayList = new ArrayList<>();
-        mDisplayList.add("1 Nos.");
-        mDisplayList.add("2 Nos.");
-        mDisplayList.add("3 Nos.");
-        mDisplayList.add("4 Nos.");
-        mDisplayList.add("5 Nos.");
-        mDisplayList.add("6 Nos.");
-        mDisplayList.add("7 Nos.");
-        mDisplayList.add("8 Nos.");
-        mDisplayList.add("9 Nos.");
-        mDisplayList.add("10 Nos.");
-        mDisplayList.add("11 Nos.");
-        mDisplayList.add("12 Nos.");
-        mDisplayList.add("13 Nos.");
-        mDisplayList.add("14 Nos.");
-        mDisplayList.add("15 Nos.");
-        mDisplayList.add("16 Nos.");
-        mDisplayList.add("17 Nos.");
-        mDisplayList.add("18 Nos.");
-        mDisplayList.add("19 Nos.");
-        mDisplayList.add("20 Nos.");
+
+
+        int maxCount = 20;
+        if (!Utility.isEmpty(quantity)) {
+            maxCount = Integer.parseInt(quantity);
+        }
+
+        for (int i = 1; i <= maxCount; i++) {
+            mDisplayList.add(i + " Nos.");
+        }
 
         RecyclerView recyclerView = (RecyclerView) dialogView.findViewById(R.id.rv_list);
         LinearLayoutManager llm = new LinearLayoutManager(this);

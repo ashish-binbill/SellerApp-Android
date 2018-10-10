@@ -51,6 +51,7 @@ public class Order implements Serializable {
     @SerializedName("delivery_user")
     DeliveryModel deliveryUser;
 
+
     public DeliveryModel getDeliveryUser() {
         return deliveryUser;
     }
