@@ -14,6 +14,9 @@ public class OrderItem implements Serializable {
     @SerializedName("id")
     String itemId;
 
+    @SerializedName("uid")
+    String uid;
+
     @SerializedName("title")
     String itemTitle;
 
@@ -82,6 +85,10 @@ public class OrderItem implements Serializable {
 
     @SerializedName("suggestion")
     Suggestion suggestion;
+
+    public String getUid() {
+        return uid;
+    }
 
     public Suggestion getSuggestion() {
         return suggestion;

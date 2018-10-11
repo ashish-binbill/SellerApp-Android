@@ -35,6 +35,8 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
         void onItemInteraction(boolean enable);
 
         void onOrderItemQuantityDenominationSelected(int pos, String quantity);
+
+        void onSuggestionClicked(int pos);
     }
 
     public static class OrderShoppingListHolder extends RecyclerView.ViewHolder {
@@ -267,6 +269,7 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
                 orderHolder.mAvailableQuantity.setVisibility(View.VISIBLE);
             } else {
                 orderHolder.mAlternateItem.setVisibility(View.VISIBLE);
+                enableDisableAlternateItemEditText(orderHolder.mAlternateItem, false);
                 orderHolder.mItemAvailability.setTag("0");
                 orderHolder.mAvailableQuantityNewItem.setVisibility(View.VISIBLE);
                 orderHolder.mAvailableQuantity.setVisibility(View.GONE);
@@ -286,6 +289,7 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
                         model.setUpdateItemAvailable(false);
                         textView.setTag("0");
                         orderHolder.mAlternateItem.setVisibility(View.VISIBLE);
+                        enableDisableAlternateItemEditText(orderHolder.mAlternateItem, false);
                         orderHolder.mAvailableQuantity.setVisibility(View.GONE);
                         orderHolder.mAvailableQuantityNewItem.setVisibility(View.VISIBLE);
 
@@ -382,6 +386,14 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
                 }
             });
 
+            orderHolder.mAlternateItem.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (listener != null)
+                        listener.onSuggestionClicked(position);
+                }
+            });
+
             orderHolder.mQuantityNumber.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -394,10 +406,9 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
 
                         /**
                          * if Item is available and available quantity is equal to the requested quantity,
-                         * disable selection here
+                         * send quantity requested string
                          */
                         if (orderHolder.mAvailableQuantity.getVisibility() == View.VISIBLE &&
-                                model.getUpdatedSKUMeasurement() == null &&
                                 orderHolder.mAvailableQuantity.getText().toString().contains(model.getOrderSKU().getSkuMeasurementValue())) {
                             listener.onOrderItemQuantityDenominationSelected(position, model.getQuantity());
                         } else
@@ -513,6 +524,11 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
             orderHolder.mServiceName.setText(model.getServiceName());
         }
 
+    }
+
+    private void enableDisableAlternateItemEditText(EditText mAlternateItem, boolean isEnable) {
+        mAlternateItem.setFocusable(isEnable);
+        mAlternateItem.setFocusableInTouchMode(isEnable);
     }
 
 

@@ -22,6 +22,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -245,6 +246,18 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                     ArrayList<OrderItem> updatedList = mAdapter.getUpdatedOrderList();
                     for (OrderItem orderItem : updatedList) {
                         orderItem.setItemAvailability(orderItem.isUpdateItemAvailable());
+
+                        /**
+                         * Remove suggestion if any of the 2 items are missing : measurement or title
+                         */
+                        if (orderItem.getSuggestion() != null) {
+                            Suggestion suggestion = orderItem.getSuggestion();
+                            if (Utility.isEmpty(suggestion.getItemName()) || Utility.isEmpty(suggestion.getMeasuremenValue())) {
+                                suggestion = null;
+                            }
+
+                            orderItem.setSuggestion(suggestion);
+                        }
                     }
                     if (textOnButton.equalsIgnoreCase(getString(R.string.send_for_approval))) {
                         /**
@@ -1035,7 +1048,7 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                                         }.getType();
 
                                         ArrayList<OrderItem.OrderSKU> skuOptions = new Gson().fromJson(orderJson.toString(), classType);
-                                        invokeSkuPopUp(skuOptions, orderItem.getItemId());
+                                        invokeSkuPopUp(skuOptions, orderItem.getUid());
 
 
                                     }
@@ -1076,11 +1089,142 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                 orderDetails.getOrderItems().size() > 0) {
             final OrderItem orderItem = orderDetails.getOrderItems().get(pos);
 
-            invokeQuantityPopUp(orderItem.getItemId(), quantity);
+            invokeQuantityPopUp(orderItem.getUid(), quantity);
         }
     }
 
-    private void invokeSkuPopUp(ArrayList<OrderItem.OrderSKU> skuList, String itemId) {
+    @Override
+    public void onSuggestionClicked(int pos) {
+        if (orderDetails != null && orderDetails.getOrderItems() != null &&
+                orderDetails.getOrderItems().size() > 0) {
+            final OrderItem orderItem = orderDetails.getOrderItems().get(pos);
+
+            just_sec_layout.setVisibility(View.VISIBLE);
+            new RetrofitHelper(this).fetchSuggestionsByID(orderItem.getItemId(), new RetrofitHelper.RetrofitCallback() {
+                        @Override
+                        public void onResponse(String response) {
+                            just_sec_layout.setVisibility(View.GONE);
+                            try {
+                                JSONObject jsonObject = new JSONObject(response);
+                                if (jsonObject.getBoolean("status")) {
+                                    if (jsonObject.optJSONArray("result") != null) {
+                                        JSONArray orderJson = jsonObject.getJSONArray("result");
+                                        Type classType = new TypeToken<ArrayList<SuggestionSku>>() {
+                                        }.getType();
+
+                                        ArrayList<SuggestionSku> skuOptions = new Gson().fromJson(orderJson.toString(), classType);
+                                        invokeSuggestionPopUp(skuOptions, orderItem.getUid());
+
+                                    }
+                                } else {
+                                    showSnackBar(getString(R.string.something_went_wrong));
+
+                                }
+                            } catch (JSONException e) {
+
+                                showSnackBar(getString(R.string.something_went_wrong));
+                            }
+
+                        }
+
+                        @Override
+                        public void onErrorResponse() {
+                            just_sec_layout.setVisibility(View.GONE);
+                            showSnackBar(getString(R.string.something_went_wrong));
+                        }
+                    }
+            );
+        }
+    }
+
+    private void invokeSuggestionPopUp(ArrayList<SuggestionSku> skuOptions, final String uid) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.dialog_show_available_sku, null);
+
+        Rect displayRectangle = new Rect();
+        Window window = getWindow();
+        window.getDecorView().getWindowVisibleDisplayFrame(displayRectangle);
+
+        dialogView.setMinimumWidth((int) (displayRectangle.width() * 0.9f));
+
+        builder.setView(dialogView);
+        builder.setCancelable(false);
+
+        mSKUDialog = builder.create();
+        mSKUDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        mSKUDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        final TextView addNew = (TextView) dialogView.findViewById(R.id.tv_add_new);
+        final LinearLayout addNewLayout = (LinearLayout) dialogView.findViewById(R.id.ll_add_new_item);
+
+        addNew.setVisibility(View.VISIBLE);
+        addNewLayout.setVisibility(View.GONE);
+
+        final EditText newItem = (EditText) addNewLayout.findViewById(R.id.et_add_item);
+        final TextView newItemError = (TextView) addNewLayout.findViewById(R.id.tv_error_add_item);
+        AppButton add = (AppButton) addNewLayout.findViewById(R.id.btn_yes);
+        AppButtonGreyed cancel = (AppButtonGreyed) addNewLayout.findViewById(R.id.btn_no);
+
+        final RecyclerView recyclerView = (RecyclerView) dialogView.findViewById(R.id.rv_list);
+
+        OrderSKUAdapter mAdapter = null;
+        if (skuOptions != null && skuOptions.size() > 0) {
+            recyclerView.setHasFixedSize(true);
+            LinearLayoutManager llm = new LinearLayoutManager(this);
+            llm.setOrientation(LinearLayoutManager.VERTICAL);
+            recyclerView.setLayoutManager(llm);
+            mAdapter = new OrderSKUAdapter(skuOptions, this, uid, true);
+            recyclerView.setAdapter(mAdapter);
+        } else {
+            mSKUDialog.dismiss();
+        }
+
+        addNew.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addNew.setVisibility(View.GONE);
+                addNewLayout.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.GONE);
+            }
+        });
+
+        add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                newItemError.setVisibility(View.GONE);
+                String newItemText = newItem.getText().toString();
+                if (!Utility.isEmpty(newItemText)) {
+                    onSKUSelectedNewItem(newItemText, uid);
+                } else {
+                    newItemError.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                newItemError.setVisibility(View.GONE);
+                addNewLayout.setVisibility(View.GONE);
+
+                addNew.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.VISIBLE);
+            }
+        });
+
+        TextView headerTitle = (TextView) dialogView.findViewById(R.id.header);
+        headerTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mSKUDialog.dismiss();
+            }
+        });
+
+        mSKUDialog.show();
+    }
+
+    private void invokeSkuPopUp(ArrayList<OrderItem.OrderSKU> skuList, String uid) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout.dialog_show_available_sku, null);
@@ -1105,7 +1249,7 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
             LinearLayoutManager llm = new LinearLayoutManager(this);
             llm.setOrientation(LinearLayoutManager.VERTICAL);
             recyclerView.setLayoutManager(llm);
-            mAdapter = new OrderSKUAdapter(skuList, this, itemId);
+            mAdapter = new OrderSKUAdapter(skuList, this, uid);
             recyclerView.setAdapter(mAdapter);
         } else {
             mSKUDialog.dismiss();
@@ -1122,7 +1266,7 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
         mSKUDialog.show();
     }
 
-    private void invokeQuantityPopUp(final String itemId, String quantity) {
+    private void invokeQuantityPopUp(final String uid, String quantity) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout.dialog_show_available_sku, null);
@@ -1162,7 +1306,7 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
 
                 ArrayList<OrderItem> itemList = orderDetails.getOrderItems();
                 for (OrderItem item : itemList) {
-                    if (item.getItemId().equalsIgnoreCase(itemId)) {
+                    if (item.getItemId().equalsIgnoreCase(uid)) {
 
                         String quantitySelected = (String) object;
                         quantitySelected = quantitySelected.substring(0, quantitySelected.length() - 5);
@@ -1193,12 +1337,59 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
     }
 
     @Override
-    public void onSKUSelected(OrderItem.OrderSKU sku, String itemId) {
+    public void onSKUSelected(OrderItem.OrderSKU sku, String uid) {
 
         ArrayList<OrderItem> itemList = orderDetails.getOrderItems();
         for (OrderItem item : itemList) {
-            if (item.getItemId().equalsIgnoreCase(itemId))
+            if (item.getUid().equalsIgnoreCase(uid))
                 item.setUpdatedSKUMeasurement(sku);
+        }
+
+        if (mAdapter != null) {
+            mAdapter.refreshEvents(itemList);
+        }
+
+        if (mSKUDialog != null)
+            mSKUDialog.dismiss();
+    }
+
+    @Override
+    public void onSKUSelected(SuggestionSku sku, String uid) {
+        ArrayList<OrderItem> itemList = orderDetails.getOrderItems();
+        Suggestion suggestion;
+        for (OrderItem item : itemList) {
+            if (item.getUid().equalsIgnoreCase(uid)) {
+                if (item.getSuggestion() != null)
+                    suggestion = item.getSuggestion();
+                else
+                    suggestion = new Suggestion();
+
+                suggestion.setItemName(sku.getTitle());
+                item.setSuggestion(suggestion);
+            }
+        }
+
+        if (mAdapter != null) {
+            mAdapter.refreshEvents(itemList);
+        }
+
+        if (mSKUDialog != null)
+            mSKUDialog.dismiss();
+    }
+
+    public void onSKUSelectedNewItem(String sku, String uid) {
+        ArrayList<OrderItem> itemList = orderDetails.getOrderItems();
+        Suggestion suggestion;
+        for (OrderItem item : itemList) {
+            if (item.getUid().equalsIgnoreCase(uid)) {
+                if (item.getSuggestion() != null)
+                    suggestion = item.getSuggestion();
+                else
+                    suggestion = new Suggestion();
+
+                suggestion.setItemName(sku);
+                item.setSuggestion(suggestion);
+            }
         }
 
         if (mAdapter != null) {

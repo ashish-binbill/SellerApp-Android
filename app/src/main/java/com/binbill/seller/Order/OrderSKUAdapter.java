@@ -19,6 +19,8 @@ class OrderSKUAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public interface OrderSKUInterface {
         void onSKUSelected(OrderItem.OrderSKU sku, String itemID);
+
+        void onSKUSelected(SuggestionSku sku, String itemID);
     }
 
     public static class OrderSKUHolder extends RecyclerView.ViewHolder {
@@ -33,6 +35,7 @@ class OrderSKUAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     private ArrayList<OrderItem.OrderSKU> mList;
+    private ArrayList<SuggestionSku> mSuggestionList;
     private OrderSKUInterface listener;
     private String itemId;
 
@@ -42,9 +45,19 @@ class OrderSKUAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         this.itemId = item;
     }
 
+    public OrderSKUAdapter(ArrayList<SuggestionSku> list, OrderSKUInterface skuInterface, String item, boolean isSuggestion) {
+        this.mSuggestionList = list;
+        this.listener = skuInterface;
+        this.itemId = item;
+    }
+
     @Override
     public int getItemCount() {
-        return mList.size();
+
+        if (mList != null)
+            return mList.size();
+        else
+            return mSuggestionList.size();
     }
 
     @Override
@@ -58,21 +71,36 @@ class OrderSKUAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
 
-        final OrderSKUHolder orderSKUHolder = (OrderSKUHolder) holder;
-        final OrderItem.OrderSKU model = mList.get(position);
+        if (mList != null) {
+            final OrderSKUHolder orderSKUHolder = (OrderSKUHolder) holder;
+            final OrderItem.OrderSKU model = mList.get(position);
 
-        if (!Utility.isEmpty(model.getSkuPackNumber()) && Integer.parseInt(model.getSkuPackNumber()) > 0)
-            orderSKUHolder.mValue.setText(model.getSkuMeasurementValue() + " " + model.getSkuMeasurementAcronym() + " x " + model.getSkuPackNumber());
-        else
-            orderSKUHolder.mValue.setText(model.getSkuMeasurementValue() + " " + model.getSkuMeasurementAcronym());
+            if (!Utility.isEmpty(model.getSkuPackNumber()) && Integer.parseInt(model.getSkuPackNumber()) > 0)
+                orderSKUHolder.mValue.setText(model.getSkuMeasurementValue() + " " + model.getSkuMeasurementAcronym() + " x " + model.getSkuPackNumber());
+            else
+                orderSKUHolder.mValue.setText(model.getSkuMeasurementValue() + " " + model.getSkuMeasurementAcronym());
 
-        orderSKUHolder.mRootCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (listener != null)
-                    listener.onSKUSelected(model, itemId);
-            }
-        });
+            orderSKUHolder.mRootCard.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (listener != null)
+                        listener.onSKUSelected(model, itemId);
+                }
+            });
+        } else {
+            final OrderSKUHolder orderSKUHolder = (OrderSKUHolder) holder;
+            final SuggestionSku model = mSuggestionList.get(position);
+
+            orderSKUHolder.mValue.setText(model.getTitle());
+
+            orderSKUHolder.mRootCard.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (listener != null)
+                        listener.onSKUSelected(model, itemId);
+                }
+            });
+        }
 
     }
 }
