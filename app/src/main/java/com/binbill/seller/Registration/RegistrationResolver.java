@@ -208,13 +208,13 @@ public class RegistrationResolver {
                     /**
                      * AUTOMOBILE/ ELECTRONINCS / ELECTRICAL
                      */
-                    if (mainCategory.getId().equalsIgnoreCase("11") || mainCategory.getId().equalsIgnoreCase("12") ||
+                    /*if (mainCategory.getId().equalsIgnoreCase("11") || mainCategory.getId().equalsIgnoreCase("12") ||
                             mainCategory.getId().equalsIgnoreCase("138") || mainCategory.getId().equalsIgnoreCase("139")) {
 
                         intent = new Intent(context, AutoEEServicesActivity_.class);
                         intent.putExtra(Constants.REGISTRATION_INDEX, indexToOpen);
 
-                    } else if (mainCategory.getId().equalsIgnoreCase("28")) {
+                    } else */if (mainCategory.getId().equalsIgnoreCase("28")) {
                         /**
                          * KIRANA STORE
                          */
