@@ -26,15 +26,17 @@
 
             <ImageView
                 android:id="@+id/ic_sku_image"
-                android:layout_width="@dimen/dimen_50dp"
-                android:src="@drawable/ic_camera"
-                android:layout_height="@dimen/dimen_50dp" />
+                android:layout_width="56dp"
+                android:src="@drawable/ic_placeholder_sku"
+                android:padding="@dimen/dimen_10dp"
+                android:background="@drawable/order_sku_image_bg"
+                android:layout_height="56dp" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_marginLeft="@dimen/dimen_10dp"
+                android:layout_marginLeft="@dimen/dimen_15dp"
                 android:orientation="vertical">
 
                 <TextView
@@ -43,7 +45,6 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:drawablePadding="@dimen/dimen_10dp"
-                    android:drawableStart="@drawable/ic_small_check"
                     android:fontFamily="sans-serif-medium"
                     android:text="Baker Street Toast Pita Chips Jalapeno Chips"
                     android:textColor="@color/text_44"
@@ -52,7 +53,6 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/dimen_25dp"
                     android:layout_marginTop="@dimen/dimen_5dp"
                     android:orientation="horizontal">
 
@@ -77,9 +77,9 @@
 
             <TextView
                 android:id="@+id/tv_item_unavailable"
-                android:layout_width="@dimen/dimen_50dp"
+                android:layout_width="@dimen/dimen_48dp"
                 android:layout_height="wrap_content"
-                android:background="@drawable/edittext_bg"
+                android:background="@drawable/edittext_bg_order"
                 android:gravity="center"
                 android:padding="@dimen/dimen_10dp"
                 android:tag="1"
@@ -94,7 +94,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/dimen_35dp"
             android:layout_marginTop="@dimen/dimen_10dp"
-            android:background="@drawable/edittext_bg"
+            android:background="@drawable/edittext_bg_order"
             android:hint="@string/suggest_replacement"
             android:inputType="textNoSuggestions"
             android:paddingLeft="@dimen/dimen_15dp"
@@ -112,10 +112,10 @@
 
             <EditText
                 android:id="@+id/et_quantity"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/edittext_bg"
+                android:layout_weight="0.75"
+                android:background="@drawable/edittext_bg_order"
                 android:drawableRight="@drawable/ic_dropdown"
                 android:focusable="false"
                 android:focusableInTouchMode="false"
@@ -129,10 +129,10 @@
 
             <EditText
                 android:id="@+id/et_quantity_other_item"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/edittext_bg"
+                android:layout_weight="0.75"
+                android:background="@drawable/edittext_bg_order"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
                 android:hint="e.g. 250 gm"
@@ -146,15 +146,15 @@
 
             <EditText
                 android:id="@+id/et_quantity_number"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dimen_10dp"
-                android:layout_weight="1"
-                android:background="@drawable/edittext_bg"
+                android:layout_marginLeft="@dimen/dimen_5dp"
+                android:background="@drawable/edittext_bg_order"
                 android:drawableRight="@drawable/ic_dropdown"
                 android:focusable="false"
                 android:focusableInTouchMode="false"
                 android:hint="2 Nos"
+                android:layout_weight="0.65"
                 android:inputType="textNoSuggestions"
                 android:lineSpacingExtra="-1sp"
                 android:padding="@dimen/dimen_10dp"
@@ -164,10 +164,11 @@
 
             <com.binbill.seller.CustomViews.PrefixEditText
                 android:id="@+id/et_item_price"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="@dimen/dimen_10dp"
-                android:background="@drawable/edittext_bg"
+                android:layout_marginLeft="@dimen/dimen_5dp"
+                android:background="@drawable/edittext_bg_order"
                 android:hint="@string/add_price"
                 android:inputType="numberDecimal"
                 android:minWidth="@dimen/dimen_120dp"

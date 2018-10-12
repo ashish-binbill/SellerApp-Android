@@ -45,5 +45,6 @@
     <dimen name="dimen_17dp">17dp</dimen>
     <dimen name="dimen_11dp">11dp</dimen>
     <dimen name="dimen_240dp">240dp</dimen>
+    <dimen name="dimen_48dp">48dp</dimen>
 
 </resources>
