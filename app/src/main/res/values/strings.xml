@@ -163,7 +163,7 @@
     <string name="no_credit">There is no Outstanding Amount from your BinBill customers.</string>
     <string name="no_txn">There has not been any transaction with the BinBill customers as yet.</string>
     <string name="no_cashback">There is no BB Cash issued to your Customers.</string>
-    <string name="no_discount">There is currently no history of Loyalty points for your customers.</string>
+    <string name="no_discount">There is currently no history of Loyalty discount for your customers.</string>
     <string name="settle_credit">Settle Credit</string>
     <string name="add_remarks">Add Remarks</string>
     <string name="max_150_char">150 Char. max</string>
