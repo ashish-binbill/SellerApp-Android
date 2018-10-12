@@ -68,17 +68,20 @@ public class DashboardListActivity extends BaseActivity {
         switch (mType) {
             case Constants.CREDIT_PENDING:
                 iv_no_data_image.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_no_credit));
+                tv_no_data.setText(getString(R.string.no_credit));
                 break;
             case Constants.POINTS:
                 iv_no_data_image.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_no_points));
+                tv_no_data.setText(getString(R.string.no_discount));
                 break;
             case Constants.TRANSACTIONS:
                 iv_no_data_image.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_no_txn));
+                tv_no_data.setText(getString(R.string.no_txn));
                 break;
             default:
                 iv_no_data_image.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_no_cashback));
+                tv_no_data.setText(getString(R.string.no_cashback));
         }
-        tv_no_data.setText(getString(R.string.no_credit));
 
     }
 

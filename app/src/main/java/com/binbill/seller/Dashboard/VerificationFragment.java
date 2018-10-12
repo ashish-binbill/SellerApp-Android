@@ -309,7 +309,7 @@ public class VerificationFragment extends Fragment implements VerificationAdapte
             noData.setText(getString(R.string.no_credit));
         } else if (type == LINK_POINTS) {
             headerTitle.setText(getString(R.string.link_points));
-            noData.setText(getString(R.string.no_points));
+            noData.setText(getString(R.string.no_discount));
         }
 
         RecyclerView recyclerView = (RecyclerView) dialogView.findViewById(R.id.rv_credit_points);

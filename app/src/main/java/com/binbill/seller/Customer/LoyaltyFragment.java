@@ -97,7 +97,7 @@ public class LoyaltyFragment extends Fragment {
         settleCredit.setVisibility(View.GONE);
 
         TextView noDataTitle = (TextView) noDataLayout.findViewById(R.id.tv_no_data);
-        noDataTitle.setText(getString(R.string.no_points));
+        noDataTitle.setText(getString(R.string.no_discount));
         AppButton noDataButton = (AppButton) noDataLayout.findViewById(R.id.btn_no_data);
         noDataButton.setVisibility(View.GONE);
         userModel = (UserModel) getArguments().getSerializable(Constants.USER_MODEL);
