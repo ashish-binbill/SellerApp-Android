@@ -1035,7 +1035,12 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
             final OrderItem orderItem = orderDetails.getOrderItems().get(pos);
 
             just_sec_layout.setVisibility(View.VISIBLE);
-            new RetrofitHelper(this).fetchMeasurementsByID(orderItem.getItemId(), new RetrofitHelper.RetrofitCallback() {
+
+            String itemId = orderItem.getItemId();
+            if (orderItem.getSuggestion() != null && orderItem.getSuggestion().getSuggestionStatus() == Constants.SUGGESTION_STATUS_EXISTING)
+                itemId = orderItem.getSuggestion().getItemId();
+
+            new RetrofitHelper(this).fetchMeasurementsByID(itemId, new RetrofitHelper.RetrofitCallback() {
                         @Override
                         public void onResponse(String response) {
                             just_sec_layout.setVisibility(View.GONE);
@@ -1049,8 +1054,6 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
 
                                         ArrayList<OrderItem.OrderSKU> skuOptions = new Gson().fromJson(orderJson.toString(), classType);
                                         invokeSkuPopUp(skuOptions, orderItem.getUid());
-
-
                                     }
                                 } else {
                                     showSnackBar(getString(R.string.something_went_wrong));
@@ -1192,6 +1195,7 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Utility.hideKeyboard(OrderDetailsActivity.this, addNew);
                 newItemError.setVisibility(View.GONE);
                 String newItemText = newItem.getText().toString();
                 if (!Utility.isEmpty(newItemText)) {
@@ -1205,6 +1209,8 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                Utility.hideKeyboard(OrderDetailsActivity.this, addNew);
                 newItemError.setVisibility(View.GONE);
                 addNewLayout.setVisibility(View.GONE);
 
@@ -1217,6 +1223,7 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
         headerTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Utility.hideKeyboard(OrderDetailsActivity.this, addNew);
                 mSKUDialog.dismiss();
             }
         });
@@ -1306,7 +1313,7 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
 
                 ArrayList<OrderItem> itemList = orderDetails.getOrderItems();
                 for (OrderItem item : itemList) {
-                    if (item.getItemId().equalsIgnoreCase(uid)) {
+                    if (item.getUid().equalsIgnoreCase(uid)) {
 
                         String quantitySelected = (String) object;
                         quantitySelected = quantitySelected.substring(0, quantitySelected.length() - 5);
@@ -1341,8 +1348,16 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
 
         ArrayList<OrderItem> itemList = orderDetails.getOrderItems();
         for (OrderItem item : itemList) {
-            if (item.getUid().equalsIgnoreCase(uid))
-                item.setUpdatedSKUMeasurement(sku);
+            if (item.getUid().equalsIgnoreCase(uid)) {
+                if (item.getSuggestion() != null && item.getSuggestion().getSuggestionStatus() == Constants.SUGGESTION_STATUS_EXISTING) {
+                    Suggestion suggestion = item.getSuggestion();
+                    suggestion.setMeasurementId(sku.getSkuId());
+                    suggestion.setMeasuremenValue(sku.getSkuMeasurementValue() + " " + sku.getSkuMeasurementAcronym());
+                    item.setSuggestion(suggestion);
+                } else {
+                    item.setUpdatedSKUMeasurement(sku);
+                }
+            }
         }
 
         if (mAdapter != null) {
@@ -1365,6 +1380,8 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                     suggestion = new Suggestion();
 
                 suggestion.setItemName(sku.getTitle());
+                suggestion.setItemId(sku.getId());
+                suggestion.setSuggestionStatus(Constants.SUGGESTION_STATUS_EXISTING);
                 item.setSuggestion(suggestion);
             }
         }
@@ -1388,6 +1405,7 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                     suggestion = new Suggestion();
 
                 suggestion.setItemName(sku);
+                suggestion.setSuggestionStatus(Constants.SUGGESTION_STATUS_NEW);
                 item.setSuggestion(suggestion);
             }
         }

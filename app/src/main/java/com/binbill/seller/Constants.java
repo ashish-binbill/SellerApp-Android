@@ -171,4 +171,8 @@ public class Constants {
     public static final String UPDATE_POPUP_NOT_NOW_CLICKED = "UPDATE_POPUP_NOT_NOW_CLICKED";
     public static final String NOTIFICATION_DEEPLINK = "NOTIFICATION_DEEPLINK";
     public static final String BUSINESS_MODEL = "BUSINESS_MODEL";
+
+    public static final int SUGGESTION_STATUS_NO_SUGGESTION = 0;
+    public static final int SUGGESTION_STATUS_EXISTING = 1;
+    public static final int SUGGESTION_STATUS_NEW = 2;
 }
