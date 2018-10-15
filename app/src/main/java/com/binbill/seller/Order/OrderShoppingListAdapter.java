@@ -180,7 +180,7 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
             orderHolder.layoutFMCG.setVisibility(View.VISIBLE);
 
             Picasso.get()
-                    .load(Constants.BASE_URL + "skus/" + model.getItemBrandId() + "/images")
+                    .load(Constants.BASE_URL + "skus/" + model.getItemId() + "/images")
                     .config(Bitmap.Config.RGB_565)
                     .placeholder(ContextCompat.getDrawable(orderHolder.mSkuImage.getContext(), R.drawable.ic_placeholder_sku))
                     .memoryPolicy(MemoryPolicy.NO_CACHE)
