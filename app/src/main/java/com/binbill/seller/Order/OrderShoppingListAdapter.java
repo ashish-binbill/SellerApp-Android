@@ -6,7 +6,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -150,7 +149,7 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
         this.updateStateMap = updateStates;
         this.mStatus = status;
         this.orderModified = isModified;
-        }
+    }
 
     @Override
     public int getItemCount() {
@@ -260,19 +259,19 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
                         /***
                          * BrandID check is to identify manual created items
                          * If item is manually created, suggestion need not be shown
+                         *
+                         * Update: Actually let them be shown, we wont show list
                          */
 
-                        if (model.getItemBrandId() != null && !Utility.isEmpty(model.getItemBrandId())) {
-                            orderHolder.mAlternateItem.setVisibility(View.VISIBLE);
-                            enableDisableAlternateItemEditText(orderHolder.mAlternateItem, false);
+                        orderHolder.mAlternateItem.setVisibility(View.VISIBLE);
+                        enableDisableAlternateItemEditText(orderHolder.mAlternateItem, false);
 
-                            if (model.getSuggestion() != null && model.getSuggestion().getSuggestionStatus() == Constants.SUGGESTION_STATUS_NEW) {
-                                orderHolder.mAvailableQuantityNewItem.setVisibility(View.VISIBLE);
-                                orderHolder.mAvailableQuantity.setVisibility(View.GONE);
-                            } else {
-                                orderHolder.mAvailableQuantityNewItem.setVisibility(View.GONE);
-                                orderHolder.mAvailableQuantity.setVisibility(View.VISIBLE);
-                            }
+                        if (model.getSuggestion() != null && model.getSuggestion().getSuggestionStatus() == Constants.SUGGESTION_STATUS_NEW) {
+                            orderHolder.mAvailableQuantityNewItem.setVisibility(View.VISIBLE);
+                            orderHolder.mAvailableQuantity.setVisibility(View.GONE);
+                        } else {
+                            orderHolder.mAvailableQuantityNewItem.setVisibility(View.GONE);
+                            orderHolder.mAvailableQuantity.setVisibility(View.VISIBLE);
                         }
 
                         updateItemAvailability(orderHolder.mItemAvailability.getContext(), orderHolder.mItemAvailability);
@@ -377,10 +376,8 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
                          * Do nothing here
                          */
                     } else {
-                        if (model.getItemBrandId() != null && !Utility.isEmpty(model.getItemBrandId())) {
-                            if (listener != null)
-                                listener.onOrderItemQuantitySelected(position);
-                        }
+                        if (listener != null)
+                            listener.onOrderItemQuantitySelected(position);
                     }
                 }
             });
@@ -474,6 +471,7 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
                         orderHolder.mAvailableQuantity.setVisibility(View.GONE);
                         orderHolder.mAvailableQuantityNewItem.setVisibility(View.VISIBLE);
                         orderHolder.mAvailableQuantityNewItem.setEnabled(false);
+                        orderHolder.mAvailableQuantityNewItem.setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, null, null);
                         orderHolder.mAvailableQuantityNewItem.setTextColor(ContextCompat.getColor(orderHolder.mItemAvailability.getContext(), R.color.text_77));
                         orderHolder.mAvailableQuantityNewItem.setBackground(ContextCompat.getDrawable(orderHolder.mItemAvailability.getContext(), R.drawable.edittext_bg_order));
                     } else {

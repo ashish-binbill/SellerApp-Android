@@ -339,5 +339,6 @@
     <string name="please_select_categories_first">Please select categories first</string>
     <string name="suggest_replacement">Suggest Replacement</string>
     <string name="add_new_suggestion">+ Add New Suggestion</string>
+    <string name="no_suggestion">No Suggestions found for this item.</string>
 
 </resources>

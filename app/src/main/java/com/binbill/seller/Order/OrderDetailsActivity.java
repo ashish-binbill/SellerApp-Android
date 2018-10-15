@@ -1140,7 +1140,7 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
         }
     }
 
-    private void invokeSuggestionPopUp(ArrayList<SuggestionSku> skuOptions, final String uid) {
+    private void invokeSuggestionPopUp(final ArrayList<SuggestionSku> skuOptions, final String uid) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout.dialog_show_available_sku, null);
@@ -1171,6 +1171,8 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
 
         final RecyclerView recyclerView = (RecyclerView) dialogView.findViewById(R.id.rv_list);
 
+        final TextView noData = (TextView) dialogView.findViewById(R.id.tv_no_data);
+        noData.setVisibility(View.GONE);
         OrderSKUAdapter mAdapter = null;
         if (skuOptions != null && skuOptions.size() > 0) {
             recyclerView.setHasFixedSize(true);
@@ -1180,7 +1182,8 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
             mAdapter = new OrderSKUAdapter(skuOptions, this, uid, true);
             recyclerView.setAdapter(mAdapter);
         } else {
-            mSKUDialog.dismiss();
+            noData.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
         }
 
         addNew.setOnClickListener(new View.OnClickListener() {
@@ -1189,6 +1192,7 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                 addNew.setVisibility(View.GONE);
                 addNewLayout.setVisibility(View.VISIBLE);
                 recyclerView.setVisibility(View.GONE);
+                noData.setVisibility(View.GONE);
             }
         });
 
@@ -1215,7 +1219,11 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                 addNewLayout.setVisibility(View.GONE);
 
                 addNew.setVisibility(View.VISIBLE);
-                recyclerView.setVisibility(View.VISIBLE);
+
+                if (skuOptions != null && skuOptions.size() > 0) {
+                    recyclerView.setVisibility(View.VISIBLE);
+                } else
+                    noData.setVisibility(View.GONE);
             }
         });
 
