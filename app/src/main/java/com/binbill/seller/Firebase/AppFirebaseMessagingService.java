@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
+import android.text.Html;
 import android.util.Log;
 
 import com.applozic.mobicomkit.Applozic;
@@ -119,6 +120,7 @@ public class AppFirebaseMessagingService extends FirebaseMessagingService {
                         .setContentText(messageBody)
                         .setAutoCancel(true)
                         .setLargeIcon(icon)
+                        .setStyle(new NotificationCompat.BigTextStyle().bigText(Html.fromHtml(messageBody)))
                         .setColor(ContextCompat.getColor(this, R.color.colorPrimary))
                         .setSound(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.notify_order))
                         .setContentIntent(pendingIntent);

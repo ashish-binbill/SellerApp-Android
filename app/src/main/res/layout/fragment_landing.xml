@@ -32,6 +32,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dimen_20dp"
+        android:layout_weight="1"
         android:gravity="center_horizontal"
         android:text="Increase in Store Footfalls as well as combat Online Players by grabbing Online Sales on our platform."
         android:textColor="@color/text_44"

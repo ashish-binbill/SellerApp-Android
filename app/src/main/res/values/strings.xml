@@ -97,7 +97,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="manage_offers">Promote Offers</string>
     <string name="manage_your_products_categories">Manage Your Products Categories</string>
-    <string name="no_offers_added">You have not added any Offers yet. Please add Offers.</string>
+    <string name="no_offers_added">Add your Offer here to publish it for customers and increase visibility and sales</string>
     <string name="add_offers">Add Offers</string>
     <string name="my_offers">My Offers</string>
     <string name="create_new_offer">Create New Offer</string>
@@ -160,7 +160,7 @@
     <string name="invite_customer">Invite Customer</string>
     <string name="invitation_sent">Invitation sent successfully!</string>
     <string name="customer_details">Customer Details</string>
-    <string name="no_credit">There is no Outstanding Amount from your BinBill customers.</string>
+    <string name="no_credit">There is no Outstanding Amount due from your BinBill customers.</string>
     <string name="no_txn">There has not been any transaction with the BinBill customers as yet.</string>
     <string name="no_cashback">There is no BB Cash issued to your Customers.</string>
     <string name="no_discount">There is currently no history of Loyalty discount for your customers.</string>
