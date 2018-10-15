@@ -5,6 +5,8 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
@@ -109,13 +111,14 @@ public class AppFirebaseMessagingService extends FirebaseMessagingService {
                 PendingIntent.FLAG_ONE_SHOT);
 
         String channelId = getString(R.string.default_notification_channel_id);
-        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        Bitmap icon = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(this, channelId)
                         .setSmallIcon(R.mipmap.ic_launcher_round)
                         .setContentTitle(title)
                         .setContentText(messageBody)
                         .setAutoCancel(true)
+                        .setLargeIcon(icon)
                         .setColor(ContextCompat.getColor(this, R.color.colorPrimary))
                         .setSound(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.notify_order))
                         .setContentIntent(pendingIntent);
