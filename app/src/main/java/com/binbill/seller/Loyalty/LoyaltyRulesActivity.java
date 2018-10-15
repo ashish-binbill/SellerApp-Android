@@ -81,6 +81,8 @@ public class LoyaltyRulesActivity extends BaseActivity {
 
                                     showSnackBar(getString(R.string.details_saved_successfully));
 
+                                    finish();
+
                                 } else
                                     showSnackBar(getString(R.string.something_went_wrong));
                             } catch (JSONException e) {
