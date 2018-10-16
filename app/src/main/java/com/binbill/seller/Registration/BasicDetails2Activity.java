@@ -83,8 +83,6 @@ public class BasicDetails2Activity extends BaseActivity implements OptionListFra
     EditText et_delivery_distance;
 
     UserRegistrationDetails userRegistrationDetails;
-    String shopOpenTime = "9:00 AM";
-    String shopCloseTime = "9:00 PM";
     private String mMode;
     private String sellerId;
     private ProfileModel.BasicDetails basicDetails;
@@ -332,10 +330,8 @@ public class BasicDetails2Activity extends BaseActivity implements OptionListFra
             map.put("locality_id", userRegistrationDetails.getLocality().getLocalityId());
         if (userRegistrationDetails.getDaysOpen() != null && userRegistrationDetails.getDaysOpen().size() > 0)
             map.put("shop_open_day", TextUtils.join(",", userRegistrationDetails.getDaysOpen()));
-        if (!Utility.isEmpty(userRegistrationDetails.getShopOpen()))
-            map.put("start_time", userRegistrationDetails.getShopOpen());
-        if (!Utility.isEmpty(userRegistrationDetails.getShopClose()))
-            map.put("close_time", userRegistrationDetails.getShopClose());
+        map.put("start_time", start_time.getText().toString());
+        map.put("close_time", end_time.getText().toString());
         map.put("home_delivery", String.valueOf(userRegistrationDetails.isHomeDelivery()));
         if (!Utility.isEmpty(userRegistrationDetails.getHomeDeliveryDistance()))
             map.put("home_delivery_remarks", userRegistrationDetails.getHomeDeliveryDistance());
@@ -393,8 +389,8 @@ public class BasicDetails2Activity extends BaseActivity implements OptionListFra
 
     private void saveDataInLocalObject() {
         userRegistrationDetails.setDaysOpen(getDaysSelected());
-        userRegistrationDetails.setShopOpen(shopOpenTime);
-        userRegistrationDetails.setShopClose(shopCloseTime);
+        userRegistrationDetails.setShopOpen(start_time.getText().toString());
+        userRegistrationDetails.setShopClose(end_time.getText().toString());
 
         int radioButtonID = radio_group_home_delivery.getCheckedRadioButtonId();
         AppCompatRadioButton radioButton = (AppCompatRadioButton) radio_group_home_delivery.findViewById(radioButtonID);
@@ -511,10 +507,10 @@ public class BasicDetails2Activity extends BaseActivity implements OptionListFra
                     String curTime = String.format("%02d:%02d", datetime.get(Calendar.HOUR_OF_DAY), datetime.get(Calendar.MINUTE));
                     viewSelected.setText(curTime + " " + AM_PM);
 
-                    if (view.getId() == R.id.start_time)
-                        shopOpenTime = curTime + " " + AM_PM;
-                    else
-                        shopCloseTime = curTime + " " + AM_PM;
+//                    if (view.getId() == R.id.start_time)
+//                        shopOpenTime = curTime + " " + AM_PM;
+//                    else
+//                        shopCloseTime = curTime + " " + AM_PM;
 
                 }
             }, hour, minute, false);

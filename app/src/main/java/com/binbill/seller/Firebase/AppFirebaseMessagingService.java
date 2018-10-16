@@ -7,12 +7,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
-import android.text.Html;
 import android.util.Log;
 
 import com.applozic.mobicomkit.Applozic;
@@ -54,6 +52,7 @@ public class AppFirebaseMessagingService extends FirebaseMessagingService {
             String description = "";
             String notificationType = "0";
             String orderId = "";
+            String notificationId = "";
             Map<String, String> map = remoteMessage.getData();
             if (map.containsKey("title"))
                 title = map.get("title");
@@ -68,7 +67,10 @@ public class AppFirebaseMessagingService extends FirebaseMessagingService {
             if (map.containsKey("order_id"))
                 orderId = map.get("order_id");
 
-            handleNow(title, description, notificationType, orderId);
+            if (map.containsKey("notification_id"))
+                notificationId = map.get("notification_id");
+
+            handleNow(title, description, notificationType, orderId, notificationId);
         }
 
         if (remoteMessage.getNotification() != null) {
@@ -93,16 +95,16 @@ public class AppFirebaseMessagingService extends FirebaseMessagingService {
         }
     }
 
-    private void handleNow(String title, String message, String notificationType, String orderId) {
+    private void handleNow(String title, String message, String notificationType, String orderId, String notificationId) {
         Log.d(TAG, "Short lived task is done.");
-        sendNotification(title, message, notificationType, orderId);
+        sendNotification(title, message, notificationType, orderId, notificationId);
     }
 
     private void sendRegistrationToServer(String token) {
         // TODO: Implement this method to send token to your app server.
     }
 
-    private void sendNotification(String title, String messageBody, String notificationType, String orderId) {
+    private void sendNotification(String title, String messageBody, String notificationType, String orderId, String notificationId) {
         Intent intent = new Intent(this, SplashActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra(Constants.NOTIFICATION_DEEPLINK, notificationType);
@@ -120,7 +122,8 @@ public class AppFirebaseMessagingService extends FirebaseMessagingService {
                         .setContentText(messageBody)
                         .setAutoCancel(true)
                         .setLargeIcon(icon)
-                        .setStyle(new NotificationCompat.BigTextStyle().bigText(Html.fromHtml(messageBody)))
+                        .setStyle(new NotificationCompat.BigTextStyle()
+                                .bigText(messageBody))
                         .setColor(ContextCompat.getColor(this, R.color.colorPrimary))
                         .setSound(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.notify_order))
                         .setContentIntent(pendingIntent);
@@ -136,6 +139,14 @@ public class AppFirebaseMessagingService extends FirebaseMessagingService {
             notificationManager.createNotificationChannel(channel);
         }
 
-        notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
+        int notifyId = 0;
+        if (!Utility.isEmpty(notificationId)) {
+            try {
+                notifyId = Integer.parseInt(notificationId);
+            } catch (Exception e) {
+
+            }
+        }
+        notificationManager.notify(notifyId /* ID of notification */, notificationBuilder.build());
     }
 }

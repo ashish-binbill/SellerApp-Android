@@ -154,6 +154,7 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
  6| Cash Back Verification
  */
         String notificationType = AppSession.getInstance(this).getNotificationIntent();
+        Log.d("SHRUTI", "Notification type " + notificationType);
         switch (notificationType) {
             case "1":
                 /**
