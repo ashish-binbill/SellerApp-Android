@@ -11,6 +11,7 @@ import com.binbill.seller.Model.UserModel;
 import com.binbill.seller.Model.UserRegistrationDetails;
 import com.binbill.seller.Order.Order;
 import com.binbill.seller.Retrofit.RetrofitHelper;
+import com.binbill.seller.SplashActivity;
 import com.binbill.seller.UpgradeHelper;
 import com.binbill.seller.Utility;
 import com.binbill.seller.Verification.RejectReasonModel;
@@ -63,6 +64,7 @@ public class ApiHelper {
                             else if (dashboardModel.getForceUpdate().equalsIgnoreCase("FALSE"))
                                 UpgradeHelper.invokeUpdateDialog((Activity) context, false);
                         }
+//                        UpgradeHelper.invokeUpdateDialog((Activity)context, true);
                     }
                 } catch (JSONException e) {
 

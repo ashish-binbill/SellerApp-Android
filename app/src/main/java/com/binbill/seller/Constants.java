@@ -11,8 +11,8 @@ import java.util.regex.Pattern;
 public class Constants {
 
     //    public static final String BASE_URL = "https://seller-test.binbill.com/";
-//    public static final String BASE_URL = "https://seller.binbill.com/";
-    public static final String BASE_URL = "https://seller-stage.binbill.com/";
+    public static final String BASE_URL = "https://seller.binbill.com/";
+//    public static final String BASE_URL = "https://seller-stage.binbill.com/";
     public static final String APP_VERSION = "1";
     public static final String GET_OTP_FOR_USER_LOGIN = "sellers/getotp";
     public static final String VERIFY_OTP_FOR_USER_LOGIN = "sellers/validate";

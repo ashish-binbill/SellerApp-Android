@@ -32,7 +32,7 @@ public class SplashActivity extends AppCompatActivity {
         if (getIntent() != null && getIntent().hasExtra(Constants.NOTIFICATION_DEEPLINK))
             AppSession.getInstance(this).setNotificationIntent(getIntent().getStringExtra(Constants.NOTIFICATION_DEEPLINK));
 
-        if(getIntent() != null && getIntent().hasExtra(Constants.ORDER_ID))
+        if (getIntent() != null && getIntent().hasExtra(Constants.ORDER_ID))
             AppSession.getInstance(this).setNotificationOrderId(getIntent().getStringExtra(Constants.ORDER_ID));
     }
 
@@ -111,16 +111,8 @@ public class SplashActivity extends AppCompatActivity {
 
                                     DashboardModel dashboardModel = new Gson().fromJson(jsonObject.toString(), classType);
                                     AppSession.getInstance(SplashActivity.this).setDashboardData(dashboardModel);
-
-                                    if (dashboardModel.getForceUpdate() != null) {
-                                        if (dashboardModel.getForceUpdate().equalsIgnoreCase("TRUE"))
-                                            UpgradeHelper.invokeUpdateDialog(SplashActivity.this, true);
-                                        else if (dashboardModel.getForceUpdate().equalsIgnoreCase("FALSE"))
-                                            UpgradeHelper.invokeUpdateDialog(SplashActivity.this, false);
-                                    } else {
                                         startActivity(intent);
                                         finish();
-                                    }
                                 }
                             } catch (JSONException e) {
                                 finish();
