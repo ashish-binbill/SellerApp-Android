@@ -1087,12 +1087,12 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
     }
 
     @Override
-    public void onOrderItemQuantityDenominationSelected(int pos, String quantity) {
+    public void onOrderItemQuantityDenominationSelected(int pos, String quantity, String setQuantity) {
         if (orderDetails != null && orderDetails.getOrderItems() != null &&
                 orderDetails.getOrderItems().size() > 0) {
             final OrderItem orderItem = orderDetails.getOrderItems().get(pos);
 
-            invokeQuantityPopUp(orderItem.getUid(), quantity);
+            invokeQuantityPopUp(orderItem.getUid(), quantity, setQuantity);
         }
     }
 
@@ -1281,7 +1281,7 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
         mSKUDialog.show();
     }
 
-    private void invokeQuantityPopUp(final String uid, String quantity) {
+    private void invokeQuantityPopUp(final String uid, final String quantity, final String setQuantity) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout.dialog_show_available_sku, null);
@@ -1325,7 +1325,10 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
 
                         String quantitySelected = (String) object;
                         quantitySelected = quantitySelected.substring(0, quantitySelected.length() - 5);
-                        item.setUpdatedQuantityCount(quantitySelected);
+                        if (setQuantity.equalsIgnoreCase(quantitySelected))
+                            item.setUpdatedQuantityCount(null);
+                        else
+                            item.setUpdatedQuantityCount(quantitySelected);
                     }
                 }
 

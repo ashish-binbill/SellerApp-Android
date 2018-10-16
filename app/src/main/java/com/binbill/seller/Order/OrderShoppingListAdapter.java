@@ -33,7 +33,7 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
 
         void onItemInteraction(boolean enable);
 
-        void onOrderItemQuantityDenominationSelected(int pos, String quantity);
+        void onOrderItemQuantityDenominationSelected(int pos, String quantity, String setQuantity);
 
         void onSuggestionClicked(int pos);
     }
@@ -279,6 +279,9 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
                         orderHolder.mQuantityNumber.setText(model.getQuantity() + " Nos.");
                     } else {
 
+                        model.setUpdatedQuantityCount(null);
+                        model.setUpdatedSKUMeasurement(null);
+
                         if (model.getUpdatedSKUMeasurement() != null) {
                             OrderItem.OrderSKU updatedSku = model.getUpdatedSKUMeasurement();
                             OrderItem.OrderSKU sku = model.getOrderSKU();
@@ -309,6 +312,9 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
                                 orderHolder.mAvailableQuantity.setText(model.getOrderSKU().getSkuMeasurementValue() + " " + model.getOrderSKU().getSkuMeasurementAcronym());
                         } else
                             orderHolder.mAvailableQuantity.setText("");
+
+                        orderHolder.mQuantityNumber.setText(model.getQuantity());
+                        orderHolder.mAlternateItem.setText("");
                     }
 
                     updateStateMap[position] = updateState;
@@ -408,9 +414,9 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
                              */
                             if (orderHolder.mItemAvailability.getTag().toString().equalsIgnoreCase("1") &&
                                     orderHolder.mAvailableQuantity.getText().toString().contains(model.getOrderSKU().getSkuMeasurementValue())) {
-                                listener.onOrderItemQuantityDenominationSelected(position, model.getQuantity());
+                                listener.onOrderItemQuantityDenominationSelected(position, model.getQuantity(), model.getQuantity());
                             } else
-                                listener.onOrderItemQuantityDenominationSelected(position, "");
+                                listener.onOrderItemQuantityDenominationSelected(position, "", model.getQuantity());
                         }
                     }
                 }
