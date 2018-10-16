@@ -18,8 +18,11 @@ public class UpgradeHelper {
 
     public static void invokeUpdateDialog(final Activity context, boolean forceUpdate) {
 
-        if (!SharedPref.getBoolean(context, DIALOG_VISIBLE)) {
-            SharedPref.putBoolean(context, DIALOG_VISIBLE, true);
+        boolean isAppDialogShown = false;
+        if(!forceUpdate && SharedPref.getBoolean(context, Constants.UPDATE_POPUP_NOT_NOW_CLICKED))
+            isAppDialogShown = true;
+
+        if (!isAppDialogShown) {
             AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.FullScreenDialog);
             LayoutInflater inflater = context.getLayoutInflater();
             View dialogView = inflater.inflate(R.layout.custom_force_update, null);
@@ -44,7 +47,6 @@ public class UpgradeHelper {
                 updateButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        SharedPref.putBoolean(context, DIALOG_VISIBLE, false);
                         goToPlayStore(context);
                         dialog.cancel();
                     }
@@ -55,7 +57,6 @@ public class UpgradeHelper {
                 updateButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        SharedPref.putBoolean(context, DIALOG_VISIBLE, false);
                         dialog.cancel();
                         goToPlayStore(context);
                     }
@@ -64,8 +65,7 @@ public class UpgradeHelper {
                 notNow.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        SharedPref.putBoolean(context, DIALOG_VISIBLE, false);
-                       SharedPref.putBoolean(context, Constants.UPDATE_POPUP_NOT_NOW_CLICKED, true);
+                        SharedPref.putBoolean(context, Constants.UPDATE_POPUP_NOT_NOW_CLICKED, true);
                         dialog.cancel();
                     }
                 });
