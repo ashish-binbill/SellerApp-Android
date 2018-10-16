@@ -416,21 +416,6 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
                 }
             });
 
-            if (mStatus == Constants.STATUS_CANCEL || mStatus == Constants.STATUS_COMPLETE ||
-                    mStatus == Constants.STATUS_OUT_FOR_DELIVERY || mStatus == Constants.STATUS_REJECTED) {
-
-                if (Utility.isEmpty(orderHolder.mItemPrice.getText().toString()))
-                    orderHolder.mItemPrice.setVisibility(View.GONE);
-                else
-                    orderHolder.mItemPrice.setVisibility(View.VISIBLE);
-
-                orderHolder.mItemPrice.setFocusable(false);
-                orderHolder.mItemPrice.setFocusableInTouchMode(false);
-                orderHolder.mItemPrice.setBackground(null);
-                orderHolder.mItemPrice.setTextColor(ContextCompat.getColor(orderHolder.mItemPrice.getContext(),
-                        R.color.colorPrimary));
-            }
-
             if (mStatus != Constants.STATUS_NEW_ORDER || orderModified) {
 
                 if (orderModified && mStatus == Constants.STATUS_NEW_ORDER) {
@@ -468,6 +453,7 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
                             orderHolder.mAlternateItem.setFocusable(false);
                         } else
                             orderHolder.mAlternateItem.setVisibility(View.GONE);
+
                         orderHolder.mAvailableQuantity.setVisibility(View.GONE);
                         orderHolder.mAvailableQuantityNewItem.setVisibility(View.VISIBLE);
                         orderHolder.mAvailableQuantityNewItem.setEnabled(false);
@@ -510,6 +496,30 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
 
 //                orderHolder.mDivider.setVisibility(View.GONE);
             }
+
+            if (mStatus == Constants.STATUS_CANCEL || mStatus == Constants.STATUS_COMPLETE ||
+                    mStatus == Constants.STATUS_OUT_FOR_DELIVERY || mStatus == Constants.STATUS_REJECTED) {
+
+                if (Utility.isEmpty(orderHolder.mItemPrice.getText().toString()))
+                    orderHolder.mItemPrice.setVisibility(View.GONE);
+                else
+                    orderHolder.mItemPrice.setVisibility(View.VISIBLE);
+
+                orderHolder.mItemPrice.setFocusable(false);
+                orderHolder.mItemPrice.setFocusableInTouchMode(false);
+                orderHolder.mItemPrice.setBackground(null);
+                orderHolder.mItemPrice.setTextColor(ContextCompat.getColor(orderHolder.mItemPrice.getContext(),
+                        R.color.colorPrimary));
+
+                orderHolder.mAvailableQuantity.setVisibility(View.GONE);
+                orderHolder.mAvailableQuantityNewItem.setVisibility(View.GONE);
+                orderHolder.mQuantityNumber.setVisibility(View.GONE);
+
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT);
+                layoutParams.setMargins(Utility.convertDPtoPx(orderHolder.mQuantityNumber.getContext(), 60), 0, 0, 0);
+                orderHolder.mItemPrice.setLayoutParams(layoutParams);
+            }
         } else if (mOrderType.equalsIgnoreCase(Constants.ORDER_TYPE_SERVICE)) {
             orderHolder.layoutService.setVisibility(View.VISIBLE);
             orderHolder.layoutFMCG.setVisibility(View.GONE);
@@ -521,6 +531,7 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
 
             orderHolder.mServiceName.setText(model.getServiceName());
         }
+
 
     }
 

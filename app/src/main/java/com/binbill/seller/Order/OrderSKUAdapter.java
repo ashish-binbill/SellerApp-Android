@@ -1,13 +1,19 @@
 package com.binbill.seller.Order;
 
+import android.graphics.Bitmap;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.binbill.seller.Constants;
 import com.binbill.seller.R;
 import com.binbill.seller.Utility;
+import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -26,11 +32,13 @@ class OrderSKUAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public static class OrderSKUHolder extends RecyclerView.ViewHolder {
         protected View mRootCard;
         protected TextView mValue;
+        protected ImageView skuImage;
 
         public OrderSKUHolder(View view) {
             super(view);
             mRootCard = view;
             mValue = (TextView) view.findViewById(R.id.text);
+            skuImage = (ImageView) view.findViewById(R.id.ic_sku_image);
         }
     }
 
@@ -100,6 +108,15 @@ class OrderSKUAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         listener.onSKUSelected(model, itemId);
                 }
             });
+
+            Picasso.get()
+                    .load(Constants.BASE_URL + "skus/" + model.getId() + "/images")
+                    .config(Bitmap.Config.RGB_565)
+                    .placeholder(ContextCompat.getDrawable(orderSKUHolder.skuImage.getContext(), R.drawable.ic_placeholder_sku))
+                    .memoryPolicy(MemoryPolicy.NO_CACHE)
+                    .into(orderSKUHolder.skuImage);
+            orderSKUHolder.skuImage.setVisibility(View.VISIBLE);
+
         }
 
     }

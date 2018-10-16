@@ -73,7 +73,7 @@
     <string name="select_service_categories">Select Service Categories</string>
     <string name="select_category_brand">Select Category Brands</string>
     <string name="select_services_categories">Select categories of the services you provide</string>
-    <string name="select_brand_you_select">Which brands do you sell?</string>
+    <string name="select_brand_you_select">Which brands do you sell in each category?</string>
     <string name="sell_accessories">Sell Accessories</string>
     <string name="default_notification_channel_id">BinBill Partner</string>
     <string name="state">State</string>
