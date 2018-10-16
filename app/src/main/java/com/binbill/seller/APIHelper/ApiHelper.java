@@ -64,7 +64,6 @@ public class ApiHelper {
                             else if (dashboardModel.getForceUpdate().equalsIgnoreCase("FALSE"))
                                 UpgradeHelper.invokeUpdateDialog((Activity) context, false);
                         }
-                        UpgradeHelper.invokeUpdateDialog((Activity)context, false);
                     }
                 } catch (JSONException e) {
 
