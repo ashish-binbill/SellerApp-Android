@@ -296,7 +296,7 @@ public class ProfileActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
 
-                if (profileDetails.getSellerDetails().getBusinessDetails() != null) {
+                if (profileDetails.getSellerDetails() != null && profileDetails.getSellerDetails().getBusinessDetails() != null) {
                     Intent intent = RegistrationResolver.getNextIntent(ProfileActivity.this, 2);
                     intent.putExtra(Constants.BUSINESS_MODEL, profileDetails.getSellerDetails().getBusinessDetails().getBusinessType());
                     startActivity(intent);
