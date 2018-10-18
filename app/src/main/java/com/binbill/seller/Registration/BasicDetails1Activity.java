@@ -114,16 +114,21 @@ public class BasicDetails1Activity extends BaseActivity implements OptionListFra
         et_business_name.setText(mProfileModel.getSellerDetails().getBasicDetails().getBusinessName());
         et_business_address.setText(mProfileModel.getBusinessAddress());
 
-        et_city.setText(mProfileModel.getCity().getCityName());
-        mCitySelected = mProfileModel.getCity();
+        if(mProfileModel.getCity() != null) {
+            et_city.setText(mProfileModel.getCity().getCityName());
+            mCitySelected = mProfileModel.getCity();
+        }
 
-        et_state.setText(mProfileModel.getState().getStateName());
-        mStateSelected = mProfileModel.getState();
+        if(mProfileModel.getState() != null) {
+            et_state.setText(mProfileModel.getState().getStateName());
+            mStateSelected = mProfileModel.getState();
+        }
 
-        et_locality.setText(mProfileModel.getLocality().getLocalityName());
-        mLocalitySelected = mProfileModel.getLocality();
-
-        et_pincode.setText(mProfileModel.getLocality().getPinCode());
+        if(mProfileModel.getLocality() != null) {
+            et_locality.setText(mProfileModel.getLocality().getLocalityName());
+            mLocalitySelected = mProfileModel.getLocality();
+            et_pincode.setText(mProfileModel.getLocality().getPinCode());
+        }
 
         btn_submit.setText(getString(R.string.save));
         enableDisableVerifyButton();
