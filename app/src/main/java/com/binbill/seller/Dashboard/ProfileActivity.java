@@ -259,10 +259,11 @@ public class ProfileActivity extends BaseActivity {
         tv_basic_details.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                Intent intent = RegistrationResolver.getNextIntent(ProfileActivity.this, 0);
-                intent.putExtra(Constants.PROFILE_MODEL, profileDetails);
-                startActivity(intent);
+                if (profileDetails != null) {
+                    Intent intent = RegistrationResolver.getNextIntent(ProfileActivity.this, 0);
+                    intent.putExtra(Constants.PROFILE_MODEL, profileDetails);
+                    startActivity(intent);
+                }
 
             }
         });
@@ -281,14 +282,16 @@ public class ProfileActivity extends BaseActivity {
         tv_view_attachment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ProfileModel.BusinessDetails businessDetails = profileDetails.getSellerDetails().getBusinessDetails();
-                if (businessDetails != null && businessDetails.getDocuments() != null && businessDetails.getDocuments().size() > 0) {
-                    Intent intent = new Intent(ProfileActivity.this, ImagePreviewActivity_.class);
-                    intent.putExtra(Constants.FILE_URI, businessDetails.getDocuments());
-                    intent.putExtra(Constants.IMAGE_TYPE, Constants.TYPE_URL_FILE);
-                    startActivity(intent);
-                } else
-                    showSnackBar(getString(R.string.no_copies));
+                if (profileDetails != null) {
+                    ProfileModel.BusinessDetails businessDetails = profileDetails.getSellerDetails().getBusinessDetails();
+                    if (businessDetails != null && businessDetails.getDocuments() != null && businessDetails.getDocuments().size() > 0) {
+                        Intent intent = new Intent(ProfileActivity.this, ImagePreviewActivity_.class);
+                        intent.putExtra(Constants.FILE_URI, businessDetails.getDocuments());
+                        intent.putExtra(Constants.IMAGE_TYPE, Constants.TYPE_URL_FILE);
+                        startActivity(intent);
+                    } else
+                        showSnackBar(getString(R.string.no_copies));
+                }
             }
         });
 
@@ -296,7 +299,7 @@ public class ProfileActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
 
-                if (profileDetails.getSellerDetails() != null && profileDetails.getSellerDetails().getBusinessDetails() != null) {
+                if (profileDetails != null && profileDetails.getSellerDetails() != null && profileDetails.getSellerDetails().getBusinessDetails() != null) {
                     Intent intent = RegistrationResolver.getNextIntent(ProfileActivity.this, 2);
                     intent.putExtra(Constants.BUSINESS_MODEL, profileDetails.getSellerDetails().getBusinessDetails().getBusinessType());
                     startActivity(intent);

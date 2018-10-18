@@ -27,13 +27,13 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setUpFlow();
-
         if (getIntent() != null && getIntent().hasExtra(Constants.NOTIFICATION_DEEPLINK))
             AppSession.getInstance(this).setNotificationIntent(getIntent().getStringExtra(Constants.NOTIFICATION_DEEPLINK));
 
         if (getIntent() != null && getIntent().hasExtra(Constants.ORDER_ID))
             AppSession.getInstance(this).setNotificationOrderId(getIntent().getStringExtra(Constants.ORDER_ID));
+
+        setUpFlow();
     }
 
     public void setUpFlow() {
@@ -111,8 +111,8 @@ public class SplashActivity extends AppCompatActivity {
 
                                     DashboardModel dashboardModel = new Gson().fromJson(jsonObject.toString(), classType);
                                     AppSession.getInstance(SplashActivity.this).setDashboardData(dashboardModel);
-                                        startActivity(intent);
-                                        finish();
+                                    startActivity(intent);
+                                    finish();
                                 }
                             } catch (JSONException e) {
                                 finish();

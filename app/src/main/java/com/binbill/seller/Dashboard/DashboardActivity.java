@@ -308,6 +308,7 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
 
         if (AppSession.getInstance(this).getNotificationIntent() != null) {
             checkNotificationDeeplink();
+            AppSession.getInstance(this).setNotificationIntent(null);
         }
     }
 
@@ -687,8 +688,10 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
 
         DashboardModel dashboardModel = AppSession.getInstance(this).getDashboardData();
 
-        if (dashboardModel == null)
-            finish();
+        if (dashboardModel == null) {
+            return;
+        }
+
         sellerType = dashboardModel.getSellerType();
         AppSession.getInstance(this).setDashboardData(dashboardModel);
         Menu menu = bottom_navigation.getMenu();

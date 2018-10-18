@@ -242,7 +242,7 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
             @Override
             public void onClick(View view) {
                 String textOnButton = btn_accept.getText().toString();
-                if (orderDetails.getOrderType() != null && orderDetails.getOrderType().equalsIgnoreCase(Constants.ORDER_TYPE_FMCG)) {
+                if (orderDetails != null && orderDetails.getOrderType() != null && orderDetails.getOrderType().equalsIgnoreCase(Constants.ORDER_TYPE_FMCG)) {
                     ArrayList<OrderItem> updatedList = mAdapter.getUpdatedOrderList();
                     for (OrderItem orderItem : updatedList) {
                         orderItem.setItemAvailability(orderItem.isUpdateItemAvailable());
@@ -1417,6 +1417,8 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
 
                 suggestion.setItemName(sku);
                 suggestion.setSuggestionStatus(Constants.SUGGESTION_STATUS_NEW);
+                suggestion.setItemId(null);
+                suggestion.setMeasurementId(null);
                 item.setSuggestion(suggestion);
             }
         }
