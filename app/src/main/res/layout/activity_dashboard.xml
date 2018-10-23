@@ -47,6 +47,7 @@
             android:id="@+id/bottom_navigation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:minWidth="@dimen/dimen_50dp"
             android:layout_alignParentBottom="true"
             android:elevation="@dimen/dimen_10dp"
             app:elevation="@dimen/dimen_10dp"
@@ -59,9 +60,9 @@
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"
         android:layout_width="wrap_content"
+        android:maxWidth="@dimen/dimen_240dp"
         android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:paddingTop="@dimen/dimen_25dp">
+        android:layout_gravity="start">
 
         <LinearLayout
             android:layout_width="match_parent"

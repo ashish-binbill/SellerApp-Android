@@ -9,7 +9,7 @@
         android:id="@+id/tab_strip"
         style="@style/viewPagerTitleStrip"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/dimen_50dp"
         android:background="@color/color_white"
         android:visibility="visible"
         app:layout_scrollFlags="scroll|enterAlways"

@@ -12,6 +12,10 @@
         <item name="cookieBackgroundColor">@color/colorAccent</item>
     </style>
 
+    <style name="MenuItems" parent="AppTheme">
+        <item name="android:textSize">@dimen/dimen_20dp</item>
+    </style>
+
     <style name="FullScreenDialog">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">fill_parent</item>

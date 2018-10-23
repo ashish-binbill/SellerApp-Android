@@ -6,10 +6,13 @@
     android:background="@color/colorPrimary"
     android:clickable="true"
     android:focusable="true"
+    android:paddingTop="@dimen/dimen_25dp"
+    android:paddingBottom="@dimen/dimen_15dp"
+    android:paddingLeft="@dimen/dimen_15dp"
+    android:paddingRight="@dimen/dimen_15dp"
     android:foreground="?attr/selectableItemBackgroundBorderless"
     android:gravity="bottom"
     android:orientation="horizontal"
-    android:padding="@dimen/dimen_15dp"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <include layout="@layout/layout_no_user_image" />
