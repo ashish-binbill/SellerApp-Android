@@ -157,13 +157,13 @@
                     android:id="@+id/tv_delivery_header_fmcg"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dimen_5dp"
                     android:layout_marginLeft="@dimen/dimen_15dp"
                     android:layout_marginTop="@dimen/dimen_15dp"
-                    android:layout_marginBottom="@dimen/dimen_5dp"
-                    android:visibility="gone"
                     android:text="@string/delivery_agent"
                     android:textSize="@dimen/dimen_14dp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:visibility="gone" />
 
                 <include
                     android:id="@+id/cv_root_fmcg_delivery"
@@ -183,9 +183,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:paddingTop="@dimen/dimen_10dp"
+                    android:orientation="horizontal"
                     android:paddingBottom="@dimen/dimen_10dp"
-                    android:orientation="horizontal">
+                    android:paddingTop="@dimen/dimen_10dp">
 
                     <TextView
                         android:id="@+id/header_shopping_list"
@@ -193,10 +193,10 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/dimen_25dp"
                         android:layout_weight="1"
-                        android:textStyle="bold"
                         android:text="@string/shopping_list"
                         android:textColor="@color/text_77"
-                        android:textSize="@dimen/dimen_9dp" />
+                        android:textSize="@dimen/dimen_9dp"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/header_quantity"
@@ -205,10 +205,10 @@
                         android:layout_marginRight="@dimen/dimen_25dp"
                         android:layout_weight="1"
                         android:gravity="end"
-                        android:textStyle="bold"
                         android:text="@string/quantity"
                         android:textColor="@color/text_77"
-                        android:textSize="@dimen/dimen_9dp" />
+                        android:textSize="@dimen/dimen_9dp"
+                        android:textStyle="bold" />
                 </LinearLayout>
 
                 <View
@@ -228,14 +228,14 @@
                     android:id="@+id/tv_delivery_header_service"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dimen_5dp"
                     android:layout_marginLeft="@dimen/dimen_15dp"
                     android:layout_marginTop="@dimen/dimen_15dp"
-                    android:layout_marginBottom="@dimen/dimen_5dp"
                     android:text="@string/delivery_agent"
-                    android:visibility="gone"
                     android:textColor="@color/black"
                     android:textSize="@dimen/dimen_14dp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:visibility="gone" />
 
                 <include
                     android:id="@+id/cv_root_delivery"
@@ -259,6 +259,7 @@
                         android:background="@color/border_grey" />
 
                     <LinearLayout
+                        android:id="@+id/start_time"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/dimen_15dp"
@@ -285,6 +286,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/end_time"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/dimen_15dp"
@@ -311,6 +313,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/time_elapsed"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/dimen_15dp"
@@ -374,6 +377,74 @@
                             android:textSize="@dimen/dimen_14dp"
                             android:textStyle="bold" />
                     </LinearLayout>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_review_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/dimen_10dp">
+
+                    <TextView
+                        android:id="@+id/tv_delivery_review"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dimen_10dp"
+                        android:text="@string/delivery_experience"
+                        android:textColor="@color/text_44"
+                        android:textSize="@dimen/dimen_14dp"
+                        android:textStyle="bold" />
+
+                    <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                        xmlns:app="http://schemas.android.com/apk/res-auto"
+                        android:id="@+id/cv_delivery_review"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dimen_1dp"
+                        android:layout_marginRight="@dimen/dimen_1dp"
+                        android:layout_marginTop="@dimen/dimen_3dp"
+                        android:layout_marginBottom="@dimen/dimen_2dp"
+                        android:background="@color/color_white"
+                        android:elevation="@dimen/dimen_10dp"
+                        app:cardCornerRadius="@dimen/dimen_10dp">
+
+                        <include
+                            android:id="@+id/rl_delivery_review"
+                            layout="@layout/row_review" />
+
+                    </android.support.v7.widget.CardView>
+
+                    <TextView
+                        android:id="@+id/tv_seller_review"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dimen_15dp"
+                        android:text="@string/seller_responseivness"
+                        android:textColor="@color/text_44"
+                        android:textSize="@dimen/dimen_14dp"
+                        android:textStyle="bold" />
+
+                    <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                        xmlns:app="http://schemas.android.com/apk/res-auto"
+                        android:id="@+id/cv_seller_review"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dimen_1dp"
+                        android:layout_marginRight="@dimen/dimen_1dp"
+                        android:layout_marginTop="@dimen/dimen_3dp"
+                        android:background="@color/color_white"
+                        android:layout_marginBottom="@dimen/dimen_2dp"
+                        android:elevation="@dimen/dimen_10dp"
+                        app:cardCornerRadius="@dimen/dimen_10dp">
+
+                        <include
+                            android:id="@+id/rl_seller_review"
+                            layout="@layout/row_review" />
+
+                    </android.support.v7.widget.CardView>
 
 
                 </LinearLayout>

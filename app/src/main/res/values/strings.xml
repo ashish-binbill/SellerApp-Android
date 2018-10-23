@@ -340,5 +340,7 @@
     <string name="suggest_replacement">Suggest Replacement</string>
     <string name="add_new_suggestion">+ Add New Suggestion</string>
     <string name="no_suggestion">No Suggestions found for this item.</string>
+    <string name="delivery_experience">Delivery Experience</string>
+    <string name="seller_responseivness">Seller Responsiveness</string>
 
 </resources>

@@ -42,6 +42,7 @@ import com.binbill.seller.BinBillSeller;
 import com.binbill.seller.Constants;
 import com.binbill.seller.CustomViews.AppButton;
 import com.binbill.seller.CustomViews.AppButtonGreyed;
+import com.binbill.seller.CustomViews.ReviewAdapter;
 import com.binbill.seller.CustomViews.ReviewsDialogFragment;
 import com.binbill.seller.Interface.ItemSelectedInterface;
 import com.binbill.seller.Model.UserModel;
@@ -100,7 +101,7 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
     RecyclerView rv_shopping_list;
 
     @ViewById
-    LinearLayout shimmer_view_container, ll_user_action, ll_bill_layout;
+    LinearLayout shimmer_view_container, ll_user_action, ll_bill_layout, start_time, end_time, time_elapsed;
     private Order orderDetails;
 
     @ViewById
@@ -108,6 +109,12 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
 
     @ViewById
     FrameLayout fl_icon_chat;
+
+    @ViewById
+    TextView tv_delivery_review, tv_seller_review;
+
+    @ViewById
+    CardView cv_delivery_review, cv_seller_review;
 
     @ViewById
     View v_divider;
@@ -120,6 +127,9 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
      */
     @ViewById
     CardView cv_root_delivery, cv_root_fmcg_delivery;
+
+    @ViewById
+    RelativeLayout rl_delivery_review, rl_seller_review;
 
     @ViewById
     AppButton btn_accept;
@@ -641,7 +651,11 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                     tv_start_time.setText(Utility.getFormattedDate(17, orderItem.getStartDate(), 0));
                     tv_end_time.setText(Utility.getFormattedDate(17, orderItem.getEndDate(), 0));
                     tv_time_elapsed.setText(Utility.getDateDifference(orderItem.getStartDate(), orderItem.getEndDate()));
-                    tv_total_amount.setText(getString(R.string.rupee_sign) + " " + orderItem.getTotalAmount());
+
+                    if (!Utility.isEmpty(orderItem.getTotalAmount()))
+                        tv_total_amount.setText(getString(R.string.rupee_sign) + " " + orderItem.getTotalAmount());
+                    else
+                        tv_total_amount.setText(getString(R.string.rupee_sign) + " 0");
                     ll_bill_layout.setVisibility(View.VISIBLE);
                 }
             }
@@ -660,19 +674,109 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                 updateAgentLayout(deliveryAgentHolder, orderDetails.getDeliveryUser(), null);
             }
 
-            if (orderDetails.getTotalAmount() != null) {
-                tv_start_time.setVisibility(View.GONE);
-                tv_end_time.setVisibility(View.GONE);
-                tv_time_elapsed.setVisibility(View.GONE);
-                tv_start_time_header.setVisibility(View.GONE);
-                tv_end_time_header.setVisibility(View.GONE);
-                tv_time_elapsed_header.setVisibility(View.GONE);
-                v_divider.setVisibility(View.GONE);
+            tv_start_time.setVisibility(View.GONE);
+            tv_end_time.setVisibility(View.GONE);
+            tv_time_elapsed.setVisibility(View.GONE);
+            tv_start_time_header.setVisibility(View.GONE);
+            tv_end_time_header.setVisibility(View.GONE);
+            tv_time_elapsed_header.setVisibility(View.GONE);
+
+            start_time.setVisibility(View.GONE);
+            end_time.setVisibility(View.GONE);
+            time_elapsed.setVisibility(View.GONE);
+
+            v_divider.setVisibility(View.GONE);
+
+            if (!Utility.isEmpty(orderDetails.getTotalAmount()))
                 tv_total_amount.setText(getString(R.string.rupee_sign) + " " + orderDetails.getTotalAmount());
-                ll_bill_layout.setVisibility(View.VISIBLE);
+            else
+                tv_total_amount.setText(getString(R.string.rupee_sign) + " 0");
+            ll_bill_layout.setVisibility(View.VISIBLE);
+
+
+            if (orderDetails.getDeliveryReview() != null) {
+                ReviewAdapter.ReviewHolder reviewHolder = new ReviewAdapter.ReviewHolder(rl_delivery_review);
+                updateDeliveryReview(reviewHolder, orderDetails.getDeliveryReview());
+                tv_delivery_review.setVisibility(View.VISIBLE);
+                cv_delivery_review.setVisibility(View.VISIBLE);
+            } else {
+                tv_delivery_review.setVisibility(View.GONE);
+                cv_delivery_review.setVisibility(View.GONE);
+            }
+
+            if (orderDetails.getSellerReview() != null) {
+                ReviewAdapter.ReviewHolder reviewHolder = new ReviewAdapter.ReviewHolder(rl_seller_review);
+                updateDeliveryReview(reviewHolder, orderDetails.getSellerReview());
+                tv_seller_review.setVisibility(View.VISIBLE);
+                cv_seller_review.setVisibility(View.VISIBLE);
+            } else {
+                tv_seller_review.setVisibility(View.GONE);
+                cv_seller_review.setVisibility(View.GONE);
             }
         }
 
+    }
+
+    private void updateDeliveryReview(final ReviewAdapter.ReviewHolder reviewHolder, AssistedUserModel.Review deliveryReview) {
+
+        reviewHolder.mReview.setText(deliveryReview.getUserName());
+        reviewHolder.mUser.setText(deliveryReview.getFeedback());
+
+        if (!Utility.isEmpty(deliveryReview.getRating()))
+            reviewHolder.mRating.setRating(Float.parseFloat(deliveryReview.getRating()));
+        else
+            reviewHolder.mRating.setRating(0);
+
+        reviewHolder.mDivider.setVisibility(View.GONE);
+
+        final String authToken = SharedPref.getString(reviewHolder.mUserImage.getContext(), SharedPref.AUTH_TOKEN);
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .authenticator(new Authenticator() {
+                    @Override
+                    public Request authenticate(Route route, Response response) throws IOException {
+                        return response.request().newBuilder()
+                                .header("Authorization", authToken)
+                                .build();
+                    }
+                }).build();
+
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.MATCH_PARENT,
+                RelativeLayout.LayoutParams.MATCH_PARENT
+        );
+        params.setMargins(0, 0, 0, 0);
+        reviewHolder.mUserImage.setLayoutParams(params);
+
+        Picasso picasso = new Picasso.Builder(reviewHolder.mUserImage.getContext())
+                .downloader(new OkHttp3Downloader(okHttpClient))
+                .build();
+        picasso.load(Constants.BASE_URL + "customer/" + deliveryReview.getUserID() + "/images")
+                .config(Bitmap.Config.RGB_565)
+                .memoryPolicy(MemoryPolicy.NO_CACHE)
+                .into(reviewHolder.mUserImage, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        Bitmap imageBitmap = ((BitmapDrawable) reviewHolder.mUserImage.getDrawable()).getBitmap();
+                        RoundedBitmapDrawable imageDrawable = RoundedBitmapDrawableFactory.create(reviewHolder.mUserImage.getContext().getResources(), imageBitmap);
+                        imageDrawable.setCircular(true);
+                        imageDrawable.setCornerRadius(Math.max(imageBitmap.getWidth(), imageBitmap.getHeight()) / 2.0f);
+                        reviewHolder.mUserImage.setImageDrawable(imageDrawable);
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                                RelativeLayout.LayoutParams.MATCH_PARENT,
+                                RelativeLayout.LayoutParams.MATCH_PARENT
+                        );
+
+                        int margins = Utility.convertDPtoPx(reviewHolder.mUserImage.getContext(), 15);
+                        params.setMargins(margins, margins, margins, margins);
+                        reviewHolder.mUserImage.setLayoutParams(params);
+
+                        reviewHolder.mUserImage.setImageDrawable(ContextCompat.getDrawable(reviewHolder.mUserImage.getContext(), R.drawable.ic_user));
+                    }
+                });
     }
 
     private void updateAgentLayout(final DeliveryAgentAdapter.DeliveryAgentHolder userHolder, final DeliveryModel model, String serviceId) {

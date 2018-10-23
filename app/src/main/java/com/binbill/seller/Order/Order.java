@@ -1,5 +1,6 @@
 package com.binbill.seller.Order;
 
+import com.binbill.seller.AssistedService.AssistedUserModel;
 import com.binbill.seller.Model.UserModel;
 import com.google.gson.annotations.SerializedName;
 
@@ -51,6 +52,19 @@ public class Order implements Serializable {
     @SerializedName("delivery_user")
     DeliveryModel deliveryUser;
 
+    @SerializedName("seller_review")
+    AssistedUserModel.Review sellerReview;
+
+    @SerializedName("delivery_review")
+    AssistedUserModel.Review deliveryReview;
+
+    public AssistedUserModel.Review getSellerReview() {
+        return sellerReview;
+    }
+
+    public AssistedUserModel.Review getDeliveryReview() {
+        return deliveryReview;
+    }
 
     public DeliveryModel getDeliveryUser() {
         return deliveryUser;

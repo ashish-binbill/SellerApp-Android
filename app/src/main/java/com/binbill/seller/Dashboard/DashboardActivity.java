@@ -701,12 +701,12 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
             final View iconView = menuView.getChildAt(i).findViewById(android.support.design.R.id.icon);
             final ViewGroup.LayoutParams layoutParams = iconView.getLayoutParams();
             final DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-            layoutParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 32, displayMetrics);
-            layoutParams.width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 32, displayMetrics);
+            layoutParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, getResources().getDimension(R.dimen.bottom_navigation_icon_size), displayMetrics);
+            layoutParams.width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, getResources().getDimension(R.dimen.bottom_navigation_icon_size), displayMetrics);
             iconView.setLayoutParams(layoutParams);
 
-            int padding20 = Utility.convertDPtoPx(this, 15);
-            iconView.setPadding(0, 0, 0, padding20);
+//            int padding20 = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, getResources().getDimension(R.dimen.dimen_15dp), displayMetrics);
+//            iconView.setPadding(0, 0, 0, padding20);
         }
 
         sellerType = dashboardModel.getSellerType();

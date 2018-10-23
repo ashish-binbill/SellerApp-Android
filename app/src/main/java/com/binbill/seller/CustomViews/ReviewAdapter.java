@@ -41,10 +41,11 @@ public class ReviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     public static class ReviewHolder extends RecyclerView.ViewHolder {
         protected View mRootCard;
-        protected TextView mReview;
-        protected AppCompatRatingBar mRating;
-        protected TextView mUser;
-        protected ImageView mUserImage;
+        public TextView mReview;
+        public AppCompatRatingBar mRating;
+        public TextView mUser;
+        public ImageView mUserImage;
+        public  View mDivider;
 
         public ReviewHolder(View view) {
             super(view);
@@ -53,6 +54,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             mRating = (AppCompatRatingBar) view.findViewById(R.id.rb_rating);
             mUser = (TextView) view.findViewById(R.id.tv_review_user);
             mUserImage = (ImageView) view.findViewById(R.id.iv_user_image);
+            mDivider = (View) view.findViewById(R.id.v_divider);
         }
     }
 
@@ -83,6 +85,12 @@ public class ReviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         reviewHolder.mReview.setText(model.getFeedback());
         reviewHolder.mUser.setText("From " + model.getUserName());
+
+        if (!Utility.isEmpty(model.getRating()))
+            reviewHolder.mRating.setRating(Float.parseFloat(model.getRating()));
+        else
+            reviewHolder.mRating.setRating(0);
+
 
         final String authToken = SharedPref.getString(reviewHolder.mUserImage.getContext(), SharedPref.AUTH_TOKEN);
         OkHttpClient okHttpClient = new OkHttpClient.Builder()

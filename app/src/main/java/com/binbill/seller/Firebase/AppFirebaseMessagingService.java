@@ -1,5 +1,6 @@
 package com.binbill.seller.Firebase;
 
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -147,6 +148,10 @@ public class AppFirebaseMessagingService extends FirebaseMessagingService {
 
             }
         }
-        notificationManager.notify(notifyId /* ID of notification */, notificationBuilder.build());
+
+        Notification notification = notificationBuilder.build();
+        notification.flags = Notification.FLAG_INSISTENT | Notification.VISIBILITY_PUBLIC;
+
+        notificationManager.notify(notifyId /* ID of notification */,notification);
     }
 }
