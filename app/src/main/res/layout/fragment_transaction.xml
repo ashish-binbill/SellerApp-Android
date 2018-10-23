@@ -21,7 +21,7 @@
             android:layout_gravity="center_horizontal"
             android:gravity="center_horizontal"
             android:lineSpacingExtra="1sp"
-            android:text="Total Transactions : "
+            android:text="Total Transaction Value : "
             android:textColor="@color/text_44"
             android:textSize="@dimen/dimen_18dp" />
 

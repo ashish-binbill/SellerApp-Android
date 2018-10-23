@@ -111,7 +111,7 @@ public class TransactionFragment extends Fragment implements TransactionAdapter.
                     if (jsonObject.optBoolean("status")) {
 
                         String total = jsonObject.optString("total_transactions");
-                        totalTransaction.setText(total);
+                        totalTransaction.setText(getString(R.string.rupee_sign) + total);
 
                         JSONArray userArray = jsonObject.getJSONArray("result");
                         Type classType = new TypeToken<ArrayList<TransactionModel>>() {
