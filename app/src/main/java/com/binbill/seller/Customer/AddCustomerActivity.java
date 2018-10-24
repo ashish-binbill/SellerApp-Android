@@ -91,6 +91,10 @@ public class AddCustomerActivity extends BaseActivity implements UserAdapter.Car
 
                     if (length >= 5) {
                         makeFetchUserCallToLink(text);
+                    }else{
+                        tv_no_data.setVisibility(View.VISIBLE);
+                        shimmer_view_container.setVisibility(View.GONE);
+                        rv_user_list.setVisibility(View.GONE);
                     }
                 }
             }

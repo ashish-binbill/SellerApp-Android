@@ -149,6 +149,8 @@ public class Constants {
     public static final int STATUS_COMPLETE = 5;
     public static final int STATUS_APPROVED = 16;
     public static final int STATUS_CANCEL = 17;
+    public static final int STATUS_AUTO_CANCEL = 2;
+    public static final int STATUS_AUTO_EXPIRED = 15;
     public static final int STATUS_REJECTED = 18;
     public static final int STATUS_OUT_FOR_DELIVERY = 19;
     public static final int STATUS_JOB_STARTED = 20;

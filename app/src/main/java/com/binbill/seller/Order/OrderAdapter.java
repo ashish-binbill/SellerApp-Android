@@ -180,6 +180,8 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     orderHolder.mStatus.setText(orderHolder.mStatus.getContext().getString(R.string.in_progress));
                 break;
             case Constants.STATUS_CANCEL:
+            case Constants.STATUS_AUTO_CANCEL:
+            case Constants.STATUS_AUTO_EXPIRED:
                 ViewCompat.setBackgroundTintList(orderHolder.mStatusColor, ContextCompat.getColorStateList(orderHolder.mStatusColor.getContext(), R.color.status_red));
                 orderHolder.mStatus.setText(orderHolder.mStatus.getContext().getString(R.string.order_cancelled));
                 break;

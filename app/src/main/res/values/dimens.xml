@@ -49,6 +49,6 @@
     <dimen name="dimen_48dp">48dp</dimen>
     <dimen name="dimen_24dp">24dp</dimen>
 
-    <dimen name="bottom_navigation_icon_size">24dp</dimen>
+    <dimen name="bottom_navigation_icon_size">8dp</dimen>
 
 </resources>

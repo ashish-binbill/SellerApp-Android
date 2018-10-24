@@ -504,7 +504,8 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
             }
 
             if (mStatus == Constants.STATUS_CANCEL || mStatus == Constants.STATUS_COMPLETE ||
-                    mStatus == Constants.STATUS_OUT_FOR_DELIVERY || mStatus == Constants.STATUS_REJECTED) {
+                    mStatus == Constants.STATUS_OUT_FOR_DELIVERY || mStatus == Constants.STATUS_REJECTED ||
+                    mStatus == Constants.STATUS_AUTO_CANCEL || mStatus == Constants.STATUS_AUTO_EXPIRED) {
 
                 if (Utility.isEmpty(orderHolder.mItemPrice.getText().toString()))
                     orderHolder.mItemPrice.setVisibility(View.GONE);

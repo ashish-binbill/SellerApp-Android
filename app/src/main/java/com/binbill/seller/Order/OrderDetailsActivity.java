@@ -987,6 +987,8 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                     changeButtonStateToApproval(2);
                     break;
                 case Constants.STATUS_CANCEL:
+                case Constants.STATUS_AUTO_CANCEL:
+                case Constants.STATUS_AUTO_EXPIRED:
                     tv_order_status.setTextColor(ContextCompat.getColor(this, R.color.status_red));
                     tv_order_status.setText(getString(R.string.order_cancelled));
                     changeButtonStateToApproval(3);
