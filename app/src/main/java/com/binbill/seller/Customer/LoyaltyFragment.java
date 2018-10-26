@@ -44,7 +44,7 @@ import java.util.ArrayList;
 public class LoyaltyFragment extends Fragment {
 
     private RecyclerView userListView;
-    private LinearLayout shimmerview, noDataLayout;
+    private LinearLayout shimmerview, noDataLayout, creditLayout;
     private SwipeRefreshLayout swipeRefreshLayout;
     private UserModel userModel;
     private RelativeLayout recyclerData;
@@ -79,6 +79,8 @@ public class LoyaltyFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        creditLayout = (LinearLayout) view.findViewById(R.id.ll_grant_credit);
+        creditLayout.setVisibility(View.GONE);
         totalCredits = (TextView) view.findViewById(R.id.tv_total_credits);
         TextView totalLabel = (TextView) view.findViewById(R.id.tv_total_label);
         totalLabel.setText(getString(R.string.total_points));
@@ -264,13 +266,21 @@ public class LoyaltyFragment extends Fragment {
             public void onClick(View view) {
                 amountError.setVisibility(View.GONE);
                 Utility.hideKeyboard(getActivity(), yesButton);
-                if (!Utility.isEmpty(amount.getText().toString())) {
-                    yesButtonProgress.setVisibility(View.VISIBLE);
-                    yesButton.setVisibility(View.GONE);
 
-                    makeAddPointsApiCall(dialog, type, amount.getText().toString(), remarks.getText().toString());
-                } else
+                try {
+                    if (!Utility.isEmpty(amount.getText().toString()) && Double.parseDouble(amount.getText().toString()) > 0) {
+                        yesButtonProgress.setVisibility(View.VISIBLE);
+                        yesButton.setVisibility(View.GONE);
+
+                        makeAddPointsApiCall(dialog, type, amount.getText().toString(), remarks.getText().toString());
+                    } else {
+                        amountError.setText(getString(R.string.error_invalid_value));
+                        amountError.setVisibility(View.VISIBLE);
+                    }
+                } catch (Exception e) {
+                    amountError.setText(getString(R.string.error_invalid_value));
                     amountError.setVisibility(View.VISIBLE);
+                }
             }
         });
 

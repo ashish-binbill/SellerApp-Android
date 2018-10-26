@@ -76,6 +76,28 @@ public class UserModel implements Serializable {
     @SerializedName("address")
     String address;
 
+    @SerializedName("credit_limit")
+    String creditLimit;
+
+    @SerializedName("is_credit_allowed")
+    String isCreditAllowed;
+
+    public String getIsCreditAllowed() {
+        return isCreditAllowed;
+    }
+
+    public String getCreditLimit() {
+        return creditLimit;
+    }
+
+    public void setCreditLimit(String creditLimit) {
+        this.creditLimit = creditLimit;
+    }
+
+    public void setIsCreditAllowed(String isCreditAllowed) {
+        this.isCreditAllowed = isCreditAllowed;
+    }
+
     public String getAddress() {
         return address;
     }

@@ -21,37 +21,244 @@
 
     <include layout="@layout/full_screen_loader" />
 
+
     <RelativeLayout
+        android:id="@+id/rl_auto_credit_layout"
         android:layout_width="match_parent"
+        android:orientation="vertical"
         android:layout_marginBottom="@dimen/dimen_20dp"
         android:layout_height="wrap_content">
 
-    <LinearLayout
-        android:id="@+id/points_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dimen_20dp"
-        android:layout_marginBottom="@dimen/dimen_7dp"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal">
+        <LinearLayout
+            android:id="@+id/ll_auto_credit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/light_blue"
+            android:orientation="horizontal"
+            android:padding="@dimen/dimen_15dp"
+            android:visibility="visible">
+
+            <TextView
+                android:id="@+id/tv_auto_credit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:lineSpacingExtra="5.5sp"
+                android:text="@string/enable_auto_credit_wo"
+                android:textColor="@color/text_44"
+                android:textSize="@dimen/dimen_14dp" />
+
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/sc_auto_credit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:checked="false"
+                android:gravity="end" />
+        </LinearLayout>
 
         <TextView
+            android:id="@+id/tv_auto_credit_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:lineSpacingExtra="-1sp"
-            android:text="@string/_1_rs"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="@dimen/dimen_20dp"
+            android:layout_below="@id/ll_auto_credit"
+            android:text="@string/auto_credit_text"
             android:textColor="@color/text_44"
-            android:textSize="@dimen/dimen_16dp"
+            android:textSize="@dimen/dimen_14dp" />
+
+        <LinearLayout
+            android:id="@+id/points_layout_ac"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/ll_auto_credit"
+            android:layout_marginBottom="@dimen/dimen_7dp"
+            android:layout_marginTop="@dimen/dimen_20dp"
+            android:gravity="center_horizontal"
+            android:visibility="gone"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="-1sp"
+                android:text="@string/_1_rs"
+                android:textColor="@color/text_44"
+                android:textSize="@dimen/dimen_16dp"
+                android:textStyle="bold" />
+
+            <com.binbill.seller.CustomViews.PrefixEditText
+                android:id="@+id/et_points_ac"
+                android:layout_width="@dimen/dimen_150dp"
+                android:layout_height="@dimen/dimen_55dp"
+                android:layout_marginLeft="@dimen/dimen_20dp"
+                android:layout_marginRight="@dimen/dimen_20dp"
+                android:background="@drawable/edittext_bg"
+                android:hint=""
+                android:inputType="number"
+                android:lineSpacingExtra="-1sp"
+                android:maxLength="5"
+                app:prefix_string="@string/rupee_sign"
+                android:paddingLeft="@dimen/dimen_12dp"
+                android:paddingRight="@dimen/dimen_12dp"
+                android:textColor="@color/text_44"
+                android:textColorHint="@color/hint_color"
+                android:textSize="@dimen/dimen_15dp" />
+
+            <TextView
+                android:id="@+id/tv_points_ac"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="-1sp"
+                android:text="@string/bill_amount"
+                android:textColor="@color/text_44"
+                android:textSize="@dimen/dimen_16dp"
+                android:textStyle="bold"
+                android:visibility="visible" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/example_ac"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/points_layout_ac"
+            android:gravity="center_horizontal"
+            android:lineSpacingExtra="3.5sp"
+            android:text="@string/example_loyalty_points_auto_credit"
+            android:textColor="@color/dark_grey"
+            android:textSize="@dimen/dimen_12dp" />
+
+        <FrameLayout
+            android:id="@+id/fl_button"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_55dp"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="@dimen/dimen_30dp"
+            android:layout_marginRight="@dimen/dimen_30dp"
+            android:layout_marginTop="@dimen/dimen_10dp"
+            android:background="@drawable/rounded_button"
+            android:gravity="center">
+
+            <ProgressBar
+                android:id="@+id/progress_ac"
+                android:layout_width="@dimen/dimen_25dp"
+                android:layout_height="@dimen/dimen_25dp"
+                android:layout_gravity="center"
+                android:backgroundTint="@color/color_white"
+                android:foregroundGravity="center"
+                android:gravity="center"
+                android:indeterminate="true"
+                android:indeterminateTint="@color/color_white"
+                android:indeterminateTintMode="src_in"
+                android:secondaryProgress="@color/color_white"
+                android:visibility="gone" />
+
+
+            <com.binbill.seller.CustomViews.AppButton
+                android:id="@+id/btn_confirm_ac"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:background="@android:color/transparent"
+                android:gravity="center"
+                android:text="@string/save"
+                android:textSize="@dimen/dimen_16dp"
+                android:visibility="visible" />
+
+        </FrameLayout>
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_loyalty_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dimen_20dp">
+
+        <LinearLayout
+            android:id="@+id/points_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dimen_7dp"
+            android:layout_marginTop="@dimen/dimen_20dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="-1sp"
+                android:text="@string/_1_rs"
+                android:textColor="@color/text_44"
+                android:textSize="@dimen/dimen_16dp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/et_points"
+                android:layout_width="@dimen/dimen_150dp"
+                android:layout_height="@dimen/dimen_55dp"
+                android:layout_marginLeft="@dimen/dimen_20dp"
+                android:layout_marginRight="@dimen/dimen_20dp"
+                android:background="@drawable/edittext_bg"
+                android:hint="@string/points_string"
+                android:inputType="number"
+                android:lineSpacingExtra="-1sp"
+                android:maxLength="5"
+                android:paddingLeft="@dimen/dimen_12dp"
+                android:paddingRight="@dimen/dimen_12dp"
+                android:textColor="@color/text_44"
+                android:textColorHint="@color/hint_color"
+                android:textSize="@dimen/dimen_15dp" />
+
+            <TextView
+                android:id="@+id/tv_points"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="-1sp"
+                android:text="@string/points_string"
+                android:textColor="@color/text_44"
+                android:textSize="@dimen/dimen_16dp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/example"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/points_layout"
+            android:gravity="center_horizontal"
+            android:lineSpacingExtra="3.5sp"
+            android:text="@string/example_loyalty_points"
+            android:textColor="@color/dark_grey"
+            android:textSize="@dimen/dimen_12dp" />
+
+        <TextView
+            android:id="@+id/min_point_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/example"
+            android:layout_margin="@dimen/dimen_20dp"
+            android:lineSpacingExtra="-1sp"
+            android:text="@string/minimum_points_for_redemption"
+            android:textColor="@color/text_44"
+            android:textSize="@dimen/dimen_15dp"
             android:textStyle="bold" />
 
         <EditText
-            android:id="@+id/et_points"
-            android:layout_width="@dimen/dimen_150dp"
+            android:id="@+id/et_min_points"
+            android:layout_width="match_parent"
             android:layout_height="@dimen/dimen_55dp"
+            android:layout_below="@id/min_point_header"
             android:layout_marginLeft="@dimen/dimen_20dp"
             android:layout_marginRight="@dimen/dimen_20dp"
             android:background="@drawable/edittext_bg"
-            android:hint="@string/points_string"
+            android:hint="@string/enter_points_string"
             android:inputType="number"
             android:lineSpacingExtra="-1sp"
             android:maxLength="5"
@@ -60,60 +267,6 @@
             android:textColor="@color/text_44"
             android:textColorHint="@color/hint_color"
             android:textSize="@dimen/dimen_15dp" />
-
-        <TextView
-            android:id="@+id/tv_points"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:lineSpacingExtra="-1sp"
-            android:text="@string/points_string"
-            android:textColor="@color/text_44"
-            android:textSize="@dimen/dimen_16dp"
-            android:textStyle="bold"
-            android:visibility="gone" />
-
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/example"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:lineSpacingExtra="3.5sp"
-        android:layout_below="@id/points_layout"
-        android:text="@string/example_loyalty_points"
-        android:textColor="@color/dark_grey"
-        android:textSize="@dimen/dimen_12dp" />
-
-    <TextView
-        android:id="@+id/min_point_header"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/dimen_20dp"
-        android:lineSpacingExtra="-1sp"
-        android:text="@string/minimum_points_for_redemption"
-        android:textColor="@color/text_44"
-        android:layout_below="@id/example"
-        android:textSize="@dimen/dimen_15dp"
-        android:textStyle="bold" />
-
-    <EditText
-        android:id="@+id/et_min_points"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_55dp"
-        android:layout_marginLeft="@dimen/dimen_20dp"
-        android:layout_marginRight="@dimen/dimen_20dp"
-        android:background="@drawable/edittext_bg"
-        android:hint="@string/enter_points_string"
-        android:inputType="number"
-        android:lineSpacingExtra="-1sp"
-        android:maxLength="5"
-        android:layout_below="@id/min_point_header"
-        android:paddingLeft="@dimen/dimen_12dp"
-        android:paddingRight="@dimen/dimen_12dp"
-        android:textColor="@color/text_44"
-        android:textColorHint="@color/hint_color"
-        android:textSize="@dimen/dimen_15dp" />
 
         <FrameLayout
             android:layout_width="match_parent"

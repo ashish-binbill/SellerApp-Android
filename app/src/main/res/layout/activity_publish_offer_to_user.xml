@@ -25,9 +25,24 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <CheckBox
+            android:id="@+id/cb_select_all"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:lineSpacingExtra="1sp"
+            android:layout_marginTop="@dimen/dimen_10dp"
+            android:paddingLeft="@dimen/dimen_5dp"
+            android:layout_alignParentRight="true"
+            android:text="@string/select_all"
+            android:layout_marginRight="@dimen/dimen_20dp"
+            android:textColor="@color/text_44"
+            android:textSize="@dimen/dimen_14dp" />
+
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/sl_pull_to_refresh"
         android:layout_width="match_parent"
+        android:layout_below="@id/cb_select_all"
         android:layout_above="@+id/btn_publish"
         android:layout_height="wrap_content">
 

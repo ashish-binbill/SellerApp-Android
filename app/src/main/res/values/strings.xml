@@ -5,6 +5,7 @@
 
     <string name="error_field_cannot_be_empty">Field cannot be empty</string>
     <string name="error_incorrect_value">Incorrect Mobile Number</string>
+    <string name="error_invalid_value">Invalid Value</string>
     <string name="mobile_number">Mobile Number</string>
     <string name="register">Register</string>
     <string name="mobile_number_asterisk">Mobile Number *</string>
@@ -215,7 +216,8 @@
     <string name="my_order">Orders</string>
     <string name="order_complete">Completed</string>
     <string name="no_active_orders">No Active Orders as of now.</string>
-    <string name="no_past_orders">No Past Order history available.</string>
+    <string name="no_past_orders">No Past Orders.</string>
+    <string name="no_orders">No Orders.</string>
     <string name="in_progress">In Progress</string>
     <string name="order_cancelled">Cancelled</string>
     <string name="order_rejected">Rejected</string>
@@ -290,19 +292,21 @@
     <string name="bbcash_transactions">BB Cash Transactions</string>
     <string name="name_string">Name : %1$s</string>
     <string name="received_from_home_delivery">Received from BinBill for Home Delivery</string>
+    <string name="received_from_referral">Received from BinBill for Referral</string>
     <string name="received_from_customer">Received from Customer</string>
     <string name="success">Success</string>
     <string name="no_wallet_txn">You don\'t have any wallet transactions</string>
     <string name="confirm_paytm">Please confirm your Paytm Number - %1$s Or go back to Redeem Via Seller.</string>
     <string name="confirm_number">Confirm Number</string>
     <string name="redeem_successfully">Request generated successfully to redeem wallet amount</string>
-    <string name="_1_rs">₹1 =</string>
+    <string name="_1_rs">₹ 1 =</string>
     <string name="new_version_text">The new version brings a whole host of fantastic features and improvements</string>
     <string name="points_string">Points</string>
     <string name="example_loyalty_points">Ex. 100 points for ₹10</string>
     <string name="minimum_points_for_redemption">Minimum points for redemption</string>
     <string name="enter_points_string">Enter Points</string>
     <string name="set_loyalty_rules">Set Loyalty Rules</string>
+    <string name="set_loyalty_rules_hyphen">- Set Loyalty Rules</string>
     <string name="redeemed_at_paytm">Redeemed at Paytm</string>
     <string name="insufficient_wallet_amount">The amount in your wallet is insufficient to redeem.</string>
     <string name="onboarding_title_1">Multiply Your Sales</string>
@@ -342,5 +346,23 @@
     <string name="no_suggestion">No Suggestions found for this item.</string>
     <string name="delivery_experience">Delivery Experience</string>
     <string name="seller_responseivness">Seller Responsiveness</string>
+    <string name="grant_credit">Grant Credit</string>
+    <string name="set_credit_limit_for">Set Credit Limit for %1$s</string>
+    <string name="set_credit_limit">Set Credit Limit</string>
+    <string name="example_rs_1000">e.g. Rs. 1000</string>
+    <string name="credit_limit">Credit Limit:</string>
+    <string name="total_transaction_value">Total Transaction Value</string>
+    <string name="outstanding_credit">Outstanding Credit</string>
+    <string name="loyalty_discount">Loyalty Discount</string>
+    <string name="not_responded">Not Responded</string>
+    <string name="lost_sales_count">Lost Sales (%1$s Times)</string>
+    <string name="enable_auto_credit">- Enable Auto Credit</string>
+    <string name="enable_auto_credit_wo">Enable Auto Credit</string>
+    <string name="auto_credit_text">Your customers can automatically avail preset loyalty benefits once you enable Auto Credit</string>
+    <string name="bill_amount">Bill Amount</string>
+    <string name="auto_credit_enabled">Auto Credit Enabled</string>
+    <string name="example_loyalty_points_auto_credit">Eg. A bill of Rs. 500 will give the user loyalty point of Rs. 5</string>
+    <string name="select_all">Select All</string>
+    <string name="incorrect_input">Please check your input</string>
 
 </resources>

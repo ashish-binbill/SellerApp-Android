@@ -55,9 +55,22 @@ public class DashboardModel implements Serializable {
     @SerializedName("is_data_manually_added")
     boolean categoryBrandDataManuallyAdded;
 
+    @SerializedName("lost_order_counts")
+    String totalLostOrder;
+
+    @SerializedName("lost_order_sum")
+    String totalLostOrderValue;
+
 
     transient int sellerType;
 
+    public String getTotalLostOrder() {
+        return totalLostOrder;
+    }
+
+    public String getTotalLostOrderValue() {
+        return totalLostOrderValue;
+    }
 
     public String getForceUpdate() {
         return forceUpdate;

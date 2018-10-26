@@ -42,6 +42,7 @@ import com.binbill.seller.BinBillSeller;
 import com.binbill.seller.Constants;
 import com.binbill.seller.CustomViews.AppButton;
 import com.binbill.seller.CustomViews.AppButtonGreyed;
+import com.binbill.seller.CustomViews.PrefixEditText;
 import com.binbill.seller.CustomViews.ReviewAdapter;
 import com.binbill.seller.CustomViews.ReviewsDialogFragment;
 import com.binbill.seller.Interface.ItemSelectedInterface;
@@ -101,7 +102,7 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
     RecyclerView rv_shopping_list;
 
     @ViewById
-    LinearLayout shimmer_view_container, ll_user_action, ll_bill_layout, start_time, end_time, time_elapsed;
+    LinearLayout shimmer_view_container, ll_user_action, ll_bill_layout, start_time, end_time, time_elapsed, ll_amount_entry;
     private Order orderDetails;
 
     @ViewById
@@ -109,6 +110,9 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
 
     @ViewById
     FrameLayout fl_icon_chat;
+
+    @ViewById
+    PrefixEditText et_total_amount;
 
     @ViewById
     TextView tv_delivery_review, tv_seller_review;
@@ -361,7 +365,7 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                         btn_accept_progress.setVisibility(View.VISIBLE);
                         btn_accept.setVisibility(View.GONE);
 
-                        new RetrofitHelper(OrderDetailsActivity.this).sendOrderOutForDeliveryCall(orderDetails.getOrderId(), orderDetails.getUserId(), null, null, new RetrofitHelper.RetrofitCallback() {
+                        new RetrofitHelper(OrderDetailsActivity.this).sendOrderOutForDeliveryCall(orderDetails.getOrderId(), orderDetails.getUserId(), null, null, null, new RetrofitHelper.RetrofitCallback() {
                             @Override
                             public void onResponse(String response) {
                                 btn_accept.setVisibility(View.VISIBLE);
@@ -428,7 +432,12 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                     }.getType();
                     String json = gson.toJson(updatedList, type);
 
-                    new RetrofitHelper(OrderDetailsActivity.this).sendOrderOutForDeliveryCall(orderDetails.getOrderId(), orderDetails.getUserId(), json, deliveryId, new RetrofitHelper.RetrofitCallback() {
+                    String totalAmount = "";
+                    if (!Utility.isEmpty(et_total_amount.getText().toString())) {
+                        totalAmount = et_total_amount.getText().toString().trim();
+                    }
+
+                    new RetrofitHelper(OrderDetailsActivity.this).sendOrderOutForDeliveryCall(orderDetails.getOrderId(), orderDetails.getUserId(), json, deliveryId, totalAmount, new RetrofitHelper.RetrofitCallback() {
                         @Override
                         public void onResponse(String response) {
                             btn_accept.setVisibility(View.VISIBLE);
@@ -687,12 +696,22 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
 
             v_divider.setVisibility(View.GONE);
 
-            if (!Utility.isEmpty(orderDetails.getTotalAmount()))
+            if (!Utility.isEmpty(orderDetails.getTotalAmount())) {
                 tv_total_amount.setText(getString(R.string.rupee_sign) + " " + orderDetails.getTotalAmount());
-            else
+                et_total_amount.setText(orderDetails.getTotalAmount());
+            } else {
                 tv_total_amount.setText(getString(R.string.rupee_sign) + " 0");
-            ll_bill_layout.setVisibility(View.VISIBLE);
+            }
 
+            if (orderDetails.getOrderStatus() == Constants.STATUS_OUT_FOR_DELIVERY || orderDetails.getOrderStatus() == Constants.STATUS_COMPLETE ||
+                    orderDetails.getOrderStatus() == Constants.STATUS_AUTO_CANCEL || orderDetails.getOrderStatus() == Constants.STATUS_AUTO_EXPIRED ||
+                    orderDetails.getOrderStatus() == Constants.STATUS_REJECTED || orderDetails.getOrderStatus() == Constants.STATUS_CANCEL || orderDetails.getOrderStatus() == Constants.STATUS_NEW_ORDER) {
+                ll_bill_layout.setVisibility(View.VISIBLE);
+                ll_amount_entry.setVisibility(View.GONE);
+            } else {
+                ll_amount_entry.setVisibility(View.VISIBLE);
+                ll_bill_layout.setVisibility(View.GONE);
+            }
 
             if (orderDetails.getDeliveryReview() != null) {
                 ReviewAdapter.ReviewHolder reviewHolder = new ReviewAdapter.ReviewHolder(rl_delivery_review);
@@ -915,7 +934,7 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
     }
 
     public void changeButtonStateToApproval(int state) {
-
+        ll_amount_entry.setVisibility(View.GONE);
         switch (state) {
             case 0:
                 if (orderDetails.getOrderStatus() == Constants.STATUS_NEW_ORDER) {
@@ -949,8 +968,9 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
 
                 if (orderDetails.getOrderType().equalsIgnoreCase(Constants.ORDER_TYPE_SERVICE))
                     btn_accept.setText(getString(R.string.out_for_service));
-                else
+                else {
                     btn_accept.setText(getString(R.string.out_for_delivery));
+                }
                 break;
             default:
                 ll_user_action.setVisibility(View.GONE);
@@ -987,10 +1007,14 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                     changeButtonStateToApproval(2);
                     break;
                 case Constants.STATUS_CANCEL:
-                case Constants.STATUS_AUTO_CANCEL:
-                case Constants.STATUS_AUTO_EXPIRED:
                     tv_order_status.setTextColor(ContextCompat.getColor(this, R.color.status_red));
                     tv_order_status.setText(getString(R.string.order_cancelled));
+                    changeButtonStateToApproval(3);
+                    break;
+                case Constants.STATUS_AUTO_EXPIRED:
+                case Constants.STATUS_AUTO_CANCEL:
+                    tv_order_status.setTextColor(ContextCompat.getColor(this, R.color.status_lighter_blue));
+                    tv_order_status.setText(getString(R.string.not_responded));
                     changeButtonStateToApproval(3);
                     break;
                 case Constants.STATUS_REJECTED:

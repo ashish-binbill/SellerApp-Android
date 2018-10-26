@@ -434,6 +434,19 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
             }
         });
 
+        TextView autoCreditLoyalty = nav_view.findViewById(R.id.tv_auto_credit);
+        autoCreditLoyalty.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (drawer_layout.isDrawerOpen(GravityCompat.START))
+                    drawer_layout.closeDrawer(GravityCompat.START);
+
+                Intent intent = new Intent(DashboardActivity.this, LoyaltyRulesActivity_.class);
+                intent.putExtra(Constants.TYPE, Constants.AUTO_CREDIT);
+                startActivity(intent);
+            }
+        });
+
         TextView callUs = (TextView) findViewById(R.id.tv_call_us);
         callUs.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -758,7 +771,7 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
                                 iv_search.setVisibility(View.GONE);
                                 break;
                             case R.id.action_chat:
-                                OrderFragment orderFragment = OrderFragment.newInstance();
+                                OrderFragment orderFragment = OrderFragment.newInstance(0);
                                 replaceFragment(orderFragment, 2);
                                 setUpToolbar(getString(R.string.my_order));
 
@@ -902,16 +915,24 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
 
     @Override
     public void changeViewPagerFragment(int position) {
+        changeViewPagerFragment(position, 0);
+    }
+
+    public void changeViewPagerFragment(int position, int page) {
 
         if (position == 1) {
-            OrderFragment orderFragment = OrderFragment.newInstance();
+            /**
+             * Moving this up, since it resets the page of the pager to 0
+             */
+            bottom_navigation.setSelectedItemId(R.id.action_chat);
+
+            OrderFragment orderFragment = OrderFragment.newInstance(page);
             replaceFragment(orderFragment, 2);
             setUpToolbar(getString(R.string.my_order));
 
             iv_notification.setVisibility(View.INVISIBLE);
             iv_search.setVisibility(View.GONE);
 
-            bottom_navigation.setSelectedItemId(R.id.action_chat);
         } else if (position == 2) {
             VerificationFragment verificationFragment = VerificationFragment.newInstance();
             replaceFragment(verificationFragment, 1);

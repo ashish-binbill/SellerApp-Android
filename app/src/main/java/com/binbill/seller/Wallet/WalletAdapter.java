@@ -80,7 +80,7 @@ public class WalletAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
          * Credit
          */
         if (model.getTransactionType().equalsIgnoreCase("1")) {
-                walletHolder.mDate.setText(Utility.getFormattedDate(10, model.getDate(), 0));
+            walletHolder.mDate.setText(Utility.getFormattedDate(10, model.getDate(), 0));
             walletHolder.mTransactionId.setText(" " + model.getId());
             walletHolder.mAmount.setText("+ " + model.getAmount());
             walletHolder.mAmount.setTextColor(ContextCompat.getColor(walletHolder.mAmount.getContext(), R.color.status_green));
@@ -102,7 +102,7 @@ public class WalletAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
                 walletHolder.userImage.setImageDrawable(ContextCompat.getDrawable(walletHolder.userImage.getContext(), R.drawable.ic_binbill));
 
-            } else {
+            } else if (model.getCashbackSource().equalsIgnoreCase("2")) {
                 /**
                  * By user
                  */
@@ -157,6 +157,24 @@ public class WalletAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                                 walletHolder.userImage.setImageDrawable(ContextCompat.getDrawable(walletHolder.userImage.getContext(), R.drawable.ic_user));
                             }
                         });
+            } else if (model.getCashbackSource().equalsIgnoreCase("3")) {
+                /**
+                 * Against referral
+                 */
+                walletHolder.mTitle.setText(R.string.received_from_referral);
+                walletHolder.mUserName.setVisibility(View.GONE);
+
+                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                        RelativeLayout.LayoutParams.MATCH_PARENT,
+                        RelativeLayout.LayoutParams.MATCH_PARENT
+                );
+
+                int margins = Utility.convertDPtoPx(walletHolder.userImage.getContext(), 5);
+                params.setMargins(margins, margins, margins, margins);
+                walletHolder.userImage.setLayoutParams(params);
+
+                walletHolder.userImage.setImageDrawable(ContextCompat.getDrawable(walletHolder.userImage.getContext(), R.drawable.ic_binbill));
+
             }
             walletHolder.mStatus.setVisibility(View.GONE);
         } else {

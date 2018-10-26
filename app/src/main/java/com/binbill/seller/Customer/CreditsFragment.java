@@ -12,12 +12,14 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SwitchCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -44,14 +46,15 @@ import java.util.ArrayList;
 public class CreditsFragment extends Fragment {
 
     private RecyclerView userListView;
-    private LinearLayout shimmerview, noDataLayout;
+    private LinearLayout shimmerview, noDataLayout, creditLayout;
     private SwipeRefreshLayout swipeRefreshLayout;
     private UserModel userModel;
     private RelativeLayout recyclerData;
     private AppButton addCredit, settleCredit;
     private int ADD_CREDIT = 1;
     private int SETTLE_CREDIT = 2;
-    private TextView totalCredits;
+    private TextView totalCredits, creditLimit, creditLimitValue;
+    private SwitchCompat creditSwitch;
 
 
     public CreditsFragment() {
@@ -80,6 +83,13 @@ public class CreditsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        creditLayout = (LinearLayout) view.findViewById(R.id.ll_grant_credit);
+        creditLayout.setVisibility(View.VISIBLE);
+
+        creditLimit = (TextView) view.findViewById(R.id.tv_credit_header);
+        creditSwitch = (SwitchCompat) view.findViewById(R.id.sc_credit_allowed);
+        creditLimitValue = (TextView) view.findViewById(R.id.tv_credit_value);
+
         totalCredits = (TextView) view.findViewById(R.id.tv_total_credits);
         TextView totalLabel = (TextView) view.findViewById(R.id.tv_total_label);
         totalLabel.setText(getString(R.string.total_credits));
@@ -101,9 +111,26 @@ public class CreditsFragment extends Fragment {
         if (userModel != null) {
             totalCredits.setText(getString(R.string.rupee_symbol) + " " + userModel.getUserCredit());
             makeCreditHistoryCall();
+            setUpCreditLimitData();
         }
 
         setUpListeners();
+    }
+
+    private void setUpCreditLimitData() {
+
+        if (userModel != null) {
+            if (userModel.getIsCreditAllowed().equalsIgnoreCase("true")) {
+                creditSwitch.setChecked(true);
+                creditLimit.setText(getString(R.string.credit_limit));
+                creditLimitValue.setVisibility(View.VISIBLE);
+                creditLimitValue.setText(getString(R.string.rupee_sign) + " " + userModel.getCreditLimit());
+            } else {
+                creditSwitch.setChecked(false);
+                creditLimitValue.setVisibility(View.GONE);
+            }
+        }
+
     }
 
     @Override
@@ -124,7 +151,7 @@ public class CreditsFragment extends Fragment {
                     JSONObject jsonObject = new JSONObject(response);
                     if (jsonObject.optBoolean("status")) {
 
-                        if(isAdded()) {
+                        if (isAdded()) {
                             String total = jsonObject.optString("total_credits");
                             totalCredits.setText(getString(R.string.rupee_symbol) + " " + total);
 
@@ -180,7 +207,6 @@ public class CreditsFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 invokeAddSettleCreditDialog(ADD_CREDIT);
-
             }
         });
 
@@ -190,6 +216,158 @@ public class CreditsFragment extends Fragment {
                 invokeAddSettleCreditDialog(SETTLE_CREDIT);
             }
         });
+
+        creditSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean enable) {
+                if (enable) {
+
+                    if (userModel != null && userModel.getIsCreditAllowed().equalsIgnoreCase("false")) {
+                        /**
+                         * show popup
+                         */
+                        invokeAddCreditLimitDialog();
+                    }
+                } else {
+                    creditLimit.setText(getString(R.string.grant_credit));
+                    creditLimitValue.setVisibility(View.GONE);
+                    if (userModel != null && userModel.getIsCreditAllowed().equalsIgnoreCase("true")) {
+                        makeSetCreditLimitAPICall("0", false);
+                    }
+                }
+            }
+        });
+
+        creditLimitValue.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                invokeAddCreditLimitDialog();
+            }
+        });
+    }
+
+    private void invokeAddCreditLimitDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.dialog_add_settle_credit, null);
+
+        Rect displayRectangle = new Rect();
+        Window window = getActivity().getWindow();
+        window.getDecorView().getWindowVisibleDisplayFrame(displayRectangle);
+
+        dialogView.setMinimumWidth((int) (displayRectangle.width() * 0.9f));
+
+        builder.setView(dialogView);
+        builder.setCancelable(false);
+
+        final AlertDialog dialog = builder.create();
+        dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        TextView headerTitle = (TextView) dialogView.findViewById(R.id.header);
+        final AppButton yesButton = (AppButton) dialogView.findViewById(R.id.btn_yes);
+        final LinearLayout yesButtonProgress = (LinearLayout) dialogView.findViewById(R.id.btn_yes_progress);
+        yesButton.setText(getString(R.string.save));
+        final AppButtonGreyed noButton = (AppButtonGreyed) dialogView.findViewById(R.id.btn_no);
+
+        String userName = "";
+        if (userModel != null) {
+            if (!Utility.isEmpty(userModel.getUserName()))
+                userName = userModel.getUserName();
+            else if (!Utility.isEmpty(userModel.getUserEmail()))
+                userName = userModel.getUserEmail();
+            else
+                userName = userModel.getUserMobile();
+        }
+
+        if (!Utility.isEmpty(userName))
+            headerTitle.setText(getString(R.string.set_credit_limit_for, userName));
+        else
+            headerTitle.setText(getString(R.string.set_credit_limit));
+
+        final EditText amount = (EditText) dialogView.findViewById(R.id.et_add_credit);
+        amount.setHint(getString(R.string.example_rs_1000));
+
+        try {
+            if (userModel != null && !Utility.isEmpty(userModel.getCreditLimit()) && Double.parseDouble(userModel.getCreditLimit()) > 0) {
+                amount.setText(userModel.getCreditLimit());
+                amount.setSelection(amount.getText().toString().length());
+            }
+        } catch (Exception e) {
+            // do nothing
+        }
+
+        final EditText remarks = (EditText) dialogView.findViewById(R.id.et_add_remarks);
+        final TextView charLeft = (TextView) dialogView.findViewById(R.id.tv_char_left);
+        final TextView amountError = (TextView) dialogView.findViewById(R.id.tv_error_add_credit);
+
+        LinearLayout remarksLayout = (LinearLayout) dialogView.findViewById(R.id.ll_remarks);
+        remarksLayout.setVisibility(View.GONE);
+
+        noButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Utility.hideKeyboard(getActivity(), noButton);
+                dialog.dismiss();
+            }
+        });
+
+        yesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                amountError.setVisibility(View.GONE);
+                Utility.hideKeyboard(getActivity(), yesButton);
+                try {
+                    if (!Utility.isEmpty(amount.getText().toString()) && Double.parseDouble(amount.getText().toString()) > 0) {
+                        yesButtonProgress.setVisibility(View.VISIBLE);
+                        yesButton.setVisibility(View.GONE);
+
+                        makeSetCreditLimitAPICall(amount.getText().toString(), true);
+                        dialog.dismiss();
+                    } else {
+                        amountError.setText(getString(R.string.error_invalid_value));
+                        amountError.setVisibility(View.VISIBLE);
+                    }
+                } catch (Exception e) {
+                    amountError.setText(getString(R.string.error_invalid_value));
+                    amountError.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        dialog.show();
+    }
+
+    private void makeSetCreditLimitAPICall(final String amount, final boolean isAllowed) {
+        new RetrofitHelper(getActivity()).setCreditLimitForUser(userModel.getUserId(), isAllowed, amount, new RetrofitHelper.RetrofitCallback() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    if (jsonObject.optBoolean("status")) {
+
+                        userModel.setIsCreditAllowed(String.valueOf(isAllowed));
+
+                        if (amount != null)
+                            userModel.setCreditLimit(amount);
+
+                        setUpCreditLimitData();
+                    } else {
+                        ((BaseActivity) getActivity()).showSnackBar(getString(R.string.something_went_wrong));
+                    }
+
+
+                } catch (JSONException e) {
+                    ((BaseActivity) getActivity()).showSnackBar(getString(R.string.something_went_wrong));
+                }
+            }
+
+            @Override
+            public void onErrorResponse() {
+                ((BaseActivity) getActivity()).showSnackBar(getString(R.string.something_went_wrong));
+            }
+        });
+
     }
 
     private void invokeAddSettleCreditDialog(final int type) {
@@ -264,13 +442,21 @@ public class CreditsFragment extends Fragment {
             public void onClick(View view) {
                 amountError.setVisibility(View.GONE);
                 Utility.hideKeyboard(getActivity(), yesButton);
-                if (!Utility.isEmpty(amount.getText().toString())) {
-                    yesButtonProgress.setVisibility(View.VISIBLE);
-                    yesButton.setVisibility(View.GONE);
 
-                    makeAddCreditApiCall(dialog, type, amount.getText().toString(), remarks.getText().toString());
-                } else
+                try {
+                    if (!Utility.isEmpty(amount.getText().toString()) && Double.parseDouble(amount.getText().toString()) > 0) {
+                        yesButtonProgress.setVisibility(View.VISIBLE);
+                        yesButton.setVisibility(View.GONE);
+
+                        makeAddCreditApiCall(dialog, type, amount.getText().toString(), remarks.getText().toString());
+                    } else {
+                        amountError.setText(getString(R.string.error_invalid_value));
+                        amountError.setVisibility(View.VISIBLE);
+                    }
+                } catch (Exception e) {
+                    amountError.setText(getString(R.string.error_invalid_value));
                     amountError.setVisibility(View.VISIBLE);
+                }
             }
         });
 
@@ -341,6 +527,8 @@ public class CreditsFragment extends Fragment {
         recyclerData.setVisibility(View.VISIBLE);
         shimmerview.setVisibility(View.GONE);
         noDataLayout.setVisibility(View.GONE);
+
+        setUpCreditLimitData();
     }
 
     @Override

@@ -114,17 +114,17 @@ public class BasicDetails1Activity extends BaseActivity implements OptionListFra
         et_business_name.setText(mProfileModel.getSellerDetails().getBasicDetails().getBusinessName());
         et_business_address.setText(mProfileModel.getBusinessAddress());
 
-        if(mProfileModel.getCity() != null) {
+        if (mProfileModel.getCity() != null) {
             et_city.setText(mProfileModel.getCity().getCityName());
             mCitySelected = mProfileModel.getCity();
         }
 
-        if(mProfileModel.getState() != null) {
+        if (mProfileModel.getState() != null) {
             et_state.setText(mProfileModel.getState().getStateName());
             mStateSelected = mProfileModel.getState();
         }
 
-        if(mProfileModel.getLocality() != null) {
+        if (mProfileModel.getLocality() != null) {
             et_locality.setText(mProfileModel.getLocality().getLocalityName());
             mLocalitySelected = mProfileModel.getLocality();
             et_pincode.setText(mProfileModel.getLocality().getPinCode());
@@ -166,12 +166,20 @@ public class BasicDetails1Activity extends BaseActivity implements OptionListFra
             map.put("address", userRegistrationDetails.getBusinessAddress());
         if (!Utility.isEmpty(userRegistrationDetails.getPincode()))
             map.put("pincode", userRegistrationDetails.getPincode());
+        else
+            map.put("pincode", "");
         if (userRegistrationDetails.getState() != null)
             map.put("state_id", userRegistrationDetails.getState().getStateId());
+        else
+            map.put("state_id", "");
         if (userRegistrationDetails.getCity() != null)
             map.put("city_id", userRegistrationDetails.getCity().getCityId());
+        else
+            map.put("city_id", "");
         if (userRegistrationDetails.getLocality() != null)
             map.put("locality_id", userRegistrationDetails.getLocality().getLocalityId());
+        else
+            map.put("locality_id", "");
 
         new RetrofitHelper(this).updateBasicDetails(userRegistrationDetails.getId(), map, new RetrofitHelper.RetrofitCallback() {
             @Override
@@ -656,6 +664,7 @@ public class BasicDetails1Activity extends BaseActivity implements OptionListFra
                 mCitySelected = selectedCity;
                 et_city.setText(selectedCity.getCityName());
                 et_locality.setText("");
+                et_pincode.setText("");
 
                 container.setVisibility(View.GONE);
                 scroll_view.setVisibility(View.VISIBLE);

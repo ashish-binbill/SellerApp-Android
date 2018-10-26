@@ -194,15 +194,22 @@ public class WalletActivity extends BaseActivity {
                         setUpData(walletAmount);
                         if (jsonObject.optJSONArray("result") != null) {
                             JSONArray userArray = jsonObject.getJSONArray("result");
-                            Type classType = new TypeToken<ArrayList<WalletTransaction>>() {
-                            }.getType();
 
-                            walletTransactionList = new Gson().fromJson(userArray.toString(), classType);
-                            handleResponse();
+                            if(userArray != null && userArray.length() > 0) {
+                                Type classType = new TypeToken<ArrayList<WalletTransaction>>() {
+                                }.getType();
 
-                            no_data_layout.setVisibility(View.GONE);
-                            rv_wallet_txn.setVisibility(View.VISIBLE);
-                            shimmer_view_container.setVisibility(View.GONE);
+                                walletTransactionList = new Gson().fromJson(userArray.toString(), classType);
+                                handleResponse();
+
+                                no_data_layout.setVisibility(View.GONE);
+                                rv_wallet_txn.setVisibility(View.VISIBLE);
+                                shimmer_view_container.setVisibility(View.GONE);
+                            }else{
+                                no_data_layout.setVisibility(View.VISIBLE);
+                                rv_wallet_txn.setVisibility(View.GONE);
+                                shimmer_view_container.setVisibility(View.GONE);
+                            }
                         }
                     }
                 } catch (JSONException e) {

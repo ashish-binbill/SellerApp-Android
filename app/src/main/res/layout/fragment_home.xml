@@ -1,8 +1,8 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.binbill.seller.Dashboard.HomeFragment">
 
     <LinearLayout
@@ -49,9 +49,9 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="bottom"
                             android:layout_marginTop="@dimen/dimen_5dp"
-                            android:singleLine="true"
                             android:ellipsize="end"
                             android:maxLines="1"
+                            android:singleLine="true"
                             android:text=""
                             android:textColor="@color/color_white"
                             android:textSize="@dimen/dimen_18dp"
@@ -60,7 +60,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Total Transaction Value"
+                            android:text="@string/total_transaction_value"
                             android:textColor="@color/color_white"
                             android:textSize="@dimen/dimen_12dp"
                             android:textStyle="bold" />
@@ -98,7 +98,7 @@
                             android:id="@+id/tv_label_customer"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="My Customers"
+                            android:text="@string/my_customers"
                             android:textColor="@color/color_white"
                             android:textSize="@dimen/dimen_12dp"
                             android:textStyle="bold" />
@@ -141,7 +141,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Outstanding Credit"
+                            android:text="@string/outstanding_credit"
                             android:textColor="@color/color_white"
                             android:textSize="@dimen/dimen_12dp"
                             android:textStyle="bold" />
@@ -177,6 +177,85 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:text="@string/loyalty_discount"
+                            android:textColor="@color/color_white"
+                            android:textSize="@dimen/dimen_12dp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dimen_90dp"
+                    android:layout_marginTop="@dimen/dimen_10dp"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:id="@+id/ll_lost_sales"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="@dimen/dimen_10dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_lost_sales"
+                        android:gravity="bottom"
+                        android:orientation="vertical"
+                        android:padding="@dimen/dimen_10dp">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_lost_sale" />
+
+                        <TextView
+                            android:id="@+id/tv_lost_sales_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:layout_marginTop="@dimen/dimen_5dp"
+                            android:text=""
+                            android:textColor="@color/color_white"
+                            android:textSize="@dimen/dimen_18dp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tv_lost_sales"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/lost_sales_count"
+                            android:textColor="@color/color_white"
+                            android:textSize="@dimen/dimen_12dp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:visibility="invisible"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/dimen_10dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_loyalty"
+                        android:gravity="bottom"
+                        android:orientation="vertical"
+                        android:padding="@dimen/dimen_10dp">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_loyalty_icon" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:layout_marginTop="@dimen/dimen_2dp"
+                            android:text=""
+                            android:textColor="@color/color_white"
+                            android:textSize="@dimen/dimen_18dp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:text="Loyalty Discount"
                             android:textColor="@color/color_white"
                             android:textSize="@dimen/dimen_12dp"
@@ -195,9 +274,9 @@
             android:layout_marginBottom="@dimen/dimen_10dp"
             android:layout_marginLeft="@dimen/dimen_20dp"
             android:layout_marginRight="@dimen/dimen_20dp"
-            app:cardCornerRadius="@dimen/dimen_8dp"
             android:layout_marginTop="@dimen/dimen_20dp"
-            android:elevation="@dimen/dimen_10dp">
+            android:elevation="@dimen/dimen_10dp"
+            app:cardCornerRadius="@dimen/dimen_8dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -216,8 +295,8 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:layout_marginLeft="@dimen/dimen_5dp"
-                    android:gravity="center_vertical"
                     android:fontFamily="sans-serif-medium"
+                    android:gravity="center_vertical"
                     android:lineSpacingExtra="-10sp"
                     android:text="@string/manage_offers"
                     android:textColor="@color/text_44"

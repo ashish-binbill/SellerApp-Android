@@ -166,6 +166,9 @@ public interface RetrofitApiInterface {
     @GET(Constants.FETCH_COMPLETED_ORDERS)
     Call<JsonObject> fetchCompletedOrders(@Path(value = "seller_id", encoded = true) String sellerId);
 
+    @GET(Constants.FETCH_COMPLETED_ORDERS)
+    Call<JsonObject> fetchNotRespondedOrders(@Path(value = "seller_id", encoded = true) String sellerId, @Query(value = "status_type", encoded = true) String status);
+
     @GET(Constants.FETCH_ORDERS_BY_ID)
     Call<JsonObject> fetchOrderById(@Path(value = "seller_id", encoded = true) String sellerId, @Path(value = "id", encoded = true) String jobId);
 
@@ -216,4 +219,7 @@ public interface RetrofitApiInterface {
 
     @POST(Constants.LOGOUT)
     Call<JsonObject> logoutUser(@Body HashMap<String, String> body);
+
+    @PUT(Constants.ADD_CREDIT_LIMIT_FOR_USER)
+    Call<JsonObject> addCreditLimitForUser(@Path(value = "seller_id", encoded = true) String sellerId, @Path(value = "customer_id", encoded = true) String customerId, @Body HashMap<String, String> body);
 }

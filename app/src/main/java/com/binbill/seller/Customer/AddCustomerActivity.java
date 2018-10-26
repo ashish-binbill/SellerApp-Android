@@ -91,7 +91,7 @@ public class AddCustomerActivity extends BaseActivity implements UserAdapter.Car
 
                     if (length >= 5) {
                         makeFetchUserCallToLink(text);
-                    }else{
+                    } else {
                         tv_no_data.setVisibility(View.VISIBLE);
                         shimmer_view_container.setVisibility(View.GONE);
                         rv_user_list.setVisibility(View.GONE);
@@ -132,6 +132,9 @@ public class AddCustomerActivity extends BaseActivity implements UserAdapter.Car
     }
 
     public void invokeSuccessDialog(boolean isInvite) {
+
+        Utility.hideKeyboard(this, tv_no_data);
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.dialog_add_assisted_service, null);
@@ -152,8 +155,8 @@ public class AddCustomerActivity extends BaseActivity implements UserAdapter.Car
 
         TextView title = (TextView) dialogView.findViewById(R.id.title);
 
-        if(isInvite)
-        title.setText(getString(R.string.invitation_sent));
+        if (isInvite)
+            title.setText(getString(R.string.invitation_sent));
         else
             title.setText(getString(R.string.customer_added_successfully));
         AppButton yesButton = (AppButton) dialogView.findViewById(R.id.btn_yes);

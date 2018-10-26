@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.binbill.seller.APIHelper.ApiHelper;
 import com.binbill.seller.Order.OrderFragmentPagerAdapter;
 import com.binbill.seller.R;
 
@@ -22,13 +21,15 @@ public class OrderFragment extends Fragment {
 
     private ViewPager viewPager;
     private TabLayout tabStrip;
+    private int pageToDisplay = 0;
 
     public OrderFragment() {
     }
 
-    public static OrderFragment newInstance() {
+    public static OrderFragment newInstance(int page) {
         OrderFragment fragment = new OrderFragment();
         Bundle args = new Bundle();
+        args.putInt("Page", page);
         fragment.setArguments(args);
         return fragment;
     }
@@ -57,6 +58,8 @@ public class OrderFragment extends Fragment {
         viewPager = (ViewPager) view.findViewById(R.id.view_pager);
         tabStrip = (TabLayout) view.findViewById(R.id.tab_strip);
 
+        pageToDisplay = getArguments().getInt("Page");
+
         setUpViewPager();
     }
 
@@ -71,5 +74,8 @@ public class OrderFragment extends Fragment {
         if (tabStrip != null) {
             tabStrip.setupWithViewPager(viewPager);
         }
+
+        viewPager.setCurrentItem(pageToDisplay);
+
     }
 }

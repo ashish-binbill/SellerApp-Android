@@ -36,7 +36,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Handler;
+import java.util.Set;
 
 @EActivity(R.layout.activity_fmcg_registration)
 public class FMCGRegistrationActivity extends BaseActivity {
@@ -225,9 +225,13 @@ public class FMCGRegistrationActivity extends BaseActivity {
                         expandableListTitle.get(groupPosition)).get(
                         childPosition);
 
-                if (fmcgChildModel.isUserSelected())
+                Set<Map.Entry<FMCGHeaderModel, List<FMCGChildModel>>> mapSet = expandableListDetail.entrySet();
+                Map.Entry<FMCGHeaderModel, List<FMCGChildModel>> fmcgHeaderRow = (new ArrayList<Map.Entry<FMCGHeaderModel, List<FMCGChildModel>>>(mapSet)).get(groupPosition);
+
+                if (fmcgChildModel.isUserSelected()) {
+                    fmcgHeaderRow.getKey().setShowSelectAll(false);
                     fmcgChildModel.setUserSelected(false);
-                else
+                } else
                     fmcgChildModel.setUserSelected(true);
 
                 fmcgExpandableAdapter.notifyDataSetChanged();

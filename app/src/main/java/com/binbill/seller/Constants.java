@@ -11,8 +11,8 @@ import java.util.regex.Pattern;
 public class Constants {
 
     //    public static final String BASE_URL = "https://seller-test.binbill.com/";
-    public static final String BASE_URL = "https://seller.binbill.com/";
-//    public static final String BASE_URL = "https://seller-stage.binbill.com/";
+//    public static final String BASE_URL = "https://seller.binbill.com/";
+    public static final String BASE_URL = "https://seller-stage.binbill.com/";
     public static final String APP_VERSION = "1";
     public static final String GET_OTP_FOR_USER_LOGIN = "sellers/getotp";
     public static final String VERIFY_OTP_FOR_USER_LOGIN = "sellers/validate";
@@ -68,6 +68,7 @@ public class Constants {
     public static final String FETCH_FAQ = "faqs";
     public static final String LOGOUT = "sellers/logout";
     public static final String FETCH_SUGGESTION_BY_ID = "sellers/skus/{sku_id}";
+    public static final String ADD_CREDIT_LIMIT_FOR_USER = "sellers/{seller_id}/users/{customer_id}";
 
     public static final int PERMISSION_READ_SMS = 100;
     public static final int PERMISSION_CAMERA = 101;
@@ -177,4 +178,6 @@ public class Constants {
     public static final int SUGGESTION_STATUS_NO_SUGGESTION = 0;
     public static final int SUGGESTION_STATUS_EXISTING = 1;
     public static final int SUGGESTION_STATUS_NEW = 2;
+    public static final String AUTO_CREDIT = "AUTO_CREDIT";
+    public static final String LOYALTY_POINTS = "LOYALTY_POINTS";
 }

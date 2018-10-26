@@ -107,12 +107,12 @@ public class AppFirebaseMessagingService extends FirebaseMessagingService {
 
     private void sendNotification(String title, String messageBody, String notificationType, String orderId, String notificationId) {
         Intent intent = new Intent(this, SplashActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(Constants.NOTIFICATION_DEEPLINK, notificationType);
         if (!Utility.isEmpty(orderId))
             intent.putExtra(Constants.ORDER_ID, orderId);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
-                PendingIntent.FLAG_ONE_SHOT);
+                PendingIntent.FLAG_UPDATE_CURRENT);
 
         String channelId = getString(R.string.default_notification_channel_id);
         Bitmap icon = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
@@ -150,8 +150,11 @@ public class AppFirebaseMessagingService extends FirebaseMessagingService {
         }
 
         Notification notification = notificationBuilder.build();
-        notification.flags = Notification.FLAG_INSISTENT | Notification.VISIBILITY_PUBLIC;
 
-        notificationManager.notify(notifyId /* ID of notification */,notification);
+        if (!Utility.isEmpty(notificationType) && (notificationType.equalsIgnoreCase("1") ||
+                notificationType.equalsIgnoreCase("6")))
+            notification.flags = Notification.FLAG_INSISTENT | Notification.VISIBILITY_PUBLIC;
+
+        notificationManager.notify(notifyId /* ID of notification */, notification);
     }
 }

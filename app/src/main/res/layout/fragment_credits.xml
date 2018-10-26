@@ -7,6 +7,48 @@
     tools:context="com.binbill.seller.Customer.CreditsFragment">
 
     <LinearLayout
+        android:id="@+id/ll_grant_credit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/light_blue"
+        android:padding="@dimen/dimen_15dp">
+
+        <TextView
+            android:id="@+id/tv_credit_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:lineSpacingExtra="5.5sp"
+            android:text="@string/grant_credit"
+            android:textColor="@color/text_44"
+            android:textSize="@dimen/dimen_14dp" />
+
+        <TextView
+            android:id="@+id/tv_credit_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:layout_marginLeft="@dimen/dimen_2dp"
+            android:lineSpacingExtra="5.5sp"
+            android:drawablePadding="@dimen/dimen_5dp"
+            android:text=""
+            android:visibility="gone"
+            android:drawableRight="@drawable/ic_edit_blue"
+            android:textColor="@color/status_light_blue"
+            android:textSize="@dimen/dimen_14dp" />
+
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/sc_credit_allowed"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:checked="false"
+            android:gravity="end" />
+    </LinearLayout>
+
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"

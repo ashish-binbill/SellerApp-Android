@@ -78,6 +78,8 @@ public class HomeFragment extends Fragment {
         final TextView customerCount = (TextView) view.findViewById(R.id.customers);
         final TextView pendingCredit = (TextView) view.findViewById(R.id.pending_credit);
         final TextView loyalty = (TextView) view.findViewById(R.id.loyalty_points);
+        final TextView lostSales = (TextView) view.findViewById(R.id.tv_lost_sales_value);
+        final TextView lostSalesCount = (TextView) view.findViewById(R.id.tv_lost_sales);
 
         final String emptyValue = getString(R.string.rupee_sign) + " 0";
 
@@ -86,6 +88,8 @@ public class HomeFragment extends Fragment {
             transactionValue.setText(getString(R.string.rupee_sign) + " " + dashboardModel.getTotalTransactionValue());
             pendingCredit.setText(getString(R.string.rupee_sign) + " " + dashboardModel.getCreditPending());
             loyalty.setText(dashboardModel.getLoyaltyPoints());
+            lostSales.setText(getString(R.string.rupee_sign) + " " + dashboardModel.getTotalLostOrderValue());
+            lostSalesCount.setText(getString(R.string.lost_sales_count, dashboardModel.getTotalLostOrder()));
         }
 
         CardView manageOffers = (CardView) view.findViewById(R.id.manage_offers);
@@ -117,17 +121,10 @@ public class HomeFragment extends Fragment {
                 ivLabelCustomer.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_cashback));
                 break;
         }
+
         /**
          * Layout listeners
          */
-
-      /*  LinearLayout transactionLayout = (LinearLayout) view.findViewById(R.id.ll_transaction);
-        transactionLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });*/
 
         LinearLayout allCredits = (LinearLayout) view.findViewById(R.id.ll_credit);
         allCredits.setOnClickListener(new View.OnClickListener() {
@@ -175,6 +172,13 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        LinearLayout lostSalesLayout = (LinearLayout) view.findViewById(R.id.ll_lost_sales);
+        lostSalesLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((DashboardActivity) getActivity()).changeViewPagerFragment(1, 2);
+            }
+        });
 
     }
 

@@ -15,8 +15,8 @@ import com.binbill.seller.Model.UserModel;
 
 public class OrderFragmentPagerAdapter extends FragmentStatePagerAdapter {
 
-    final int PAGE_COUNT = 2;
-    private String tabTitles[] = new String[]{"Active Orders", "Past Orders"};
+    final int PAGE_COUNT = 3;
+    private String tabTitles[] = new String[]{"Active Orders", "Past Orders","Not Responded"};
 
     public OrderFragmentPagerAdapter(FragmentManager fm) {
         super(fm);
@@ -36,6 +36,8 @@ public class OrderFragmentPagerAdapter extends FragmentStatePagerAdapter {
                 return ActiveOrderFragment.newInstance();
             case 1:
                 return PastOrderFragment.newInstance();
+            case 2:
+                return NotRespondedOrderFragment.newInstance();
 
         }
         return null;

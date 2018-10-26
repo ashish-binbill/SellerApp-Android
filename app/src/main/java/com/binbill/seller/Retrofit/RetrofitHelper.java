@@ -895,6 +895,28 @@ public class RetrofitHelper {
         });
     }
 
+    public void fetchNotRespondedOrders(String status, final RetrofitCallback retrofitCallback) {
+        RetrofitApiInterface apiService =
+                RetrofitHelper.getClient(mContext).create(RetrofitApiInterface.class);
+
+        Call<JsonObject> call = apiService.fetchNotRespondedOrders(AppSession.getInstance(mContext).getSellerId(), status);
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (response.isSuccessful()) {
+                    JsonObject body = response.body();
+                    retrofitCallback.onResponse(body.toString());
+                } else
+                    retrofitCallback.onErrorResponse();
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable throwable) {
+                retrofitCallback.onErrorResponse();
+            }
+        });
+    }
+
     public void fetchOrderById(String orderId, final RetrofitCallback retrofitCallback) {
         RetrofitApiInterface apiService =
                 RetrofitHelper.getClient(mContext).create(RetrofitApiInterface.class);
@@ -993,7 +1015,7 @@ public class RetrofitHelper {
         });
     }
 
-    public void sendOrderOutForDeliveryCall(String orderID, String userId, String list, String deliveryId, final RetrofitCallback retrofitCallback) {
+    public void sendOrderOutForDeliveryCall(String orderID, String userId, String list, String deliveryId, String totalAmount, final RetrofitCallback retrofitCallback) {
         RetrofitApiInterface apiService =
                 RetrofitHelper.getClient(mContext).create(RetrofitApiInterface.class);
 
@@ -1003,6 +1025,8 @@ public class RetrofitHelper {
         map.put("user_id", userId);
         if (!Utility.isEmpty(deliveryId))
             map.put("delivery_user_id", deliveryId);
+        if (!Utility.isEmpty(totalAmount))
+            map.put("total_amount", totalAmount);
 
         Call<JsonObject> call = apiService.sendOrderForDelivery(AppSession.getInstance(mContext).getSellerId(), orderID, map);
         call.enqueue(new Callback<JsonObject>() {
@@ -1801,7 +1825,7 @@ public class RetrofitHelper {
         });
     }
 
-    public void setLoyaltyPoints(String id, String points, String minPoints, final RetrofitCallback retrofitCallback) {
+    public void setLoyaltyPoints(String id, String points, String minPoints, boolean isAutoOrder, String autoOrderValue, final RetrofitCallback retrofitCallback) {
         RetrofitApiInterface apiService =
                 RetrofitHelper.getClient(mContext).create(RetrofitApiInterface.class);
 
@@ -1809,6 +1833,9 @@ public class RetrofitHelper {
         map.put("id", id);
         map.put("minimum_points", minPoints);
         map.put("points_per_item", points);
+        map.put("allow_auto_loyalty", String.valueOf(isAutoOrder));
+        if (!Utility.isEmpty(autoOrderValue))
+            map.put("order_value", autoOrderValue);
 
         Call<JsonObject> call = apiService.setLoyaltyPoints(AppSession.getInstance(mContext).getSellerId(), map);
         call.enqueue(new Callback<JsonObject>() {
@@ -1849,6 +1876,33 @@ public class RetrofitHelper {
             }
         });
     }
+
+    public void setCreditLimitForUser(String userId, boolean isCreditLimitSet, String creditLimit, final RetrofitCallback retrofitCallback) {
+        RetrofitApiInterface apiService =
+                RetrofitHelper.getClient(mContext).create(RetrofitApiInterface.class);
+
+        HashMap<String, String> map = new HashMap<>();
+        map.put("credit_limit", creditLimit);
+        map.put("is_credit_allowed", String.valueOf(isCreditLimitSet));
+
+        Call<JsonObject> call = apiService.addCreditLimitForUser(AppSession.getInstance(mContext).getSellerId(), userId, map);
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (response.isSuccessful()) {
+                    JsonObject body = response.body();
+                    retrofitCallback.onResponse(body.toString());
+                } else
+                    retrofitCallback.onErrorResponse();
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable throwable) {
+                retrofitCallback.onErrorResponse();
+            }
+        });
+    }
+
 
     public void linkCreditWithJob(String userId, String creditId, String jobId, final RetrofitCallback retrofitCallback) {
         RetrofitApiInterface apiService =

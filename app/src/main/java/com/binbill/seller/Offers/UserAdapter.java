@@ -203,6 +203,7 @@ public class UserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             userHolder.mUserName.setText(model.getUserEmail());
         else
             userHolder.mUserName.setText(model.getUserMobile());
+
         userHolder.mUserTransactions.setText(model.getTransactionCount());
         userHolder.mUserCredit.setText(userHolder.mUserCredit.getContext().getString(R.string.rupee_sign) + " " + model.getUserCredit());
         userHolder.mUserPoints.setText(model.getUserLoyalty());
@@ -312,13 +313,18 @@ public class UserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         });
     }
 
-    private void onBindOfferHolder(RecyclerView.ViewHolder holder, int position) {
+    private void onBindOfferHolder(RecyclerView.ViewHolder holder, final int position) {
 
         final UserHolder userHolder = (UserHolder) holder;
 
         final UserModel model = mFilteredList.get(position);
 
-        userHolder.mUserName.setText(model.getUserName());
+        if (!Utility.isEmpty(model.getUserName()))
+            userHolder.mUserName.setText(model.getUserName());
+        else if (!Utility.isEmpty(model.getUserEmail()))
+            userHolder.mUserName.setText(model.getUserEmail());
+        else
+            userHolder.mUserName.setText(model.getUserMobile());
 
 
         int transactionCount = 0;
@@ -429,15 +435,18 @@ public class UserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             @Override
             public void onClick(View view) {
 
-                new RetrofitHelper(userHolder.mAddCustomer.getContext()).linkUserWithSeller(model.getUserId(), new RetrofitHelper.RetrofitCallback() {
+                new RetrofitHelper(userHolder.mAddCustomer.getContext()).setCreditLimitForUser(model.getUserId(), false, "0", new RetrofitHelper.RetrofitCallback() {
                     @Override
                     public void onResponse(String response) {
 
                         try {
                             JSONObject jsonObject = new JSONObject(response);
 
-                            if (jsonObject.optBoolean("status"))
+                            if (jsonObject.optBoolean("status")) {
                                 userHolder.mAddCustomer.setVisibility(View.GONE);
+                                if(mListener != null)
+                                    mListener.onCustomerAdded(position);
+                            }
 
                         } catch (JSONException e) {
 

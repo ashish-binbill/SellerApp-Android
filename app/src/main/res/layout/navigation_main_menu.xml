@@ -62,7 +62,7 @@
                 android:text="@string/manage_sku"
                 android:textColor="@color/text_44"
                 android:textSize="@dimen/dimen_14dp"
-                android:visibility="gone"/>
+                android:visibility="gone" />
         </LinearLayout>
 
         <TextView
@@ -78,19 +78,50 @@
             android:textColor="@color/text_44"
             android:textSize="@dimen/dimen_14dp" />
 
-
-        <TextView
-            android:id="@+id/tv_layalty_rules"
+        <LinearLayout
+            android:id="@+id/ll_loyalty"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_loyalty_rules"
-            android:drawablePadding="@dimen/dimen_15dp"
-            android:fontFamily="sans-serif-medium"
-            android:lineSpacingExtra="1sp"
-            android:padding="@dimen/dimen_15dp"
-            android:text="@string/loyalty_rules"
-            android:textColor="@color/text_44"
-            android:textSize="@dimen/dimen_14dp" />
+            android:background="#edf8fd"
+            android:orientation="vertical"
+            android:padding="@dimen/dimen_15dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_loyalty_rules"
+                android:drawablePadding="@dimen/dimen_15dp"
+                android:fontFamily="sans-serif-medium"
+                android:lineSpacingExtra="1sp"
+                android:text="@string/loyalty_rules"
+                android:textColor="@color/text_44"
+                android:textSize="@dimen/dimen_14dp" />
+
+            <TextView
+                android:id="@+id/tv_layalty_rules"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_60dp"
+                android:layout_marginTop="@dimen/dimen_15dp"
+                android:fontFamily="sans-serif-light"
+                android:lineSpacingExtra="13.5sp"
+                android:text="@string/set_loyalty_rules_hyphen"
+                android:textColor="@color/text_44"
+                android:textSize="@dimen/dimen_14dp" />
+
+            <TextView
+                android:id="@+id/tv_auto_credit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_60dp"
+                android:layout_marginTop="@dimen/dimen_15dp"
+                android:fontFamily="sans-serif-light"
+                android:lineSpacingExtra="13.5sp"
+                android:text="@string/enable_auto_credit"
+                android:textColor="@color/text_44"
+                android:textSize="@dimen/dimen_14dp" />
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/tv_faq"
@@ -114,9 +145,9 @@
             android:lineSpacingExtra="1sp"
             android:padding="@dimen/dimen_15dp"
             android:text="@string/reports"
-            android:visibility="gone"
             android:textColor="@color/text_44"
-            android:textSize="@dimen/dimen_14dp" />
+            android:textSize="@dimen/dimen_14dp"
+            android:visibility="gone" />
 
 
         <TextView

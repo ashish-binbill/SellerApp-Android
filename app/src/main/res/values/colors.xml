@@ -31,8 +31,10 @@
     <color name="status_green">#009900</color>
     <color name="status_blue">#0000FF</color>
     <color name="status_light_blue">#009EE5</color>
+    <color name="status_lighter_blue">#c0e9fc</color>
     <color name="status_orange">#FF732E</color>
     <color name="status_yellow">#CECE00</color>
     <color name="text_77_80">#80777777</color>
     <color name="status_green_light">#3fed02</color>
+    <color name="light_blue">#dcf4ff</color>
 </resources>

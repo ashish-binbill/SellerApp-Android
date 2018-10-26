@@ -12,6 +12,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -60,6 +62,9 @@ public class PublishOfferToUserActivity extends BaseActivity implements UserAdap
     TextView tv_no_data;
 
     @ViewById
+    CheckBox cb_select_all;
+
+    @ViewById
     AppButton btn_no_data;
     private ArrayList<UserModel> mUserList;
 
@@ -75,6 +80,7 @@ public class PublishOfferToUserActivity extends BaseActivity implements UserAdap
     private String mOfferId;
     private String mFlowType;
     private boolean isCreatingOffer;
+    private UserAdapter mAdapter;
 
     @AfterViews
     public void setUpView() {
@@ -125,6 +131,8 @@ public class PublishOfferToUserActivity extends BaseActivity implements UserAdap
                 mFlowType = Constants.ADD_USER_FOR_OFFER;
                 setUpToolbar();
                 makeUserFetchApiCallToAddUsers();
+
+                sl_pull_to_refresh.setEnabled(false);
             }
         });
 
@@ -141,6 +149,40 @@ public class PublishOfferToUserActivity extends BaseActivity implements UserAdap
                 }
 
                 sl_pull_to_refresh.setRefreshing(false);
+            }
+        });
+
+        cb_select_all.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
+                if (checked) {
+
+                    for (UserModel user : mUserList) {
+                        user.setSelected(true);
+                    }
+
+                    mAdapter.notifyDataSetChanged();
+
+                } else {
+
+                    boolean areAllUserUnselect = true;
+                    for (UserModel user : mUserList) {
+
+                        if (!user.isSelected()) {
+                            areAllUserUnselect = false;
+                            break;
+                        }
+                    }
+
+                    if (areAllUserUnselect) {
+                        for (UserModel user : mUserList)
+                            user.setSelected(false);
+                    }
+
+                    mAdapter.notifyDataSetChanged();
+                }
+
+                enableDisableVerifyButton();
             }
         });
 
@@ -206,11 +248,14 @@ public class PublishOfferToUserActivity extends BaseActivity implements UserAdap
                 iv_notification.setVisibility(View.VISIBLE);
                 btn_publish.setVisibility(View.GONE);
 
+                cb_select_all.setVisibility(View.GONE);
                 break;
             case Constants.ADD_USER_FOR_OFFER:
                 toolbarText.setText(getString(R.string.select_user));
                 iv_notification.setVisibility(View.INVISIBLE);
                 btn_publish.setVisibility(View.VISIBLE);
+
+                cb_select_all.setVisibility(View.VISIBLE);
                 break;
         }
 
@@ -324,7 +369,7 @@ public class PublishOfferToUserActivity extends BaseActivity implements UserAdap
         LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         rv_user_list.setLayoutManager(llm);
-        UserAdapter mAdapter = new UserAdapter(Constants.OFFER, mUserList, this, linkUser);
+        mAdapter = new UserAdapter(Constants.OFFER, mUserList, this, linkUser);
         rv_user_list.setAdapter(mAdapter);
 
         rv_user_list.setVisibility(View.VISIBLE);
@@ -342,6 +387,9 @@ public class PublishOfferToUserActivity extends BaseActivity implements UserAdap
                 tv_no_data.setText(getString(R.string.no_users_added));
                 break;
         }
+
+        cb_select_all.setVisibility(View.GONE);
+        btn_publish.setVisibility(View.GONE);
 
         btn_no_data.setVisibility(View.GONE);
         no_data_layout.setVisibility(View.VISIBLE);
@@ -368,6 +416,16 @@ public class PublishOfferToUserActivity extends BaseActivity implements UserAdap
 
     @Override
     public void onCardInteraction() {
+
+        boolean allUserChecked = true;
+        for(UserModel user: mUserList){
+            if(!user.isSelected()){
+                allUserChecked = false;
+            }
+        }
+
+        cb_select_all.setChecked(allUserChecked);
+
         enableDisableVerifyButton();
     }
 

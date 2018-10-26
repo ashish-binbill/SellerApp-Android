@@ -10,6 +10,7 @@ import com.binbill.seller.BaseActivity;
 import com.binbill.seller.Constants;
 import com.binbill.seller.Model.UserModel;
 import com.binbill.seller.R;
+import com.binbill.seller.Utility;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
@@ -30,15 +31,16 @@ public class UserInformationActivity extends BaseActivity {
     @ViewById
     TabLayout tab_strip;
     private UserFragmentPagerAdapter mPagerAdapter;
+    private UserModel userModel;
 
     @AfterViews
     public void setUpView() {
-        setUpToolbar();
         setUpViewPager();
+        setUpToolbar();
     }
 
     private void setUpViewPager() {
-        UserModel userModel = (UserModel) getIntent().getSerializableExtra(Constants.USER_MODEL);
+        userModel = (UserModel) getIntent().getSerializableExtra(Constants.USER_MODEL);
         mPagerAdapter = new UserFragmentPagerAdapter(getSupportFragmentManager(), userModel);
 
         if (view_pager != null) {
@@ -56,7 +58,11 @@ public class UserInformationActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         getSupportActionBar().setTitle("");
-        toolbarText.setText(getString(R.string.customer_details));
+
+        if(!Utility.isEmpty(userModel.getUserName()))
+        toolbarText.setText(userModel.getUserName());
+        else
+            toolbarText.setText(getString(R.string.customer_details));
     }
 
 
