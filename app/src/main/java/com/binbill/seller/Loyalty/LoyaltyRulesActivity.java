@@ -237,11 +237,8 @@ public class LoyaltyRulesActivity extends BaseActivity {
                                     boolean isAutoLoyaltySet = ruleJson.optBoolean("allow_auto_loyalty");
                                     setDataInUI(pointsPerItem, minPoints, isAutoLoyaltySet, orderValue);
 
-                                    if (orderValue.equalsIgnoreCase("0")) {
 
-                                    } else {
-                                        finish();
-                                    }
+                                    finish();
 
                                 } else
                                     showSnackBar(getString(R.string.something_went_wrong));
@@ -271,6 +268,9 @@ public class LoyaltyRulesActivity extends BaseActivity {
             tv_auto_credit_text.setVisibility(View.GONE);
             tv_auto_credit.setText(getString(R.string.auto_credit_enabled));
 
+            if (makeApi)
+                setAutoCredit(true);
+
         } else {
             points_layout_ac.setVisibility(View.GONE);
             example_ac.setVisibility(View.GONE);
@@ -279,13 +279,13 @@ public class LoyaltyRulesActivity extends BaseActivity {
             tv_auto_credit.setText(getString(R.string.enable_auto_credit_wo));
 
             if (makeApi)
-                setAutoCreditOff();
+                setAutoCredit(false);
         }
     }
 
-    private void setAutoCreditOff() {
+    private void setAutoCredit(boolean isOn) {
 
-        new RetrofitHelper(LoyaltyRulesActivity.this).setLoyaltyPoints(ruleId, null, null, false, null, new RetrofitHelper.RetrofitCallback() {
+        new RetrofitHelper(LoyaltyRulesActivity.this).setLoyaltyPoints(ruleId, null, null, isOn, null, new RetrofitHelper.RetrofitCallback() {
             @Override
             public void onResponse(String response) {
                 try {
@@ -301,7 +301,6 @@ public class LoyaltyRulesActivity extends BaseActivity {
                         boolean isAutoLoyaltySet = ruleJson.optBoolean("allow_auto_loyalty");
 
                         setDataInUI(pointsPerItem, minPoints, isAutoLoyaltySet, orderValue);
-                        finish();
 
                     } else
                         showSnackBar(getString(R.string.something_went_wrong));
