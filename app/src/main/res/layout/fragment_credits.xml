@@ -10,8 +10,8 @@
         android:id="@+id/ll_grant_credit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:background="@color/light_blue"
+        android:orientation="horizontal"
         android:padding="@dimen/dimen_15dp">
 
         <TextView
@@ -28,22 +28,23 @@
             android:id="@+id/tv_credit_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="start"
             android:layout_marginLeft="@dimen/dimen_2dp"
-            android:lineSpacingExtra="5.5sp"
             android:drawablePadding="@dimen/dimen_5dp"
-            android:text=""
-            android:visibility="gone"
             android:drawableRight="@drawable/ic_edit_blue"
+            android:gravity="start"
+            android:lineSpacingExtra="5.5sp"
+            android:text=""
             android:textColor="@color/status_light_blue"
-            android:textSize="@dimen/dimen_14dp" />
+            android:textSize="@dimen/dimen_14dp"
+            android:visibility="gone" />
 
         <android.support.v7.widget.SwitchCompat
             android:id="@+id/sc_credit_allowed"
+            android:theme="@style/ToggleTheme"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:checked="false"
+            android:checked="true"
             android:gravity="end" />
     </LinearLayout>
 

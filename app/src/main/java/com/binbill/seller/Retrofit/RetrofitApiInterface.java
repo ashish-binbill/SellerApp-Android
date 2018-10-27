@@ -69,7 +69,7 @@ public interface RetrofitApiInterface {
     Call<JsonObject> fetchUsers(@Path(value = "seller_id", encoded = true) String identifier, @Query(value = "offer_id", encoded = true) String offerId, @Query(value = "is_linked_offers", encoded = true) String isLinked);
 
     @GET(Constants.FETCH_USERS_FOR_SELLER)
-    Call<JsonObject> fetchUsers(@Path(value = "seller_id", encoded = true) String identifier, @Query(value = "linked_only", encoded = true) String isLinked);
+    Call<JsonObject> fetchCustomers(@Path(value = "seller_id", encoded = true) String identifier, @Query(value = "linked_only", encoded = true) String isLinked, @Query(value = "user_status_type", encoded = true) String statusType);
 
     @PUT(Constants.PUBLISH_OFFERS_TO_USERS)
     Call<JsonObject> publishOfferToUsers(@Path(value = "seller_id", encoded = true) String identifier, @Path(value = "id", encoded = true) String offerId, @Body HashMap<String, String> body);

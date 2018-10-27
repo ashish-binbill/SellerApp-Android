@@ -138,7 +138,7 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
     @ViewById
     BottomNavigationView bottom_navigation;
     private AssistedServiceFragment assistedServiceFragment;
-    private MyCustomerFragment myCustomerFragment;
+    private CustomerFragment myCustomerFragment;
     public int sellerType;
     private TextView sellerAvailability;
 
@@ -779,7 +779,7 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
                                 iv_search.setVisibility(View.GONE);
                                 break;
                             case R.id.action_customers:
-                                myCustomerFragment = MyCustomerFragment.newInstance();
+                                myCustomerFragment = CustomerFragment.newInstance(0);
                                 replaceFragment(myCustomerFragment, 3);
                                 setUpToolbar(getString(R.string.my_customers));
 
@@ -943,7 +943,7 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
 
             bottom_navigation.setSelectedItemId(R.id.action_verification);
         } else if (position == 3) {
-            myCustomerFragment = MyCustomerFragment.newInstance();
+            myCustomerFragment = CustomerFragment.newInstance(0);
             replaceFragment(myCustomerFragment, 3);
             setUpToolbar(getString(R.string.my_customers));
 

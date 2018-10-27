@@ -24,6 +24,12 @@
         <item name="android:windowNoTitle">true</item>
     </style>
 
+    <style name="ToggleTheme" parent="Theme.AppCompat.Light">
+        <item name="colorPrimary">@color/status_lighter_blue</item>
+        <item name="colorPrimaryDark">@color/status_lighter_blue</item>
+        <item name="colorAccent">@color/colorPrimary</item>
+    </style>
+
     <style name="RatingBar" parent="Theme.AppCompat">
         <item name="colorControlNormal">@color/navigation_grey</item>
         <item name="colorControlActivated">#fac917</item>

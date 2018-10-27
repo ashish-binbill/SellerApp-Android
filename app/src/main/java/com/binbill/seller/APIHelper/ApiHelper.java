@@ -81,6 +81,10 @@ public class ApiHelper {
         new RetrofitHelper(context).fetchUsersForSeller(retrofitCallback);
     }
 
+    public static void fetchInvitedCustomer(final Context context, RetrofitHelper.RetrofitCallback retrofitCallback) {
+        new RetrofitHelper(context).fetchInvitedUsersForSeller(retrofitCallback);
+    }
+
     public static void fetchJobsForVerification(final Context context) {
 
         new RetrofitHelper(context).fetchJobsForVerification(new RetrofitHelper.RetrofitCallback() {

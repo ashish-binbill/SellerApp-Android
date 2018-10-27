@@ -463,31 +463,34 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
     }
 
     private void makeDeclineOrderCall() {
-        new RetrofitHelper(OrderDetailsActivity.this).sendOrderDeclineCall(orderDetails.getOrderId(), orderDetails.getUserId(), new RetrofitHelper.RetrofitCallback() {
-            @Override
-            public void onResponse(String response) {
-                btn_decline.setVisibility(View.VISIBLE);
-                btn_decline_progress.setVisibility(View.GONE);
-                try {
-                    JSONObject jsonObject = new JSONObject(response);
-                    if (jsonObject.getBoolean("status")) {
-                        invokeSuccessDialog();
-                    } else {
 
+        if(orderDetails !=null) {
+            new RetrofitHelper(OrderDetailsActivity.this).sendOrderDeclineCall(orderDetails.getOrderId(), orderDetails.getUserId(), new RetrofitHelper.RetrofitCallback() {
+                @Override
+                public void onResponse(String response) {
+                    btn_decline.setVisibility(View.VISIBLE);
+                    btn_decline_progress.setVisibility(View.GONE);
+                    try {
+                        JSONObject jsonObject = new JSONObject(response);
+                        if (jsonObject.getBoolean("status")) {
+                            invokeSuccessDialog();
+                        } else {
+
+                            showSnackBar(getString(R.string.something_went_wrong));
+                        }
+                    } catch (JSONException e) {
                         showSnackBar(getString(R.string.something_went_wrong));
                     }
-                } catch (JSONException e) {
+                }
+
+                @Override
+                public void onErrorResponse() {
+                    btn_decline.setVisibility(View.VISIBLE);
+                    btn_decline_progress.setVisibility(View.GONE);
                     showSnackBar(getString(R.string.something_went_wrong));
                 }
-            }
-
-            @Override
-            public void onErrorResponse() {
-                btn_decline.setVisibility(View.VISIBLE);
-                btn_decline_progress.setVisibility(View.GONE);
-                showSnackBar(getString(R.string.something_went_wrong));
-            }
-        });
+            });
+        }
     }
 
     public void invokeSuccessDialog() {
