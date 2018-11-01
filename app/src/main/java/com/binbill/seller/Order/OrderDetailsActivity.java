@@ -683,10 +683,11 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
 
         } else {
 
-            if (orderDetails.getDeliveryUser() != null) {
-                DeliveryAgentAdapter.DeliveryAgentHolder deliveryAgentHolder = new DeliveryAgentAdapter.DeliveryAgentHolder(cv_root_fmcg_delivery);
-                updateAgentLayout(deliveryAgentHolder, orderDetails.getDeliveryUser(), null);
-            }
+            if (orderDetails.getOrderStatus() != Constants.STATUS_COMPLETE)
+                if (orderDetails.getDeliveryUser() != null) {
+                    DeliveryAgentAdapter.DeliveryAgentHolder deliveryAgentHolder = new DeliveryAgentAdapter.DeliveryAgentHolder(cv_root_fmcg_delivery);
+                    updateAgentLayout(deliveryAgentHolder, orderDetails.getDeliveryUser(), null);
+                }
 
             tv_start_time.setVisibility(View.GONE);
             tv_end_time.setVisibility(View.GONE);
@@ -725,9 +726,9 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
             /**
              * Payment status
              */
-            if(orderDetails.getOrderStatus() == Constants.STATUS_COMPLETE){
-                if(orderDetails.getPaymentModeId() > 0){
-                    switch (orderDetails.getPaymentModeId()){
+            if (orderDetails.getOrderStatus() == Constants.STATUS_COMPLETE) {
+                if (orderDetails.getPaymentModeId() > 0) {
+                    switch (orderDetails.getPaymentModeId()) {
                         case Constants.PAYMENT_MODE_CASH:
                             header_quantity.setText(getString(R.string.paid_in_cash));
                             header_quantity.setVisibility(View.VISIBLE);

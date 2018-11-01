@@ -205,11 +205,17 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
                 break;
             case "8":
                 /**
+                 * Offline payment
+                 */
+                // do nothing
+                break;
+            case "9":
+                /**
                  * assisted users
                  */
                 changeViewPagerFragment(4);
                 break;
-            case "9":
+            case "10":
                 /**
                  * Manage categories
                  */

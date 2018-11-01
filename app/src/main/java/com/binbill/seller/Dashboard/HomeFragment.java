@@ -89,7 +89,7 @@ public class HomeFragment extends Fragment {
             pendingCredit.setText(getString(R.string.rupee_sign) + " " + dashboardModel.getCreditPending());
             loyalty.setText(dashboardModel.getLoyaltyPoints());
             lostSales.setText(getString(R.string.rupee_sign) + " " + dashboardModel.getTotalLostOrderValue());
-            lostSalesCount.setText(getString(R.string.lost_sales_count, dashboardModel.getTotalLostOrder()));
+            lostSalesCount.setText(getString(R.string.lost_sales_count));
         }
 
         CardView manageOffers = (CardView) view.findViewById(R.id.manage_offers);

@@ -44,7 +44,7 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
         private final ItemPriceEditTextListener itemPriceListener;
         private final ItemPriceSuggestionMeasurementTextListener itemPriceSuggestionMeasurementTextListener;
         protected View mRootCard;
-        protected TextView mItemName, mQuantity, mItemAvailability, mMeasurement, mServiceName;
+        protected TextView mItemName, mQuantity, mItemAvailability, mMeasurement, mServiceName, mSKUPrice;
         protected EditText mItemPrice, mAvailableQuantity, mAvailableQuantityNewItem, mQuantityNumber, mAlternateItem;
         protected View mDivider;
         protected ImageView mSkuImage;
@@ -63,6 +63,7 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
             mMeasurement = (TextView) view.findViewById(R.id.tv_item_measurement);
             mItemPrice = (EditText) view.findViewById(R.id.et_item_price);
             mSkuImage = (ImageView) view.findViewById(R.id.ic_sku_image);
+            mSKUPrice = (TextView) view.findViewById(R.id.tv_item_price);
             mItemAvailability = (TextView) view.findViewById(R.id.tv_item_unavailable);
             mAvailableQuantity = (EditText) view.findViewById(R.id.et_quantity);
             mAvailableQuantityNewItem = (EditText) view.findViewById(R.id.et_quantity_other_item);
@@ -102,7 +103,7 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
                 mList.get(position).setUpdatedPrice(newPrice.trim());
             }
 
-            if(listener != null)
+            if (listener != null)
                 listener.onItemAmountChanged();
         }
     }
@@ -227,6 +228,14 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
                 else
                     orderHolder.mItemPrice.setText("");
             }
+
+            String rupee = orderHolder.mSKUPrice.getContext().getString(R.string.rupee_sign);
+            if (!Utility.isEmpty(model.getSellingPrice()) && Utility.isValueNonZero(model.getSellingPrice()))
+                orderHolder.mSKUPrice.setText(rupee + " " + model.getSellingPrice());
+            else
+                orderHolder.mSKUPrice.setText("");
+
+            orderHolder.mSKUPrice.setVisibility(View.GONE);
 
             if (model.isUpdateItemAvailable()) {
                 orderHolder.mItemAvailability.setTag("1");
@@ -511,26 +520,14 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
             if (mStatus == Constants.STATUS_CANCEL || mStatus == Constants.STATUS_COMPLETE ||
                     mStatus == Constants.STATUS_OUT_FOR_DELIVERY || mStatus == Constants.STATUS_REJECTED ||
                     mStatus == Constants.STATUS_AUTO_CANCEL || mStatus == Constants.STATUS_AUTO_EXPIRED) {
-
-                if (Utility.isEmpty(orderHolder.mItemPrice.getText().toString()))
-                    orderHolder.mItemPrice.setVisibility(View.GONE);
-                else
-                    orderHolder.mItemPrice.setVisibility(View.VISIBLE);
-
-                orderHolder.mItemPrice.setFocusable(false);
-                orderHolder.mItemPrice.setFocusableInTouchMode(false);
-                orderHolder.mItemPrice.setBackground(null);
-                orderHolder.mItemPrice.setTextColor(ContextCompat.getColor(orderHolder.mItemPrice.getContext(),
-                        R.color.text_44));
+                orderHolder.mItemPrice.setVisibility(View.GONE);
 
                 orderHolder.mAvailableQuantity.setVisibility(View.GONE);
                 orderHolder.mAvailableQuantityNewItem.setVisibility(View.GONE);
                 orderHolder.mQuantityNumber.setVisibility(View.GONE);
 
-                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT);
-                layoutParams.setMargins(Utility.convertDPtoPx(orderHolder.mQuantityNumber.getContext(), 60), 0, 0, 0);
-                orderHolder.mItemPrice.setLayoutParams(layoutParams);
+                orderHolder.mSKUPrice.setVisibility(View.VISIBLE);
+
             }
         } else if (mOrderType.equalsIgnoreCase(Constants.ORDER_TYPE_SERVICE)) {
             orderHolder.layoutService.setVisibility(View.VISIBLE);

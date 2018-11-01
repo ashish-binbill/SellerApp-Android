@@ -16,7 +16,7 @@ import com.binbill.seller.Model.UserModel;
 public class OrderFragmentPagerAdapter extends FragmentStatePagerAdapter {
 
     final int PAGE_COUNT = 3;
-    private String tabTitles[] = new String[]{"Active", "Past","Not Responded"};
+    private String tabTitles[] = new String[]{"Active", "Past","Missed"};
 
     public OrderFragmentPagerAdapter(FragmentManager fm) {
         super(fm);

@@ -155,6 +155,13 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             orderHolder.mItemCount.setText(itemCount + " Items");
         else
             orderHolder.mItemCount.setText("0 Items");
+
+
+        if (!Utility.isEmpty(model.getTotalAmount()) && !model.getTotalAmount().equalsIgnoreCase("0")) {
+            String item = (String) orderHolder.mItemCount.getText();
+            String rupee = orderHolder.mItemCount.getContext().getString(R.string.rupee_sign);
+            orderHolder.mItemCount.setText(item + " | " + rupee + " " + model.getTotalAmount());
+        }
         orderHolder.mDate.setText(Utility.getFormattedDate(9, model.getOrderCreationDate(), 0));
 
         /**
@@ -261,7 +268,7 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                                 orderHolder.userImage.setImageDrawable(ContextCompat.getDrawable(orderHolder.userImage.getContext(), R.drawable.ic_user));
                             }
                         });
-            }else{
+            } else {
                 RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
                         RelativeLayout.LayoutParams.MATCH_PARENT,
                         RelativeLayout.LayoutParams.MATCH_PARENT
