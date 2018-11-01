@@ -9,11 +9,9 @@
 
     <ImageView
         android:id="@+id/ic_sku_image"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
+        android:layout_width="@dimen/dimen_80dp"
+        android:layout_height="@dimen/dimen_80dp"
         android:layout_marginRight="@dimen/dimen_10dp"
-        android:background="@drawable/order_sku_image_bg"
-        android:padding="@dimen/dimen_5dp"
         android:scaleType="fitXY"
         android:visibility="gone"
         android:src="@drawable/ic_placeholder_sku" />

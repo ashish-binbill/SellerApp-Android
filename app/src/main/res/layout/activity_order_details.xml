@@ -175,6 +175,7 @@
                     android:layout_marginTop="@dimen/dimen_15dp"
                     android:fontFamily="sans-serif-medium"
                     android:text="@string/delivery_agent"
+                    android:textColor="@color/text_44"
                     android:textSize="@dimen/dimen_14dp"
                     android:visibility="gone" />
 
@@ -234,7 +235,7 @@
                     android:layout_marginTop="@dimen/dimen_15dp"
                     android:fontFamily="sans-serif-medium"
                     android:text="@string/delivery_agent"
-                    android:textColor="@color/black"
+                    android:textColor="@color/text_44"
                     android:textSize="@dimen/dimen_14dp"
                     android:visibility="gone" />
 
@@ -408,8 +409,7 @@
                             android:fontFamily="sans-serif-medium"
                             android:text="@string/total_amount"
                             android:textColor="@color/text_44"
-                            android:textSize="@dimen/dimen_14dp"
-                            android:textStyle="bold" />
+                            android:textSize="@dimen/dimen_14dp" />
 
                         <com.binbill.seller.CustomViews.PrefixEditText
                             android:id="@+id/et_total_amount"
@@ -445,8 +445,7 @@
                         android:layout_marginTop="@dimen/dimen_10dp"
                         android:text="@string/delivery_experience"
                         android:textColor="@color/text_44"
-                        android:textSize="@dimen/dimen_14dp"
-                        android:textStyle="bold" />
+                        android:textSize="@dimen/dimen_14dp" />
 
                     <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
                         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -474,8 +473,7 @@
                         android:layout_marginTop="@dimen/dimen_15dp"
                         android:text="@string/seller_responseivness"
                         android:textColor="@color/text_44"
-                        android:textSize="@dimen/dimen_14dp"
-                        android:textStyle="bold" />
+                        android:textSize="@dimen/dimen_14dp" />
 
                     <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
                         xmlns:app="http://schemas.android.com/apk/res-auto"

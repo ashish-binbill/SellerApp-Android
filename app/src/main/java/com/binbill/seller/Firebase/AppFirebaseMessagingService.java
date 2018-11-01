@@ -54,6 +54,7 @@ public class AppFirebaseMessagingService extends FirebaseMessagingService {
             String notificationType = "0";
             String orderId = "";
             String notificationId = "";
+            String orderStatus = "";
             Map<String, String> map = remoteMessage.getData();
             if (map.containsKey("title"))
                 title = map.get("title");
@@ -71,7 +72,10 @@ public class AppFirebaseMessagingService extends FirebaseMessagingService {
             if (map.containsKey("notification_id"))
                 notificationId = map.get("notification_id");
 
-            handleNow(title, description, notificationType, orderId, notificationId);
+            if (map.containsKey("status_type"))
+                orderStatus = map.get("status_type");
+
+            handleNow(title, description, notificationType, orderId, notificationId, orderStatus);
         }
 
         if (remoteMessage.getNotification() != null) {
@@ -96,16 +100,16 @@ public class AppFirebaseMessagingService extends FirebaseMessagingService {
         }
     }
 
-    private void handleNow(String title, String message, String notificationType, String orderId, String notificationId) {
+    private void handleNow(String title, String message, String notificationType, String orderId, String notificationId, String orderStatus) {
         Log.d(TAG, "Short lived task is done.");
-        sendNotification(title, message, notificationType, orderId, notificationId);
+        sendNotification(title, message, notificationType, orderId, notificationId, orderStatus);
     }
 
     private void sendRegistrationToServer(String token) {
         // TODO: Implement this method to send token to your app server.
     }
 
-    private void sendNotification(String title, String messageBody, String notificationType, String orderId, String notificationId) {
+    private void sendNotification(String title, String messageBody, String notificationType, String orderId, String notificationId, String orderStatus) {
         Intent intent = new Intent(this, SplashActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(Constants.NOTIFICATION_DEEPLINK, notificationType);
@@ -152,9 +156,25 @@ public class AppFirebaseMessagingService extends FirebaseMessagingService {
 
         Notification notification = notificationBuilder.build();
 
-        if (!Utility.isEmpty(notificationType) && (notificationType.equalsIgnoreCase("1") ||
-                notificationType.equalsIgnoreCase("6")))
-            notification.flags = Notification.FLAG_INSISTENT | Notification.VISIBILITY_PUBLIC | Notification.FLAG_AUTO_CANCEL;
+        if (!Utility.isEmpty(notificationType)) {
+            if ((notificationType.equalsIgnoreCase("1"))) {
+
+                if (!Utility.isEmpty(orderStatus))
+                    try {
+                        int status = Integer.parseInt(orderStatus);
+                        if (status == Constants.STATUS_NEW_ORDER || status == Constants.STATUS_APPROVED) {
+                            notification.flags = Notification.FLAG_INSISTENT | Notification.VISIBILITY_PUBLIC | Notification.FLAG_AUTO_CANCEL;
+                        }
+                    } catch (Exception e) {
+
+
+                    }
+
+                if (notificationType.equalsIgnoreCase("6")) {
+                    notification.flags = Notification.FLAG_INSISTENT | Notification.VISIBILITY_PUBLIC | Notification.FLAG_AUTO_CANCEL;
+                }
+            }
+        }
 
         notificationManager.notify(notifyId /* ID of notification */, notification);
     }

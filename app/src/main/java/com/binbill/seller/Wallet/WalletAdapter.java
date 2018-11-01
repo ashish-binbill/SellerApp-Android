@@ -175,8 +175,8 @@ public class WalletAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
                 walletHolder.userImage.setImageDrawable(ContextCompat.getDrawable(walletHolder.userImage.getContext(), R.drawable.ic_binbill));
 
-            }else if(model.getCashbackSource().equalsIgnoreCase("4")){
-                walletHolder.mTitle.setText(R.string.received_for_order);
+            } else if (model.getCashbackSource().equalsIgnoreCase("4")) {
+                walletHolder.mTitle.setText(walletHolder.mTitle.getContext().getString(R.string.received_for_order, model.getOrderId()));
                 walletHolder.mUserName.setText(walletHolder.mUserName.getContext().getString(R.string.name_string, model.getUserName()));
                 walletHolder.mUserName.setVisibility(View.VISIBLE);
 

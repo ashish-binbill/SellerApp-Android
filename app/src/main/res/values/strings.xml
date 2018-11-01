@@ -366,7 +366,7 @@
     <string name="incorrect_input">Please check your input</string>
     <string name="no_orders_not_responded">Hurray! You do not have any Missed Orders or Opportunities as you have been quick with your response to customer orders!</string>
     <string name="invited_customer">These customers are yet to accept your invitation.</string>
-    <string name="received_for_order">Received for Order</string>
+    <string name="received_for_order">Received for Order %1$s</string>
     <string name="paid_in_cash">Paid in Cash</string>
     <string name="paid_online">Paid Online</string>
     <string name="on_credit">On Credit</string>

@@ -21,6 +21,9 @@ class WalletTransaction implements Serializable{
     @SerializedName("user_id")
     String userId;
 
+    @SerializedName("order_id")
+    String orderId;
+
     @SerializedName("created_at")
     String date;
 
@@ -41,6 +44,10 @@ class WalletTransaction implements Serializable{
 
     @SerializedName("user_name")
     String userName;
+
+    public String getOrderId() {
+        return orderId;
+    }
 
     public String getDate() {
         return date;
