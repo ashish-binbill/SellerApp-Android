@@ -183,7 +183,7 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
             Type classType = new TypeToken<Order>() {
             }.getType();
             final Order mOrderDetails = new Gson().fromJson(args[0].toString(), classType);
-            if (orderId.equalsIgnoreCase(mOrderDetails.getOrderId())) {
+            if (orderId != null && orderId.equalsIgnoreCase(mOrderDetails.getOrderId())) {
 
                 Handler uiHandler = new Handler(Looper.getMainLooper());
                 uiHandler.post(new Runnable() {
@@ -193,7 +193,8 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                         handleResponse();
                     }
                 });
-            }
+            } else
+                finish();
         }
     };
 
@@ -205,7 +206,7 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
             }.getType();
 
             final Order mOrderDetails = new Gson().fromJson(args[0].toString(), classType);
-            if (orderId.equalsIgnoreCase(mOrderDetails.getOrderId())) {
+            if (orderId != null && orderId.equalsIgnoreCase(mOrderDetails.getOrderId())) {
                 Handler uiHandler = new Handler(Looper.getMainLooper());
                 uiHandler.post(new Runnable() {
                     @Override
@@ -214,7 +215,8 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                         handleResponse();
                     }
                 });
-            }
+            } else
+                finish();
 
         }
     };
@@ -464,7 +466,7 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
 
     private void makeDeclineOrderCall() {
 
-        if(orderDetails !=null) {
+        if (orderDetails != null) {
             new RetrofitHelper(OrderDetailsActivity.this).sendOrderDeclineCall(orderDetails.getOrderId(), orderDetails.getUserId(), new RetrofitHelper.RetrofitCallback() {
                 @Override
                 public void onResponse(String response) {
@@ -701,19 +703,45 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
 
             if (!Utility.isEmpty(orderDetails.getTotalAmount())) {
                 tv_total_amount.setText(getString(R.string.rupee_sign) + " " + orderDetails.getTotalAmount());
-                et_total_amount.setText(orderDetails.getTotalAmount());
             } else {
                 tv_total_amount.setText(getString(R.string.rupee_sign) + " 0");
             }
 
+            /**
+             * Set edit text
+             */
+            setAmountInTotalEditText();
+
             if (orderDetails.getOrderStatus() == Constants.STATUS_OUT_FOR_DELIVERY || orderDetails.getOrderStatus() == Constants.STATUS_COMPLETE ||
                     orderDetails.getOrderStatus() == Constants.STATUS_AUTO_CANCEL || orderDetails.getOrderStatus() == Constants.STATUS_AUTO_EXPIRED ||
-                    orderDetails.getOrderStatus() == Constants.STATUS_REJECTED || orderDetails.getOrderStatus() == Constants.STATUS_CANCEL || orderDetails.getOrderStatus() == Constants.STATUS_NEW_ORDER) {
+                    orderDetails.getOrderStatus() == Constants.STATUS_REJECTED || orderDetails.getOrderStatus() == Constants.STATUS_CANCEL) {
                 ll_bill_layout.setVisibility(View.VISIBLE);
                 ll_amount_entry.setVisibility(View.GONE);
             } else {
                 ll_amount_entry.setVisibility(View.VISIBLE);
                 ll_bill_layout.setVisibility(View.GONE);
+            }
+
+            /**
+             * Payment status
+             */
+            if(orderDetails.getOrderStatus() == Constants.STATUS_COMPLETE){
+                if(orderDetails.getPaymentModeId() > 0){
+                    switch (orderDetails.getPaymentModeId()){
+                        case Constants.PAYMENT_MODE_CASH:
+                            header_quantity.setText(getString(R.string.paid_in_cash));
+                            header_quantity.setVisibility(View.VISIBLE);
+                            break;
+                        case Constants.PAYMENT_MODE_ONLINE:
+                            header_quantity.setText(getString(R.string.paid_online));
+                            header_quantity.setVisibility(View.VISIBLE);
+                            break;
+                        case Constants.PAYMENT_MODE_CREDIT:
+                            header_quantity.setText(getString(R.string.on_credit));
+                            header_quantity.setVisibility(View.VISIBLE);
+                            break;
+                    }
+                }
             }
 
             if (orderDetails.getDeliveryReview() != null) {
@@ -737,6 +765,22 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
             }
         }
 
+    }
+
+    private void setAmountInTotalEditText() {
+
+        if (mAdapter != null) {
+            ArrayList<OrderItem> orderItems = mAdapter.getUpdatedOrderList();
+
+            double totalAmount = 0;
+            for (OrderItem item : orderItems) {
+                if (!Utility.isEmpty(item.getUpdatedPrice()) && Utility.isValueNonZero(item.getUpdatedPrice())) {
+                    totalAmount = totalAmount + Double.parseDouble(item.getUpdatedPrice());
+                }
+            }
+
+            et_total_amount.setText(Utility.showDoubleString(totalAmount));
+        }
     }
 
     private void updateDeliveryReview(final ReviewAdapter.ReviewHolder reviewHolder, AssistedUserModel.Review deliveryReview) {
@@ -804,10 +848,11 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
     private void updateAgentLayout(final DeliveryAgentAdapter.DeliveryAgentHolder userHolder, final DeliveryModel model, String serviceId) {
         userHolder.mUserName.setText(model.getName());
 
-        float rating = 0;
+        Double rating = 0.0;
         if (!Utility.isEmpty(model.getRating()))
-            rating = Float.parseFloat(model.getRating());
-        userHolder.mRating.setRating(rating);
+            rating = Double.parseDouble(model.getRating());
+
+        userHolder.mRating.setRating(rating.floatValue());
         userHolder.ratingText.setText(userHolder.mReviews.getContext().getString(R.string.rating_value, String.format("%.2f", rating)));
 
         ArrayList<AssistedUserModel.Review> userReviews = model.getReviews();
@@ -937,7 +982,6 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
     }
 
     public void changeButtonStateToApproval(int state) {
-        ll_amount_entry.setVisibility(View.GONE);
         switch (state) {
             case 0:
                 if (orderDetails.getOrderStatus() == Constants.STATUS_NEW_ORDER) {
@@ -977,6 +1021,7 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                 break;
             default:
                 ll_user_action.setVisibility(View.GONE);
+                ll_amount_entry.setVisibility(View.GONE);
                 break;
         }
     }
@@ -1220,6 +1265,11 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
     }
 
     @Override
+    public void onItemAmountChanged() {
+        setAmountInTotalEditText();
+    }
+
+    @Override
     public void onOrderItemQuantityDenominationSelected(int pos, String quantity, String setQuantity) {
         if (orderDetails != null && orderDetails.getOrderItems() != null &&
                 orderDetails.getOrderItems().size() > 0) {
@@ -1235,8 +1285,10 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                 orderDetails.getOrderItems().size() > 0) {
             final OrderItem orderItem = orderDetails.getOrderItems().get(pos);
 
+            String measurementId = orderItem.getOrderSKU().getSkuId();
+
             just_sec_layout.setVisibility(View.VISIBLE);
-            new RetrofitHelper(this).fetchSuggestionsByID(orderItem.getItemId(), new RetrofitHelper.RetrofitCallback() {
+            new RetrofitHelper(this).fetchSuggestionsByID(orderItem.getItemId(), measurementId, new RetrofitHelper.RetrofitCallback() {
                         @Override
                         public void onResponse(String response) {
                             just_sec_layout.setVisibility(View.GONE);

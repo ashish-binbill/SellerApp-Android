@@ -35,6 +35,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -628,6 +629,12 @@ public class Utility {
         }
     }
 
+    public static String showDoubleString(double value) {
+        DecimalFormat formatter = new DecimalFormat("###.##");
+        String formatted = formatter.format(value);
+        return formatted;
+    }
+
     public static String loadJSONFromAsset(Context context, String fileName) {
         String json = null;
         try {
@@ -647,7 +654,7 @@ public class Utility {
     public static boolean isValueNonZero(String priceString) {
 
         try {
-            int price = Integer.parseInt(priceString);
+            double price = Double.parseDouble(priceString);
             if (price > 0)
                 return true;
         } catch (Exception e) {

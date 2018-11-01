@@ -115,7 +115,7 @@ public class FMCGRegistrationActivity extends BaseActivity {
 
         just_sec_layout.setVisibility(View.VISIBLE);
 
-        if (userRegistrationDetails != null) {
+        if (userRegistrationDetails != null && userRegistrationDetails.getFmcgCategoriesSelected() != null) {
             HashMap<String, ArrayList<String>> fmcgCategoriesSelected = userRegistrationDetails.getFmcgCategoriesSelected();
             String commaSeparatedSubCategories = "";
             Iterator it = fmcgCategoriesSelected.entrySet().iterator();

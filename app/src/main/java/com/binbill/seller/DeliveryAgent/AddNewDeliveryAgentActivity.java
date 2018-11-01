@@ -425,8 +425,10 @@ public class AddNewDeliveryAgentActivity extends BaseActivity {
         if (requestCode == Constants.ACTIVITY_RESULT_CAMERA) {
             if (resultCode == RESULT_OK) {
 
-                Log.d("SHRUTI", "Image uri: " + fileUri.toString());
-                uploadProfileImage();
+                if (fileUri != null) {
+                    Log.d("SHRUTI", "Image uri: " + fileUri.toString());
+                    uploadProfileImage();
+                }
             } else {
                 fileUri = null;
             }

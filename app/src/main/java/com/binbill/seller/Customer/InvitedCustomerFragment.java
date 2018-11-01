@@ -93,6 +93,9 @@ public class InvitedCustomerFragment extends Fragment implements UserAdapter.Car
         userListView = (RecyclerView) view.findViewById(R.id.rv_customer_list);
         shimmerview = (LinearLayout) view.findViewById(R.id.shimmer_view_container);
         noDataLayout = (LinearLayout) view.findViewById(R.id.no_data_layout);
+        TextView noData = (TextView) noDataLayout.findViewById(R.id.tv_no_data);
+        noData.setText(getString(R.string.invited_customer));
+
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.sl_pull_to_refresh);
         searchView = (SearchView) view.findViewById(R.id.search_view);
         searchView.setIconifiedByDefault(false);

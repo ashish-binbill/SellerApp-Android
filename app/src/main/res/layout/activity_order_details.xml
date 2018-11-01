@@ -147,6 +147,19 @@
                                 android:text=""
                                 android:textColor="@color/text_44"
                                 android:textSize="@dimen/dimen_12dp" />
+
+                            <TextView
+                                android:id="@+id/header_quantity"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/dimen_10dp"
+                                android:layout_weight="1"
+                                android:fontFamily="sans-serif-medium"
+                                android:gravity="end"
+                                android:text=""
+                                android:textColor="@color/colorPrimary"
+                                android:textSize="@dimen/dimen_12dp"
+                                android:visibility="gone" />
                         </LinearLayout>
 
                     </LinearLayout>
@@ -160,9 +173,9 @@
                     android:layout_marginBottom="@dimen/dimen_5dp"
                     android:layout_marginLeft="@dimen/dimen_15dp"
                     android:layout_marginTop="@dimen/dimen_15dp"
+                    android:fontFamily="sans-serif-medium"
                     android:text="@string/delivery_agent"
                     android:textSize="@dimen/dimen_14dp"
-                    android:textStyle="bold"
                     android:visibility="gone" />
 
                 <include
@@ -193,22 +206,10 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/dimen_25dp"
                         android:layout_weight="1"
+                        android:fontFamily="sans-serif-medium"
                         android:text="@string/shopping_list"
                         android:textColor="@color/text_77"
-                        android:textSize="@dimen/dimen_9dp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/header_quantity"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="@dimen/dimen_25dp"
-                        android:layout_weight="1"
-                        android:gravity="end"
-                        android:text="@string/quantity"
-                        android:textColor="@color/text_77"
-                        android:textSize="@dimen/dimen_9dp"
-                        android:textStyle="bold" />
+                        android:textSize="@dimen/dimen_9dp" />
                 </LinearLayout>
 
                 <View
@@ -231,10 +232,10 @@
                     android:layout_marginBottom="@dimen/dimen_5dp"
                     android:layout_marginLeft="@dimen/dimen_15dp"
                     android:layout_marginTop="@dimen/dimen_15dp"
+                    android:fontFamily="sans-serif-medium"
                     android:text="@string/delivery_agent"
                     android:textColor="@color/black"
                     android:textSize="@dimen/dimen_14dp"
-                    android:textStyle="bold"
                     android:visibility="gone" />
 
                 <include
@@ -362,8 +363,7 @@
                             android:fontFamily="sans-serif-medium"
                             android:text="@string/total_amount"
                             android:textColor="@color/text_44"
-                            android:textSize="@dimen/dimen_14dp"
-                            android:textStyle="bold" />
+                            android:textSize="@dimen/dimen_14dp" />
 
                         <TextView
                             android:id="@+id/tv_total_amount"
@@ -374,8 +374,7 @@
                             android:gravity="end"
                             android:text=""
                             android:textColor="@color/text_44"
-                            android:textSize="@dimen/dimen_14dp"
-                            android:textStyle="bold" />
+                            android:textSize="@dimen/dimen_14dp" />
                     </LinearLayout>
 
 
@@ -418,6 +417,7 @@
                             android:layout_height="@dimen/dimen_40dp"
                             android:layout_marginLeft="@dimen/dimen_5dp"
                             android:background="@drawable/edittext_bg_order"
+                            android:enabled="false"
                             android:hint="E.g 100"
                             android:inputType="numberDecimal"
                             android:minWidth="@dimen/dimen_120dp"

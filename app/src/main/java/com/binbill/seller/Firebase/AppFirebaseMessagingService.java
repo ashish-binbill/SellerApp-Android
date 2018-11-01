@@ -109,10 +109,11 @@ public class AppFirebaseMessagingService extends FirebaseMessagingService {
         Intent intent = new Intent(this, SplashActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(Constants.NOTIFICATION_DEEPLINK, notificationType);
+        intent.setAction(Long.toString(System.currentTimeMillis()));
         if (!Utility.isEmpty(orderId))
             intent.putExtra(Constants.ORDER_ID, orderId);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
-                PendingIntent.FLAG_UPDATE_CURRENT);
+                PendingIntent.FLAG_ONE_SHOT);
 
         String channelId = getString(R.string.default_notification_channel_id);
         Bitmap icon = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
@@ -153,7 +154,7 @@ public class AppFirebaseMessagingService extends FirebaseMessagingService {
 
         if (!Utility.isEmpty(notificationType) && (notificationType.equalsIgnoreCase("1") ||
                 notificationType.equalsIgnoreCase("6")))
-            notification.flags = Notification.FLAG_INSISTENT | Notification.VISIBILITY_PUBLIC;
+            notification.flags = Notification.FLAG_INSISTENT | Notification.VISIBILITY_PUBLIC | Notification.FLAG_AUTO_CANCEL;
 
         notificationManager.notify(notifyId /* ID of notification */, notification);
     }

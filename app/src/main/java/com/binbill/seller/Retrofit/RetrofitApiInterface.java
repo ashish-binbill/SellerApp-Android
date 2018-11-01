@@ -176,7 +176,7 @@ public interface RetrofitApiInterface {
     Call<JsonObject> fetchSKUById(@Path(value = "sku_id", encoded = true) String skuID);
 
     @GET(Constants.FETCH_SUGGESTION_BY_ID)
-    Call<JsonObject> fetchSuggestionById(@Path(value = "sku_id", encoded = true) String skuID);
+    Call<JsonObject> fetchSuggestionById(@Path(value = "sku_id", encoded = true) String skuID, @Query(value = "sku_measurement_id", encoded = true) String measurementId);
 
     @PUT(Constants.SEND_ORDER_FOR_APPROVAL)
     Call<JsonObject> sendOrderForApproval(@Path(value = "seller_id", encoded = true) String sellerId, @Path(value = "order_id", encoded = true) String orderId, @Body HashMap<String, String> body);

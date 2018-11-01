@@ -961,11 +961,11 @@ public class RetrofitHelper {
         });
     }
 
-    public void fetchSuggestionsByID(String skuId, final RetrofitCallback retrofitCallback) {
+    public void fetchSuggestionsByID(String skuId, String measurementId, final RetrofitCallback retrofitCallback) {
         RetrofitApiInterface apiService =
                 RetrofitHelper.getClient(mContext).create(RetrofitApiInterface.class);
 
-        Call<JsonObject> call = apiService.fetchSuggestionById(skuId);
+        Call<JsonObject> call = apiService.fetchSuggestionById(skuId, measurementId);
         call.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {

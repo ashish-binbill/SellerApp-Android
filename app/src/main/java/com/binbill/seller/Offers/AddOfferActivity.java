@@ -252,7 +252,7 @@ public class AddOfferActivity extends BaseActivity implements BottomSheetHelper.
         }
 
         if (requestCode == Constants.ACTIVITY_RESULT_CAMERA) {
-            if (resultCode == RESULT_OK) {
+            if (resultCode == RESULT_OK && cameraFileUri != null) {
                 Log.d("SHRUTI", "Image uri: " + cameraFileUri.toString());
 
                 tv_upload_image.setCompoundDrawablesWithIntrinsicBounds(null, null,

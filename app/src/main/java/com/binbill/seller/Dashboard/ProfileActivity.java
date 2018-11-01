@@ -78,7 +78,9 @@ public class ProfileActivity extends BaseActivity {
 
         tv_shop_name.setText(profileDetails.getName());
         tv_shop_address.setText(profileDetails.getAddress());
-        tv_main_category.setText(userRegistrationDetails.getMainCategory().getName());
+
+        if (userRegistrationDetails != null && userRegistrationDetails.getMainCategory() != null)
+            tv_main_category.setText(userRegistrationDetails.getMainCategory().getName());
 
         ProfileModel.BasicDetails basicDetails = profileDetails.getSellerDetails().getBasicDetails();
         String shopOpenDays = basicDetails.getShopOpenDays();

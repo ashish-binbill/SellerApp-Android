@@ -33,6 +33,8 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
 
         void onItemInteraction(boolean enable);
 
+        void onItemAmountChanged();
+
         void onOrderItemQuantityDenominationSelected(int pos, String quantity, String setQuantity);
 
         void onSuggestionClicked(int pos);
@@ -99,6 +101,9 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
                 String newPrice = editable.toString();
                 mList.get(position).setUpdatedPrice(newPrice.trim());
             }
+
+            if(listener != null)
+                listener.onItemAmountChanged();
         }
     }
 
@@ -516,7 +521,7 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
                 orderHolder.mItemPrice.setFocusableInTouchMode(false);
                 orderHolder.mItemPrice.setBackground(null);
                 orderHolder.mItemPrice.setTextColor(ContextCompat.getColor(orderHolder.mItemPrice.getContext(),
-                        R.color.colorPrimary));
+                        R.color.text_44));
 
                 orderHolder.mAvailableQuantity.setVisibility(View.GONE);
                 orderHolder.mAvailableQuantityNewItem.setVisibility(View.GONE);

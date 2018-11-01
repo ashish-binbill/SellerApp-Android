@@ -102,10 +102,6 @@ public class VerificationFragment extends Fragment implements VerificationAdapte
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-
-                jobListView.setVisibility(View.GONE);
-                shimmerview.setVisibility(View.VISIBLE);
-                noDataLayout.setVisibility(View.GONE);
                 fetchJobsForVerification();
 
             }
@@ -119,6 +115,9 @@ public class VerificationFragment extends Fragment implements VerificationAdapte
     }
 
     private void fetchJobsForVerification() {
+        jobListView.setVisibility(View.GONE);
+        shimmerview.setVisibility(View.VISIBLE);
+        noDataLayout.setVisibility(View.GONE);
         ApiHelper.fetchJobsForVerification(getActivity(), new RetrofitHelper.RetrofitCallback() {
             @Override
             public void onResponse(String response) {

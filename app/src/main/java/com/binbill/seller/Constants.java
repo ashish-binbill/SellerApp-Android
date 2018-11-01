@@ -180,4 +180,7 @@ public class Constants {
     public static final int SUGGESTION_STATUS_NEW = 2;
     public static final String AUTO_CREDIT = "AUTO_CREDIT";
     public static final String LOYALTY_POINTS = "LOYALTY_POINTS";
+    public static final int PAYMENT_MODE_CASH = 1;
+    public static final int PAYMENT_MODE_ONLINE = 4;
+    public static final int PAYMENT_MODE_CREDIT = 5;
 }

@@ -93,7 +93,7 @@ public class NotRespondedOrderFragment extends Fragment implements OrderAdapter.
         shimmerview = (LinearLayout) view.findViewById(R.id.shimmer_view_container);
         noDataLayout = (LinearLayout) view.findViewById(R.id.no_data_layout);
         TextView noDataText = (TextView) noDataLayout.findViewById(R.id.tv_no_data);
-        noDataText.setText(getString(R.string.no_orders));
+        noDataText.setText(getString(R.string.no_orders_not_responded));
 
         AppButton noDataButton = (AppButton) noDataLayout.findViewById(R.id.btn_no_data);
         noDataButton.setVisibility(View.GONE);

@@ -164,7 +164,10 @@ public class AddCustomerActivity extends BaseActivity implements UserAdapter.Car
         yesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dialog.dismiss();
+
+                if (!(AddCustomerActivity.this).isFinishing())
+                    dialog.dismiss();
+
                 onBackPressed();
             }
         });

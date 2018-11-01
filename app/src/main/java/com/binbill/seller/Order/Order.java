@@ -58,6 +58,13 @@ public class Order implements Serializable {
     @SerializedName("delivery_review")
     AssistedUserModel.Review deliveryReview;
 
+    @SerializedName("payment_mode_id")
+    int paymentModeId;
+
+    public int getPaymentModeId() {
+        return paymentModeId;
+    }
+
     public AssistedUserModel.Review getSellerReview() {
         return sellerReview;
     }

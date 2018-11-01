@@ -156,6 +156,7 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
  4| Loyalty Points
  5| Seller Verification
  6| Cash Back Verification
+ 7| User credit
  */
         String notificationType = AppSession.getInstance(this).getNotificationIntent();
         Log.d("SHRUTI", "Notification type " + notificationType);
@@ -198,12 +199,17 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
                 changeViewPagerFragment(2);
                 break;
             case "7":
+                intent = new Intent(DashboardActivity.this, DashboardListActivity_.class);
+                intent.putExtra(Constants.TYPE, Constants.CREDIT_PENDING);
+                startActivity(intent);
+                break;
+            case "8":
                 /**
                  * assisted users
                  */
                 changeViewPagerFragment(4);
                 break;
-            case "8":
+            case "9":
                 /**
                  * Manage categories
                  */
@@ -488,7 +494,7 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
         sellerAvailability = (TextView) findViewById(R.id.tv_availability);
 
         DashboardModel dashboardModel = AppSession.getInstance(this).getDashboardData();
-        if (dashboardModel.isRushHour()) {
+        if (dashboardModel != null && dashboardModel.isRushHour()) {
             sellerAvailability.setText(getString(R.string.busy));
             sellerAvailability.setBackgroundColor(ContextCompat.getColor(DashboardActivity.this, R.color.status_red));
         } else {
@@ -706,6 +712,7 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
         DashboardModel dashboardModel = AppSession.getInstance(this).getDashboardData();
 
         if (dashboardModel == null) {
+            finish();
             return;
         }
 
