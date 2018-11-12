@@ -249,7 +249,7 @@ public class PastOrderFragment extends Fragment implements OrderAdapter.OrderSel
         else
             mAdapter.setLoadMore(false);
         orderListView.setAdapter(mAdapter);
-//        orderListView.addOnScrollListener(OnScrollListener);
+        orderListView.addOnScrollListener(OnScrollListener);
 
         if (list.size() > 0) {
             int pos = Constants.ORDER_PAGE_SIZE * page;
