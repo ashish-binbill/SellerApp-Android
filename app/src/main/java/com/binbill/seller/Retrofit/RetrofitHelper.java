@@ -1258,11 +1258,11 @@ public class RetrofitHelper {
         });
     }
 
-    public void fetchUsersForSeller(final RetrofitCallback retrofitCallback) {
+    public void fetchUsersForSeller(final RetrofitCallback retrofitCallback, int page) {
         RetrofitApiInterface apiService =
                 RetrofitHelper.getClient(mContext).create(RetrofitApiInterface.class);
 
-        Call<JsonObject> call = apiService.fetchCustomers(AppSession.getInstance(mContext).getSellerId(), String.valueOf(true), "1");
+        Call<JsonObject> call = apiService.fetchCustomers(AppSession.getInstance(mContext).getSellerId(), String.valueOf(true), "1", page);
         call.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
@@ -1280,11 +1280,11 @@ public class RetrofitHelper {
         });
     }
 
-    public void fetchInvitedUsersForSeller(final RetrofitCallback retrofitCallback) {
+    public void fetchInvitedUsersForSeller(final RetrofitCallback retrofitCallback, int page) {
         RetrofitApiInterface apiService =
                 RetrofitHelper.getClient(mContext).create(RetrofitApiInterface.class);
 
-        Call<JsonObject> call = apiService.fetchCustomers(AppSession.getInstance(mContext).getSellerId(), String.valueOf(true), "2");
+        Call<JsonObject> call = apiService.fetchCustomers(AppSession.getInstance(mContext).getSellerId(), String.valueOf(true), "2", page);
         call.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {

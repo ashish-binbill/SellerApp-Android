@@ -13,12 +13,15 @@ import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.binbill.seller.Constants;
 import com.binbill.seller.CustomViews.AppButton;
 import com.binbill.seller.Model.UserModel;
+import com.binbill.seller.Order.Order;
+import com.binbill.seller.Order.OrderAdapter;
 import com.binbill.seller.R;
 import com.binbill.seller.Retrofit.RetrofitHelper;
 import com.binbill.seller.SharedPref;
@@ -46,6 +49,7 @@ import okhttp3.Route;
 
 public class UserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements Filterable {
 
+    private boolean loadMore = false;
     private ArrayList<UserModel> mList, mFilteredList;
 
     @Override
@@ -122,6 +126,16 @@ public class UserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         }
     }
 
+    public class LoadingViewHolder extends RecyclerView.ViewHolder {
+        LinearLayout mShimmerFrameLayout;
+
+        public LoadingViewHolder(View itemView) {
+            super(itemView);
+            mShimmerFrameLayout = (LinearLayout) itemView.findViewById(R.id.shimmer_view_container);
+        }
+    }
+
+
     public static class MyCustomerHolder extends RecyclerView.ViewHolder {
         protected View mRootCard;
         protected CardView mCard;
@@ -174,9 +188,17 @@ public class UserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                     inflate(R.layout.row_user_model, parent, false);
             return new UserHolder(itemView);
         } else if (type == Constants.MY_CUSTOMER) {
-            itemView = LayoutInflater.from(parent.getContext()).
-                    inflate(R.layout.row_user_model_my_customer, parent, false);
-            return new MyCustomerHolder(itemView);
+            if (viewType == Constants.TYPE_DATA) {
+                itemView = LayoutInflater.from(parent.getContext()).
+                        inflate(R.layout.row_user_model_my_customer, parent, false);
+                return new MyCustomerHolder(itemView);
+            } else if (viewType == Constants.TYPE_LOADING) {
+                itemView = LayoutInflater.
+                        from(parent.getContext()).
+                        inflate(R.layout.layout_shimmer_holder, parent, false);
+                return new UserAdapter.LoadingViewHolder(itemView);
+            } else
+                return null;
         }
 
         return null;
@@ -192,125 +214,148 @@ public class UserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         }
     }
 
-    private void onBindMyCustomerHolder(RecyclerView.ViewHolder holder, final int position) {
-        final MyCustomerHolder userHolder = (MyCustomerHolder) holder;
-
-        final UserModel model = mFilteredList.get(position);
-
-        if (!Utility.isEmpty(model.getUserName()))
-            userHolder.mUserName.setText(model.getUserName());
-        else if (!Utility.isEmpty(model.getUserEmail()))
-            userHolder.mUserName.setText(model.getUserEmail());
+    @Override
+    public int getItemViewType(int position) {
+        final UserModel modelList = mList.get(position);
+        if (isLoadMore() && position == mList.size() - 1)
+            return Constants.TYPE_LOADING;
         else
-            userHolder.mUserName.setText(model.getUserMobile());
+            return Constants.TYPE_DATA;
+    }
 
-        userHolder.mUserTransactions.setText(model.getTransactionCount());
-        userHolder.mUserCredit.setText(userHolder.mUserCredit.getContext().getString(R.string.rupee_sign) + " " + model.getUserCredit());
-        userHolder.mUserPoints.setText(model.getUserLoyalty());
-        if (!Utility.isEmpty(model.getAddress())) {
-            userHolder.mUserAddress.setText(model.getAddress());
-            userHolder.mUserAddress.setVisibility(View.VISIBLE);
-        } else
-            userHolder.mUserAddress.setVisibility(View.GONE);
+    public void setLoadMore(boolean load) {
+        this.loadMore = load;
+    }
 
-        if (!Utility.isEmpty(model.getUserDistance())) {
-            userHolder.mDistance.setText(model.getUserDistance() + " " + model.getDistanceMetric());
-            userHolder.mDistance.setVisibility(View.VISIBLE);
+    public boolean isLoadMore() {
+        return loadMore;
+    }
 
-        } else
-            userHolder.mDistance.setVisibility(View.GONE);
+    private void onBindMyCustomerHolder(RecyclerView.ViewHolder holder, final int position) {
 
-        if (model.getUserStatusType().equalsIgnoreCase(Constants.ACTIVE)) {
-            userHolder.mStatus.setVisibility(View.VISIBLE);
-        } else
-            userHolder.mStatus.setVisibility(View.GONE);
+        if (getItemViewType(position) == Constants.TYPE_ORDER) {
+            final MyCustomerHolder userHolder = (MyCustomerHolder) holder;
 
-        userHolder.mCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mListener != null)
-                    mListener.onCardClicked(position);
+            final UserModel model = mFilteredList.get(position);
+
+            if (!Utility.isEmpty(model.getUserName()))
+                userHolder.mUserName.setText(model.getUserName());
+            else if (!Utility.isEmpty(model.getUserEmail()))
+                userHolder.mUserName.setText(model.getUserEmail());
+            else
+                userHolder.mUserName.setText(model.getUserMobile());
+
+            userHolder.mUserTransactions.setText(model.getTransactionCount());
+            userHolder.mUserCredit.setText(userHolder.mUserCredit.getContext().getString(R.string.rupee_sign) + " " + model.getUserCredit());
+            userHolder.mUserPoints.setText(model.getUserLoyalty());
+            if (!Utility.isEmpty(model.getAddress())) {
+                userHolder.mUserAddress.setText(model.getAddress());
+                userHolder.mUserAddress.setVisibility(View.VISIBLE);
+            } else
+                userHolder.mUserAddress.setVisibility(View.GONE);
+
+            if (!Utility.isEmpty(model.getUserDistance())) {
+                userHolder.mDistance.setText(model.getUserDistance() + " " + model.getDistanceMetric());
+                userHolder.mDistance.setVisibility(View.VISIBLE);
+
+            } else
+                userHolder.mDistance.setVisibility(View.GONE);
+
+            if (model.getUserStatusType().equalsIgnoreCase(Constants.ACTIVE)) {
+                userHolder.mStatus.setVisibility(View.VISIBLE);
+            } else
+                userHolder.mStatus.setVisibility(View.GONE);
+
+            userHolder.mCard.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (mListener != null)
+                        mListener.onCardClicked(position);
+                }
+            });
+
+            if (model.getUserImage() != null && !Utility.isEmpty(model.getUserImage())) {
+
+                final String authToken = SharedPref.getString(userHolder.mCard.getContext(), SharedPref.AUTH_TOKEN);
+                OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                        .authenticator(new Authenticator() {
+                            @Override
+                            public Request authenticate(Route route, Response response) throws IOException {
+                                return response.request().newBuilder()
+                                        .header("Authorization", authToken)
+                                        .build();
+                            }
+                        }).build();
+
+                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                        RelativeLayout.LayoutParams.MATCH_PARENT,
+                        RelativeLayout.LayoutParams.MATCH_PARENT
+                );
+                params.setMargins(0, 0, 0, 0);
+                userHolder.userImage.setLayoutParams(params);
+
+                Picasso picasso = new Picasso.Builder(userHolder.mCard.getContext())
+                        .downloader(new OkHttp3Downloader(okHttpClient))
+                        .build();
+                picasso.load(Constants.BASE_URL + "customer/" + model.getUserId() + "/images")
+                        .config(Bitmap.Config.RGB_565)
+                        .memoryPolicy(MemoryPolicy.NO_CACHE)
+                        .into(userHolder.userImage, new Callback() {
+                            @Override
+                            public void onSuccess() {
+                                Bitmap imageBitmap = ((BitmapDrawable) userHolder.userImage.getDrawable()).getBitmap();
+                                RoundedBitmapDrawable imageDrawable = RoundedBitmapDrawableFactory.create(userHolder.userImage.getContext().getResources(), imageBitmap);
+                                imageDrawable.setCircular(true);
+                                imageDrawable.setCornerRadius(Math.max(imageBitmap.getWidth(), imageBitmap.getHeight()) / 2.0f);
+                                userHolder.userImage.setImageDrawable(imageDrawable);
+                            }
+
+                            @Override
+                            public void onError(Exception e) {
+                                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                                        RelativeLayout.LayoutParams.MATCH_PARENT,
+                                        RelativeLayout.LayoutParams.MATCH_PARENT
+                                );
+
+                                int margins = Utility.convertDPtoPx(userHolder.userImage.getContext(), 15);
+                                params.setMargins(margins, margins, margins, margins);
+                                userHolder.userImage.setLayoutParams(params);
+
+                                userHolder.userImage.setImageDrawable(ContextCompat.getDrawable(userHolder.userImage.getContext(), R.drawable.ic_user));
+                            }
+                        });
+            } else {
+                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                        RelativeLayout.LayoutParams.MATCH_PARENT,
+                        RelativeLayout.LayoutParams.MATCH_PARENT
+                );
+
+                int margins = Utility.convertDPtoPx(userHolder.userImage.getContext(), 15);
+                params.setMargins(margins, margins, margins, margins);
+                userHolder.userImage.setLayoutParams(params);
+
+                userHolder.userImage.setImageDrawable(ContextCompat.getDrawable(userHolder.userImage.getContext(), R.drawable.ic_user));
             }
-        });
 
-        if (model.getUserImage() != null && !Utility.isEmpty(model.getUserImage())) {
+            userHolder.mAddCredits.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (mListener != null)
+                        mListener.onAddCredits(position);
+                }
+            });
 
-            final String authToken = SharedPref.getString(userHolder.mCard.getContext(), SharedPref.AUTH_TOKEN);
-            OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                    .authenticator(new Authenticator() {
-                        @Override
-                        public Request authenticate(Route route, Response response) throws IOException {
-                            return response.request().newBuilder()
-                                    .header("Authorization", authToken)
-                                    .build();
-                        }
-                    }).build();
-
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-                    RelativeLayout.LayoutParams.MATCH_PARENT,
-                    RelativeLayout.LayoutParams.MATCH_PARENT
-            );
-            params.setMargins(0, 0, 0, 0);
-            userHolder.userImage.setLayoutParams(params);
-
-            Picasso picasso = new Picasso.Builder(userHolder.mCard.getContext())
-                    .downloader(new OkHttp3Downloader(okHttpClient))
-                    .build();
-            picasso.load(Constants.BASE_URL + "customer/" + model.getUserId() + "/images")
-                    .config(Bitmap.Config.RGB_565)
-                    .memoryPolicy(MemoryPolicy.NO_CACHE)
-                    .into(userHolder.userImage, new Callback() {
-                        @Override
-                        public void onSuccess() {
-                            Bitmap imageBitmap = ((BitmapDrawable) userHolder.userImage.getDrawable()).getBitmap();
-                            RoundedBitmapDrawable imageDrawable = RoundedBitmapDrawableFactory.create(userHolder.userImage.getContext().getResources(), imageBitmap);
-                            imageDrawable.setCircular(true);
-                            imageDrawable.setCornerRadius(Math.max(imageBitmap.getWidth(), imageBitmap.getHeight()) / 2.0f);
-                            userHolder.userImage.setImageDrawable(imageDrawable);
-                        }
-
-                        @Override
-                        public void onError(Exception e) {
-                            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-                                    RelativeLayout.LayoutParams.MATCH_PARENT,
-                                    RelativeLayout.LayoutParams.MATCH_PARENT
-                            );
-
-                            int margins = Utility.convertDPtoPx(userHolder.userImage.getContext(), 15);
-                            params.setMargins(margins, margins, margins, margins);
-                            userHolder.userImage.setLayoutParams(params);
-
-                            userHolder.userImage.setImageDrawable(ContextCompat.getDrawable(userHolder.userImage.getContext(), R.drawable.ic_user));
-                        }
-                    });
-        } else {
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-                    RelativeLayout.LayoutParams.MATCH_PARENT,
-                    RelativeLayout.LayoutParams.MATCH_PARENT
-            );
-
-            int margins = Utility.convertDPtoPx(userHolder.userImage.getContext(), 15);
-            params.setMargins(margins, margins, margins, margins);
-            userHolder.userImage.setLayoutParams(params);
-
-            userHolder.userImage.setImageDrawable(ContextCompat.getDrawable(userHolder.userImage.getContext(), R.drawable.ic_user));
+            userHolder.mAddPoints.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (mListener != null)
+                        mListener.onAddPoints(position);
+                }
+            });
+        }else if (getItemViewType(position) == Constants.TYPE_LOADING) {
+            UserAdapter.LoadingViewHolder loadingViewHolder = (UserAdapter.LoadingViewHolder) holder;
+            loadingViewHolder.mShimmerFrameLayout.setVisibility(View.VISIBLE);
         }
-
-        userHolder.mAddCredits.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mListener != null)
-                    mListener.onAddCredits(position);
-            }
-        });
-
-        userHolder.mAddPoints.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mListener != null)
-                    mListener.onAddPoints(position);
-            }
-        });
     }
 
     private void onBindOfferHolder(RecyclerView.ViewHolder holder, final int position) {
@@ -444,7 +489,7 @@ public class UserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 
                             if (jsonObject.optBoolean("status")) {
                                 userHolder.mAddCustomer.setVisibility(View.GONE);
-                                if(mListener != null)
+                                if (mListener != null)
                                     mListener.onCustomerAdded(position);
                             }
 

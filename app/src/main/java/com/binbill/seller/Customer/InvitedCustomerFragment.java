@@ -17,6 +17,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,6 +58,10 @@ public class InvitedCustomerFragment extends Fragment implements UserAdapter.Car
     private ArrayList<UserModel> mUserList;
     private int ADD_CREDIT = 1;
     private int ADD_POINTS = 2;
+    private int page = 0;
+    private LinearLayoutManager llm;
+    private boolean isCallInProgress = false;
+    private int lastPage = 0;
 
 
     public InvitedCustomerFragment() {
@@ -135,18 +140,54 @@ public class InvitedCustomerFragment extends Fragment implements UserAdapter.Car
         userListView.setVisibility(View.GONE);
         shimmerview.setVisibility(View.VISIBLE);
         noDataLayout.setVisibility(View.GONE);
+
+        page = 0;
+        fetchInvitedCustomers();
+    }
+
+    RecyclerView.OnScrollListener OnScrollListener = new RecyclerView.OnScrollListener() {
+        @Override
+        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            super.onScrollStateChanged(recyclerView, newState);
+        }
+
+        @Override
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            super.onScrolled(recyclerView, dx, dy);
+
+            int visibleItemCount = llm.getChildCount();
+            int totalItemCount = llm.getItemCount();
+            int firstVisibleItemPosition = llm.findFirstVisibleItemPosition();
+
+            if (!isCallInProgress && page < lastPage && (visibleItemCount + firstVisibleItemPosition) >= (totalItemCount)
+                    && firstVisibleItemPosition >= 0
+                    && totalItemCount >= Constants.CUSTOMER_PAGE_SIZE) {
+                loadMoreItems();
+                Log.d("SHRUTI", visibleItemCount + " " + totalItemCount + " " +
+                        firstVisibleItemPosition);
+            }
+        }
+    };
+
+    private void loadMoreItems() {
+        page = ++page;
         fetchInvitedCustomers();
     }
 
 
     private void fetchInvitedCustomers() {
+        isCallInProgress = true;
         ApiHelper.fetchInvitedCustomer(getActivity(), new RetrofitHelper.RetrofitCallback() {
             @Override
             public void onResponse(String response) {
-
+                isCallInProgress = false;
                 try {
                     JSONObject jsonObject = new JSONObject(response);
                     if (jsonObject.getBoolean("status")) {
+
+                        if (jsonObject.has("last_page") && !jsonObject.isNull("last_page"))
+                            lastPage = jsonObject.optInt("last_page");
+
                         if (jsonObject.optJSONArray("result") != null) {
                             JSONArray userArray = jsonObject.getJSONArray("result");
                             Type classType = new TypeToken<ArrayList<UserModel>>() {
@@ -185,7 +226,7 @@ public class InvitedCustomerFragment extends Fragment implements UserAdapter.Car
                 swipeRefreshLayout.setRefreshing(false);
 
             }
-        });
+        }, page);
     }
 
     private void handleResponse(ArrayList<UserModel> userList) {
@@ -200,13 +241,34 @@ public class InvitedCustomerFragment extends Fragment implements UserAdapter.Car
 
     private void setUpData(ArrayList<UserModel> list) {
 
-        this.mUserList = list;
+        if (this.mUserList == null)
+            this.mUserList = list;
+        else
+            this.mUserList.addAll(list);
         userListView.setHasFixedSize(true);
-        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+        llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         userListView.setLayoutManager(llm);
         mAdapter = new UserAdapter(Constants.MY_CUSTOMER, mUserList, this, false);
+        if (page != lastPage)
+            mAdapter.setLoadMore(true);
+        else
+            mAdapter.setLoadMore(false);
         userListView.setAdapter(mAdapter);
+        userListView.addOnScrollListener(OnScrollListener);
+
+        if (list.size() > 0) {
+            int pos = Constants.CUSTOMER_PAGE_SIZE * page;
+            if (pos >= 0 && pos < mAdapter.getItemCount()) {
+                final int position = pos;
+                userListView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        userListView.scrollToPosition(position);
+                    }
+                });
+            }
+        }
 
         userListView.setVisibility(View.VISIBLE);
         shimmerview.setVisibility(View.GONE);
@@ -348,6 +410,7 @@ public class InvitedCustomerFragment extends Fragment implements UserAdapter.Car
                             if (dialog != null)
                                 dialog.dismiss();
 
+                            page = 0;
                             fetchInvitedCustomers();
                         } else {
                             if (dialog != null)
@@ -382,6 +445,7 @@ public class InvitedCustomerFragment extends Fragment implements UserAdapter.Car
                             if (dialog != null)
                                 dialog.dismiss();
 
+                            page = 0;
                             fetchInvitedCustomers();
                         } else {
                             if (dialog != null)

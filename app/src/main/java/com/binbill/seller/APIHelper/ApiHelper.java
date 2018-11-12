@@ -77,12 +77,12 @@ public class ApiHelper {
         });
     }
 
-    public static void fetchAllCustomer(final Context context, RetrofitHelper.RetrofitCallback retrofitCallback) {
-        new RetrofitHelper(context).fetchUsersForSeller(retrofitCallback);
+    public static void fetchAllCustomer(final Context context, RetrofitHelper.RetrofitCallback retrofitCallback, int page) {
+        new RetrofitHelper(context).fetchUsersForSeller(retrofitCallback, page);
     }
 
-    public static void fetchInvitedCustomer(final Context context, RetrofitHelper.RetrofitCallback retrofitCallback) {
-        new RetrofitHelper(context).fetchInvitedUsersForSeller(retrofitCallback);
+    public static void fetchInvitedCustomer(final Context context, RetrofitHelper.RetrofitCallback retrofitCallback, int page) {
+        new RetrofitHelper(context).fetchInvitedUsersForSeller(retrofitCallback ,page);
     }
 
     public static void fetchJobsForVerification(final Context context) {
@@ -127,7 +127,7 @@ public class ApiHelper {
         new RetrofitHelper(context).fetchJobsForVerification(retrofitCallback);
     }
 
-    public static void fetchAllCustomer(final Context context) {
+    public static void fetchAllCustomer(final Context context ) {
 
         new RetrofitHelper(context).fetchUsersForSeller(new RetrofitHelper.RetrofitCallback() {
             @Override
@@ -153,7 +153,7 @@ public class ApiHelper {
             public void onErrorResponse() {
 
             }
-        });
+        }, 0);
     }
 
     public static void fetchAllAssistedServices(final Context context, RetrofitHelper.RetrofitCallback retrofitCallback) {
