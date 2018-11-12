@@ -285,7 +285,7 @@ public class ActiveOrderFragment extends Fragment implements OrderAdapter.OrderS
         else
             mAdapter.setLoadMore(false);
         orderListView.setAdapter(mAdapter);
-        orderListView.addOnScrollListener(OnScrollListener);
+//        orderListView.addOnScrollListener(OnScrollListener);
 
         if (list.size() > 0) {
             int pos = Constants.ORDER_PAGE_SIZE * page;
