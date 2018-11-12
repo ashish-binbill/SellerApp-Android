@@ -1,5 +1,6 @@
 package com.binbill.seller.FAQ;
 
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
@@ -103,6 +104,7 @@ public class FaqActivity extends BaseActivity {
 
     private void setUpToolbar() {
         setSupportActionBar(toolbar);
+        getSupportActionBar().setHomeAsUpIndicator(ContextCompat.getDrawable(this, R.drawable.ic_back));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         getSupportActionBar().setTitle("");

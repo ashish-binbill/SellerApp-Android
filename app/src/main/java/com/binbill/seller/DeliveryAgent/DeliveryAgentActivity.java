@@ -188,6 +188,7 @@ public class DeliveryAgentActivity extends BaseActivity implements DeliveryAgent
 
     private void setUpToolbar() {
         setSupportActionBar(toolbar);
+        getSupportActionBar().setHomeAsUpIndicator(ContextCompat.getDrawable(this, R.drawable.ic_back));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         getSupportActionBar().setTitle("");

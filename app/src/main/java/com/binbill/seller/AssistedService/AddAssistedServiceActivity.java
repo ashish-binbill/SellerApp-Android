@@ -464,6 +464,7 @@ public class AddAssistedServiceActivity extends BaseActivity implements OptionLi
 
     private void setUpToolbar() {
         setSupportActionBar(toolbar);
+        getSupportActionBar().setHomeAsUpIndicator(ContextCompat.getDrawable(this, R.drawable.ic_back));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         getSupportActionBar().setTitle("");

@@ -1,5 +1,6 @@
 package com.binbill.seller.Loyalty;
 
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -392,6 +393,7 @@ public class LoyaltyRulesActivity extends BaseActivity {
 
     private void setUpToolbar() {
         setSupportActionBar(toolbar);
+        getSupportActionBar().setHomeAsUpIndicator(ContextCompat.getDrawable(this, R.drawable.ic_back));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         getSupportActionBar().setTitle("");

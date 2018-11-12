@@ -91,6 +91,7 @@ public class OfferActivity extends BaseActivity implements YesNoDialogFragment.Y
 
     private void setUpToolbar() {
         setSupportActionBar(toolbar);
+        getSupportActionBar().setHomeAsUpIndicator(ContextCompat.getDrawable(this, R.drawable.ic_back));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         getSupportActionBar().setTitle("");

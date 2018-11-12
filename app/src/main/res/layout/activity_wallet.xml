@@ -51,12 +51,13 @@
                 android:id="@+id/tv_wallet"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:minHeight="@dimen/dimen_50dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/dimen_10dp"
                 android:fontFamily="sans-serif-light"
                 android:gravity="center_horizontal"
                 android:lineSpacingExtra="-41.5sp"
-                android:text=""
+                android:text="0"
                 android:textColor="@color/color_white"
                 android:textSize="@dimen/dimen_45dp" />
 

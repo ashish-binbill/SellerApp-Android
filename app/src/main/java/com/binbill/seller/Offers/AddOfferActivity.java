@@ -158,6 +158,7 @@ public class AddOfferActivity extends BaseActivity implements BottomSheetHelper.
                 DatePickerDialog datePickerDialog = new DatePickerDialog(AddOfferActivity.this, datePickerListener, mCalendar
                         .get(Calendar.YEAR), mCalendar.get(Calendar.MONTH),
                         mCalendar.get(Calendar.DAY_OF_MONTH));
+
                 datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
                 datePickerDialog.show();
             }
@@ -480,6 +481,7 @@ public class AddOfferActivity extends BaseActivity implements BottomSheetHelper.
 
     private void setUpToolbar() {
         setSupportActionBar(toolbar);
+        getSupportActionBar().setHomeAsUpIndicator(ContextCompat.getDrawable(this, R.drawable.ic_back));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         getSupportActionBar().setTitle("");
