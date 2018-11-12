@@ -26,6 +26,7 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -36,6 +37,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -140,7 +142,7 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
     private AssistedServiceFragment assistedServiceFragment;
     private CustomerFragment myCustomerFragment;
     public int sellerType;
-    private TextView sellerAvailability;
+    private SwitchCompat sellerAvailability;
 
     @AfterViews
     public void setUpView() {
@@ -497,26 +499,61 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
             }
         });
 
-        sellerAvailability = (TextView) findViewById(R.id.tv_availability);
+        sellerAvailability = (SwitchCompat) findViewById(R.id.tv_availability);
 
         DashboardModel dashboardModel = AppSession.getInstance(this).getDashboardData();
         if (dashboardModel != null && dashboardModel.isRushHour()) {
-            sellerAvailability.setText(getString(R.string.busy));
-            sellerAvailability.setBackgroundColor(ContextCompat.getColor(DashboardActivity.this, R.color.status_red));
+//            sellerAvailability.setText(getString(R.string.busy));
+//            sellerAvailability.setBackgroundColor(ContextCompat.getColor(DashboardActivity.this, R.color.status_red));
+
+            sellerAvailability.setChecked(false);
         } else {
-            sellerAvailability.setText(getString(R.string.available));
-            sellerAvailability.setBackgroundColor(ContextCompat.getColor(DashboardActivity.this, R.color.status_green_light));
+            sellerAvailability.setChecked(true);
+//            sellerAvailability.setText(getString(R.string.available));
+//            sellerAvailability.setBackgroundColor(ContextCompat.getColor(DashboardActivity.this, R.color.status_green_light));
         }
 
-        sellerAvailability.setOnClickListener(new View.OnClickListener() {
+        sellerAvailability.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View view) {
-                invokeAvailabilityDialog(sellerAvailability.getText().toString());
+            public void onCheckedChanged(CompoundButton compoundButton, boolean enable) {
+
+                String isBusy;
+                if (enable)
+                    isBusy = "false";
+                else
+                    isBusy = "true";
+
+                new RetrofitHelper(DashboardActivity.this).setSellerAvailability(isBusy, new RetrofitHelper.RetrofitCallback() {
+                    @Override
+                    public void onResponse(String response) {
+                        /**
+                         * Do nothing
+                         */
+                    }
+
+                    @Override
+                    public void onErrorResponse() {
+                        /**
+                         * Do nothing
+                         */
+                    }
+                });
             }
         });
 
+//        sellerAvailability.setOnClickListener(new View.OnClickListener()
+//
+//            {
+//                @Override
+//                public void onClick (View view){
+//                invokeAvailabilityDialog(sellerAvailability.getText().toString());
+//            }
+//            });
+
         TextView apVersion = (TextView) findViewById(R.id.tv_app_version);
-        apVersion.setText(getString(R.string.app_version, BuildConfig.VERSION_NAME));
+        apVersion.setText(
+
+                getString(R.string.app_version, BuildConfig.VERSION_NAME));
 
         TextView logout = nav_view.findViewById(R.id.tv_logout);
         logout.setOnClickListener(new View.OnClickListener() {
@@ -858,7 +895,8 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
         switch (requestCode) {
             case Constants.PERMISSION_CALL: {
 
@@ -915,7 +953,8 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
     }
 
     @Override
-    public void onAddService(String assistedServiceId, String linkId, String serviceTypeId, String price, String overTimePrice) {
+    public void onAddService(String assistedServiceId, String linkId, String
+            serviceTypeId, String price, String overTimePrice) {
         if (bottom_navigation.getSelectedItemId() == R.id.action_assisted) {
             assistedServiceFragment.onAddService(assistedServiceId, linkId, serviceTypeId, price, overTimePrice);
         }

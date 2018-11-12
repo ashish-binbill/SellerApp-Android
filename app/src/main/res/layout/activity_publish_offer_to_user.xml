@@ -75,6 +75,7 @@
         android:layout_marginLeft="@dimen/dimen_40dp"
         android:layout_alignParentBottom="true"
         android:layout_marginRight="@dimen/dimen_40dp"
+        app:sizeOfText="@dimen/dimen_20dp"
         android:text="@string/publish" />
 
     <LinearLayout

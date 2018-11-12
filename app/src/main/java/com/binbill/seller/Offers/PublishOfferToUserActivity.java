@@ -94,6 +94,7 @@ public class PublishOfferToUserActivity extends BaseActivity implements UserAdap
         mFlowType = getIntent().getStringExtra(Constants.FLOW_TYPE);
 
         setUpToolbar();
+        sl_pull_to_refresh.setEnabled(false);
     }
 
     @Override

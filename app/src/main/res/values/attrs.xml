@@ -23,4 +23,9 @@
         <attr name="hint_color" format="color" />
         <attr name="hint" format="string" />
     </declare-styleable>
+
+    <declare-styleable name="AppButton">
+        <attr name="sizeOfText" format="dimension" />
+    </declare-styleable>
+
 </resources>

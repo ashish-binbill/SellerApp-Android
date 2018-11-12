@@ -3,6 +3,7 @@ package com.binbill.seller.Order;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class SuggestionSku implements Serializable{
 
@@ -29,6 +30,13 @@ public class SuggestionSku implements Serializable{
 
     @SerializedName("priority_index")
     String priorityIndex;
+
+    @SerializedName("sku_measurements")
+    ArrayList<OrderItem.OrderSKU> measurement;
+
+    public ArrayList<OrderItem.OrderSKU> getMeasurement() {
+        return measurement;
+    }
 
     public String getSubCategoryName() {
         return subCategoryName;

@@ -206,6 +206,7 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
             } else
                 orderHolder.mMeasurement.setText("");
 
+
             if (model.getUpdatedQuantityCount() != null) {
                 orderHolder.mQuantityNumber.setText(model.getUpdatedQuantityCount() + " Nos.");
 
@@ -217,6 +218,10 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
             } else
                 orderHolder.mQuantityNumber.setText(model.getQuantity() + " Nos.");
 
+            /**
+             * Any change in itemPrice, please do it in NA click listner as well.
+             * Same code there
+             */
             if (mStatus == Constants.STATUS_OUT_FOR_DELIVERY || mStatus == Constants.STATUS_COMPLETE) {
                 if (!Utility.isEmpty(model.getSellingPrice()) && Utility.isValueNonZero(model.getSellingPrice()))
                     orderHolder.mItemPrice.setText(model.getSellingPrice());
@@ -225,6 +230,13 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
             } else {
                 if (!Utility.isEmpty(model.getUpdatedPrice()) && Utility.isValueNonZero(model.getUpdatedPrice()))
                     orderHolder.mItemPrice.setText(model.getUpdatedPrice());
+                else
+                    orderHolder.mItemPrice.setText("");
+            }
+
+            if (model.getSuggestion() != null) {
+                if (!Utility.isEmpty(model.getSuggestion().getSuggestionPrice()) && Utility.isValueNonZero(model.getSuggestion().getSuggestionPrice()))
+                    orderHolder.mItemPrice.setText(model.getSuggestion().getSuggestionPrice());
                 else
                     orderHolder.mItemPrice.setText("");
             }
@@ -314,6 +326,8 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
 
 
                         model.setSuggestion(null);
+                        model.setUpdatedPrice(null);
+
                         orderHolder.mAlternateItem.setVisibility(View.GONE);
                         orderHolder.mAvailableQuantityNewItem.setVisibility(View.GONE);
                         orderHolder.mAvailableQuantity.setVisibility(View.VISIBLE);
@@ -329,6 +343,26 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
 
                         orderHolder.mQuantityNumber.setText(model.getQuantity());
                         orderHolder.mAlternateItem.setText("");
+
+                        if (mStatus == Constants.STATUS_OUT_FOR_DELIVERY || mStatus == Constants.STATUS_COMPLETE) {
+                            if (!Utility.isEmpty(model.getSellingPrice()) && Utility.isValueNonZero(model.getSellingPrice()))
+                                orderHolder.mItemPrice.setText(model.getSellingPrice());
+                            else
+                                orderHolder.mItemPrice.setText("");
+                        } else {
+                            if (!Utility.isEmpty(model.getUpdatedPrice()) && Utility.isValueNonZero(model.getUpdatedPrice()))
+                                orderHolder.mItemPrice.setText(model.getUpdatedPrice());
+                            else
+                                orderHolder.mItemPrice.setText("");
+                        }
+
+                        if (model.getSuggestion() != null) {
+                            if (!Utility.isEmpty(model.getSuggestion().getSuggestionPrice()) && Utility.isValueNonZero(model.getSuggestion().getSuggestionPrice()))
+                                orderHolder.mItemPrice.setText(model.getSuggestion().getSuggestionPrice());
+                            else
+                                orderHolder.mItemPrice.setText("");
+                        }
+
                     }
 
                     updateStateMap[position] = updateState;

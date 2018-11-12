@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 
 import com.binbill.seller.Customer.CustomerPagerAdapter;
 import com.binbill.seller.Customer.InvitedCustomerFragment;
-import com.binbill.seller.Order.OrderFragmentPagerAdapter;
 import com.binbill.seller.R;
 
 public class CustomerFragment extends Fragment {
@@ -20,6 +19,7 @@ public class CustomerFragment extends Fragment {
     private ViewPager viewPager;
     private TabLayout tabStrip;
     private int pageToDisplay = 0;
+    private CustomerPagerAdapter mPagerAdapter;
 
     public CustomerFragment() {
     }
@@ -61,7 +61,7 @@ public class CustomerFragment extends Fragment {
     }
 
     private void setUpViewPager() {
-        CustomerPagerAdapter mPagerAdapter = new CustomerPagerAdapter(getChildFragmentManager());
+        mPagerAdapter = new CustomerPagerAdapter(getChildFragmentManager());
 
         if (viewPager != null) {
             viewPager.setOffscreenPageLimit(0);
@@ -77,7 +77,7 @@ public class CustomerFragment extends Fragment {
     }
 
     public void showSearchView() {
-        Fragment page = getActivity().getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.pager + ":" + viewPager.getCurrentItem());
+        Fragment page = (Fragment) mPagerAdapter.instantiateItem(viewPager, viewPager.getCurrentItem());
         if (page != null)
             if (viewPager.getCurrentItem() == 0) {
                 ((MyCustomerFragment) page).showSearchView();

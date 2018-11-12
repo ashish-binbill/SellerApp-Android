@@ -62,7 +62,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="@dimen/dimen_15dp"
                 android:text="@string/link"
-                android:textSize="@dimen/dimen_12dp"
+                app:sizeOfText="@dimen/dimen_12dp"
                 android:visibility="visible" />
 
             <LinearLayout

@@ -183,4 +183,7 @@ public class Constants {
     public static final int PAYMENT_MODE_CASH = 1;
     public static final int PAYMENT_MODE_ONLINE = 4;
     public static final int PAYMENT_MODE_CREDIT = 5;
+    public static final int TYPE_ORDER = 2;
+    public static final int TYPE_LOADING = 1;
+    public static final int ORDER_PAGE_SIZE = 10;
 }

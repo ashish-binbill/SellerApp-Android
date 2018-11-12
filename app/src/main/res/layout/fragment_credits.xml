@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/off_white"
     android:orientation="vertical"
     tools:context="com.binbill.seller.Customer.CreditsFragment">
@@ -131,7 +132,7 @@
                         android:layout_marginRight="@dimen/dimen_2dp"
                         android:layout_weight="1"
                         android:text="@string/settle_credit"
-                        android:textSize="@dimen/dimen_16dp" />
+                        app:sizeOfText="@dimen/dimen_16dp" />
 
                     <com.binbill.seller.CustomViews.AppButton
                         android:id="@+id/btn_add_credit"
@@ -140,7 +141,7 @@
                         android:layout_marginLeft="@dimen/dimen_2dp"
                         android:layout_weight="1"
                         android:text="@string/add_credit"
-                        android:textSize="@dimen/dimen_16dp" />
+                        app:sizeOfText="@dimen/dimen_16dp" />
 
                 </LinearLayout>
             </RelativeLayout>

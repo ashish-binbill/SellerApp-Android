@@ -829,11 +829,11 @@ public class RetrofitHelper {
         });
     }
 
-    public void fetchOrders(final RetrofitCallback retrofitCallback) {
+    public void fetchOrders(final RetrofitCallback retrofitCallback, int page) {
         RetrofitApiInterface apiService =
                 RetrofitHelper.getClient(mContext).create(RetrofitApiInterface.class);
 
-        Call<JsonObject> call = apiService.fetchOrders(AppSession.getInstance(mContext).getSellerId());
+        Call<JsonObject> call = apiService.fetchOrders(AppSession.getInstance(mContext).getSellerId(), page);
         call.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
@@ -873,11 +873,11 @@ public class RetrofitHelper {
         });
     }
 
-    public void fetchCompletedOrders(final RetrofitCallback retrofitCallback) {
+    public void fetchCompletedOrders(final RetrofitCallback retrofitCallback, int page) {
         RetrofitApiInterface apiService =
                 RetrofitHelper.getClient(mContext).create(RetrofitApiInterface.class);
 
-        Call<JsonObject> call = apiService.fetchCompletedOrders(AppSession.getInstance(mContext).getSellerId());
+        Call<JsonObject> call = apiService.fetchCompletedOrders(AppSession.getInstance(mContext).getSellerId(), page);
         call.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
@@ -895,11 +895,11 @@ public class RetrofitHelper {
         });
     }
 
-    public void fetchNotRespondedOrders(String status, final RetrofitCallback retrofitCallback) {
+    public void fetchNotRespondedOrders(String status, final RetrofitCallback retrofitCallback, int page) {
         RetrofitApiInterface apiService =
                 RetrofitHelper.getClient(mContext).create(RetrofitApiInterface.class);
 
-        Call<JsonObject> call = apiService.fetchNotRespondedOrders(AppSession.getInstance(mContext).getSellerId(), status);
+        Call<JsonObject> call = apiService.fetchNotRespondedOrders(AppSession.getInstance(mContext).getSellerId(), status, page);
         call.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {

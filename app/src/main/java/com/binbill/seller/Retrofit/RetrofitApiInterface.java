@@ -161,13 +161,13 @@ public interface RetrofitApiInterface {
     Call<JsonObject> saveSellerBrands(@Path(value = "seller_id", encoded = true) String sellerId, @Body HashMap<String, String> body);
 
     @GET(Constants.FETCH_ORDERS)
-    Call<JsonObject> fetchOrders(@Path(value = "seller_id", encoded = true) String sellerId);
+    Call<JsonObject> fetchOrders(@Path(value = "seller_id", encoded = true) String sellerId, @Query(value = "page_no", encoded = true) int page);
 
     @GET(Constants.FETCH_COMPLETED_ORDERS)
-    Call<JsonObject> fetchCompletedOrders(@Path(value = "seller_id", encoded = true) String sellerId);
+    Call<JsonObject> fetchCompletedOrders(@Path(value = "seller_id", encoded = true) String sellerId, @Query(value = "page_no", encoded = true) int page);
 
     @GET(Constants.FETCH_COMPLETED_ORDERS)
-    Call<JsonObject> fetchNotRespondedOrders(@Path(value = "seller_id", encoded = true) String sellerId, @Query(value = "status_type", encoded = true) String status);
+    Call<JsonObject> fetchNotRespondedOrders(@Path(value = "seller_id", encoded = true) String sellerId, @Query(value = "status_type", encoded = true) String status,  @Query(value = "page_no", encoded = true) int page);
 
     @GET(Constants.FETCH_ORDERS_BY_ID)
     Call<JsonObject> fetchOrderById(@Path(value = "seller_id", encoded = true) String sellerId, @Path(value = "id", encoded = true) String jobId);

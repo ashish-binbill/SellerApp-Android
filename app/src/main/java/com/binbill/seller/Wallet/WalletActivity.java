@@ -8,6 +8,9 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -92,7 +95,15 @@ public class WalletActivity extends BaseActivity {
                     float amountFloat = Float.parseFloat(walletAmount);
                     if (amountFloat > 0) {
                         tv_wallet_balance.setText(" " + tv_wallet.getText().toString());
-                        tv_mobile.setText(getString(R.string.confirm_paytm, AppSession.getInstance(WalletActivity.this).getMobile()));
+
+                        String mobile = AppSession.getInstance(WalletActivity.this).getMobile();
+                        String confirmNumber = getString(R.string.confirm_paytm, mobile);
+                        SpannableString ss1 = new SpannableString(confirmNumber);
+                        ss1.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD),confirmNumber.indexOf("-") + 2, confirmNumber.indexOf("-") + 2 + mobile.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        ss1.setSpan(new RelativeSizeSpan(1.3f), confirmNumber.indexOf("-") + 2, confirmNumber.indexOf("-") + 2 + mobile.length(), 0);
+
+                        tv_mobile.setText(ss1);
+
                         setUpToolbar(true);
 
                         ll_wallet_layout.setVisibility(View.GONE);
@@ -195,7 +206,7 @@ public class WalletActivity extends BaseActivity {
                         if (jsonObject.optJSONArray("result") != null) {
                             JSONArray userArray = jsonObject.getJSONArray("result");
 
-                            if(userArray != null && userArray.length() > 0) {
+                            if (userArray != null && userArray.length() > 0) {
                                 Type classType = new TypeToken<ArrayList<WalletTransaction>>() {
                                 }.getType();
 
@@ -205,7 +216,7 @@ public class WalletActivity extends BaseActivity {
                                 no_data_layout.setVisibility(View.GONE);
                                 rv_wallet_txn.setVisibility(View.VISIBLE);
                                 shimmer_view_container.setVisibility(View.GONE);
-                            }else{
+                            } else {
                                 no_data_layout.setVisibility(View.VISIBLE);
                                 rv_wallet_txn.setVisibility(View.GONE);
                                 shimmer_view_container.setVisibility(View.GONE);

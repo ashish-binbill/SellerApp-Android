@@ -217,11 +217,11 @@ public class ApiHelper {
             public void onErrorResponse() {
 
             }
-        });
+        }, 0);
     }
 
-    public static void fetchOrders(final Context context, RetrofitHelper.RetrofitCallback retrofitCallback) {
-        new RetrofitHelper(context).fetchOrders(retrofitCallback);
+    public static void fetchOrders(final Context context, RetrofitHelper.RetrofitCallback retrofitCallback, int page) {
+        new RetrofitHelper(context).fetchOrders(retrofitCallback, page);
     }
 
     public static void getUserSelectedCategories(final Context context) {

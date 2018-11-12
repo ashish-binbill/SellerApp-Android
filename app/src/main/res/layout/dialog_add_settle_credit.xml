@@ -146,6 +146,7 @@
                         android:layout_weight="1"
                         android:visibility="visible"
                         android:gravity="center"
+                        app:sizeOfText="@dimen/dimen_20dp"
                         android:text="@string/add_credit" />
 
                     <LinearLayout

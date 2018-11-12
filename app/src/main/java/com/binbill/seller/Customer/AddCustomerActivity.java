@@ -172,7 +172,9 @@ public class AddCustomerActivity extends BaseActivity implements UserAdapter.Car
             }
         });
 
-        dialog.show();
+        if (!((AddCustomerActivity.this).isFinishing())) {
+            dialog.show();
+        }
     }
 
     public boolean isValidMobileNumber(String mobileStr) {

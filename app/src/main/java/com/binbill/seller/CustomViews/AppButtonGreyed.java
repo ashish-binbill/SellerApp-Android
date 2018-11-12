@@ -5,6 +5,7 @@ import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatButton;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 
 import com.binbill.seller.R;
 
@@ -38,5 +39,7 @@ public class AppButtonGreyed extends AppCompatButton {
             setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.rounded_button_grey));
         }
         setTextColor(ContextCompat.getColor(context, R.color.color_white));
+
+        setTextSize(TypedValue.COMPLEX_UNIT_PX, context.getResources().getDimension(R.dimen.dimen_14dp));
     }
 }

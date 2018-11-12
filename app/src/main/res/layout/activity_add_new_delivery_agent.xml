@@ -156,7 +156,7 @@
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:text="@string/save"
-                    android:textSize="@dimen/dimen_16dp" />
+                    app:sizeOfText="@dimen/dimen_16dp" />
             </FrameLayout>
 
         </LinearLayout>

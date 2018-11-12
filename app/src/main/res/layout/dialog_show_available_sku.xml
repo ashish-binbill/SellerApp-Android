@@ -108,6 +108,7 @@
                         android:layout_weight="1"
                         android:gravity="center"
                         android:text="@string/add"
+                        app:sizeOfText="@dimen/dimen_20dp"
                         android:visibility="visible" />
                 </LinearLayout>
             </LinearLayout>

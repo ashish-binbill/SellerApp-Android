@@ -52,27 +52,11 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/tv_availability"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimen_10dp"
-                android:background="@color/status_green_light"
-                android:gravity="center"
-                android:lineSpacingExtra="3.5sp"
-                android:paddingBottom="@dimen/dimen_5dp"
-                android:paddingLeft="@dimen/dimen_10dp"
-                android:paddingRight="@dimen/dimen_10dp"
-                android:paddingTop="@dimen/dimen_5dp"
-                android:text="@string/available"
-                android:textColor="#ffffff"
-                android:textSize="@dimen/dimen_12dp"
-                android:textStyle="bold" />
-
-            <TextView
                 android:id="@+id/wallet_amount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:drawablePadding="@dimen/dimen_5dp"
+                android:layout_marginLeft="@dimen/dimen_5dp"
                 android:drawableTop="@drawable/ic_wallet"
                 android:fontFamily="sans-serif-medium"
                 android:gravity="center_horizontal"

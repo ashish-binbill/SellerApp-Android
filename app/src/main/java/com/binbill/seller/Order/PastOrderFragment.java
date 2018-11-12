@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,6 +45,10 @@ public class PastOrderFragment extends Fragment implements OrderAdapter.OrderSel
     private int ADD_POINTS = 2;
     private OrderAdapter mAdapter;
     private ArrayList<Order> orderList;
+    private int page = 0;
+    private LinearLayoutManager llm;
+    private boolean isOrderCall = false;
+    private int lastPage = 0;
 
 
     public PastOrderFragment() {
@@ -70,6 +75,8 @@ public class PastOrderFragment extends Fragment implements OrderAdapter.OrderSel
     @Override
     public void onResume() {
         super.onResume();
+
+        page = 0;
         fetchOrders();
     }
 
@@ -106,6 +113,35 @@ public class PastOrderFragment extends Fragment implements OrderAdapter.OrderSel
         handleResponse();
     }
 
+    RecyclerView.OnScrollListener OnScrollListener = new RecyclerView.OnScrollListener() {
+        @Override
+        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            super.onScrollStateChanged(recyclerView, newState);
+        }
+
+        @Override
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            super.onScrolled(recyclerView, dx, dy);
+
+            int visibleItemCount = llm.getChildCount();
+            int totalItemCount = llm.getItemCount();
+            int firstVisibleItemPosition = llm.findFirstVisibleItemPosition();
+
+            if (!isOrderCall && page < lastPage && (visibleItemCount + firstVisibleItemPosition) >= (totalItemCount)
+                    && firstVisibleItemPosition >= 0
+                    && totalItemCount >= Constants.ORDER_PAGE_SIZE) {
+                loadMoreItems();
+                Log.d("SHRUTI", visibleItemCount + " " + totalItemCount + " " +
+                        firstVisibleItemPosition);
+            }
+        }
+    };
+
+    private void loadMoreItems() {
+        page = ++page;
+        fetchOrders();
+    }
+
     private void setUpListeners() {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -114,6 +150,8 @@ public class PastOrderFragment extends Fragment implements OrderAdapter.OrderSel
                 orderListView.setVisibility(View.GONE);
                 shimmerview.setVisibility(View.VISIBLE);
                 noDataLayout.setVisibility(View.GONE);
+
+                page = 0;
                 fetchOrders();
 
             }
@@ -129,17 +167,18 @@ public class PastOrderFragment extends Fragment implements OrderAdapter.OrderSel
     }
 
     private void fetchOrders() {
-        orderListView.setVisibility(View.GONE);
-        shimmerview.setVisibility(View.VISIBLE);
-        noDataLayout.setVisibility(View.GONE);
-
+        isOrderCall = true;
         new RetrofitHelper(getActivity()).fetchCompletedOrders(new RetrofitHelper.RetrofitCallback() {
             @Override
             public void onResponse(String response) {
-
+                isOrderCall = false;
                 try {
                     JSONObject jsonObject = new JSONObject(response);
                     if (jsonObject.getBoolean("status")) {
+
+                        if (jsonObject.has("last_page") && !jsonObject.isNull("last_page"))
+                            lastPage = jsonObject.optInt("last_page");
+
                         if (jsonObject.optJSONArray("result") != null) {
                             JSONArray userArray = jsonObject.getJSONArray("result");
                             Type classType = new TypeToken<ArrayList<Order>>() {
@@ -181,7 +220,7 @@ public class PastOrderFragment extends Fragment implements OrderAdapter.OrderSel
                 }
 
             }
-        });
+        }, page);
     }
 
     private void handleResponse() {
@@ -196,13 +235,34 @@ public class PastOrderFragment extends Fragment implements OrderAdapter.OrderSel
 
     private void setUpData(ArrayList<Order> list) {
 
-        this.mOrderList = list;
+        if (this.mOrderList == null)
+            this.mOrderList = list;
+        else
+            this.mOrderList.addAll(list);
         orderListView.setHasFixedSize(true);
-        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+        llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         orderListView.setLayoutManager(llm);
         mAdapter = new OrderAdapter(mOrderList, this);
+        if (page != lastPage)
+            mAdapter.setLoadMore(true);
+        else
+            mAdapter.setLoadMore(false);
         orderListView.setAdapter(mAdapter);
+        orderListView.addOnScrollListener(OnScrollListener);
+
+        if (list.size() > 0) {
+            int pos = Constants.ORDER_PAGE_SIZE * page;
+            if (pos >= 0 && pos < mAdapter.getItemCount()) {
+                final int position = pos;
+                orderListView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        orderListView.scrollToPosition(position);
+                    }
+                });
+            }
+        }
 
         orderListView.setVisibility(View.VISIBLE);
         shimmerview.setVisibility(View.GONE);

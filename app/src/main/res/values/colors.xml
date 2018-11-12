@@ -27,7 +27,7 @@
     <color name="color_b7b7b7">#b7b7b7</color>
     <color name="off_white">#f9f9f9</color>
     <color name="color_ababab">#ababab</color>
-    <color name="status_red">#FF0000</color>
+    <color name="status_red">#ff6565</color>
     <color name="status_green">#009900</color>
     <color name="status_blue">#0000FF</color>
     <color name="status_light_blue">#009EE5</color>

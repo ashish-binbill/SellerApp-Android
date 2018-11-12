@@ -347,6 +347,7 @@
                         android:layout_weight="1"
                         android:gravity="center"
                         android:text="@string/string_approve"
+                        android:textSize="@dimen/dimen_20dp"
                         android:visibility="visible" />
 
                     <LinearLayout

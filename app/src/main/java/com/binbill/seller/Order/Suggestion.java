@@ -19,7 +19,17 @@ public class Suggestion implements Serializable {
     @SerializedName("measurement_id")
     String measurementId;
 
-   transient int suggestionStatus = Constants.SUGGESTION_STATUS_NO_SUGGESTION;
+    transient String suggestionPrice;
+
+    public String getSuggestionPrice() {
+        return suggestionPrice;
+    }
+
+    public void setSuggestionPrice(String suggestionPrice) {
+        this.suggestionPrice = suggestionPrice;
+    }
+
+    transient int suggestionStatus = Constants.SUGGESTION_STATUS_NO_SUGGESTION;
 
     public int getSuggestionStatus() {
         return suggestionStatus;

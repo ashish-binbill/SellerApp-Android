@@ -78,6 +78,6 @@
         android:layout_marginRight="@dimen/dimen_70dp"
         android:layout_marginTop="@dimen/dimen_20dp"
         android:text="@string/invite_customer"
-        android:textSize="@dimen/dimen_16dp" />
+        app:sizeOfText="@dimen/dimen_16dp" />
 
 </LinearLayout>

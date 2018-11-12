@@ -69,8 +69,8 @@
                 android:layout_marginTop="@dimen/dimen_10dp"
                 android:gravity="center"
                 android:text="@string/redeem_via_paytm"
-                android:textSize="@dimen/dimen_12dp"
-                android:visibility="visible" />
+                android:visibility="visible"
+                app:sizeOfText="@dimen/dimen_12dp" />
 
         </LinearLayout>
 
@@ -114,10 +114,10 @@
     <RelativeLayout
         android:id="@+id/rl_confirm_layout"
         android:layout_width="match_parent"
-        android:visibility="gone"
         android:layout_height="match_parent"
         android:background="@color/color_white"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <LinearLayout
             android:id="@+id/cashback"
@@ -198,8 +198,8 @@
                 android:background="@android:color/transparent"
                 android:gravity="center"
                 android:text="@string/confirm_number"
-                android:textSize="@dimen/dimen_16dp"
-                android:visibility="visible" />
+                android:visibility="visible"
+                app:sizeOfText="@dimen/dimen_16dp" />
 
         </FrameLayout>
 

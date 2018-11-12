@@ -36,6 +36,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="top"
                 android:layout_marginTop="@dimen/dimen_5dp"
+                android:layout_marginRight="@dimen/dimen_5dp"
                 android:layout_marginLeft="@dimen/dimen_15dp"
                 android:layout_weight="1"
                 android:orientation="vertical">

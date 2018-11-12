@@ -92,9 +92,9 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
     TextView toolbarText;
 
     @ViewById
-    TextView tv_address, tv_date, tv_name, tv_order_status, header_shopping_list, header_quantity, tv_start_time, tv_end_time, tv_time_elapsed, tv_total_amount;
+    TextView tv_address, tv_date, tv_name, tv_order_status, header_shopping_list, tv_start_time, tv_end_time, tv_time_elapsed, tv_total_amount;
     @ViewById
-    ImageView iv_user_image;
+    ImageView iv_user_image, header_quantity;
 
     @ViewById
     TextView tv_start_time_header, tv_end_time_header, tv_time_elapsed_header, tv_delivery_header_fmcg, tv_delivery_header_service;
@@ -730,15 +730,15 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                 if (orderDetails.getPaymentModeId() > 0) {
                     switch (orderDetails.getPaymentModeId()) {
                         case Constants.PAYMENT_MODE_CASH:
-                            header_quantity.setText(getString(R.string.paid_in_cash));
+                            header_quantity.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.paid_offline_watermark));
                             header_quantity.setVisibility(View.VISIBLE);
                             break;
                         case Constants.PAYMENT_MODE_ONLINE:
-                            header_quantity.setText(getString(R.string.paid_online));
+                            header_quantity.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.paid_online_watermark));
                             header_quantity.setVisibility(View.VISIBLE);
                             break;
                         case Constants.PAYMENT_MODE_CREDIT:
-                            header_quantity.setText(getString(R.string.on_credit));
+                            header_quantity.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.paid_credit_watermark));
                             header_quantity.setVisibility(View.VISIBLE);
                             break;
                     }
@@ -776,7 +776,21 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
             double totalAmount = 0;
             for (OrderItem item : orderItems) {
                 if (!Utility.isEmpty(item.getUpdatedPrice()) && Utility.isValueNonZero(item.getUpdatedPrice())) {
-                    totalAmount = totalAmount + Double.parseDouble(item.getUpdatedPrice());
+
+                    int quantity = 1;
+                    try {
+
+                        if (!Utility.isEmpty(item.getQuantity()))
+                            quantity = Integer.parseInt(item.getQuantity());
+
+                        if (!Utility.isEmpty(item.getUpdatedQuantityCount()))
+                            quantity = Integer.parseInt(item.getUpdatedQuantityCount());
+
+                    } catch (Exception e) {
+                        quantity = 1;
+                    }
+
+                    totalAmount = totalAmount + (quantity * Double.parseDouble(item.getUpdatedPrice()));
                 }
             }
 
@@ -1550,9 +1564,11 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                     Suggestion suggestion = item.getSuggestion();
                     suggestion.setMeasurementId(sku.getSkuId());
                     suggestion.setMeasuremenValue(sku.getSkuMeasurementValue() + " " + sku.getSkuMeasurementAcronym());
+                    suggestion.setSuggestionPrice(sku.getSkuMrp());
                     item.setSuggestion(suggestion);
                 } else {
                     item.setUpdatedSKUMeasurement(sku);
+                    item.setUpdatedPrice(sku.getSkuMrp());
                 }
             }
         }
@@ -1578,6 +1594,7 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
 
                 suggestion.setItemName(sku.getTitle());
                 suggestion.setItemId(sku.getId());
+                suggestion.setSuggestionPrice("0");
                 suggestion.setSuggestionStatus(Constants.SUGGESTION_STATUS_EXISTING);
                 item.setSuggestion(suggestion);
             }

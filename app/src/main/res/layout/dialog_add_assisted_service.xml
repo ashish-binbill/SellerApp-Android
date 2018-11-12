@@ -48,6 +48,7 @@
                 android:layout_marginLeft="@dimen/dimen_5dp"
                 android:layout_marginTop="@dimen/dimen_30dp"
                 android:gravity="center"
+                app:sizeOfText="@dimen/dimen_20dp"
                 android:text="@string/string_yes" />
 
         </LinearLayout>

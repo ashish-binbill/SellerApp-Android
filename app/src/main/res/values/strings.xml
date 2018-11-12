@@ -346,7 +346,7 @@
     <string name="no_suggestion">No Suggestions found for this item.</string>
     <string name="delivery_experience">Delivery Experience</string>
     <string name="seller_responseivness">Seller Responsiveness</string>
-    <string name="grant_credit">Grant Credit</string>
+    <string name="grant_credit">Set Credit Limit</string>
     <string name="set_credit_limit_for">Set Credit Limit for %1$s</string>
     <string name="set_credit_limit">Set Credit Limit</string>
     <string name="example_rs_1000">e.g. Rs. 1000</string>
@@ -356,9 +356,9 @@
     <string name="loyalty_discount">Loyalty Discount</string>
     <string name="not_responded">Not Responded</string>
     <string name="lost_sales_count">Missed Sales</string>
-    <string name="enable_auto_credit">- Enable Auto Credit</string>
-    <string name="enable_auto_credit_wo">Enable Auto Credit</string>
-    <string name="auto_credit_text">Your customers can automatically avail preset loyalty benefits once you enable Auto Credit</string>
+    <string name="enable_auto_credit">- Enable Auto Mode</string>
+    <string name="enable_auto_credit_wo">Enable Auto Mode</string>
+    <string name="auto_credit_text">Your customers can automatically avail preset loyalty benefits once you enable Auto Mode</string>
     <string name="bill_amount">Bill Amount</string>
     <string name="auto_credit_enabled">Auto Credit Enabled</string>
     <string name="example_loyalty_points_auto_credit">Eg. A bill of Rs. 500 will give the user loyalty point of Rs. 5</string>

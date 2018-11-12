@@ -80,6 +80,7 @@
                         android:layout_height="@dimen/dimen_40dp"
                         android:layout_marginLeft="@dimen/dimen_5dp"
                         android:gravity="center"
+                        android:textSize="@dimen/dimen_20dp"
                         android:text="@string/string_yes" />
 
                 </LinearLayout>

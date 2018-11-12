@@ -74,7 +74,7 @@
             android:lineSpacingExtra="-5.5sp"
             android:text="@string/submit"
             android:textColor="@color/color_white"
-            android:textSize="@dimen/dimen_20dp"
+            app:sizeOfText="@dimen/dimen_20dp"
             android:visibility="visible" />
 
         <LinearLayout
