@@ -258,7 +258,7 @@ public class MyCustomerFragment extends Fragment implements UserAdapter.CardInte
         else
             mAdapter.setLoadMore(false);
         userListView.setAdapter(mAdapter);
-//        userListView.addOnScrollListener(OnScrollListener);
+        userListView.addOnScrollListener(OnScrollListener);
 
         if (list.size() > 0) {
             int pos = Constants.CUSTOMER_PAGE_SIZE * page;
