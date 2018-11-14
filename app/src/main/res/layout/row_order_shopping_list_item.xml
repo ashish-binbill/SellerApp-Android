@@ -28,7 +28,6 @@
                 android:id="@+id/ic_sku_image"
                 android:layout_width="@dimen/dimen_80dp"
                 android:layout_height="@dimen/dimen_80dp"
-                android:scaleType="fitXY"
                 android:src="@drawable/ic_placeholder_sku" />
 
             <LinearLayout

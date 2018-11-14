@@ -374,5 +374,6 @@
     <string name="collect_at_store">Collect At Store</string>
     <string name="order_ready">Order Ready</string>
     <string name="subscribe_for_notification">Subscribe for Notifications</string>
+    <string name="successfully_subsribed_for_notification">You have successfully subscribed for receiving notifications on this device</string>
 
 </resources>

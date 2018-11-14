@@ -1655,8 +1655,12 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
 
                 suggestion.setItemName(sku.getTitle());
                 suggestion.setItemId(sku.getId());
-                suggestion.setSuggestionPrice("0");
                 suggestion.setSuggestionStatus(Constants.SUGGESTION_STATUS_EXISTING);
+
+                OrderItem.OrderSKU measurement = sku.getMeasurement().get(0);
+                suggestion.setMeasurementId(measurement.getSkuId());
+                suggestion.setMeasuremenValue(measurement.getSkuMeasurementValue() + " " + measurement.getSkuMeasurementAcronym());
+                suggestion.setSuggestionPrice(measurement.getSkuMrp());
                 item.setSuggestion(suggestion);
             }
         }

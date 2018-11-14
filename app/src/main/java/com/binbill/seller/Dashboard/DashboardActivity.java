@@ -504,6 +504,7 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
             @Override
             public void onClick(View view) {
 
+                makeSubscribeNetworkCall();
             }
         });
 
@@ -664,6 +665,28 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
                         assistedServiceFragment.showSearchView();
                         break;
                 }
+            }
+        });
+    }
+
+    private void makeSubscribeNetworkCall() {
+        new RetrofitHelper(this).subscribeForNotification(new RetrofitHelper.RetrofitCallback() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    if (jsonObject.getBoolean("status")) {
+
+                        showSnackBar(getString(R.string.successfully_subsribed_for_notification));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onErrorResponse() {
+
             }
         });
     }

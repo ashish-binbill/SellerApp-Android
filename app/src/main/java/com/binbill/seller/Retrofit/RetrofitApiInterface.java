@@ -222,4 +222,7 @@ public interface RetrofitApiInterface {
 
     @PUT(Constants.ADD_CREDIT_LIMIT_FOR_USER)
     Call<JsonObject> addCreditLimitForUser(@Path(value = "seller_id", encoded = true) String sellerId, @Path(value = "customer_id", encoded = true) String customerId, @Body HashMap<String, String> body);
+
+    @POST(Constants.SUBSCRIBE_FOR_NOTIFICATION)
+    Call<JsonObject> subscribeForNotification(@Body HashMap<String, String> body);
 }

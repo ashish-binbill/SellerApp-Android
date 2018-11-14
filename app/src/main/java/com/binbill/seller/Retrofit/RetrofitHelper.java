@@ -339,6 +339,34 @@ public class RetrofitHelper {
         });
     }
 
+    public void subscribeForNotification(final RetrofitCallback retrofitCallback) {
+        RetrofitApiInterface apiService =
+                RetrofitHelper.getClient(mContext).create(RetrofitApiInterface.class);
+
+        HashMap<String, String> map = new HashMap<>();
+        String firebaseToken = SharedPref.getString(mContext, SharedPref.FIREBASE_TOKEN);
+        if (!Utility.isEmpty(firebaseToken))
+            map.put("fcm_id", SharedPref.getString(mContext, SharedPref.FIREBASE_TOKEN));
+
+        Call<JsonObject> call = apiService.subscribeForNotification(map);
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (response.isSuccessful()) {
+                    JsonObject body = response.body();
+                    retrofitCallback.onResponse(body.toString());
+                } else
+                    retrofitCallback.onErrorResponse();
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable throwable) {
+                retrofitCallback.onErrorResponse();
+            }
+        });
+    }
+
+
     public void logoutUser() {
         RetrofitApiInterface apiService =
                 RetrofitHelper.getClient(mContext).create(RetrofitApiInterface.class);

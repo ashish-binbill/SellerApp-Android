@@ -3,6 +3,7 @@ package com.binbill.seller.Order;
 import android.graphics.Bitmap;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +32,7 @@ class OrderSKUAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public static class OrderSKUHolder extends RecyclerView.ViewHolder {
         protected View mRootCard;
-        protected TextView mValue;
+        protected TextView mValue, mMeasurement;
         protected ImageView skuImage;
 
         public OrderSKUHolder(View view) {
@@ -39,6 +40,7 @@ class OrderSKUAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             mRootCard = view;
             mValue = (TextView) view.findViewById(R.id.text);
             skuImage = (ImageView) view.findViewById(R.id.ic_sku_image);
+            mMeasurement = (TextView) view.findViewById(R.id.measurement);
         }
     }
 
@@ -109,8 +111,28 @@ class OrderSKUAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 }
             });
 
+            /**
+             *
+             *  Update:
+             *  get measurement id now,
+             *
+             *  /skus/{id}/measurements/{measurement_id}/images
+             *
+             */
+
+            String imageUrl = Constants.BASE_URL + "skus/" + model.getId() + "/images";
+
+            if (model.getMeasurement() != null && model.getMeasurement().size() > 0) {
+                OrderItem.OrderSKU measurement = model.getMeasurement().get(0);
+                imageUrl = Constants.BASE_URL + "skus/" + model.getId() + "/measurements/" + measurement.getSkuId() + "/images";
+
+                orderSKUHolder.mMeasurement.setText(measurement.getSkuMeasurementValue() + " " + measurement.getSkuMeasurementAcronym());
+                orderSKUHolder.mMeasurement.setVisibility(View.VISIBLE);
+            }
+            Log.d("SHRUTI", imageUrl);
+
             Picasso.get()
-                    .load(Constants.BASE_URL + "skus/" + model.getId() + "/images")
+                    .load(imageUrl)
                     .config(Bitmap.Config.RGB_565)
                     .placeholder(ContextCompat.getDrawable(orderSKUHolder.skuImage.getContext(), R.drawable.ic_placeholder_sku))
                     .memoryPolicy(MemoryPolicy.NO_CACHE)

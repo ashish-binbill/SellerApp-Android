@@ -69,6 +69,7 @@ public class Constants {
     public static final String LOGOUT = "sellers/logout";
     public static final String FETCH_SUGGESTION_BY_ID = "sellers/skus/{sku_id}";
     public static final String ADD_CREDIT_LIMIT_FOR_USER = "sellers/{seller_id}/users/{customer_id}";
+    public static final String SUBSCRIBE_FOR_NOTIFICATION = "sellers/subscribe";
 
     public static final int PERMISSION_READ_SMS = 100;
     public static final int PERMISSION_CAMERA = 101;

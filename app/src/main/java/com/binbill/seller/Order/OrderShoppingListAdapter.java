@@ -438,7 +438,13 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
                         /**
                          * Do nothing here
                          */
-                    } else {
+                    } else if(model.getSuggestion() != null && model.getSuggestion().getSuggestionStatus() == Constants.SUGGESTION_STATUS_EXISTING) {
+                        /**
+                         * Do nothing here
+                         *
+                         * Update: Now measurement is pre defined in the suggestion list
+                         */
+                    }else{
                         if (listener != null)
                             listener.onOrderItemQuantitySelected(position);
                     }
