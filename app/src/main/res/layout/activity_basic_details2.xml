@@ -196,6 +196,51 @@
                     android:textSize="@dimen/dimen_15dp"
                     android:visibility="visible" />
 
+                <!-- Home delivery layout -->
+
+                <TextView
+                    android:id="@+id/tv_pay_online"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimen_35dp"
+                    android:lineSpacingExtra="-1sp"
+                    android:text="@string/pay_online"
+                    android:textColor="@color/text_44"
+                    android:textSize="@dimen/dimen_15dp"
+                    android:visibility="visible" />
+
+                <RadioGroup
+                    android:id="@+id/radio_group_pay_online"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimen_10dp"
+                    android:orientation="horizontal"
+                    android:visibility="visible">
+
+                    <android.support.v7.widget.AppCompatRadioButton
+                        android:id="@+id/po_yes"
+                        style="@style/RadionButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="@dimen/dimen_8dp"
+                        android:text="@string/yes"
+                        android:checked="true"
+                        android:textColor="@color/text_44"
+                        android:textSize="@dimen/dimen_13dp" />
+
+                    <android.support.v7.widget.AppCompatRadioButton
+                        android:id="@+id/po_no"
+                        style="@style/RadionButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dimen_15dp"
+                        android:paddingStart="@dimen/dimen_8dp"
+                        android:text="@string/no"
+                        android:textColor="@color/text_44"
+                        android:textSize="@dimen/dimen_13dp" />
+
+                </RadioGroup>
+
                 <!-- Available Payment Options -->
 
                 <TextView

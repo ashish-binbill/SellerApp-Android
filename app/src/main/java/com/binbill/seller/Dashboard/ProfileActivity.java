@@ -58,14 +58,14 @@ public class ProfileActivity extends BaseActivity {
     ImageView iv_shop_image;
 
     @ViewById
-    TextView tv_shop_name, tv_business_type, tv_shop_address, tv_main_category, tv_open_days, tv_timings, tv_delivery, tv_payment_modes, tv_view_attachment;
+    TextView tv_shop_name, tv_pay_online, tv_business_type, tv_shop_address, tv_main_category, tv_open_days, tv_timings, tv_delivery, tv_payment_modes, tv_view_attachment;
 
     @ViewById
     TextView tv_other_details, tv_edit_business, tv_basic_details;
     private ProfileModel profileDetails;
 
     @ViewById
-    LinearLayout ll_payment_mode, ll_delivery;
+    LinearLayout ll_payment_mode, ll_delivery, ll_pay_online;
 
     @AfterViews
     public void initiateViews() {
@@ -149,11 +149,18 @@ public class ProfileActivity extends BaseActivity {
 
             tv_delivery.setText(homeDelivery);
 
+            if (basicDetails != null && basicDetails.getPayOnline() != null && basicDetails.getPayOnline().equalsIgnoreCase("true"))
+                tv_pay_online.setText("Yes");
+            else
+                tv_pay_online.setText("No");
+
             ll_payment_mode.setVisibility(View.VISIBLE);
-            ll_payment_mode.setVisibility(View.VISIBLE);
+            ll_delivery.setVisibility(View.VISIBLE);
+            ll_pay_online.setVisibility(View.VISIBLE);
         } else {
             ll_payment_mode.setVisibility(View.GONE);
-            ll_payment_mode.setVisibility(View.GONE);
+            ll_delivery.setVisibility(View.GONE);
+            ll_pay_online.setVisibility(View.GONE);
         }
 
         tv_timings.setText(basicDetails.getStartTime() + " - " + basicDetails.getCloseTime());

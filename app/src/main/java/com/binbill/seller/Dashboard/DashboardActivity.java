@@ -499,6 +499,15 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
             }
         });
 
+        TextView subscribe = (TextView) findViewById(R.id.tv_subscribe_notification);
+        subscribe.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+
         sellerAvailability = (SwitchCompat) findViewById(R.id.tv_availability);
 
         DashboardModel dashboardModel = AppSession.getInstance(this).getDashboardData();

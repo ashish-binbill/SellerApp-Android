@@ -64,14 +64,14 @@ public class BasicDetails2Activity extends BaseActivity implements OptionListFra
     NestedScrollView scroll_view;
 
     @ViewById
-    RadioGroup radio_group_home_delivery;
+    RadioGroup radio_group_home_delivery, radio_group_pay_online;
 
     @ViewById
     TextView tv_monday, tv_tuesday, tv_wednesday, tv_thursday, tv_friday, tv_saturday, tv_sunday,
             start_time, end_time;
 
     @ViewById
-    TextView tv_delivery_header, tv_delivery_remark, tv_payment_modes_header;
+    TextView tv_delivery_header, tv_delivery_remark, tv_payment_modes_header, tv_pay_online;
 
     @ViewById
     LinearLayout ll_payment_2, ll_payment_1;
@@ -112,6 +112,10 @@ public class BasicDetails2Activity extends BaseActivity implements OptionListFra
         if (userRegistrationDetails != null && userRegistrationDetails.isAssisted() && !userRegistrationDetails.isFmcg()) {
             tv_delivery_header.setVisibility(View.GONE);
             radio_group_home_delivery.setVisibility(View.GONE);
+
+            tv_pay_online.setVisibility(View.GONE);
+            radio_group_pay_online.setVisibility(View.GONE);
+
             tv_delivery_remark.setVisibility(View.GONE);
             et_delivery_distance.setVisibility(View.GONE);
 
@@ -176,6 +180,11 @@ public class BasicDetails2Activity extends BaseActivity implements OptionListFra
             radio_group_home_delivery.check(R.id.yes);
         else
             radio_group_home_delivery.check(R.id.no);
+
+        if (!Utility.isEmpty(basicDetails.getPayOnline()) && basicDetails.getPayOnline().equalsIgnoreCase("true"))
+            radio_group_pay_online.check(R.id.po_yes);
+        else
+            radio_group_pay_online.check(R.id.po_no);
 
         if (!Utility.isEmpty(basicDetails.getHomeDeliveryRemarks()))
             et_delivery_distance.setText(basicDetails.getHomeDeliveryRemarks());
@@ -333,6 +342,7 @@ public class BasicDetails2Activity extends BaseActivity implements OptionListFra
         map.put("start_time", start_time.getText().toString());
         map.put("close_time", end_time.getText().toString());
         map.put("home_delivery", String.valueOf(userRegistrationDetails.isHomeDelivery()));
+        map.put("pay_online", String.valueOf(userRegistrationDetails.isOnlinePayment()));
         if (!Utility.isEmpty(userRegistrationDetails.getHomeDeliveryDistance()))
             map.put("home_delivery_remarks", userRegistrationDetails.getHomeDeliveryDistance());
         if (userRegistrationDetails.getPaymentOptions() != null && userRegistrationDetails.getPaymentOptions().size() > 0)
@@ -400,6 +410,15 @@ public class BasicDetails2Activity extends BaseActivity implements OptionListFra
             userRegistrationDetails.setHomeDelivery(true);
         else
             userRegistrationDetails.setHomeDelivery(false);
+
+        int radioButtonID2 = radio_group_pay_online.getCheckedRadioButtonId();
+        AppCompatRadioButton radioButton2 = (AppCompatRadioButton) radio_group_pay_online.findViewById(radioButtonID2);
+        final String isOnlinePayment = radioButton2.getText().toString();
+
+        if (isOnlinePayment.equalsIgnoreCase(getString(R.string.yes)))
+            userRegistrationDetails.setOnlinePayment(true);
+        else
+            userRegistrationDetails.setOnlinePayment(false);
 
         if (userRegistrationDetails.isHomeDelivery())
             userRegistrationDetails.setHomeDeliveryDistance(et_delivery_distance.getText().toString());

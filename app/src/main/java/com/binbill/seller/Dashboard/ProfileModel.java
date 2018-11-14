@@ -212,8 +212,15 @@ public class ProfileModel implements Serializable {
         @SerializedName("start_time")
         String startTime;
 
+        @SerializedName("pay_online")
+        String payOnline;
+
         @SerializedName("documents")
         ArrayList<FileItem> documents;
+
+        public String getPayOnline() {
+            return payOnline;
+        }
 
         public ArrayList<FileItem> getDocuments() {
             return documents;

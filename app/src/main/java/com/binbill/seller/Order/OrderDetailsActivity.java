@@ -92,7 +92,7 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
     TextView toolbarText;
 
     @ViewById
-    TextView tv_address, tv_date, tv_name, tv_order_status, header_shopping_list, tv_start_time, tv_end_time, tv_time_elapsed, tv_total_amount;
+    TextView tv_address, tv_date, tv_home_delivery, tv_name, tv_order_status, header_shopping_list, tv_start_time, tv_end_time, tv_time_elapsed, tv_total_amount;
     @ViewById
     ImageView iv_user_image, header_quantity;
 
@@ -348,6 +348,48 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                         Intent intent = new Intent(OrderDetailsActivity.this, SelectDeliveryAgentActivity_.class);
                         startActivityForResult(intent, Constants.INTENT_CALL_SELECT_DELIVERY_AGENT);
 
+                    } else if (textOnButton.equalsIgnoreCase(getString(R.string.order_ready))) {
+                        /**
+                         * Order Ready
+                         */
+                        btn_accept_progress.setVisibility(View.VISIBLE);
+                        btn_accept.setVisibility(View.GONE);
+
+                        ArrayList<OrderItem> updatedList2 = mAdapter.getUpdatedOrderList();
+                        for (OrderItem orderItem : updatedList2) {
+                            if (orderItem.getUpdatedSKUMeasurement() != null)
+                                orderItem.setOrderSKU(orderItem.getUpdatedSKUMeasurement());
+                            orderItem.setItemAvailability(orderItem.isUpdateItemAvailable());
+                        }
+
+
+                        Gson gson = new Gson();
+                        Type type = new TypeToken<List<OrderItem>>() {
+                        }.getType();
+                        String json = gson.toJson(updatedList2, type);
+
+                        String totalAmount = "";
+                        if (!Utility.isEmpty(et_total_amount.getText().toString())) {
+                            totalAmount = et_total_amount.getText().toString().trim();
+                        }
+
+                        new RetrofitHelper(OrderDetailsActivity.this).sendOrderOutForDeliveryCall(orderDetails.getOrderId(), orderDetails.getUserId(), json, "", totalAmount, new RetrofitHelper.RetrofitCallback() {
+                            @Override
+                            public void onResponse(String response) {
+                                btn_accept.setVisibility(View.VISIBLE);
+                                btn_accept_progress.setVisibility(View.GONE);
+                                handleApiResponse(response);
+                            }
+
+                            @Override
+                            public void onErrorResponse() {
+                                btn_accept.setVisibility(View.VISIBLE);
+                                btn_accept_progress.setVisibility(View.GONE);
+                                shimmer_view_container.setVisibility(View.GONE);
+
+                                showSnackBar(getString(R.string.something_went_wrong));
+                            }
+                        });
                     }
 
                 } else if (orderDetails.getOrderType().equalsIgnoreCase(Constants.ORDER_TYPE_SERVICE)) {
@@ -1031,7 +1073,11 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                 if (orderDetails.getOrderType().equalsIgnoreCase(Constants.ORDER_TYPE_SERVICE))
                     btn_accept.setText(getString(R.string.out_for_service));
                 else {
-                    btn_accept.setText(getString(R.string.out_for_delivery));
+
+                    if (orderDetails.isCollectAtStore())
+                        btn_accept.setText(getString(R.string.order_ready));
+                    else
+                        btn_accept.setText(getString(R.string.out_for_delivery));
                 }
                 break;
             default:
@@ -1044,10 +1090,20 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
     private void setUpUserLayout() {
 
         if (orderDetails != null) {
-
+            tv_home_delivery.setVisibility(View.GONE);
             switch (orderDetails.getOrderStatus()) {
                 case Constants.STATUS_NEW_ORDER:
                     tv_order_status.setTextColor(ContextCompat.getColor(this, R.color.status_light_blue));
+
+                    if (orderDetails.isCollectAtStore()) {
+                        tv_home_delivery.setText(getString(R.string.collect_at_store));
+                        tv_home_delivery.setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(this, R.drawable.ic_collect_at_store_order), null, null, null);
+                    } else {
+                        tv_home_delivery.setText(getString(R.string.home_delivery));
+                        tv_home_delivery.setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(this, R.drawable.ic_home_delivery_order), null, null, null);
+                    }
+                    tv_home_delivery.setVisibility(View.VISIBLE);
+
                     if (orderDetails.isModified()) {
                         tv_order_status.setText(getString(R.string.waiting_for_approval));
                         changeButtonStateToApproval(3);
@@ -1090,8 +1146,12 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
 
                     if (orderDetails.getOrderType().equalsIgnoreCase(Constants.ORDER_TYPE_SERVICE))
                         tv_order_status.setText(getString(R.string.provider_assigned));
-                    else
-                        tv_order_status.setText(getString(R.string.out_for_delivery));
+                    else {
+                        if (orderDetails.isCollectAtStore())
+                            tv_order_status.setText(getString(R.string.order_ready));
+                        else
+                            tv_order_status.setText(getString(R.string.out_for_delivery));
+                    }
                     changeButtonStateToApproval(3);
                     break;
                 case Constants.STATUS_JOB_STARTED:

@@ -29,6 +29,7 @@ public class UserRegistrationDetails implements Serializable {
     String shopOpen;
     String shopClose;
     boolean isHomeDelivery;
+    boolean isOnlinePayment = true;
     String homeDeliveryDistance;
     ArrayList<String> paymentOptions;
 
@@ -85,6 +86,14 @@ public class UserRegistrationDetails implements Serializable {
 
     public void setState(StateCityModel state) {
         this.state = state;
+    }
+
+    public void setOnlinePayment(boolean onlinePayment) {
+        isOnlinePayment = onlinePayment;
+    }
+
+    public boolean isOnlinePayment() {
+        return isOnlinePayment;
     }
 
     public void setNonASCCategoriesSelected(HashMap<String, ArrayList<String>> nonASCCategoriesSelected) {

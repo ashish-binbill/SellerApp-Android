@@ -37,6 +37,9 @@ public class Order implements Serializable {
     @SerializedName("order_item_counts")
     String itemCount;
 
+    @SerializedName("collect_at_store")
+    boolean collectAtStore;
+
     @SerializedName("order_details")
     ArrayList<OrderItem> orderItems;
 
@@ -60,6 +63,10 @@ public class Order implements Serializable {
 
     @SerializedName("payment_mode_id")
     int paymentModeId;
+
+    public boolean isCollectAtStore() {
+        return collectAtStore;
+    }
 
     public int getPaymentModeId() {
         return paymentModeId;

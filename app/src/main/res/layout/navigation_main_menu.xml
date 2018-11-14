@@ -32,7 +32,9 @@
                 android:id="@+id/tv_availability"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:theme="@style/ToggleTheme"
                 android:layout_gravity="center"
+                android:minHeight="@dimen/dimen_30dp"
                 android:visibility="visible"
                 android:layout_marginRight="@dimen/dimen_10dp"
                 android:checked="false" />
@@ -98,7 +100,7 @@
             android:id="@+id/tv_manage_delivery_boy"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_delivery"
+            android:drawableLeft="@drawable/ic_delivery_agent_hamburger"
             android:drawablePadding="@dimen/dimen_15dp"
             android:fontFamily="sans-serif-medium"
             android:lineSpacingExtra="1sp"
@@ -204,6 +206,19 @@
             android:lineSpacingExtra="1sp"
             android:padding="@dimen/dimen_15dp"
             android:text="@string/email_us"
+            android:textColor="@color/text_44"
+            android:textSize="@dimen/dimen_14dp" />
+
+        <TextView
+            android:id="@+id/tv_subscribe_notification"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_subscribe"
+            android:drawablePadding="@dimen/dimen_15dp"
+            android:fontFamily="sans-serif-medium"
+            android:lineSpacingExtra="1sp"
+            android:padding="@dimen/dimen_15dp"
+            android:text="@string/subscribe_for_notification"
             android:textColor="@color/text_44"
             android:textSize="@dimen/dimen_14dp" />
 

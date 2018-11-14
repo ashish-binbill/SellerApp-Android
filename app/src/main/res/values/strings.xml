@@ -370,5 +370,9 @@
     <string name="paid_in_cash">Paid in Cash</string>
     <string name="paid_online">Paid Online</string>
     <string name="on_credit">On Credit</string>
+    <string name="pay_online">Accept Online Payments</string>
+    <string name="collect_at_store">Collect At Store</string>
+    <string name="order_ready">Order Ready</string>
+    <string name="subscribe_for_notification">Subscribe for Notifications</string>
 
 </resources>

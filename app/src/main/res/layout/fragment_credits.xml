@@ -43,6 +43,7 @@
             android:id="@+id/sc_credit_allowed"
             android:theme="@style/ToggleTheme"
             android:layout_width="0dp"
+            android:minHeight="@dimen/dimen_30dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:checked="true"

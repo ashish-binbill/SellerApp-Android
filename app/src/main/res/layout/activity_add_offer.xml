@@ -76,6 +76,7 @@
                 android:lineSpacingExtra="-1sp"
                 android:paddingLeft="@dimen/dimen_12dp"
                 android:paddingRight="@dimen/dimen_12dp"
+                android:maxLength="100"
                 android:textColor="@color/text_44"
                 android:textColorHint="@color/hint_color"
                 android:textSize="@dimen/dimen_15dp" />
@@ -103,7 +104,7 @@
                 android:gravity="top"
                 android:hint="@string/offer_description"
                 android:lineSpacingExtra="-1sp"
-                android:maxLines="10"
+                android:maxLength="255"
                 android:paddingLeft="@dimen/dimen_12dp"
                 android:paddingRight="@dimen/dimen_12dp"
                 android:paddingTop="@dimen/dimen_10dp"

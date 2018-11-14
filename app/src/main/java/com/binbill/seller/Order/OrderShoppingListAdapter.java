@@ -237,8 +237,12 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
             if (model.getSuggestion() != null) {
                 if (!Utility.isEmpty(model.getSuggestion().getSuggestionPrice()) && Utility.isValueNonZero(model.getSuggestion().getSuggestionPrice()))
                     orderHolder.mItemPrice.setText(model.getSuggestion().getSuggestionPrice());
-                else
-                    orderHolder.mItemPrice.setText("");
+                else {
+                    if (!Utility.isEmpty(model.getUpdatedPrice()) && Utility.isValueNonZero(model.getUpdatedPrice()))
+                        orderHolder.mItemPrice.setText(model.getUpdatedPrice());
+                    else
+                        orderHolder.mItemPrice.setText("");
+                }
             }
 
             String rupee = orderHolder.mSKUPrice.getContext().getString(R.string.rupee_sign);
@@ -289,6 +293,7 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
                          * Update: Actually let them be shown, we wont show list
                          */
 
+                        model.setUpdatedPrice(null);
                         orderHolder.mAlternateItem.setVisibility(View.VISIBLE);
                         enableDisableAlternateItemEditText(orderHolder.mAlternateItem, false);
 
@@ -326,7 +331,7 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
 
 
                         model.setSuggestion(null);
-                        model.setUpdatedPrice(null);
+                        model.setUpdatedPrice(model.getOrderSKU().getSkuMrp());
 
                         orderHolder.mAlternateItem.setVisibility(View.GONE);
                         orderHolder.mAvailableQuantityNewItem.setVisibility(View.GONE);
@@ -344,25 +349,29 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
                         orderHolder.mQuantityNumber.setText(model.getQuantity());
                         orderHolder.mAlternateItem.setText("");
 
-                        if (mStatus == Constants.STATUS_OUT_FOR_DELIVERY || mStatus == Constants.STATUS_COMPLETE) {
-                            if (!Utility.isEmpty(model.getSellingPrice()) && Utility.isValueNonZero(model.getSellingPrice()))
-                                orderHolder.mItemPrice.setText(model.getSellingPrice());
-                            else
-                                orderHolder.mItemPrice.setText("");
-                        } else {
+                    }
+
+                    if (mStatus == Constants.STATUS_OUT_FOR_DELIVERY || mStatus == Constants.STATUS_COMPLETE) {
+                        if (!Utility.isEmpty(model.getSellingPrice()) && Utility.isValueNonZero(model.getSellingPrice()))
+                            orderHolder.mItemPrice.setText(model.getSellingPrice());
+                        else
+                            orderHolder.mItemPrice.setText("");
+                    } else {
+                        if (!Utility.isEmpty(model.getUpdatedPrice()) && Utility.isValueNonZero(model.getUpdatedPrice()))
+                            orderHolder.mItemPrice.setText(model.getUpdatedPrice());
+                        else
+                            orderHolder.mItemPrice.setText("");
+                    }
+
+                    if (model.getSuggestion() != null) {
+                        if (!Utility.isEmpty(model.getSuggestion().getSuggestionPrice()) && Utility.isValueNonZero(model.getSuggestion().getSuggestionPrice()))
+                            orderHolder.mItemPrice.setText(model.getSuggestion().getSuggestionPrice());
+                        else {
                             if (!Utility.isEmpty(model.getUpdatedPrice()) && Utility.isValueNonZero(model.getUpdatedPrice()))
                                 orderHolder.mItemPrice.setText(model.getUpdatedPrice());
                             else
-                                orderHolder.mItemPrice.setText("");
+                            orderHolder.mItemPrice.setText("");
                         }
-
-                        if (model.getSuggestion() != null) {
-                            if (!Utility.isEmpty(model.getSuggestion().getSuggestionPrice()) && Utility.isValueNonZero(model.getSuggestion().getSuggestionPrice()))
-                                orderHolder.mItemPrice.setText(model.getSuggestion().getSuggestionPrice());
-                            else
-                                orderHolder.mItemPrice.setText("");
-                        }
-
                     }
 
                     updateStateMap[position] = updateState;
