@@ -13,7 +13,9 @@ import android.os.Build;
 import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
+import android.text.Html;
 import android.util.Log;
+import android.widget.RemoteViews;
 
 import com.applozic.mobicomkit.Applozic;
 import com.applozic.mobicomkit.api.account.register.RegisterUserClientService;
@@ -28,6 +30,9 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
 import java.util.Map;
+
+import static android.app.Notification.DEFAULT_SOUND;
+import static android.support.v4.app.NotificationCompat.DEFAULT_VIBRATE;
 
 /**
  * Created by shruti.vig on 8/20/18.
@@ -110,7 +115,17 @@ public class AppFirebaseMessagingService extends FirebaseMessagingService {
         // TODO: Implement this method to send token to your app server.
     }
 
-    private void sendNotification(String title, String messageBody, String notificationType, String orderId, String notificationId, String orderStatus) {
+    private RemoteViews createCustomView(Context context, String title, String messageBody, String notificationType, String orderId) {
+        RemoteViews contentView = new RemoteViews(context.getPackageName(), R.layout.custom_layout);
+        if (contentView != null) {
+            contentView.setTextViewText(R.id.title, Html.fromHtml(title));
+            contentView.setTextViewText(R.id.description, Html.fromHtml(messageBody));
+            contentView.setOnClickPendingIntent(R.id.root_layout, getNotificationClickIntent(notificationType, orderId));
+        }
+        return contentView;
+    }
+
+    private PendingIntent getNotificationClickIntent(String notificationType, String orderId) {
         Intent intent = new Intent(this, SplashActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(Constants.NOTIFICATION_DEEPLINK, notificationType);
@@ -120,7 +135,12 @@ public class AppFirebaseMessagingService extends FirebaseMessagingService {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);
 
-        PowerManager.WakeLock screenOn = ((PowerManager)getSystemService(POWER_SERVICE)).newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "example");
+        return pendingIntent;
+    }
+
+    private void sendNotification(String title, String messageBody, String notificationType, String orderId, String notificationId, String orderStatus) {
+
+        PowerManager.WakeLock screenOn = ((PowerManager) getSystemService(POWER_SERVICE)).newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "example");
         screenOn.acquire();
 
         String channelId = getString(R.string.default_notification_channel_id);
@@ -136,7 +156,9 @@ public class AppFirebaseMessagingService extends FirebaseMessagingService {
                                 .bigText(messageBody))
                         .setColor(ContextCompat.getColor(this, R.color.colorPrimary))
                         .setSound(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.notify_order))
-                        .setContentIntent(pendingIntent);
+                        .setPriority(NotificationManager.IMPORTANCE_HIGH)
+                        .setDefaults(DEFAULT_SOUND | DEFAULT_VIBRATE)
+                        .setCustomBigContentView(createCustomView(AppFirebaseMessagingService.this, title, messageBody, notificationType, orderId));
 
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -145,7 +167,7 @@ public class AppFirebaseMessagingService extends FirebaseMessagingService {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(channelId,
                     getString(R.string.default_notification_channel_id),
-                    NotificationManager.IMPORTANCE_DEFAULT);
+                    NotificationManager.IMPORTANCE_HIGH);
             notificationManager.createNotificationChannel(channel);
         }
 
