@@ -1,12 +1,10 @@
 package com.binbill.seller.Customer;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -27,12 +25,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.binbill.seller.APIHelper.ApiHelper;
-import com.binbill.seller.AppSession;
 import com.binbill.seller.BaseActivity;
 import com.binbill.seller.Constants;
 import com.binbill.seller.CustomViews.AppButton;
 import com.binbill.seller.CustomViews.AppButtonGreyed;
-import com.binbill.seller.Dashboard.MyCustomerFragment;
 import com.binbill.seller.Model.UserModel;
 import com.binbill.seller.Offers.UserAdapter;
 import com.binbill.seller.R;
@@ -241,7 +237,7 @@ public class InvitedCustomerFragment extends Fragment implements UserAdapter.Car
 
     private void setUpData(ArrayList<UserModel> list) {
 
-        if (this.mUserList == null)
+        if (this.mUserList == null || page == 0)
             this.mUserList = list;
         else
             this.mUserList.addAll(list);

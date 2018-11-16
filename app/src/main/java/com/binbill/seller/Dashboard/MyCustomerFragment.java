@@ -244,7 +244,7 @@ public class MyCustomerFragment extends Fragment implements UserAdapter.CardInte
 
     private void setUpData(ArrayList<UserModel> list) {
 
-        if (this.mUserList == null)
+        if (this.mUserList == null || page == 0)
             this.mUserList = list;
         else
             this.mUserList.addAll(list);

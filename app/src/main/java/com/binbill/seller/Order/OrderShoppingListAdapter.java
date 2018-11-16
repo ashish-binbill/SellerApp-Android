@@ -6,6 +6,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -185,8 +186,34 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
             orderHolder.layoutService.setVisibility(View.GONE);
             orderHolder.layoutFMCG.setVisibility(View.VISIBLE);
 
+            /**
+             *
+             *  Update:
+             *  get measurement id now,
+             *
+             *  /skus/{id}/measurements/{measurement_id}/images
+             *
+             */
+
+            String imageUrl = Constants.BASE_URL + "skus/" + model.getItemId() + "/images";
+
+            if (model.getOrderSKU() != null) {
+                OrderItem.OrderSKU measurement = model.getOrderSKU();
+                imageUrl = Constants.BASE_URL + "skus/" + model.getItemId() + "/measurements/" + measurement.getSkuId() + "/images";
+            }
+
+            if (model.getSuggestion() != null) {
+                Suggestion suggestion = model.getSuggestion();
+                if (suggestion.getSuggestionStatus() == Constants.SUGGESTION_STATUS_EXISTING)
+                    imageUrl = Constants.BASE_URL + "skus/" + suggestion.getItemId() + "/measurements/" + suggestion.getMeasurementId() + "/images";
+                else if (suggestion.getSuggestionStatus() == Constants.SUGGESTION_STATUS_NEW)
+                    imageUrl = "";
+            }
+
+            Log.d("SHRUTI", imageUrl);
+
             Picasso.get()
-                    .load(Constants.BASE_URL + "skus/" + model.getItemId() + "/images")
+                    .load(imageUrl)
                     .config(Bitmap.Config.RGB_565)
                     .placeholder(ContextCompat.getDrawable(orderHolder.mSkuImage.getContext(), R.drawable.ic_placeholder_sku))
                     .memoryPolicy(MemoryPolicy.NO_CACHE)
@@ -370,7 +397,7 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
                             if (!Utility.isEmpty(model.getUpdatedPrice()) && Utility.isValueNonZero(model.getUpdatedPrice()))
                                 orderHolder.mItemPrice.setText(model.getUpdatedPrice());
                             else
-                            orderHolder.mItemPrice.setText("");
+                                orderHolder.mItemPrice.setText("");
                         }
                     }
 
@@ -438,13 +465,13 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
                         /**
                          * Do nothing here
                          */
-                    } else if(model.getSuggestion() != null && model.getSuggestion().getSuggestionStatus() == Constants.SUGGESTION_STATUS_EXISTING) {
+                    } else if (model.getSuggestion() != null && model.getSuggestion().getSuggestionStatus() == Constants.SUGGESTION_STATUS_EXISTING) {
                         /**
                          * Do nothing here
                          *
                          * Update: Now measurement is pre defined in the suggestion list
                          */
-                    }else{
+                    } else {
                         if (listener != null)
                             listener.onOrderItemQuantitySelected(position);
                     }
@@ -478,6 +505,12 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
                             if (orderHolder.mItemAvailability.getTag().toString().equalsIgnoreCase("1") &&
                                     orderHolder.mAvailableQuantity.getText().toString().contains(model.getOrderSKU().getSkuMeasurementValue())) {
                                 listener.onOrderItemQuantityDenominationSelected(position, model.getQuantity(), model.getQuantity());
+                            } else if (orderHolder.mItemAvailability.getTag().toString().equalsIgnoreCase("0") && model.getSuggestion() == null) {
+                                /**
+                                 * If item is not available and seller has not selected any replacement yet
+                                 *
+                                 * Do nothing
+                                 */
                             } else
                                 listener.onOrderItemQuantityDenominationSelected(position, "", model.getQuantity());
                         }

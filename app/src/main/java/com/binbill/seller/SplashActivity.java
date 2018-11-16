@@ -3,8 +3,10 @@ package com.binbill.seller;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.PowerManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.binbill.seller.APIHelper.ApiHelper;
@@ -27,6 +29,8 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+
         if (getIntent() != null && getIntent().hasExtra(Constants.NOTIFICATION_DEEPLINK))
             AppSession.getInstance(this).setNotificationIntent(getIntent().getStringExtra(Constants.NOTIFICATION_DEEPLINK));
 
@@ -34,6 +38,10 @@ public class SplashActivity extends AppCompatActivity {
             AppSession.getInstance(this).setNotificationOrderId(getIntent().getStringExtra(Constants.ORDER_ID));
 
         setUpFlow();
+
+        PowerManager.WakeLock screenOn = ((PowerManager) getSystemService(POWER_SERVICE)).newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "example");
+        if (screenOn.isHeld())
+            screenOn.release();
     }
 
     public void setUpFlow() {

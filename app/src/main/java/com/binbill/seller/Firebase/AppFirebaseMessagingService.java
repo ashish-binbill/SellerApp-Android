@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
+import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -118,6 +119,9 @@ public class AppFirebaseMessagingService extends FirebaseMessagingService {
             intent.putExtra(Constants.ORDER_ID, orderId);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);
+
+        PowerManager.WakeLock screenOn = ((PowerManager)getSystemService(POWER_SERVICE)).newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "example");
+        screenOn.acquire();
 
         String channelId = getString(R.string.default_notification_channel_id);
         Bitmap icon = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);

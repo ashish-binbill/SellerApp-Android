@@ -231,7 +231,7 @@ public class NotRespondedOrderFragment extends Fragment implements OrderAdapter.
 
     private void setUpData(ArrayList<Order> list) {
 
-        if (this.mOrderList == null)
+        if (this.mOrderList == null || page == 0)
             this.mOrderList = list;
         else
             this.mOrderList.addAll(list);

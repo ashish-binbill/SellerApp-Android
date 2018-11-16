@@ -94,6 +94,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import okhttp3.Authenticator;
 import okhttp3.OkHttpClient;
@@ -512,28 +513,29 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
         sellerAvailability = (SwitchCompat) findViewById(R.id.tv_availability);
 
         DashboardModel dashboardModel = AppSession.getInstance(this).getDashboardData();
-        if (dashboardModel != null && dashboardModel.isRushHour()) {
-//            sellerAvailability.setText(getString(R.string.busy));
-//            sellerAvailability.setBackgroundColor(ContextCompat.getColor(DashboardActivity.this, R.color.status_red));
+        final ProfileModel profileModel = AppSession.getInstance(DashboardActivity.this).getSellerProfile();
 
-            sellerAvailability.setChecked(false);
-        } else {
+        if (profileModel != null && profileModel.getSellerDetails() != null && profileModel.getSellerDetails().getBasicDetails() != null
+                && profileModel.getSellerDetails().getBasicDetails().getHomeDelivery().equalsIgnoreCase("true")) {
             sellerAvailability.setChecked(true);
-//            sellerAvailability.setText(getString(R.string.available));
-//            sellerAvailability.setBackgroundColor(ContextCompat.getColor(DashboardActivity.this, R.color.status_green_light));
+        } else {
+            sellerAvailability.setChecked(false);
         }
 
         sellerAvailability.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean enable) {
 
-                String isBusy;
+                String homeDelivery;
                 if (enable)
-                    isBusy = "false";
+                    homeDelivery = "true";
                 else
-                    isBusy = "true";
+                    homeDelivery = "false";
 
-                new RetrofitHelper(DashboardActivity.this).setSellerAvailability(isBusy, new RetrofitHelper.RetrofitCallback() {
+                HashMap<String, String> map = new HashMap<>();
+                map.put("home_delivery", homeDelivery);
+
+                new RetrofitHelper(DashboardActivity.this).updateBasicDetails(profileModel.getId(), map, new RetrofitHelper.RetrofitCallback() {
                     @Override
                     public void onResponse(String response) {
                         /**
@@ -550,15 +552,6 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
                 });
             }
         });
-
-//        sellerAvailability.setOnClickListener(new View.OnClickListener()
-//
-//            {
-//                @Override
-//                public void onClick (View view){
-//                invokeAvailabilityDialog(sellerAvailability.getText().toString());
-//            }
-//            });
 
         TextView apVersion = (TextView) findViewById(R.id.tv_app_version);
         apVersion.setText(

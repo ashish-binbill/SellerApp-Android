@@ -100,7 +100,7 @@ public class WalletActivity extends BaseActivity {
                         String mobile = AppSession.getInstance(WalletActivity.this).getMobile();
                         String confirmNumber = getString(R.string.confirm_paytm, mobile);
                         SpannableString ss1 = new SpannableString(confirmNumber);
-                        ss1.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD),confirmNumber.indexOf("-") + 2, confirmNumber.indexOf("-") + 2 + mobile.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        ss1.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD), confirmNumber.indexOf("-") + 2, confirmNumber.indexOf("-") + 2 + mobile.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         ss1.setSpan(new RelativeSizeSpan(1.3f), confirmNumber.indexOf("-") + 2, confirmNumber.indexOf("-") + 2 + mobile.length(), 0);
 
                         tv_mobile.setText(ss1);
@@ -275,7 +275,7 @@ public class WalletActivity extends BaseActivity {
 
         if (Utility.isEmpty(walletAmount)) {
             ProfileModel profileModel = AppSession.getInstance(this).getSellerProfile();
-            if (!Utility.isEmpty(profileModel.getCashBack()))
+            if (profileModel != null && !Utility.isEmpty(profileModel.getCashBack()))
                 tv_wallet.setText(getString(R.string.rupee_sign) + " " + String.format("%.2f", Float.parseFloat(profileModel.getCashBack())));
             else
                 tv_wallet.setText(getString(R.string.rupee_sign) + " 0");
