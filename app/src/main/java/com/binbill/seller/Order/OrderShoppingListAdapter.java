@@ -186,39 +186,7 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
             orderHolder.layoutService.setVisibility(View.GONE);
             orderHolder.layoutFMCG.setVisibility(View.VISIBLE);
 
-            /**
-             *
-             *  Update:
-             *  get measurement id now,
-             *
-             *  /skus/{id}/measurements/{measurement_id}/images
-             *
-             */
-
-            String imageUrl = Constants.BASE_URL + "skus/" + model.getItemId() + "/images";
-
-            if (model.getOrderSKU() != null) {
-                OrderItem.OrderSKU measurement = model.getOrderSKU();
-                imageUrl = Constants.BASE_URL + "skus/" + model.getItemId() + "/measurements/" + measurement.getSkuId() + "/images";
-            }
-
-            if (model.getSuggestion() != null) {
-                Suggestion suggestion = model.getSuggestion();
-                if (suggestion.getSuggestionStatus() == Constants.SUGGESTION_STATUS_EXISTING)
-                    imageUrl = Constants.BASE_URL + "skus/" + suggestion.getItemId() + "/measurements/" + suggestion.getMeasurementId() + "/images";
-                else if (suggestion.getSuggestionStatus() == Constants.SUGGESTION_STATUS_NEW)
-                    imageUrl = "";
-            }
-
-            Log.d("SHRUTI", imageUrl);
-
-            Picasso.get()
-                    .load(imageUrl)
-                    .config(Bitmap.Config.RGB_565)
-                    .placeholder(ContextCompat.getDrawable(orderHolder.mSkuImage.getContext(), R.drawable.ic_placeholder_sku))
-                    .memoryPolicy(MemoryPolicy.NO_CACHE)
-                    .into(orderHolder.mSkuImage);
-
+            setSkuImage(model, orderHolder);
 
             orderHolder.mItemName.setText(model.getItemTitle());
             orderHolder.mQuantity.setText(" x " + model.getQuantity() + " Nos.");
@@ -335,6 +303,7 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
                         updateItemAvailability(orderHolder.mItemAvailability.getContext(), orderHolder.mItemAvailability);
 
                         orderHolder.mQuantityNumber.setText(model.getQuantity() + " Nos.");
+                        setSkuImage(model, orderHolder);
                     } else {
 
                         model.setUpdatedQuantityCount(null);
@@ -375,7 +344,7 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
 
                         orderHolder.mQuantityNumber.setText(model.getQuantity());
                         orderHolder.mAlternateItem.setText("");
-
+                        setSkuImage(model, orderHolder);
                     }
 
                     if (mStatus == Constants.STATUS_OUT_FOR_DELIVERY || mStatus == Constants.STATUS_COMPLETE) {
@@ -623,6 +592,42 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
             orderHolder.mServiceName.setText(model.getServiceName());
         }
 
+
+    }
+
+    private void setSkuImage(OrderItem model, OrderShoppingListHolder orderHolder) {
+        /**
+         *
+         *  Update:
+         *  get measurement id now,
+         *
+         *  /skus/{id}/measurements/{measurement_id}/images
+         *
+         */
+
+        String imageUrl = Constants.BASE_URL + "skus/" + model.getItemId() + "/images";
+
+        if (model.getOrderSKU() != null) {
+            OrderItem.OrderSKU measurement = model.getOrderSKU();
+            imageUrl = Constants.BASE_URL + "skus/" + model.getItemId() + "/measurements/" + measurement.getSkuId() + "/images";
+        }
+
+        if (model.getSuggestion() != null) {
+            Suggestion suggestion = model.getSuggestion();
+            if (suggestion.getSuggestionStatus() == Constants.SUGGESTION_STATUS_EXISTING)
+                imageUrl = Constants.BASE_URL + "skus/" + suggestion.getItemId() + "/measurements/" + suggestion.getMeasurementId() + "/images";
+            else if (suggestion.getSuggestionStatus() == Constants.SUGGESTION_STATUS_NEW)
+                imageUrl = "";
+        }
+
+        Log.d("SHRUTI", imageUrl);
+
+        Picasso.get()
+                .load(imageUrl)
+                .config(Bitmap.Config.RGB_565)
+                .placeholder(ContextCompat.getDrawable(orderHolder.mSkuImage.getContext(), R.drawable.ic_placeholder_sku))
+                .memoryPolicy(MemoryPolicy.NO_CACHE)
+                .into(orderHolder.mSkuImage);
 
     }
 

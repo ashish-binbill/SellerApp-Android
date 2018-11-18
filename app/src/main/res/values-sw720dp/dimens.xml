@@ -57,4 +57,7 @@
     <dimen name="dimen_240dp">480dp</dimen>
     <dimen name="dimen_48dp">96dp</dimen>
 
+    <dimen name="dimen_300dp">600dp</dimen>
+    <dimen name="dimen_350dp">700dp</dimen>
+
 </resources>

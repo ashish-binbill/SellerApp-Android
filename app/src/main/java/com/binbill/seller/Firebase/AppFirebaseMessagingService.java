@@ -157,8 +157,9 @@ public class AppFirebaseMessagingService extends FirebaseMessagingService {
                         .setColor(ContextCompat.getColor(this, R.color.colorPrimary))
                         .setSound(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.notify_order))
                         .setPriority(NotificationManager.IMPORTANCE_HIGH)
-                        .setDefaults(DEFAULT_SOUND | DEFAULT_VIBRATE)
-                        .setCustomBigContentView(createCustomView(AppFirebaseMessagingService.this, title, messageBody, notificationType, orderId));
+                        .setDefaults(DEFAULT_VIBRATE)
+                        .setCustomBigContentView(createCustomView(AppFirebaseMessagingService.this, title, messageBody, notificationType, orderId))
+                        .setContentIntent(getNotificationClickIntent(notificationType, orderId));
 
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);

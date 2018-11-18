@@ -70,6 +70,7 @@ import com.binbill.seller.Login.LoginActivity_;
 import com.binbill.seller.Loyalty.LoyaltyRulesActivity_;
 import com.binbill.seller.Model.DashboardModel;
 import com.binbill.seller.Model.MainCategory;
+import com.binbill.seller.Offers.AddBarCodeOfferActivity_;
 import com.binbill.seller.Order.OrderDetailsActivity_;
 import com.binbill.seller.R;
 import com.binbill.seller.Registration.RegistrationResolver;
@@ -298,6 +299,8 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
                         ProfileModel profileModel = new Gson().fromJson(profileJson.toString(), classType);
                         AppSession.getInstance(DashboardActivity.this).setSellerProfile(profileModel);
 
+                        setUpHomeDeliveryInHamburger();
+
                         JSONArray paymentModesArray = jsonObject.getJSONArray("payment_modes");
                         classType = new TypeToken<ArrayList<MainCategory>>() {
                         }.getType();
@@ -446,6 +449,7 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
                 if (drawer_layout.isDrawerOpen(GravityCompat.START))
                     drawer_layout.closeDrawer(GravityCompat.START);
                 startActivity(new Intent(DashboardActivity.this, LoyaltyRulesActivity_.class));
+
             }
         });
 
@@ -513,45 +517,6 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
         sellerAvailability = (SwitchCompat) findViewById(R.id.tv_availability);
 
         DashboardModel dashboardModel = AppSession.getInstance(this).getDashboardData();
-        final ProfileModel profileModel = AppSession.getInstance(DashboardActivity.this).getSellerProfile();
-
-        if (profileModel != null && profileModel.getSellerDetails() != null && profileModel.getSellerDetails().getBasicDetails() != null
-                && profileModel.getSellerDetails().getBasicDetails().getHomeDelivery().equalsIgnoreCase("true")) {
-            sellerAvailability.setChecked(true);
-        } else {
-            sellerAvailability.setChecked(false);
-        }
-
-        sellerAvailability.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean enable) {
-
-                String homeDelivery;
-                if (enable)
-                    homeDelivery = "true";
-                else
-                    homeDelivery = "false";
-
-                HashMap<String, String> map = new HashMap<>();
-                map.put("home_delivery", homeDelivery);
-
-                new RetrofitHelper(DashboardActivity.this).updateBasicDetails(profileModel.getId(), map, new RetrofitHelper.RetrofitCallback() {
-                    @Override
-                    public void onResponse(String response) {
-                        /**
-                         * Do nothing
-                         */
-                    }
-
-                    @Override
-                    public void onErrorResponse() {
-                        /**
-                         * Do nothing
-                         */
-                    }
-                });
-            }
-        });
 
         TextView apVersion = (TextView) findViewById(R.id.tv_app_version);
         apVersion.setText(
@@ -599,6 +564,8 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
         wallet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (drawer_layout.isDrawerOpen(GravityCompat.START))
+                    drawer_layout.closeDrawer(GravityCompat.START);
                 startActivity(new Intent(DashboardActivity.this, WalletActivity_.class));
             }
         });
@@ -680,6 +647,48 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
             @Override
             public void onErrorResponse() {
 
+            }
+        });
+    }
+
+    private void setUpHomeDeliveryInHamburger() {
+        final ProfileModel profileModel = AppSession.getInstance(DashboardActivity.this).getSellerProfile();
+
+        if (profileModel != null && profileModel.getSellerDetails() != null && profileModel.getSellerDetails().getBasicDetails() != null
+                && profileModel.getSellerDetails().getBasicDetails().getHomeDelivery().equalsIgnoreCase("true")) {
+            sellerAvailability.setChecked(true);
+        } else {
+            sellerAvailability.setChecked(false);
+        }
+
+        sellerAvailability.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean enable) {
+
+                String homeDelivery;
+                if (enable)
+                    homeDelivery = "true";
+                else
+                    homeDelivery = "false";
+
+                HashMap<String, String> map = new HashMap<>();
+                map.put("home_delivery", homeDelivery);
+
+                new RetrofitHelper(DashboardActivity.this).updateBasicDetails(profileModel.getId(), map, new RetrofitHelper.RetrofitCallback() {
+                    @Override
+                    public void onResponse(String response) {
+                        /**
+                         * Do nothing
+                         */
+                    }
+
+                    @Override
+                    public void onErrorResponse() {
+                        /**
+                         * Do nothing
+                         */
+                    }
+                });
             }
         });
     }

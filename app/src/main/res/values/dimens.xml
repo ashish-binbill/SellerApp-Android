@@ -50,5 +50,7 @@
     <dimen name="dimen_24dp">24dp</dimen>
 
     <dimen name="bottom_navigation_icon_size">8dp</dimen>
+    <dimen name="dimen_300dp">300dp</dimen>
+    <dimen name="dimen_350dp">350dp</dimen>
 
 </resources>

@@ -227,7 +227,6 @@ public class AddOfferActivity extends BaseActivity implements BottomSheetHelper.
                         .config(Bitmap.Config.RGB_565)
                         .fit().centerCrop()
                         .into(iv_offer);
-
                 processImageResponse(response);
             }
 

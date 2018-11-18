@@ -225,4 +225,7 @@ public interface RetrofitApiInterface {
 
     @POST(Constants.SUBSCRIBE_FOR_NOTIFICATION)
     Call<JsonObject> subscribeForNotification(@Body HashMap<String, String> body);
+
+    @GET(Constants.GET_SKU_BY_BARCODE)
+    Call<JsonObject> fetchSKUByBarcode(@Path(value = "barcode", encoded = true) String barCode);
 }

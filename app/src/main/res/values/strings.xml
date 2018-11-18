@@ -375,5 +375,12 @@
     <string name="order_ready">Order Ready</string>
     <string name="subscribe_for_notification">Subscribe for Notifications</string>
     <string name="successfully_subsribed_for_notification">You have successfully subscribed for receiving notifications on this device</string>
+    <string name="enter_barcode">Enter Item Barcode Manually</string>
+    <string name="mrp_autofilled">MRP (Autofilled)</string>
+    <string name="percentage">%</string>
+    <string name="add_discount">Add Discount</string>
+    <string name="scan_bar_code">Scan Barcode</string>
+    <string name="create_normal_offer">Create Normal\nOffer</string>
+    <string name="create_barcode_offer">Create Barcode\nOffer</string>
 
 </resources>
