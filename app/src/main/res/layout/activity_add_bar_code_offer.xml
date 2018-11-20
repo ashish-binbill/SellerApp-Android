@@ -32,7 +32,9 @@
             android:orientation="vertical">
 
             <RelativeLayout
+                android:id="@+id/rl_bar_code_scanner"
                 android:layout_width="match_parent"
+                android:visibility="visible"
                 android:layout_height="@dimen/dimen_300dp">
 
                 <FrameLayout
@@ -44,18 +46,18 @@
                 <ImageView
                     android:id="@+id/iv_reset"
                     android:layout_width="wrap_content"
-                    android:src="@android:drawable/star_big_on"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="@dimen/dimen_15dp"
                     android:layout_marginTop="@dimen/dimen_15dp"
-                    android:layout_height="wrap_content" />
+                    android:src="@drawable/ic_refresh" />
 
                 <TextView
                     android:id="@+id/scan_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
                     android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
                     android:gravity="center"
                     android:text="@string/scan_bar_code"
                     android:textColor="@color/color_white_40"
@@ -70,21 +72,77 @@
                 android:orientation="vertical"
                 android:padding="@dimen/dimen_15dp">
 
-                <EditText
-                    android:id="@+id/et_barcode"
+                <ImageView
+                    android:id="@+id/iv_offer"
+                    android:layout_width="@dimen/dimen_120dp"
+                    android:layout_marginTop="@dimen/dimen_10dp"
+                    android:layout_height="@dimen/dimen_120dp"
+                    android:layout_gravity="center"
+                    android:visibility="gone"
+                    android:src="@drawable/ic_placeholder_sku" />
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dimen_45dp"
                     android:layout_marginTop="@dimen/dimen_20dp"
                     android:background="@drawable/edittext_bg"
-                    android:hint="@string/enter_barcode"
-                    android:inputType="text"
-                    android:lineSpacingExtra="-1sp"
-                    android:maxLength="15"
-                    android:paddingLeft="@dimen/dimen_12dp"
-                    android:paddingRight="@dimen/dimen_12dp"
-                    android:textColor="@color/text_44"
-                    android:textColorHint="@color/hint_color"
-                    android:textSize="@dimen/dimen_15dp" />
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/et_barcode"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:hint="@string/enter_barcode"
+                        android:inputType="text"
+                        android:lineSpacingExtra="-1sp"
+                        android:maxLength="15"
+                        android:paddingLeft="@dimen/dimen_12dp"
+                        android:paddingRight="@dimen/dimen_12dp"
+                        android:textColor="@color/text_44"
+                        android:textColorHint="@color/hint_color"
+                        android:textSize="@dimen/dimen_15dp" />
+
+                    <TextView
+                        android:id="@+id/tv_search"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/dimen_10dp"
+                        android:fontFamily="sans-serif-bold"
+                        android:text="@string/search"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/dimen_15dp" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_error_barcode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:layout_marginLeft="@dimen/dimen_5dp"
+                    android:layout_marginTop="@dimen/dimen_5dp"
+                    android:fontFamily="sans-serif"
+                    android:text=""
+                    android:textColor="@android:color/holo_red_light"
+                    android:textSize="@dimen/dimen_10dp"
+                    android:textStyle="normal"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/tv_item_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:layout_marginLeft="@dimen/dimen_5dp"
+                    android:layout_marginTop="@dimen/dimen_5dp"
+                    android:fontFamily="sans-serif-medium"
+                    android:text=""
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/dimen_14dp"
+                    android:textStyle="normal"
+                    android:visibility="gone" />
 
                 <com.binbill.seller.CustomViews.PrefixEditText
                     android:id="@+id/et_mrp"
@@ -92,6 +150,8 @@
                     android:layout_height="@dimen/dimen_45dp"
                     android:layout_marginTop="@dimen/dimen_20dp"
                     android:background="@drawable/edittext_bg"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
                     android:hint="@string/mrp_autofilled"
                     android:inputType="number"
                     android:lineSpacingExtra="-1sp"
@@ -102,6 +162,20 @@
                     android:textColorHint="@color/hint_color"
                     android:textSize="@dimen/dimen_15dp"
                     app:prefix_string="@string/rupee_sign" />
+
+                <TextView
+                    android:id="@+id/tv_error_mrp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:layout_marginLeft="@dimen/dimen_5dp"
+                    android:layout_marginTop="@dimen/dimen_5dp"
+                    android:fontFamily="sans-serif"
+                    android:text=""
+                    android:textColor="@android:color/holo_red_light"
+                    android:textSize="@dimen/dimen_10dp"
+                    android:textStyle="normal"
+                    android:visibility="gone" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -138,6 +212,20 @@
 
 
                 </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_error_discount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:layout_marginLeft="@dimen/dimen_5dp"
+                    android:layout_marginTop="@dimen/dimen_5dp"
+                    android:fontFamily="sans-serif"
+                    android:text=""
+                    android:textColor="@android:color/holo_red_light"
+                    android:textSize="@dimen/dimen_10dp"
+                    android:textStyle="normal"
+                    android:visibility="gone" />
 
                 <EditText
                     android:id="@+id/et_expiry_date"

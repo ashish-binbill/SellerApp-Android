@@ -382,5 +382,9 @@
     <string name="scan_bar_code">Scan Barcode</string>
     <string name="create_normal_offer">Create Normal\nOffer</string>
     <string name="create_barcode_offer">Create Barcode\nOffer</string>
+    <string name="offer_published_success_barcode">Your offer is successfully published.</string>
+    <string name="sku_not_found">Sorry! We were not able to find this barcode in our database</string>
+    <string name="please_click_search_sku">Please search the barcode for us to verify.</string>
+    <string name="incorrect_barcode">Barcode seems to be incorrect.</string>
 
 </resources>

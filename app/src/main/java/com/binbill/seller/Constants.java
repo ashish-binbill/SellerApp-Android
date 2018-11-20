@@ -190,4 +190,6 @@ public class Constants {
     public static final int TYPE_LOADING = 1;
     public static final int ORDER_PAGE_SIZE = 10;
     public static final int CUSTOMER_PAGE_SIZE = 5;
+    public static final int TYPE_NORMAL_OFFER = 1;
+    public static final int TYPE_BARCODE_OFFER = 2;
 }

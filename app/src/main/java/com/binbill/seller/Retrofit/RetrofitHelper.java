@@ -945,7 +945,7 @@ public class RetrofitHelper {
         });
     }
 
-    public void fetchSKUFromBarCode(String barCode, final RetrofitCallback retrofitCallback){
+    public void fetchSKUFromBarCode(String barCode, final RetrofitCallback retrofitCallback) {
         RetrofitApiInterface apiService =
                 RetrofitHelper.getClient(mContext).create(RetrofitApiInterface.class);
 
@@ -1241,6 +1241,45 @@ public class RetrofitHelper {
         });
     }
 
+    public void addBarCodeOfferFromSeller(String skuId, String skuMeasurementId, String discount, String expiry, String offerId, final RetrofitCallback retrofitCallback) {
+        RetrofitApiInterface apiService =
+                RetrofitHelper.getClient(mContext).create(RetrofitApiInterface.class);
+
+        Calendar calendar = Calendar.getInstance();
+        String myFormat = "yyyy-MM-dd";
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.ENGLISH);
+
+        HashMap<String, String> offerObject = new HashMap<String, String>();
+        offerObject.put("start_date", sdf.format(calendar.getTime()));
+        offerObject.put("sku_id", skuId);
+        offerObject.put("sku_measurement_id", skuMeasurementId);
+        offerObject.put("offer_discount", discount);
+
+
+        if (offerId != null && !Utility.isEmpty(offerId))
+            offerObject.put("id", offerId);
+
+        offerObject.put("end_date", expiry);
+
+        Call<JsonObject> call = apiService.addOffer(AppSession.getInstance(mContext).getSellerId(), offerObject);
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (response.isSuccessful()) {
+                    JsonObject body = response.body();
+                    retrofitCallback.onResponse(body.toString());
+                } else
+                    retrofitCallback.onErrorResponse();
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable throwable) {
+                retrofitCallback.onErrorResponse();
+            }
+        });
+    }
+
+
     public void addOfferFromSeller(String title, String description, String expiry, String fileUploadDetails, String offerId, final RetrofitCallback retrofitCallback) {
         RetrofitApiInterface apiService =
                 RetrofitHelper.getClient(mContext).create(RetrofitApiInterface.class);
@@ -1291,6 +1330,28 @@ public class RetrofitHelper {
                 RetrofitHelper.getClient(mContext).create(RetrofitApiInterface.class);
 
         Call<JsonObject> call = apiService.fetchOffers(identifier);
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (response.isSuccessful()) {
+                    JsonObject body = response.body();
+                    retrofitCallback.onResponse(body.toString());
+                } else
+                    retrofitCallback.onErrorResponse();
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable throwable) {
+                retrofitCallback.onErrorResponse();
+            }
+        });
+    }
+
+    public void fetchBarcodeOffersForSeller(String identifier, final RetrofitCallback retrofitCallback) {
+        RetrofitApiInterface apiService =
+                RetrofitHelper.getClient(mContext).create(RetrofitApiInterface.class);
+
+        Call<JsonObject> call = apiService.fetchBarcodeOffers(identifier, true);
         call.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {

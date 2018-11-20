@@ -126,7 +126,10 @@ public class OTPLoginActivity extends BaseActivity {
                         isSmsReceiverOnReceiveCalled = true;
                         Log.d("Text", messageText);
                         auto_read.setVisibility(View.GONE);
-                        otp_view.setText(messageText.substring(messageText.indexOf("\"") + 1, messageText.lastIndexOf("\"")));
+
+                        if (messageText.contains("\"")) {
+                            otp_view.setText(messageText.substring(messageText.indexOf("\"") + 1, messageText.lastIndexOf("\"")));
+                        }
 //                        s.callOnClick();
                         isSmsReceiverOnReceiveCalled = false;
                     }

@@ -59,6 +59,9 @@ public interface RetrofitApiInterface {
     @GET(Constants.GET_OFFERS)
     Call<JsonObject> fetchOffers(@Path(value = "id", encoded = true) String identifier);
 
+    @GET(Constants.GET_OFFERS)
+    Call<JsonObject> fetchBarcodeOffers(@Path(value = "id", encoded = true) String identifier, @Query(value = "on_sku", encoded = true) boolean isTrue);
+
     @PUT(Constants.ADD_OFFER)
     Call<JsonObject> addOffer(@Path(value = "id", encoded = true) String identifier, @Body HashMap<String, String> body);
 

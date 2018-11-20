@@ -1,6 +1,7 @@
 package com.binbill.seller.Offers;
 
 import com.binbill.seller.Model.FileItem;
+import com.binbill.seller.Order.OrderItem;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
@@ -24,6 +25,9 @@ public class OfferItem implements Serializable {
     @SerializedName("document_details")
     ArrayList<FileItem> offerFiles;
 
+    @SerializedName("sku")
+    OfferSku sku;
+
     public ArrayList<FileItem> getOfferFiles() {
         return offerFiles;
     }
@@ -42,5 +46,75 @@ public class OfferItem implements Serializable {
 
     public String getOfferId() {
         return offerId;
+    }
+
+    public OfferSku getSku() {
+        return sku;
+    }
+
+    public class OfferSku implements Serializable{
+
+        @SerializedName("id")
+        String id;
+
+        @SerializedName("sku_id")
+        String skuId;
+
+        @SerializedName("sku_measurement_id")
+        String skuMeasurementId;
+
+        @SerializedName("offer_discount")
+        String offerDiscount;
+
+        @SerializedName("offer_id")
+        String offerId;
+
+        @SerializedName("sku_title")
+        String skuTitle;
+
+        @SerializedName("measurement_value")
+        String measurementValue;
+
+        @SerializedName("acronym")
+        String acronym;
+
+        @SerializedName("mrp")
+        String mrp;
+
+        public String getId() {
+            return id;
+        }
+
+        public String getSkuId() {
+            return skuId;
+        }
+
+        public String getSkuMeasurementId() {
+            return skuMeasurementId;
+        }
+
+        public String getOfferDiscount() {
+            return offerDiscount;
+        }
+
+        public String getOfferId() {
+            return offerId;
+        }
+
+        public String getSkuTitle() {
+            return skuTitle;
+        }
+
+        public String getMeasurementValue() {
+            return measurementValue;
+        }
+
+        public String getAcronym() {
+            return acronym;
+        }
+
+        public String getMrp() {
+            return mrp;
+        }
     }
 }

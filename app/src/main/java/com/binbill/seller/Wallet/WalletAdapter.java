@@ -80,7 +80,7 @@ public class WalletAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
          * Credit
          */
         if (model.getTransactionType().equalsIgnoreCase("1")) {
-            walletHolder.mDate.setText(Utility.getFormattedDate(10, model.getDate(), 0));
+            walletHolder.mDate.setText(Utility.getFormattedDate(9, model.getDate(), 0));
             walletHolder.mTransactionId.setText(" " + model.getId());
             walletHolder.mAmount.setText("+ " + model.getAmount());
             walletHolder.mAmount.setTextColor(ContextCompat.getColor(walletHolder.mAmount.getContext(), R.color.status_green));
@@ -234,7 +234,7 @@ public class WalletAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             /**
              * Debit
              */
-            walletHolder.mDate.setText(Utility.getFormattedDate(10, model.getDate(), 0));
+            walletHolder.mDate.setText(Utility.getFormattedDate(9, model.getDate(), 0));
             walletHolder.mTransactionId.setText(" " + model.getId());
             walletHolder.mAmount.setText("- " + model.getAmount());
             walletHolder.mAmount.setTextColor(ContextCompat.getColor(walletHolder.mAmount.getContext(), R.color.text_44));
