@@ -22,6 +22,7 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:screenOrientation="portrait"
         android:supportsRtl="true"
+        android:largeHeap="true"
         android:theme="@style/AppTheme">
         <service
             android:name=".Firebase.AppFirebaseMessagingService"
@@ -191,7 +192,8 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 
-        <activity android:name=".Offers.AddBarCodeOfferActivity_"
+        <activity
+            android:name=".Offers.AddBarCodeOfferActivity_"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"></activity>
 

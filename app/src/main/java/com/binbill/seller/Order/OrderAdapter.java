@@ -231,8 +231,12 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     ViewCompat.setBackgroundTintList(orderHolder.mStatusColor, ContextCompat.getColorStateList(orderHolder.mStatusColor.getContext(), R.color.status_yellow));
                     if (model.getOrderType().equalsIgnoreCase(Constants.ORDER_TYPE_SERVICE))
                         orderHolder.mStatus.setText(orderHolder.mStatus.getContext().getString(R.string.provider_accepted));
-                    else
-                        orderHolder.mStatus.setText(orderHolder.mStatus.getContext().getString(R.string.in_progress));
+                    else {
+                        if (model.isCollectAtStore())
+                            orderHolder.mStatus.setText(orderHolder.mStatus.getContext().getString(R.string.order_ready));
+                        else
+                            orderHolder.mStatus.setText(orderHolder.mStatus.getContext().getString(R.string.in_progress));
+                    }
                     break;
                 case Constants.STATUS_CANCEL:
                     ViewCompat.setBackgroundTintList(orderHolder.mStatusColor, ContextCompat.getColorStateList(orderHolder.mStatusColor.getContext(), R.color.status_red));

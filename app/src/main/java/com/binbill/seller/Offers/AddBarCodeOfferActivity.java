@@ -142,6 +142,11 @@ public class AddBarCodeOfferActivity extends BaseActivity implements ZXingScanne
                 .placeholder(ContextCompat.getDrawable(this, R.drawable.ic_placeholder_sku))
                 .memoryPolicy(MemoryPolicy.NO_CACHE)
                 .into(iv_offer);
+
+        tv_item_name.setText(mOfferItem.getSku().getSkuTitle() + " - " + mOfferItem.getSku().getMeasurementValue() + " " + mOfferItem.getSku().getAcronym());
+        tv_item_name.setVisibility(View.VISIBLE);
+
+        tv_search.setVisibility(View.GONE);
     }
 
     private void checkCameraPermission() {
@@ -328,6 +333,8 @@ public class AddBarCodeOfferActivity extends BaseActivity implements ZXingScanne
             btn_submit.setVisibility(View.GONE);
             btn_submit_progress.setVisibility(View.VISIBLE);
 
+
+            Utility.hideKeyboard(this, btn_submit_progress);
             makeUploadDataToServerCall();
         }
     }

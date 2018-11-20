@@ -1121,8 +1121,12 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                     tv_order_status.setTextColor(ContextCompat.getColor(this, R.color.status_yellow));
                     if (orderDetails.getOrderType().equalsIgnoreCase(Constants.ORDER_TYPE_SERVICE))
                         tv_order_status.setText(getString(R.string.provider_accepted));
-                    else
-                        tv_order_status.setText(getString(R.string.in_progress));
+                    else {
+                        if (orderDetails.isCollectAtStore())
+                            tv_order_status.setText(getString(R.string.order_ready));
+                        else
+                            tv_order_status.setText(getString(R.string.in_progress));
+                    }
                     changeButtonStateToApproval(2);
                     break;
                 case Constants.STATUS_CANCEL:
