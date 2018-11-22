@@ -2,6 +2,7 @@ package com.binbill.seller.Order;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -45,7 +46,7 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
         private final ItemPriceEditTextListener itemPriceListener;
         private final ItemPriceSuggestionMeasurementTextListener itemPriceSuggestionMeasurementTextListener;
         protected View mRootCard;
-        protected TextView mItemName, mQuantity, mItemAvailability, mMeasurement, mServiceName, mSKUPrice;
+        protected TextView mItemName, mQuantity, mItemAvailability, mMeasurement, mServiceName, mSKUPrice, mOfferedPrice;
         protected EditText mItemPrice, mAvailableQuantity, mAvailableQuantityNewItem, mQuantityNumber, mAlternateItem;
         protected View mDivider;
         protected ImageView mSkuImage;
@@ -65,6 +66,7 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
             mItemPrice = (EditText) view.findViewById(R.id.et_item_price);
             mSkuImage = (ImageView) view.findViewById(R.id.ic_sku_image);
             mSKUPrice = (TextView) view.findViewById(R.id.tv_item_price);
+            mOfferedPrice = (TextView) view.findViewById(R.id.tv_offered_price);
             mItemAvailability = (TextView) view.findViewById(R.id.tv_item_unavailable);
             mAvailableQuantity = (EditText) view.findViewById(R.id.et_quantity);
             mAvailableQuantityNewItem = (EditText) view.findViewById(R.id.et_quantity_other_item);
@@ -81,6 +83,7 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
 
     private class ItemPriceEditTextListener implements TextWatcher {
         private int position;
+        private String previousValue = "";
 
         public void updatePosition(int position) {
             this.position = position;
@@ -88,7 +91,7 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
 
         @Override
         public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-            // no op
+            previousValue = charSequence.toString();
         }
 
         @Override
@@ -102,6 +105,53 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
             if (!Utility.isEmpty(editable.toString())) {
                 String newPrice = editable.toString();
                 mList.get(position).setUpdatedPrice(newPrice.trim());
+            } else {
+                mList.get(position).setUpdatedPrice("");
+            }
+
+            OrderItem item = mList.get(position);
+            if (item.getSuggestion() == null && !Utility.isEmpty(item.getUpdatedPrice()) && !Utility.isEmpty(item.getOfferDiscount()) && Float.parseFloat(item.getOfferDiscount()) > 0) {
+
+                float discount = Float.parseFloat(item.getOfferDiscount());
+                float unitPrice = Float.parseFloat(item.getUpdatedPrice());
+
+                float offeredPrice = unitPrice - (unitPrice * discount / 100);
+
+                item.setTempOfferPrice(Utility.getFormattedString(offeredPrice));
+            } else if (item.getSuggestion() != null){
+
+                if (item.getSuggestion().getSuggestionSku() != null &&
+                    item.getSuggestion().getSuggestionSku().getMeasurement() != null && item.getSuggestion().getSuggestionSku().getMeasurement().size() > 0
+                    && !Utility.isEmpty(item.getSuggestion().getSuggestionSku().getMeasurement().get(0).getOfferDiscount())
+                    && Float.parseFloat(item.getSuggestion().getSuggestionSku().getMeasurement().get(0).getOfferDiscount()) > 0) {
+
+                    SuggestionSku suggestionSku = item.getSuggestion().getSuggestionSku();
+
+                    float discount = Float.parseFloat(suggestionSku.getMeasurement().get(0).getOfferDiscount());
+
+                    String price = suggestionSku.getMeasurement().get(0).getSkuMrp();
+                    if (!Utility.isEmpty(item.getUpdatedPrice()))
+                        price = item.getUpdatedPrice();
+
+                    Suggestion suggestion = item.getSuggestion();
+                    suggestion.setSuggestionPrice(price);
+
+                    float unitPrice = Float.parseFloat(price);
+
+                    float offeredPrice = unitPrice - (unitPrice * discount / 100);
+
+                    item.setTempOfferPrice(Utility.getFormattedString(offeredPrice));
+                }
+            } else
+                item.setTempOfferPrice("0");
+
+            if (!previousValue.equalsIgnoreCase(editable.toString())) {
+                new Handler().post(new Runnable() {
+                    @Override
+                    public void run() {
+                        notifyItemChanged(position);
+                    }
+                });
             }
 
             if (listener != null)
@@ -140,6 +190,7 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
                 mList.get(position).setSuggestion(suggestion);
             }
         }
+
     }
 
     private ArrayList<OrderItem> mList;
@@ -213,8 +264,9 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
             } else
                 orderHolder.mQuantityNumber.setText(model.getQuantity() + " Nos.");
 
+
             /**
-             * Any change in itemPrice, please do it in NA click listner as well.
+             * Any change in itemPrice, please do it in NA click listener as well.
              * Same code there
              */
             if (mStatus == Constants.STATUS_OUT_FOR_DELIVERY || mStatus == Constants.STATUS_COMPLETE) {
@@ -223,16 +275,16 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
                 else
                     orderHolder.mItemPrice.setText("");
             } else {
-                if (!Utility.isEmpty(model.getUpdatedPrice()) && Utility.isValueNonZero(model.getUpdatedPrice()))
-                    orderHolder.mItemPrice.setText(model.getUpdatedPrice());
-                else
-                    orderHolder.mItemPrice.setText("");
-            }
-
-            if (model.getSuggestion() != null) {
-                if (!Utility.isEmpty(model.getSuggestion().getSuggestionPrice()) && Utility.isValueNonZero(model.getSuggestion().getSuggestionPrice()))
-                    orderHolder.mItemPrice.setText(model.getSuggestion().getSuggestionPrice());
-                else {
+                if (model.getSuggestion() != null) {
+                    if (!Utility.isEmpty(model.getSuggestion().getSuggestionPrice()) && Utility.isValueNonZero(model.getSuggestion().getSuggestionPrice()))
+                        orderHolder.mItemPrice.setText(model.getSuggestion().getSuggestionPrice());
+                    else {
+                        if (!Utility.isEmpty(model.getUpdatedPrice()) && Utility.isValueNonZero(model.getUpdatedPrice()))
+                            orderHolder.mItemPrice.setText(model.getUpdatedPrice());
+                        else
+                            orderHolder.mItemPrice.setText("");
+                    }
+                } else {
                     if (!Utility.isEmpty(model.getUpdatedPrice()) && Utility.isValueNonZero(model.getUpdatedPrice()))
                         orderHolder.mItemPrice.setText(model.getUpdatedPrice());
                     else
@@ -353,16 +405,17 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
                         else
                             orderHolder.mItemPrice.setText("");
                     } else {
-                        if (!Utility.isEmpty(model.getUpdatedPrice()) && Utility.isValueNonZero(model.getUpdatedPrice()))
-                            orderHolder.mItemPrice.setText(model.getUpdatedPrice());
-                        else
-                            orderHolder.mItemPrice.setText("");
-                    }
 
-                    if (model.getSuggestion() != null) {
-                        if (!Utility.isEmpty(model.getSuggestion().getSuggestionPrice()) && Utility.isValueNonZero(model.getSuggestion().getSuggestionPrice()))
-                            orderHolder.mItemPrice.setText(model.getSuggestion().getSuggestionPrice());
-                        else {
+                        if (model.getSuggestion() != null) {
+                            if (!Utility.isEmpty(model.getSuggestion().getSuggestionPrice()) && Utility.isValueNonZero(model.getSuggestion().getSuggestionPrice()))
+                                orderHolder.mItemPrice.setText(model.getSuggestion().getSuggestionPrice());
+                            else {
+                                if (!Utility.isEmpty(model.getUpdatedPrice()) && Utility.isValueNonZero(model.getUpdatedPrice()))
+                                    orderHolder.mItemPrice.setText(model.getUpdatedPrice());
+                                else
+                                    orderHolder.mItemPrice.setText("");
+                            }
+                        } else {
                             if (!Utility.isEmpty(model.getUpdatedPrice()) && Utility.isValueNonZero(model.getUpdatedPrice()))
                                 orderHolder.mItemPrice.setText(model.getUpdatedPrice());
                             else
@@ -580,6 +633,29 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
                 orderHolder.mSKUPrice.setVisibility(View.VISIBLE);
 
             }
+
+            if (mStatus != Constants.STATUS_CANCEL && mStatus != Constants.STATUS_COMPLETE &&
+                    mStatus != Constants.STATUS_OUT_FOR_DELIVERY && mStatus != Constants.STATUS_REJECTED &&
+                    mStatus != Constants.STATUS_AUTO_CANCEL && mStatus != Constants.STATUS_AUTO_EXPIRED) {
+                if (!Utility.isEmpty(model.getTempOfferPrice()) && !model.getTempOfferPrice().equalsIgnoreCase(model.getUpdatedPrice())
+                        && Utility.isValueNonZero(model.getTempOfferPrice())) {
+
+                    String offerDiscount = model.getOfferDiscount();
+                    if (model.getSuggestion() != null && model.getSuggestion().getSuggestionSku() != null &&
+                            model.getSuggestion().getSuggestionSku().getMeasurement() != null && model.getSuggestion().getSuggestionSku().getMeasurement().size() > 0
+                            && !Utility.isEmpty(model.getSuggestion().getSuggestionSku().getMeasurement().get(0).getOfferDiscount()))
+
+                        offerDiscount = model.getSuggestion().getSuggestionSku().getMeasurement().get(0).getOfferDiscount();
+
+                    orderHolder.mOfferedPrice.setText(orderHolder.mOfferedPrice.getContext()
+                            .getString(R.string.offered_price, Utility.showDoubleString(model.getTempOfferPrice()), offerDiscount));
+                    orderHolder.mOfferedPrice.setVisibility(View.VISIBLE);
+                } else
+                    orderHolder.mOfferedPrice.setVisibility(View.GONE);
+            }
+
+            orderHolder.mItemPrice.setSelection(orderHolder.mItemPrice.getText().toString().length());
+
         } else if (mOrderType.equalsIgnoreCase(Constants.ORDER_TYPE_SERVICE)) {
             orderHolder.layoutService.setVisibility(View.VISIBLE);
             orderHolder.layoutFMCG.setVisibility(View.GONE);
@@ -591,7 +667,23 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
 
             orderHolder.mServiceName.setText(model.getServiceName());
         }
+    }
 
+    private void showOfferedPrice(OrderItem model, OrderShoppingListHolder orderHolder) {
+        /**
+         * Offered Price Logic
+         */
+        if (!Utility.isEmpty(model.getOfferDiscount()) && Float.parseFloat(model.getOfferDiscount()) > 0) {
+            float discount = Float.parseFloat(model.getOfferDiscount());
+            float unitPrice = Float.parseFloat(model.getUpdatedPrice());
+
+            float offeredPrice = unitPrice - (unitPrice * discount / 100);
+
+            orderHolder.mOfferedPrice.setText(orderHolder.mOfferedPrice.getContext()
+                    .getString(R.string.offered_price, Utility.getFormattedString(offeredPrice), Utility.getFormattedString(discount)));
+            orderHolder.mOfferedPrice.setVisibility(View.VISIBLE);
+        } else
+            orderHolder.mOfferedPrice.setVisibility(View.GONE);
 
     }
 
@@ -618,16 +710,23 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
                 imageUrl = Constants.BASE_URL + "skus/" + suggestion.getItemId() + "/measurements/" + suggestion.getMeasurementId() + "/images";
             else if (suggestion.getSuggestionStatus() == Constants.SUGGESTION_STATUS_NEW)
                 imageUrl = "";
+            else
+                imageUrl = Constants.BASE_URL + "skus/" + suggestion.getItemId() + "/measurements/" + suggestion.getMeasurementId() + "/images";
         }
+
 
         Log.d("SHRUTI", imageUrl);
 
-        Picasso.get()
-                .load(imageUrl)
-                .config(Bitmap.Config.RGB_565)
-                .placeholder(ContextCompat.getDrawable(orderHolder.mSkuImage.getContext(), R.drawable.ic_placeholder_sku))
-                .memoryPolicy(MemoryPolicy.NO_CACHE)
-                .into(orderHolder.mSkuImage);
+        if (!Utility.isEmpty(imageUrl)) {
+            Picasso.get()
+                    .load(imageUrl)
+                    .config(Bitmap.Config.RGB_565)
+                    .placeholder(ContextCompat.getDrawable(orderHolder.mSkuImage.getContext(), R.drawable.ic_placeholder_sku))
+                    .memoryPolicy(MemoryPolicy.NO_CACHE)
+                    .into(orderHolder.mSkuImage);
+        } else {
+            orderHolder.mSkuImage.setImageDrawable(ContextCompat.getDrawable(orderHolder.mSkuImage.getContext(), R.drawable.ic_placeholder_sku));
+        }
 
     }
 

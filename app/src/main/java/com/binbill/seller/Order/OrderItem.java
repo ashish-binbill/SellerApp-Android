@@ -56,6 +56,9 @@ public class OrderItem implements Serializable {
     @SerializedName("updated_quantity")
     String updatedQuantityCount;
 
+    @SerializedName("offer_discount")
+    String offerDiscount;
+
     /******************************************** TYPE_SERVICE ****************************************/
     /**
      *  "end_date": "2018-09-14T09:46:55.891Z",
@@ -85,6 +88,20 @@ public class OrderItem implements Serializable {
 
     @SerializedName("suggestion")
     Suggestion suggestion;
+
+    transient String tempOfferPrice;
+
+    public String getTempOfferPrice() {
+        return tempOfferPrice;
+    }
+
+    public void setTempOfferPrice(String tempOfferPrice) {
+        this.tempOfferPrice = tempOfferPrice;
+    }
+
+    public String getOfferDiscount() {
+        return offerDiscount;
+    }
 
     public String getUid() {
         return uid;
@@ -197,6 +214,13 @@ public class OrderItem implements Serializable {
 
         @SerializedName("measurement_acronym")
         String skuMeasurementAcronym;
+
+        @SerializedName("offer_discount")
+        String offerDiscount;
+
+        public String getOfferDiscount() {
+            return offerDiscount;
+        }
 
         public void setSkuMrp(String skuMrp) {
             this.skuMrp = skuMrp;

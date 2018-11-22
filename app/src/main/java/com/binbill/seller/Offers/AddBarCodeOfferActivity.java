@@ -120,12 +120,12 @@ public class AddBarCodeOfferActivity extends BaseActivity implements ZXingScanne
     }
 
     private void setUpData(OfferItem offerItem) {
-        et_barcode.setText("6876");
+        et_barcode.setText(offerItem.getSku().getBarCode());
         et_barcode.setFocusableInTouchMode(false);
         et_barcode.setFocusable(false);
 
         et_mrp.setText(offerItem.getSku().getMrp());
-        et_discount.setText(offerItem.getSku().getOfferDiscount());
+        et_discount.setText(offerItem.getOfferDiscount());
 
         et_expiry_date.setText(Utility.getFormattedDate(12, offerItem.getOfferEndDate(), 0));
         mOfferId = offerItem.getOfferId();
@@ -135,7 +135,7 @@ public class AddBarCodeOfferActivity extends BaseActivity implements ZXingScanne
         rl_bar_code_scanner.setVisibility(View.GONE);
         iv_offer.setVisibility(View.VISIBLE);
 
-        String imageUrl = Constants.BASE_URL + "skus/" + mOfferItem.getSku().getSkuId() + "/measurements/" + mOfferItem.getSku().getSkuMeasurementId() + "/images";
+        String imageUrl = Constants.BASE_URL + "skus/" + mOfferItem.getSkuId() + "/measurements/" + mOfferItem.getSkuMeasurementId() + "/images";
         Picasso.get()
                 .load(imageUrl)
                 .config(Bitmap.Config.RGB_565)
@@ -403,8 +403,8 @@ public class AddBarCodeOfferActivity extends BaseActivity implements ZXingScanne
             skuId = suggestionSku.getId();
             skuMeasurementId = suggestionSku.getBarcodeMeasurement().getSkuId();
         } else {
-            skuId = mOfferItem.getSku().getSkuId();
-            skuMeasurementId = mOfferItem.getSku().getSkuMeasurementId();
+            skuId = mOfferItem.getSkuId();
+            skuMeasurementId = mOfferItem.getSkuMeasurementId();
         }
 
         String discount = et_discount.getText().toString();

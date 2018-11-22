@@ -34,9 +34,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top"
-                android:layout_marginTop="@dimen/dimen_5dp"
-                android:layout_marginRight="@dimen/dimen_5dp"
                 android:layout_marginLeft="@dimen/dimen_15dp"
+                android:layout_marginRight="@dimen/dimen_5dp"
+                android:layout_marginTop="@dimen/dimen_5dp"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
@@ -74,6 +74,17 @@
                         android:textSize="@dimen/dimen_11dp" />
                 </LinearLayout>
 
+                <TextView
+                    android:id="@+id/tv_offered_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:fontFamily="sans-serif-medium"
+                    android:layout_marginTop="@dimen/dimen_10dp"
+                    android:text="@string/offered_price"
+                    android:textColor="@color/color_33c600"
+                    android:textSize="@dimen/dimen_12dp" />
+
             </LinearLayout>
 
             <TextView
@@ -93,12 +104,12 @@
                 android:id="@+id/tv_item_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/text_77"
-                android:text="Rs 600"
-                android:visibility="gone"
                 android:layout_gravity="top"
                 android:layout_marginTop="@dimen/dimen_8dp"
-                android:textSize="@dimen/dimen_12dp" />
+                android:text="Rs 600"
+                android:textColor="@color/text_77"
+                android:textSize="@dimen/dimen_12dp"
+                android:visibility="gone" />
 
         </LinearLayout>
 

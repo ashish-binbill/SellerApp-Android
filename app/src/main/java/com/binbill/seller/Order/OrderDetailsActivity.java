@@ -102,7 +102,7 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
     RecyclerView rv_shopping_list;
 
     @ViewById
-    LinearLayout shimmer_view_container, ll_user_action, ll_bill_layout, start_time, end_time, time_elapsed, ll_amount_entry;
+    LinearLayout shimmer_view_container, ll_offer_layout, ll_user_action, ll_bill_layout, start_time, end_time, time_elapsed, ll_amount_entry, ll_call_customer;
     private Order orderDetails;
 
     @ViewById
@@ -112,7 +112,7 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
     FrameLayout fl_icon_chat;
 
     @ViewById
-    PrefixEditText et_total_amount;
+    PrefixEditText et_total_amount, et_offered_amount;
 
     @ViewById
     TextView tv_delivery_review, tv_seller_review;
@@ -244,6 +244,17 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
     };
 
     private void setUpListener() {
+
+        ll_call_customer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (orderDetails.getUser() != null && orderDetails.getUser().getUserMobile() != null) {
+                    Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + orderDetails.getUser().getUserMobile()));
+                    startActivity(intent);
+                }
+            }
+        });
+
         btn_decline.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -725,6 +736,28 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
 
         } else {
 
+            /**
+             * PATCH: Save suggestionSku in suggestion java object
+             */
+            for (OrderItem item : orderDetails.getOrderItems()) {
+                if (item.getSuggestion() != null && item.getSuggestion().getMeasurement() != null) {
+
+                    SuggestionSku suggestionSku = item.getSuggestion().getSuggestionSku();
+                    if (suggestionSku == null)
+                        suggestionSku = new SuggestionSku();
+
+                    ArrayList<OrderItem.OrderSKU> skuArray = new ArrayList<>();
+                    skuArray.add(item.getSuggestion().getMeasurement());
+
+                    suggestionSku.setMeasurement(skuArray);
+
+                    Suggestion suggestion = item.getSuggestion();
+                    suggestion.setSuggestionSku(suggestionSku);
+
+                    item.setSuggestion(suggestion);
+                }
+            }
+
             if (orderDetails.getOrderStatus() != Constants.STATUS_COMPLETE)
                 if (orderDetails.getDeliveryUser() != null) {
                     DeliveryAgentAdapter.DeliveryAgentHolder deliveryAgentHolder = new DeliveryAgentAdapter.DeliveryAgentHolder(cv_root_fmcg_delivery);
@@ -816,8 +849,18 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
             ArrayList<OrderItem> orderItems = mAdapter.getUpdatedOrderList();
 
             double totalAmount = 0;
+            double offerAmount = 0;
             for (OrderItem item : orderItems) {
-                if (!Utility.isEmpty(item.getUpdatedPrice()) && Utility.isValueNonZero(item.getUpdatedPrice())) {
+
+                String price = item.getUpdatedPrice();
+                boolean showOfferAmount = true;
+                if (orderDetails.getOrderStatus() == Constants.STATUS_COMPLETE ||
+                        orderDetails.getOrderStatus() == Constants.STATUS_OUT_FOR_DELIVERY) {
+                    price = item.getSellingPrice();
+                    showOfferAmount = false;
+                }
+
+                if (!Utility.isEmpty(price) && Utility.isValueNonZero(price)) {
 
                     int quantity = 1;
                     try {
@@ -832,10 +875,40 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                         quantity = 1;
                     }
 
-                    totalAmount = totalAmount + (quantity * Double.parseDouble(item.getUpdatedPrice()));
+                    totalAmount = totalAmount + (quantity * Double.parseDouble(price));
+                }
+
+                if (showOfferAmount) {
+                    if (!Utility.isEmpty(item.getTempOfferPrice()) && Utility.isValueNonZero(item.getTempOfferPrice())) {
+
+                        int quantity = 1;
+                        try {
+
+                            if (!Utility.isEmpty(item.getQuantity()))
+                                quantity = Integer.parseInt(item.getQuantity());
+
+                            if (!Utility.isEmpty(item.getUpdatedQuantityCount()))
+                                quantity = Integer.parseInt(item.getUpdatedQuantityCount());
+
+                        } catch (Exception e) {
+                            quantity = 1;
+                        }
+
+                        offerAmount = offerAmount + (quantity * Double.parseDouble(item.getTempOfferPrice()));
+                    }
                 }
             }
 
+            if (orderDetails.getOrderStatus() != Constants.STATUS_CANCEL && orderDetails.getOrderStatus() != Constants.STATUS_COMPLETE &&
+                    orderDetails.getOrderStatus() != Constants.STATUS_OUT_FOR_DELIVERY && orderDetails.getOrderStatus() != Constants.STATUS_REJECTED &&
+                    orderDetails.getOrderStatus() != Constants.STATUS_AUTO_CANCEL && orderDetails.getOrderStatus() != Constants.STATUS_AUTO_EXPIRED) {
+                if (Double.compare(totalAmount, offerAmount) != 0 && Utility.isValueNonZero(String.valueOf(offerAmount))) {
+                    ll_offer_layout.setVisibility(View.VISIBLE);
+                    et_offered_amount.setText(Utility.showDoubleString(offerAmount));
+                }
+            }
+
+            Log.d("XYZ", "PRICE: " + Utility.showDoubleString(totalAmount));
             et_total_amount.setText(Utility.showDoubleString(totalAmount));
         }
     }
@@ -1122,10 +1195,7 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                     if (orderDetails.getOrderType().equalsIgnoreCase(Constants.ORDER_TYPE_SERVICE))
                         tv_order_status.setText(getString(R.string.provider_accepted));
                     else {
-                        if (orderDetails.isCollectAtStore())
-                            tv_order_status.setText(getString(R.string.order_ready));
-                        else
-                            tv_order_status.setText(getString(R.string.in_progress));
+                        tv_order_status.setText(getString(R.string.in_progress));
                     }
                     changeButtonStateToApproval(2);
                     break;
@@ -1659,6 +1729,7 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
 
                 suggestion.setItemName(sku.getTitle());
                 suggestion.setItemId(sku.getId());
+                suggestion.setSuggestionSku(sku);
                 suggestion.setSuggestionStatus(Constants.SUGGESTION_STATUS_EXISTING);
 
                 OrderItem.OrderSKU measurement = sku.getMeasurement().get(0);

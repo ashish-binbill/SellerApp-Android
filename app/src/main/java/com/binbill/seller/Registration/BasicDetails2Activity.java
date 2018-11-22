@@ -101,12 +101,15 @@ public class BasicDetails2Activity extends BaseActivity implements OptionListFra
         if (getIntent().hasExtra(Constants.PROFILE_MODEL)) {
             mMode = Constants.EDIT_MODE;
             ProfileModel profileModel = (ProfileModel) getIntent().getSerializableExtra(Constants.PROFILE_MODEL);
-            sellerId = profileModel.getId();
 
-            if (profileModel.getSellerDetails() != null)
-                basicDetails = profileModel.getSellerDetails().getBasicDetails();
+            if (profileModel != null) {
+                sellerId = profileModel.getId();
 
-            setUpData();
+                if (profileModel.getSellerDetails() != null)
+                    basicDetails = profileModel.getSellerDetails().getBasicDetails();
+
+                setUpData();
+            }
         }
 
         if (userRegistrationDetails != null && userRegistrationDetails.isAssisted() && !userRegistrationDetails.isFmcg()) {

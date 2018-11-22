@@ -232,10 +232,7 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     if (model.getOrderType().equalsIgnoreCase(Constants.ORDER_TYPE_SERVICE))
                         orderHolder.mStatus.setText(orderHolder.mStatus.getContext().getString(R.string.provider_accepted));
                     else {
-                        if (model.isCollectAtStore())
-                            orderHolder.mStatus.setText(orderHolder.mStatus.getContext().getString(R.string.order_ready));
-                        else
-                            orderHolder.mStatus.setText(orderHolder.mStatus.getContext().getString(R.string.in_progress));
+                        orderHolder.mStatus.setText(orderHolder.mStatus.getContext().getString(R.string.in_progress));
                     }
                     break;
                 case Constants.STATUS_CANCEL:
@@ -255,8 +252,12 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     ViewCompat.setBackgroundTintList(orderHolder.mStatusColor, ContextCompat.getColorStateList(orderHolder.mStatusColor.getContext(), R.color.status_blue));
                     if (model.getOrderType().equalsIgnoreCase(Constants.ORDER_TYPE_SERVICE))
                         orderHolder.mStatus.setText(orderHolder.mStatus.getContext().getString(R.string.provider_assigned));
-                    else
-                        orderHolder.mStatus.setText(orderHolder.mStatus.getContext().getString(R.string.out_for_delivery));
+                    else {
+                        if (model.isCollectAtStore())
+                            orderHolder.mStatus.setText(orderHolder.mStatus.getContext().getString(R.string.order_ready));
+                        else
+                            orderHolder.mStatus.setText(orderHolder.mStatus.getContext().getString(R.string.out_for_delivery));
+                    }
                     break;
                 case Constants.STATUS_JOB_STARTED:
                     ViewCompat.setBackgroundTintList(orderHolder.mStatusColor, ContextCompat.getColorStateList(orderHolder.mStatusColor.getContext(), R.color.status_blue));

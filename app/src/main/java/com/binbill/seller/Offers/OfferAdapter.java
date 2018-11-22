@@ -180,11 +180,11 @@ public class OfferAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         offerHolder.mTitle.setText(model.getSkuTitle());
         offerHolder.mMrp.setText("MRP " + model.getMrp());
-        offerHolder.mDiscount.setText(model.getOfferDiscount() + "% Discount");
+        offerHolder.mDiscount.setText(offerItem.getOfferDiscount() + "% Discount");
         offerHolder.mExpiry.setText("Expires on: " + Utility.getFormattedDate(14, offerItem.getOfferEndDate(), 0));
 
 
-        String imageUrl = Constants.BASE_URL + "skus/" + model.getSkuId() + "/measurements/" + model.getSkuMeasurementId() + "/images";
+        String imageUrl = Constants.BASE_URL + "skus/" + offerItem.getSkuId() + "/measurements/" + offerItem.getSkuMeasurementId() + "/images";
         Picasso.get()
                 .load(imageUrl)
                 .config(Bitmap.Config.RGB_565)

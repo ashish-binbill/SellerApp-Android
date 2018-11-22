@@ -37,6 +37,10 @@ public class SuggestionSku implements Serializable{
     @SerializedName("sku_measurement")
     OrderItem.OrderSKU barcodeMeasurement;
 
+    public void setMeasurement(ArrayList<OrderItem.OrderSKU> measurement) {
+        this.measurement = measurement;
+    }
+
     public OrderItem.OrderSKU getBarcodeMeasurement() {
         return barcodeMeasurement;
     }

@@ -28,6 +28,15 @@ public class OfferItem implements Serializable {
     @SerializedName("sku")
     OfferSku sku;
 
+    @SerializedName("sku_id")
+    String skuId;
+
+    @SerializedName("sku_measurement_id")
+    String skuMeasurementId;
+
+    @SerializedName("offer_discount")
+    String offerDiscount;
+
     public ArrayList<FileItem> getOfferFiles() {
         return offerFiles;
     }
@@ -52,22 +61,19 @@ public class OfferItem implements Serializable {
         return sku;
     }
 
+    public String getSkuId() {
+        return skuId;
+    }
+
+    public String getSkuMeasurementId() {
+        return skuMeasurementId;
+    }
+
+    public String getOfferDiscount() {
+        return offerDiscount;
+    }
+
     public class OfferSku implements Serializable{
-
-        @SerializedName("id")
-        String id;
-
-        @SerializedName("sku_id")
-        String skuId;
-
-        @SerializedName("sku_measurement_id")
-        String skuMeasurementId;
-
-        @SerializedName("offer_discount")
-        String offerDiscount;
-
-        @SerializedName("offer_id")
-        String offerId;
 
         @SerializedName("sku_title")
         String skuTitle;
@@ -81,25 +87,8 @@ public class OfferItem implements Serializable {
         @SerializedName("mrp")
         String mrp;
 
-        public String getId() {
-            return id;
-        }
-
-        public String getSkuId() {
-            return skuId;
-        }
-
-        public String getSkuMeasurementId() {
-            return skuMeasurementId;
-        }
-
-        public String getOfferDiscount() {
-            return offerDiscount;
-        }
-
-        public String getOfferId() {
-            return offerId;
-        }
+        @SerializedName("bar_code")
+        String barCode;
 
         public String getSkuTitle() {
             return skuTitle;
@@ -115,6 +104,10 @@ public class OfferItem implements Serializable {
 
         public String getMrp() {
             return mrp;
+        }
+
+        public String getBarCode() {
+            return barCode;
         }
     }
 }

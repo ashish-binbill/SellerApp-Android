@@ -185,6 +185,13 @@ public class Utility {
         return "";
     }
 
+    public static String getFormattedString(double d) {
+        if (d == (long) d) {
+            return showDoubleString(d);
+        } else
+            return String.format("%s", d);
+    }
+
     public static String getFormattedDate(int type, String dateTime, int dateFormat) {
 
         String formattedDate = null;
@@ -634,6 +641,16 @@ public class Utility {
         String formatted = formatter.format(value);
         return formatted;
     }
+
+    public static String showDoubleString(String value) {
+
+        double input = Double.parseDouble(value);
+
+        DecimalFormat formatter = new DecimalFormat("###.##");
+        String formatted = formatter.format(input);
+        return formatted;
+    }
+
 
     public static String loadJSONFromAsset(Context context, String fileName) {
         String json = null;

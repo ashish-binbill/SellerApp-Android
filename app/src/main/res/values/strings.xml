@@ -373,7 +373,7 @@
     <string name="pay_online">Accept Online Payments</string>
     <string name="collect_at_store">Collect At Store</string>
     <string name="order_ready">Order Ready</string>
-    <string name="subscribe_for_notification">Subscribe for Notifications</string>
+    <string name="subscribe_for_notification">Get Notifications</string>
     <string name="successfully_subsribed_for_notification">You have successfully subscribed for receiving notifications on this device</string>
     <string name="enter_barcode">Enter Item Barcode Manually</string>
     <string name="mrp_autofilled">MRP (Autofilled)</string>
@@ -386,5 +386,8 @@
     <string name="sku_not_found">Sorry! We were not able to find this barcode in our database</string>
     <string name="please_click_search_sku">Please search the barcode for us to verify.</string>
     <string name="incorrect_barcode">Barcode seems to be incorrect.</string>
+    <string name="call">Call</string>
+    <string name="offered_price">Offered Price: ₹ %1$s (%2$s %% Off)</string>
+    <string name="amount_after_discount">Amount after discount</string>
 
 </resources>

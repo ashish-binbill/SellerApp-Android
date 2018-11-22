@@ -4,6 +4,7 @@ import com.binbill.seller.Constants;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class Suggestion implements Serializable {
 
@@ -18,6 +19,23 @@ public class Suggestion implements Serializable {
 
     @SerializedName("measurement_id")
     String measurementId;
+
+    @SerializedName("sku_measurement")
+    OrderItem.OrderSKU measurement;
+
+    transient SuggestionSku suggestionSku;
+
+    public void setSuggestionSku(SuggestionSku suggestionSku) {
+        this.suggestionSku = suggestionSku;
+    }
+
+    public SuggestionSku getSuggestionSku() {
+        return suggestionSku;
+    }
+
+    public OrderItem.OrderSKU getMeasurement() {
+        return measurement;
+    }
 
     transient String suggestionPrice;
 

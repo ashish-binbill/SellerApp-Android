@@ -494,10 +494,9 @@ public class AddOfferActivity extends BaseActivity implements BottomSheetHelper.
     private void enableDisableVerifyButton() {
 
         String offerName = et_offer_name.getText().toString();
-        String offerDescription = et_offer_description.getText().toString();
         String offerExpiry = et_expiry_date.getText().toString();
 
-        if (!Utility.isEmpty(offerName.trim()) && !Utility.isEmpty(offerDescription.trim()) && !Utility.isEmpty(offerExpiry.trim()))
+        if (!Utility.isEmpty(offerName.trim()) && !Utility.isEmpty(offerExpiry.trim()))
             Utility.enableButton(this, btn_submit, true);
         else
             Utility.enableButton(this, btn_submit, false);
@@ -516,16 +515,17 @@ public class AddOfferActivity extends BaseActivity implements BottomSheetHelper.
             return false;
         }
 
-        /**
-         * OFFER DESCRIPTION
-         */
-        String offerDescription = et_offer_description.getText().toString().trim();
-        if (TextUtils.isEmpty(offerDescription)) {
-            tv_error_offer_description.setText(getString(R.string.error_field_cannot_be_empty));
-            tv_error_offer_description.setVisibility(View.VISIBLE);
-            scroll_view.scrollTo(0, tv_error_offer_description.getBottom());
-            return false;
-        }
+        // Update: removed description
+//        /**
+//         * OFFER DESCRIPTION
+//         */
+//        String offerDescription = et_offer_description.getText().toString().trim();
+//        if (TextUtils.isEmpty(offerDescription)) {
+//            tv_error_offer_description.setText(getString(R.string.error_field_cannot_be_empty));
+//            tv_error_offer_description.setVisibility(View.VISIBLE);
+//            scroll_view.scrollTo(0, tv_error_offer_description.getBottom());
+//            return false;
+//        }
 
         /**
          * OFFER EXPIRY

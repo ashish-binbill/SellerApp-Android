@@ -227,6 +227,58 @@ public class WalletAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                                 walletHolder.userImage.setImageDrawable(ContextCompat.getDrawable(walletHolder.userImage.getContext(), R.drawable.ic_user));
                             }
                         });
+            } else if (model.getCashbackSource().equalsIgnoreCase("5")) {
+                walletHolder.mTitle.setText(model.getTitle());
+                walletHolder.mUserName.setText(walletHolder.mUserName.getContext().getString(R.string.name_string, model.getUserName()));
+                walletHolder.mUserName.setVisibility(View.VISIBLE);
+
+                final String authToken = SharedPref.getString(walletHolder.userImage.getContext(), SharedPref.AUTH_TOKEN);
+                OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                        .authenticator(new Authenticator() {
+                            @Override
+                            public Request authenticate(Route route, Response response) throws IOException {
+                                return response.request().newBuilder()
+                                        .header("Authorization", authToken)
+                                        .build();
+                            }
+                        }).build();
+
+                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                        RelativeLayout.LayoutParams.MATCH_PARENT,
+                        RelativeLayout.LayoutParams.MATCH_PARENT
+                );
+                params.setMargins(0, 0, 0, 0);
+                walletHolder.userImage.setLayoutParams(params);
+
+                Picasso picasso = new Picasso.Builder(walletHolder.userImage.getContext())
+                        .downloader(new OkHttp3Downloader(okHttpClient))
+                        .build();
+                picasso.load(Constants.BASE_URL + "customer/" + model.getUserId() + "/images")
+                        .config(Bitmap.Config.RGB_565)
+                        .memoryPolicy(MemoryPolicy.NO_CACHE)
+                        .into(walletHolder.userImage, new Callback() {
+                            @Override
+                            public void onSuccess() {
+                                Bitmap imageBitmap = ((BitmapDrawable) walletHolder.userImage.getDrawable()).getBitmap();
+                                RoundedBitmapDrawable imageDrawable = RoundedBitmapDrawableFactory.create(walletHolder.userImage.getContext().getResources(), imageBitmap);
+                                imageDrawable.setCircular(true);
+                                walletHolder.userImage.setImageDrawable(imageDrawable);
+                            }
+
+                            @Override
+                            public void onError(Exception e) {
+                                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                                        RelativeLayout.LayoutParams.MATCH_PARENT,
+                                        RelativeLayout.LayoutParams.MATCH_PARENT
+                                );
+
+                                int margins = Utility.convertDPtoPx(walletHolder.userImage.getContext(), 5);
+                                params.setMargins(margins, margins, margins, margins);
+                                walletHolder.userImage.setLayoutParams(params);
+
+                                walletHolder.userImage.setImageDrawable(ContextCompat.getDrawable(walletHolder.userImage.getContext(), R.drawable.ic_user));
+                            }
+                        });
             }
             walletHolder.mStatus.setVisibility(View.GONE);
         } else {
@@ -255,6 +307,7 @@ public class WalletAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 walletHolder.mStatus.setText(walletHolder.mStatus.getContext().getString(R.string.success));
                 walletHolder.mStatus.setBackground(ContextCompat.getDrawable(walletHolder.mStatus.getContext(), R.drawable.verification_tag));
             }
+
             walletHolder.mStatus.setVisibility(View.VISIBLE);
 
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
@@ -267,6 +320,18 @@ public class WalletAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             walletHolder.userImage.setLayoutParams(params);
 
             walletHolder.userImage.setImageDrawable(ContextCompat.getDrawable(walletHolder.userImage.getContext(), R.drawable.ic_paytm));
+
+            if (model.getCashbackSource().equalsIgnoreCase("5")) {
+                /**
+                 * success
+                 */
+                walletHolder.mStatus.setText(walletHolder.mStatus.getContext().getString(R.string.success));
+                walletHolder.mStatus.setBackground(ContextCompat.getDrawable(walletHolder.mStatus.getContext(), R.drawable.verification_tag));
+                walletHolder.mTitle.setText(model.getTitle());
+
+                walletHolder.userImage.setImageDrawable(ContextCompat.getDrawable(walletHolder.userImage.getContext(), R.drawable.ic_binbill));
+
+            }
         }
     }
 }
