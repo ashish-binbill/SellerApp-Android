@@ -9,7 +9,7 @@
     <dimen name="design_tab_text_size" tools:override="true">22dp</dimen>
 
     <dimen name="dimen_5dp">7.5dp</dimen>
-    <dimen name="bottom_navigation_icon_size">40dp</dimen>
+    <dimen name="bottom_navigation_icon_size">35dp</dimen>
 
     <dimen name="dimen_10dp">15dp</dimen>
     <dimen name="dimen_13dp">20dp</dimen>

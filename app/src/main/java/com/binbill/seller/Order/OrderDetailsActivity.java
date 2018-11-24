@@ -895,6 +895,24 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                         }
 
                         offerAmount = offerAmount + (quantity * Double.parseDouble(item.getTempOfferPrice()));
+                    } else {
+
+                        if (!Utility.isEmpty(price) && Utility.isValueNonZero(price)) {
+                            int quantity = 1;
+                            try {
+
+                                if (!Utility.isEmpty(item.getQuantity()))
+                                    quantity = Integer.parseInt(item.getQuantity());
+
+                                if (!Utility.isEmpty(item.getUpdatedQuantityCount()))
+                                    quantity = Integer.parseInt(item.getUpdatedQuantityCount());
+
+                            } catch (Exception e) {
+                                quantity = 1;
+                            }
+
+                            offerAmount = offerAmount + (quantity * Double.parseDouble(price));
+                        }
                     }
                 }
             }
@@ -905,6 +923,8 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                 if (Double.compare(totalAmount, offerAmount) != 0 && Utility.isValueNonZero(String.valueOf(offerAmount))) {
                     ll_offer_layout.setVisibility(View.VISIBLE);
                     et_offered_amount.setText(Utility.showDoubleString(offerAmount));
+                } else {
+                    ll_offer_layout.setVisibility(View.GONE);
                 }
             }
 

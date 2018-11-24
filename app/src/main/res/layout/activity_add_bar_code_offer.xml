@@ -172,11 +172,11 @@
                     android:layout_marginLeft="@dimen/dimen_5dp"
                     android:layout_marginTop="@dimen/dimen_5dp"
                     android:fontFamily="sans-serif"
-                    android:text=""
-                    android:textColor="@android:color/holo_red_light"
+                    android:text="@string/mrp_disclaimer"
+                    android:textColor="@color/hint_color"
                     android:textSize="@dimen/dimen_10dp"
                     android:textStyle="normal"
-                    android:visibility="gone" />
+                    android:visibility="visible" />
 
                 <LinearLayout
                     android:layout_width="match_parent"

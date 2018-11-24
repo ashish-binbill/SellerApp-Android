@@ -29,8 +29,6 @@ import com.binbill.seller.R;
 import com.binbill.seller.SharedPref;
 import com.binbill.seller.Utility;
 import com.squareup.picasso.Callback;
-import com.squareup.picasso.MemoryPolicy;
-import com.squareup.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
@@ -134,8 +132,10 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             Calendar last7days = Calendar.getInstance();
             last7days.add(Calendar.DAY_OF_YEAR, -10);
 
-            List<Message> messageList = new MobiComConversationService(orderHolder.mUserName.getContext()).getMessages("user_" + model.getUserId(), last7days.getTimeInMillis(), calendar.getTimeInMillis());
-            int contactUnreadCount = new MessageDatabaseService(orderHolder.mUserName.getContext()).getUnreadMessageCountForContact("user_" + model.getUserId());
+            List<Message> messageList =
+                    new MobiComConversationService(orderHolder.mUserName.getContext()).getMessages("user_" + model.getUserId(), last7days.getTimeInMillis(), calendar.getTimeInMillis());
+            int contactUnreadCount =
+                    new MessageDatabaseService(orderHolder.mUserName.getContext()).getUnreadMessageCountForContact("user_" + model.getUserId());
             if (messageList != null && messageList.size() > 0) {
                 orderHolder.mIconChat.setVisibility(View.VISIBLE);
 
@@ -292,12 +292,8 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
                     orderHolder.userImage.setScaleType(ImageView.ScaleType.FIT_XY);
 
-                    Picasso picasso = new Picasso.Builder(orderHolder.userImage.getContext())
-                            .downloader(new OkHttp3Downloader(okHttpClient))
-                            .build();
-                    picasso.load(Constants.BASE_URL + "customer/" + model.getUserId() + "/images")
+                    Picasso.get().load(Constants.BASE_URL + "customer/" + model.getUserId() + "/images")
                             .config(Bitmap.Config.RGB_565)
-                            .memoryPolicy(MemoryPolicy.NO_CACHE)
                             .into(orderHolder.userImage, new Callback() {
                                 @Override
                                 public void onSuccess() {

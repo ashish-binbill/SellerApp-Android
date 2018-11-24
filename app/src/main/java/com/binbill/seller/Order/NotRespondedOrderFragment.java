@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -100,6 +102,9 @@ public class NotRespondedOrderFragment extends Fragment implements OrderAdapter.
         noDataLayout = (LinearLayout) view.findViewById(R.id.no_data_layout);
         TextView noDataText = (TextView) noDataLayout.findViewById(R.id.tv_no_data);
         noDataText.setText(getString(R.string.no_orders_not_responded));
+
+        ImageView noDataImage = (ImageView) noDataLayout.findViewById(R.id.iv_no_data_image);
+        noDataImage.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_no_data_smile));
 
         AppButton noDataButton = (AppButton) noDataLayout.findViewById(R.id.btn_no_data);
         noDataButton.setVisibility(View.GONE);

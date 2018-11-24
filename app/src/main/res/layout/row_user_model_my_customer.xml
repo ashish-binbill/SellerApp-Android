@@ -154,11 +154,21 @@
                     android:id="@+id/tv_address"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/dimen_7dp"
                     android:layout_marginTop="@dimen/dimen_5dp"
                     android:fontFamily="sans-serif-light"
                     android:textColor="@color/text_77"
                     android:textSize="@dimen/dimen_12dp" />
+
+                <TextView
+                    android:id="@+id/tv_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimen_5dp"
+                    android:layout_marginBottom="@dimen/dimen_7dp"
+                    android:lineSpacingExtra="8sp"
+                    android:text=""
+                    android:textColor="#999999"
+                    android:textSize="@dimen/dimen_11dp" />
 
             </LinearLayout>
 

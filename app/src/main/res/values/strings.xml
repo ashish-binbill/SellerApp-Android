@@ -98,8 +98,8 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="manage_offers">Promote Offers</string>
     <string name="manage_your_products_categories">Manage Your Products Categories</string>
-    <string name="no_offers_added">Add your Offer here to publish it for customers and increase visibility and sales</string>
-    <string name="add_offers">Add Offers</string>
+    <string name="no_offers_added">Simply scan the Offer SKU with the Barcode Scanner to publish it for your customers</string>
+    <string name="add_offers">Add Offer</string>
     <string name="my_offers">My Offers</string>
     <string name="create_new_offer">Create New Offer</string>
     <string name="update_new_offer">Update Offer</string>
@@ -310,7 +310,7 @@
     <string name="redeemed_at_paytm">Redeemed at Paytm</string>
     <string name="insufficient_wallet_amount">The amount in your wallet is insufficient to redeem.</string>
     <string name="onboarding_title_1">Multiply Your Sales</string>
-    <string name="onboarding_sub_title_1">Increase your Store Footfalls as well as combat Online Players by grabbing Online Sales on our platform.</string>
+    <string name="onboarding_sub_title_1">Increase your Store Footfall as well as combat Online Players by grabbing Online Sales on our platform.</string>
     <string name="onboarding_title_2">Build Customer Loyalty</string>
     <string name="onboarding_sub_title_2">Retain your customers through Effective  Communication of In Store Offers, Successful Loyalty Programs visible to your customers and by Earning Cashback on Home Delivery.</string>
     <string name="onboarding_title_3">Home Services for Income Boost</string>
@@ -380,14 +380,15 @@
     <string name="percentage">%</string>
     <string name="add_discount">Add Discount</string>
     <string name="scan_bar_code">Scan Barcode</string>
-    <string name="create_normal_offer">Create Normal\nOffer</string>
+    <string name="create_normal_offer">Create General\nOffer</string>
     <string name="create_barcode_offer">Create Barcode\nOffer</string>
     <string name="offer_published_success_barcode">Your offer is successfully published.</string>
-    <string name="sku_not_found">Sorry! We were not able to find this barcode in our database</string>
+    <string name="sku_not_found">Oops, we do not have this SKU in our database. You can create this Offer in the General section</string>
     <string name="please_click_search_sku">Please search the barcode for us to verify.</string>
     <string name="incorrect_barcode">Barcode seems to be incorrect.</string>
     <string name="call">Call</string>
     <string name="offered_price">Offered Price: ₹ %1$s (%2$s %% Off)</string>
     <string name="amount_after_discount">Amount after discount</string>
+    <string name="mrp_disclaimer">* MRP can be edited at the time of Customer Order</string>
 
 </resources>

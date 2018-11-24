@@ -118,32 +118,35 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
                 float offeredPrice = unitPrice - (unitPrice * discount / 100);
 
                 item.setTempOfferPrice(Utility.getFormattedString(offeredPrice));
-            } else if (item.getSuggestion() != null){
+            } else if (item.getSuggestion() != null) {
 
                 if (item.getSuggestion().getSuggestionSku() != null &&
-                    item.getSuggestion().getSuggestionSku().getMeasurement() != null && item.getSuggestion().getSuggestionSku().getMeasurement().size() > 0
-                    && !Utility.isEmpty(item.getSuggestion().getSuggestionSku().getMeasurement().get(0).getOfferDiscount())
-                    && Float.parseFloat(item.getSuggestion().getSuggestionSku().getMeasurement().get(0).getOfferDiscount()) > 0) {
+                        item.getSuggestion().getSuggestionSku().getMeasurement() != null && item.getSuggestion().getSuggestionSku().getMeasurement().size() > 0) {
 
                     SuggestionSku suggestionSku = item.getSuggestion().getSuggestionSku();
-
-                    float discount = Float.parseFloat(suggestionSku.getMeasurement().get(0).getOfferDiscount());
-
-                    String price = suggestionSku.getMeasurement().get(0).getSkuMrp();
-                    if (!Utility.isEmpty(item.getUpdatedPrice()))
-                        price = item.getUpdatedPrice();
+                    String price = item.getUpdatedPrice();
 
                     Suggestion suggestion = item.getSuggestion();
                     suggestion.setSuggestionPrice(price);
 
-                    float unitPrice = Float.parseFloat(price);
+                    if (!Utility.isEmpty(price) && !Utility.isEmpty(item.getSuggestion().getSuggestionSku().getMeasurement().get(0).getOfferDiscount())
+                            && Float.parseFloat(item.getSuggestion().getSuggestionSku().getMeasurement().get(0).getOfferDiscount()) > 0) {
 
-                    float offeredPrice = unitPrice - (unitPrice * discount / 100);
+                        float discount = Float.parseFloat(suggestionSku.getMeasurement().get(0).getOfferDiscount());
 
-                    item.setTempOfferPrice(Utility.getFormattedString(offeredPrice));
+                        float unitPrice = Float.parseFloat(price);
+
+                        float offeredPrice = unitPrice - (unitPrice * discount / 100);
+
+                        item.setTempOfferPrice(Utility.getFormattedString(offeredPrice));
+                    }
                 }
-            } else
-                item.setTempOfferPrice("0");
+            } else {
+                item.setTempOfferPrice("");
+            }
+
+            if (Utility.isEmpty(editable.toString()))
+                item.setTempOfferPrice("");
 
             if (!previousValue.equalsIgnoreCase(editable.toString())) {
                 new Handler().post(new Runnable() {
@@ -156,6 +159,7 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
 
             if (listener != null)
                 listener.onItemAmountChanged();
+
         }
     }
 
@@ -637,7 +641,7 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
             if (mStatus != Constants.STATUS_CANCEL && mStatus != Constants.STATUS_COMPLETE &&
                     mStatus != Constants.STATUS_OUT_FOR_DELIVERY && mStatus != Constants.STATUS_REJECTED &&
                     mStatus != Constants.STATUS_AUTO_CANCEL && mStatus != Constants.STATUS_AUTO_EXPIRED) {
-                if (!Utility.isEmpty(model.getTempOfferPrice()) && !model.getTempOfferPrice().equalsIgnoreCase(model.getUpdatedPrice())
+                if (!model.getTempOfferPrice().equalsIgnoreCase(model.getUpdatedPrice())
                         && Utility.isValueNonZero(model.getTempOfferPrice())) {
 
                     String offerDiscount = model.getOfferDiscount();

@@ -20,8 +20,6 @@ import android.widget.TextView;
 import com.binbill.seller.Constants;
 import com.binbill.seller.CustomViews.AppButton;
 import com.binbill.seller.Model.UserModel;
-import com.binbill.seller.Order.Order;
-import com.binbill.seller.Order.OrderAdapter;
 import com.binbill.seller.R;
 import com.binbill.seller.Retrofit.RetrofitHelper;
 import com.binbill.seller.SharedPref;
@@ -139,7 +137,7 @@ public class UserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
     public static class MyCustomerHolder extends RecyclerView.ViewHolder {
         protected View mRootCard;
         protected CardView mCard;
-        protected TextView mUserName, mUserTransactions, mUserCredit, mUserAddress, mUserPoints, mAddCredits, mAddPoints, mDistance, mStatus;
+        protected TextView mUserName, mDate, mUserTransactions, mUserCredit, mUserAddress, mUserPoints, mAddCredits, mAddPoints, mDistance, mStatus;
         protected ImageView userImage;
 
         public MyCustomerHolder(View view) {
@@ -156,6 +154,7 @@ public class UserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             mAddPoints = (TextView) view.findViewById(R.id.tv_add_points);
             mDistance = (TextView) view.findViewById(R.id.tv_distance);
             mStatus = (TextView) view.findViewById(R.id.tv_user_status);
+            mDate = (TextView) view.findViewById(R.id.tv_date);
 
         }
     }
@@ -237,6 +236,9 @@ public class UserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             final MyCustomerHolder userHolder = (MyCustomerHolder) holder;
 
             final UserModel model = mFilteredList.get(position);
+
+            if (!Utility.isEmpty(model.getDateTimeOfUserCreation()))
+                userHolder.mDate.setText(Utility.getFormattedDate(9, model.getDateTimeOfUserCreation(), 0));
 
             if (!Utility.isEmpty(model.getUserName()))
                 userHolder.mUserName.setText(model.getUserName());
@@ -352,10 +354,14 @@ public class UserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                         mListener.onAddPoints(position);
                 }
             });
-        }else if (getItemViewType(position) == Constants.TYPE_LOADING) {
+        } else if (getItemViewType(position) == Constants.TYPE_LOADING) {
             UserAdapter.LoadingViewHolder loadingViewHolder = (UserAdapter.LoadingViewHolder) holder;
             loadingViewHolder.mShimmerFrameLayout.setVisibility(View.VISIBLE);
         }
+    }
+
+    public ArrayList<UserModel> getFilteredList() {
+        return mFilteredList;
     }
 
     private void onBindOfferHolder(RecyclerView.ViewHolder holder, final int position) {

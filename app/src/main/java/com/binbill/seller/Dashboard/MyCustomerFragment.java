@@ -290,7 +290,7 @@ public class MyCustomerFragment extends Fragment implements UserAdapter.CardInte
 
     @Override
     public void onCardClicked(int position) {
-        UserModel selectedModel = mUserList.get(position);
+        UserModel selectedModel = mAdapter.getFilteredList().get(position);
         Intent intent = new Intent(getActivity(), UserInformationActivity_.class);
         intent.putExtra(Constants.USER_MODEL, selectedModel);
         startActivity(intent);
@@ -298,13 +298,13 @@ public class MyCustomerFragment extends Fragment implements UserAdapter.CardInte
 
     @Override
     public void onAddPoints(int position) {
-        UserModel selectedModel = mUserList.get(position);
+        UserModel selectedModel = mAdapter.getFilteredList().get(position);
         invokeAddSettleCreditDialog(ADD_POINTS, selectedModel.getUserId());
     }
 
     @Override
     public void onAddCredits(int position) {
-        UserModel selectedModel = mUserList.get(position);
+        UserModel selectedModel = mAdapter.getFilteredList().get(position);
         invokeAddSettleCreditDialog(ADD_CREDIT, selectedModel.getUserId());
     }
 

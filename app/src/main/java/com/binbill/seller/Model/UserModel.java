@@ -82,6 +82,13 @@ public class UserModel implements Serializable {
     @SerializedName("is_credit_allowed")
     String isCreditAllowed;
 
+    @SerializedName("created_at")
+    String dateTimeOfUserCreation;
+
+    public String getDateTimeOfUserCreation() {
+        return dateTimeOfUserCreation;
+    }
+
     public String getIsCreditAllowed() {
         return isCreditAllowed;
     }

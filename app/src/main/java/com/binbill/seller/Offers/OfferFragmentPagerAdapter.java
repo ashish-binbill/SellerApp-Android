@@ -10,8 +10,8 @@ import com.binbill.seller.Order.PastOrderFragment;
 
 public class OfferFragmentPagerAdapter extends FragmentStatePagerAdapter {
 
-    final int PAGE_COUNT = 2;
-    private String tabTitles[] = new String[]{"Normal", "Bar Code"};
+    final int PAGE_COUNT = 1;
+    private String tabTitles[] = new String[]{"BarCode"};
 
     public OfferFragmentPagerAdapter(FragmentManager fm) {
         super(fm);
@@ -28,8 +28,8 @@ public class OfferFragmentPagerAdapter extends FragmentStatePagerAdapter {
 
         switch (position) {
             case 0:
-                return NormalOfferFragment.newInstance();
-            case 1:
+//                return NormalOfferFragment.newInstance();
+//            case 1:
                 return BarCodeOfferFragment.newInstance();
 
         }

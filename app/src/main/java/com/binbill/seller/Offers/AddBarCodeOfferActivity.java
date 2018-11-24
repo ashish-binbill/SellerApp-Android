@@ -82,7 +82,7 @@ public class AddBarCodeOfferActivity extends BaseActivity implements ZXingScanne
     RelativeLayout rl_bar_code_scanner;
 
     @ViewById
-    TextView tv_error_offer_expiry, tv_error_mrp, tv_error_barcode, tv_error_discount, tv_search, tv_item_name;
+    TextView tv_error_offer_expiry, tv_error_barcode, tv_error_discount, tv_search, tv_item_name;
 
     @ViewById
     ImageView iv_reset;
@@ -325,7 +325,6 @@ public class AddBarCodeOfferActivity extends BaseActivity implements ZXingScanne
         if (isValid()) {
 
             tv_error_discount.setVisibility(View.GONE);
-            tv_error_mrp.setVisibility(View.GONE);
             tv_error_barcode.setVisibility(View.GONE);
             tv_error_offer_expiry.setVisibility(View.GONE);
 
@@ -356,17 +355,6 @@ public class AddBarCodeOfferActivity extends BaseActivity implements ZXingScanne
             tv_error_barcode.setText(getString(R.string.incorrect_barcode));
             tv_error_barcode.setVisibility(View.VISIBLE);
             scroll_view.scrollTo(0, tv_error_barcode.getBottom());
-            return false;
-        }
-
-        /**
-         * MRP
-         */
-        String mrp = et_mrp.getText().toString().trim();
-        if (TextUtils.isEmpty(mrp)) {
-            tv_error_mrp.setText(getString(R.string.error_field_cannot_be_empty));
-            tv_error_mrp.setVisibility(View.VISIBLE);
-            scroll_view.scrollTo(0, tv_error_mrp.getBottom());
             return false;
         }
 

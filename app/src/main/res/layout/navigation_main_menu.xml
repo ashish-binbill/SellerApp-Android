@@ -232,6 +232,7 @@
             android:lineSpacingExtra="1sp"
             android:padding="@dimen/dimen_15dp"
             android:text="@string/share_app"
+            android:visibility="gone"
             android:textColor="@color/text_44"
             android:textSize="@dimen/dimen_14dp" />
 

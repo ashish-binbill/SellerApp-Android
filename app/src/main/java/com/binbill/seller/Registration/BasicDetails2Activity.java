@@ -474,6 +474,15 @@ public class BasicDetails2Activity extends BaseActivity implements OptionListFra
         radio_group_home_delivery.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
+
+                int radioButtonID = radio_group_home_delivery.getCheckedRadioButtonId();
+                AppCompatRadioButton radioButton = (AppCompatRadioButton) radio_group_home_delivery.findViewById(radioButtonID);
+                final String isHomeDelivery = radioButton.getText().toString();
+
+                if (isHomeDelivery.equalsIgnoreCase(getString(R.string.no)))
+                    et_delivery_distance.setEnabled(false);
+                else
+                    et_delivery_distance.setEnabled(true);
                 enableDisableVerifyButton();
             }
         });

@@ -20,8 +20,6 @@ import android.widget.TextView;
 
 import com.binbill.seller.BaseActivity;
 import com.binbill.seller.CustomViews.YesNoDialogFragment;
-import com.binbill.seller.Customer.InvitedCustomerFragment;
-import com.binbill.seller.Dashboard.MyCustomerFragment;
 import com.binbill.seller.R;
 
 import org.androidannotations.annotations.AfterViews;
@@ -68,6 +66,8 @@ public class OfferActivity extends BaseActivity implements YesNoDialogFragment.Y
         if (tab_strip != null) {
             tab_strip.setupWithViewPager(view_pager);
         }
+
+        tab_strip.setVisibility(View.GONE);
     }
 
     @Override
@@ -131,7 +131,9 @@ public class OfferActivity extends BaseActivity implements YesNoDialogFragment.Y
         iv_notification.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                invokeAddOfferOptions();
+//                invokeAddOfferOptions();
+                Intent intent = new Intent(OfferActivity.this, AddBarCodeOfferActivity_.class);
+                startActivity(intent);
             }
         });
     }
@@ -157,8 +159,8 @@ public class OfferActivity extends BaseActivity implements YesNoDialogFragment.Y
     public void onOptionSelected(boolean isProceed) {
         Fragment page = (Fragment) mPagerAdapter.instantiateItem(view_pager, view_pager.getCurrentItem());
         if (view_pager.getCurrentItem() == 0) {
-            ((NormalOfferFragment) page).onOptionSelected(isProceed);
-        } else {
+//            ((NormalOfferFragment) page).onOptionSelected(isProceed);
+//        } else {
             ((BarCodeOfferFragment) page).onOptionSelected(isProceed);
         }
     }

@@ -36,5 +36,5 @@
         android:gravity="center_horizontal"
         android:text="Increase in Store Footfalls as well as combat Online Players by grabbing Online Sales on our platform."
         android:textColor="@color/text_44"
-        android:textSize="@dimen/dimen_16dp" />
+        android:textSize="@dimen/dimen_14dp" />
 </LinearLayout>

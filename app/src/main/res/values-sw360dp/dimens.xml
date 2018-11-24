@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <dimen name="design_bottom_navigation_text_size" tools:override="true">18dp</dimen>
+    <dimen name="design_bottom_navigation_active_text_size" tools:override="true">18dp</dimen>
+    <dimen name="design_bottom_navigation_height" tools:override="true">65dp</dimen>
+
+    <dimen name="design_tab_text_size" tools:override="true">18dp</dimen>
+
+    <dimen name="bottom_navigation_icon_size">8dp</dimen>
+</resources>
