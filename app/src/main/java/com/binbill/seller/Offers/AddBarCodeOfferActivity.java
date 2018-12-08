@@ -76,13 +76,13 @@ public class AddBarCodeOfferActivity extends BaseActivity implements ZXingScanne
     EditText et_barcode, et_mrp, et_discount, et_expiry_date;
 
     @ViewById
-    ImageView iv_offer;
+    ImageView iv_offer, ic_sku_image;
 
     @ViewById
     RelativeLayout rl_bar_code_scanner;
 
     @ViewById
-    TextView tv_error_offer_expiry, tv_error_barcode, tv_error_discount, tv_search, tv_item_name;
+    TextView tv_error_offer_expiry, tv_error_barcode, tv_item_amount_discounted, tv_error_discount, tv_error_mrp, tv_search, tv_item_name;
 
     @ViewById
     ImageView iv_reset;
@@ -133,6 +133,7 @@ public class AddBarCodeOfferActivity extends BaseActivity implements ZXingScanne
         btn_submit.setText(getString(R.string.update));
 
         rl_bar_code_scanner.setVisibility(View.GONE);
+        ic_sku_image.setVisibility(View.GONE);
         iv_offer.setVisibility(View.VISIBLE);
 
         String imageUrl = Constants.BASE_URL + "skus/" + mOfferItem.getSkuId() + "/measurements/" + mOfferItem.getSkuMeasurementId() + "/images";
@@ -210,6 +211,38 @@ public class AddBarCodeOfferActivity extends BaseActivity implements ZXingScanne
         }
     };
 
+    TextWatcher discountTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            String discount = et_discount.getText().toString();
+            String mrp = et_mrp.getText().toString();
+            if (!Utility.isEmpty(discount) && !Utility.isEmpty(mrp)) {
+
+                double mrpAmount = Double.parseDouble(mrp);
+                double discountEntered = Double.parseDouble(discount);
+
+                double finalAmount = mrpAmount - (mrpAmount * (discountEntered / 100));
+
+                tv_item_amount_discounted.setText("= " + getString(R.string.rupee_sign) + Utility.showDoubleString(finalAmount));
+                tv_item_amount_discounted.setVisibility(View.VISIBLE);
+            } else {
+                tv_item_amount_discounted.setVisibility(View.GONE);
+            }
+
+            enableDisableVerifyButton();
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+
+        }
+    };
+
     TextWatcher barCodeTextWatcher = new TextWatcher() {
 
         @Override
@@ -268,8 +301,8 @@ public class AddBarCodeOfferActivity extends BaseActivity implements ZXingScanne
         });
 
         et_barcode.addTextChangedListener(barCodeTextWatcher);
-        et_mrp.addTextChangedListener(textWatcher);
-        et_discount.addTextChangedListener(textWatcher);
+        et_mrp.addTextChangedListener(discountTextWatcher);
+        et_discount.addTextChangedListener(discountTextWatcher);
         et_expiry_date.addTextChangedListener(textWatcher);
 
         iv_reset.setOnClickListener(new View.OnClickListener() {
@@ -279,6 +312,8 @@ public class AddBarCodeOfferActivity extends BaseActivity implements ZXingScanne
 //                mScannerView.setAutoFocus(true);
                 mScannerView.resumeCameraPreview(AddBarCodeOfferActivity.this);
                 et_barcode.setText("");
+                et_discount.setText("");
+                et_mrp.setText("");
             }
         });
 
@@ -359,6 +394,17 @@ public class AddBarCodeOfferActivity extends BaseActivity implements ZXingScanne
         }
 
         /**
+         * MRP
+         */
+        String mrp = et_mrp.getText().toString().trim();
+        if (TextUtils.isEmpty(mrp)) {
+            tv_error_mrp.setText(getString(R.string.error_field_cannot_be_empty));
+            tv_error_mrp.setVisibility(View.VISIBLE);
+            scroll_view.scrollTo(0, tv_error_mrp.getBottom());
+            return false;
+        }
+
+        /**
          * DISCOUNT
          */
         String discount = et_discount.getText().toString().trim();
@@ -397,8 +443,9 @@ public class AddBarCodeOfferActivity extends BaseActivity implements ZXingScanne
 
         String discount = et_discount.getText().toString();
         String expiry = et_expiry_date.getText().toString();
+        String mrp = et_mrp.getText().toString();
 
-        new RetrofitHelper(this).addBarCodeOfferFromSeller(skuId, skuMeasurementId, discount, expiry, mOfferId, new RetrofitHelper.RetrofitCallback() {
+        new RetrofitHelper(this).addBarCodeOfferFromSeller(skuId, skuMeasurementId, mrp, discount, expiry, mOfferId, new RetrofitHelper.RetrofitCallback() {
             @Override
             public void onResponse(String response) {
 
@@ -519,7 +566,21 @@ public class AddBarCodeOfferActivity extends BaseActivity implements ZXingScanne
             tv_item_name.setText(suggestionSku.getTitle() + " - " + sku.getSkuMeasurementValue() + " " + sku.getSkuMeasurementAcronym());
             tv_item_name.setVisibility(View.VISIBLE);
 
+            ic_sku_image.setVisibility(View.VISIBLE);
+            iv_offer.setVisibility(View.GONE);
+
+            String imageUrl = Constants.BASE_URL + "skus/" + sku.getParentSkuId() + "/measurements/" + sku.getSkuId() + "/images";
+            Picasso.get()
+                    .load(imageUrl)
+                    .config(Bitmap.Config.RGB_565)
+                    .placeholder(ContextCompat.getDrawable(this, R.drawable.ic_placeholder_sku))
+                    .memoryPolicy(MemoryPolicy.NO_CACHE)
+                    .into(ic_sku_image);
+
             et_barcode.setCompoundDrawablesWithIntrinsicBounds(null, null, ContextCompat.getDrawable(AddBarCodeOfferActivity.this, R.drawable.ic_barcode_success), null);
+        } else {
+            ic_sku_image.setVisibility(View.GONE);
+            tv_item_name.setVisibility(View.GONE);
         }
     }
 

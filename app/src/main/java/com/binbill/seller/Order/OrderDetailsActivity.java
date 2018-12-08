@@ -22,6 +22,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
+import android.widget.AbsListView;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -248,7 +249,7 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
         ll_call_customer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (orderDetails.getUser() != null && orderDetails.getUser().getUserMobile() != null) {
+                if (orderDetails != null && orderDetails.getUser() != null && orderDetails.getUser().getUserMobile() != null) {
                     Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + orderDetails.getUser().getUserMobile()));
                     startActivity(intent);
                 }
@@ -1196,6 +1197,9 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                         tv_home_delivery.setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(this, R.drawable.ic_home_delivery_order), null, null, null);
                     }
                     tv_home_delivery.setVisibility(View.VISIBLE);
+
+                    if (orderDetails.getOrderType().equalsIgnoreCase(Constants.ORDER_TYPE_SERVICE))
+                        tv_home_delivery.setVisibility(View.GONE);
 
                     if (orderDetails.isModified()) {
                         tv_order_status.setText(getString(R.string.waiting_for_approval));

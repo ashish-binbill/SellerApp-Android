@@ -82,6 +82,15 @@
                     android:visibility="gone"
                     android:src="@drawable/ic_placeholder_sku" />
 
+
+                <ImageView
+                    android:id="@+id/ic_sku_image"
+                    android:layout_width="@dimen/dimen_80dp"
+                    android:layout_gravity="center"
+                    android:visibility="gone"
+                    android:layout_height="@dimen/dimen_80dp"
+                    android:src="@drawable/ic_placeholder_sku" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dimen_45dp"
@@ -96,7 +105,7 @@
                         android:layout_weight="1"
                         android:background="@null"
                         android:hint="@string/enter_barcode"
-                        android:inputType="text"
+                        android:inputType="number"
                         android:lineSpacingExtra="-1sp"
                         android:maxLength="15"
                         android:paddingLeft="@dimen/dimen_12dp"
@@ -151,8 +160,6 @@
                     android:layout_height="@dimen/dimen_45dp"
                     android:layout_marginTop="@dimen/dimen_20dp"
                     android:background="@drawable/edittext_bg"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
                     android:hint="@string/mrp_autofilled"
                     android:inputType="number"
                     android:lineSpacingExtra="-1sp"
@@ -172,11 +179,11 @@
                     android:layout_marginLeft="@dimen/dimen_5dp"
                     android:layout_marginTop="@dimen/dimen_5dp"
                     android:fontFamily="sans-serif"
-                    android:text="@string/mrp_disclaimer"
-                    android:textColor="@color/hint_color"
+                    android:text=""
+                    android:textColor="@android:color/holo_red_light"
                     android:textSize="@dimen/dimen_10dp"
                     android:textStyle="normal"
-                    android:visibility="visible" />
+                    android:visibility="gone" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -213,6 +220,20 @@
 
 
                 </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_item_amount_discounted"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:layout_marginLeft="@dimen/dimen_5dp"
+                    android:layout_marginTop="@dimen/dimen_5dp"
+                    android:fontFamily="sans-serif-medium"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/dimen_14dp"
+                    android:textStyle="normal"
+                    android:visibility="gone" />
+
 
                 <TextView
                     android:id="@+id/tv_error_discount"

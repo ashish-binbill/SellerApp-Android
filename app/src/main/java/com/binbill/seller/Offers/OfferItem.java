@@ -37,6 +37,13 @@ public class OfferItem implements Serializable {
     @SerializedName("offer_discount")
     String offerDiscount;
 
+    @SerializedName("seller_mrp")
+    String sellerMrp;
+
+    public String getSellerMrp() {
+        return sellerMrp;
+    }
+
     public ArrayList<FileItem> getOfferFiles() {
         return offerFiles;
     }

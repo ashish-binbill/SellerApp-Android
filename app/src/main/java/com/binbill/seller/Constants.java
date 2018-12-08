@@ -19,6 +19,7 @@ public class Constants {
     public static final String UPDATE_PAN_OR_GSTIN = "sellers/init";
     public static final String LINK_SHOP = "sellers/link";
     public static final String GET_LATEST_USER_STATE = "sellers/reference";
+
     public static final String UPDATE_BASIC_DETAILS = "/sellers/{id}/basic";
     public static final String GET_CITY_BY_STATE = "states/{id}/cities";
     public static final String GET_LOCALITY_BY_CITY_STATE = "states/{id}/cities/{city_id}/localities";

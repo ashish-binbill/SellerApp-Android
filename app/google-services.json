@@ -1,35 +1,43 @@
 {
   "project_info": {
-    "project_number": "468078305759",
-    "firebase_url": "https://binbill-sellerapp.firebaseio.com",
-    "project_id": "binbill-sellerapp",
-    "storage_bucket": "binbill-sellerapp.appspot.com"
+    "project_number": "857112835985",
+    "firebase_url": "https://binbill-consumerapp-1010f.firebaseio.com",
+    "project_id": "binbill-consumerapp-1010f",
+    "storage_bucket": "binbill-consumerapp-1010f.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:468078305759:android:a14b3e82908c547e",
+        "mobilesdk_app_id": "1:857112835985:android:b021833a24cd2b85",
         "android_client_info": {
-          "package_name": "com.binbill.seller"
+          "package_name": "com.bin.binbillcustomer"
         }
       },
       "oauth_client": [
         {
-          "client_id": "468078305759-fjf6b90bgfdtpps49l0negll24u0b0kr.apps.googleusercontent.com",
+          "client_id": "857112835985-j2kt1soih645okmr1ti9tr0bq7tij3fi.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.binbill.seller",
+            "package_name": "com.bin.binbillcustomer",
+            "certificate_hash": "a5b94f5836289d0cd37dad7f8346fda563391ddc"
+          }
+        },
+        {
+          "client_id": "857112835985-qvd4ql4ufbnl8j26dklb23l9k62ksd1l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bin.binbillcustomer",
             "certificate_hash": "b964de07956a606862922ab8c6e2a92dcd35078b"
           }
         },
         {
-          "client_id": "468078305759-nes12hkphbqde725k4otdkf693j0iapv.apps.googleusercontent.com",
+          "client_id": "857112835985-39ms8a0fbe345n1ktba2kvh0b3v4601m.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyC-zyzNc80-S_HFKbBrfF37lbqYCrAEveE"
+          "current_key": "AIzaSyDdipp1LWRIv9Y94-CjB61cEKTV6P2mHaA"
         }
       ],
       "services": {
@@ -40,10 +48,49 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "468078305759-nes12hkphbqde725k4otdkf693j0iapv.apps.googleusercontent.com",
+              "client_id": "857112835985-39ms8a0fbe345n1ktba2kvh0b3v4601m.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "857112835985-iq6klblhass6fjqgenush8cirdatlel7.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.bin.binbillcustomer",
+                "app_store_id": "1328873045"
+              }
             }
           ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:857112835985:android:a14b3e82908c547e",
+        "android_client_info": {
+          "package_name": "com.binbill.seller"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "857112835985-39ms8a0fbe345n1ktba2kvh0b3v4601m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDdipp1LWRIv9Y94-CjB61cEKTV6P2mHaA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
         },
         "ads_service": {
           "status": 2

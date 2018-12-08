@@ -1241,7 +1241,7 @@ public class RetrofitHelper {
         });
     }
 
-    public void addBarCodeOfferFromSeller(String skuId, String skuMeasurementId, String discount, String expiry, String offerId, final RetrofitCallback retrofitCallback) {
+    public void addBarCodeOfferFromSeller(String skuId, String skuMeasurementId, String mrp, String discount, String expiry, String offerId, final RetrofitCallback retrofitCallback) {
         RetrofitApiInterface apiService =
                 RetrofitHelper.getClient(mContext).create(RetrofitApiInterface.class);
 
@@ -1254,6 +1254,7 @@ public class RetrofitHelper {
         offerObject.put("sku_id", skuId);
         offerObject.put("sku_measurement_id", skuMeasurementId);
         offerObject.put("offer_discount", discount);
+        offerObject.put("seller_mrp", mrp);
 
 
         if (offerId != null && !Utility.isEmpty(offerId))

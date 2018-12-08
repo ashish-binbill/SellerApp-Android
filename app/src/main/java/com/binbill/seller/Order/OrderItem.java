@@ -194,6 +194,9 @@ public class OrderItem implements Serializable {
         @SerializedName("id")
         String skuId;
 
+        @SerializedName("sku_id")
+        String parentSkuId;
+
         @SerializedName("mrp")
         String skuMrp;
 
@@ -217,6 +220,10 @@ public class OrderItem implements Serializable {
 
         @SerializedName("offer_discount")
         String offerDiscount;
+
+        public String getParentSkuId() {
+            return parentSkuId;
+        }
 
         public String getOfferDiscount() {
             return offerDiscount;

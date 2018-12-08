@@ -100,11 +100,13 @@ public class BarCodeOfferFragment extends Fragment implements OfferAdapter.Offer
         new RetrofitHelper(getActivity()).fetchBarcodeOffersForSeller(sellerId, new RetrofitHelper.RetrofitCallback() {
             @Override
             public void onResponse(String response) {
+                swipeRefreshLayout.setRefreshing(false);
                 handleResponse(response);
             }
 
             @Override
             public void onErrorResponse() {
+                swipeRefreshLayout.setRefreshing(false);
                 if (isAdded()) {
                     ((BaseActivity) getActivity()).showSnackBar(getString(R.string.something_went_wrong));
                     showNoOfferLayout();

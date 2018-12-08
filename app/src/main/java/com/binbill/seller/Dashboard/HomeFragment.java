@@ -103,6 +103,7 @@ public class HomeFragment extends Fragment {
         final TextView tvLabelCustomer = (TextView) view.findViewById(R.id.tv_label_customer);
         ImageView ivLabelCustomer = (ImageView) view.findViewById(R.id.iv_customer);
 
+        if(dashboardModel != null)
         switch (dashboardModel.getSellerType()) {
             case ASSISTED_ONLY_USER:
                 tvLabelCustomer.setText(getString(R.string.total_agents));
