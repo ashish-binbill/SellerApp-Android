@@ -390,5 +390,8 @@
     <string name="offered_price">Offered Price: ₹ %1$s (%2$s %% Off)</string>
     <string name="amount_after_discount">Amount after discount</string>
     <string name="mrp_disclaimer">* MRP can be edited at the time of Customer Order</string>
+    <string name="response_time_left">Response Time Left</string>
+    <string name="delivery_time">Delivery Time</string>
+    <string name="delivery_time_message">If you select Delivery Time more than 45 minutes, Home Delivery Incentive, ₹10 will not be valid.</string>
 
 </resources>

@@ -64,6 +64,20 @@ public class Order implements Serializable {
     @SerializedName("payment_mode_id")
     int paymentModeId;
 
+    @SerializedName("remaining_seconds")
+    long remainingSeconds;
+
+    @SerializedName("delivery_minutes")
+    String deliveryMinutes;
+
+    public String getDeliveryMinutes() {
+        return deliveryMinutes;
+    }
+
+    public long getRemainingSeconds() {
+        return remainingSeconds;
+    }
+
     public boolean isCollectAtStore() {
         return collectAtStore;
     }

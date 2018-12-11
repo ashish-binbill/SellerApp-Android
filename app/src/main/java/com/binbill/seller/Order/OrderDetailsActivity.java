@@ -8,6 +8,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.content.ContextCompat;
@@ -22,7 +23,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
-import android.widget.AbsListView;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -37,6 +37,7 @@ import com.applozic.mobicomkit.api.conversation.database.MessageDatabaseService;
 import com.applozic.mobicomkit.uiwidgets.conversation.ConversationUIService;
 import com.applozic.mobicomkit.uiwidgets.conversation.activity.ConversationActivity;
 import com.binbill.seller.Adapter.DeliveryDistanceAdapter;
+import com.binbill.seller.AppSession;
 import com.binbill.seller.AssistedService.AssistedUserModel;
 import com.binbill.seller.BaseActivity;
 import com.binbill.seller.BinBillSeller;
@@ -46,6 +47,7 @@ import com.binbill.seller.CustomViews.AppButtonGreyed;
 import com.binbill.seller.CustomViews.PrefixEditText;
 import com.binbill.seller.CustomViews.ReviewAdapter;
 import com.binbill.seller.CustomViews.ReviewsDialogFragment;
+import com.binbill.seller.CustomViews.YesNoDialogFragment;
 import com.binbill.seller.Interface.ItemSelectedInterface;
 import com.binbill.seller.Model.UserModel;
 import com.binbill.seller.R;
@@ -71,6 +73,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import io.socket.emitter.Emitter;
 import okhttp3.Authenticator;
@@ -84,7 +87,7 @@ import okhttp3.Route;
  */
 
 @EActivity(R.layout.activity_order_details)
-public class OrderDetailsActivity extends BaseActivity implements OrderShoppingListAdapter.OrderItemSelectedInterface, OrderSKUAdapter.OrderSKUInterface {
+public class OrderDetailsActivity extends BaseActivity implements OrderShoppingListAdapter.OrderItemSelectedInterface, OrderSKUAdapter.OrderSKUInterface, YesNoDialogFragment.YesNoClickInterface {
 
     @ViewById
     Toolbar toolbar;
@@ -98,12 +101,15 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
     ImageView iv_user_image, header_quantity;
 
     @ViewById
+    TextView tv_delivery_time_left, tv_delivery_time;
+
+    @ViewById
     TextView tv_start_time_header, tv_end_time_header, tv_time_elapsed_header, tv_delivery_header_fmcg, tv_delivery_header_service;
     @ViewById
     RecyclerView rv_shopping_list;
 
     @ViewById
-    LinearLayout shimmer_view_container, ll_offer_layout, ll_user_action, ll_bill_layout, start_time, end_time, time_elapsed, ll_amount_entry, ll_call_customer;
+    LinearLayout shimmer_view_container, ll_order_delivery_time, ll_offer_layout, ll_user_action, ll_bill_layout, start_time, end_time, time_elapsed, ll_amount_entry, ll_call_customer;
     private Order orderDetails;
 
     @ViewById
@@ -246,6 +252,15 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
 
     private void setUpListener() {
 
+        tv_delivery_time.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (orderDetails != null && orderDetails.getOrderStatus() == Constants.STATUS_NEW_ORDER)
+                    invokeDeliveryTimeOptionList();
+            }
+        });
+
         ll_call_customer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -298,9 +313,15 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                         Type type = new TypeToken<List<OrderItem>>() {
                         }.getType();
                         String json = gson.toJson(updatedList, type);
+
+                        String deliverymin = "";
+                        if (orderDetails.getOrderType().equalsIgnoreCase(Constants.ORDER_TYPE_FMCG)) {
+                            deliverymin = tv_delivery_time.getText().toString();
+                        }
+
                         btn_accept.setVisibility(View.GONE);
                         btn_accept_progress.setVisibility(View.VISIBLE);
-                        new RetrofitHelper(OrderDetailsActivity.this).sendOrderModificationCall(orderDetails.getOrderId(), orderDetails.getUserId(), json, new RetrofitHelper.RetrofitCallback() {
+                        new RetrofitHelper(OrderDetailsActivity.this).sendOrderModificationCall(orderDetails.getOrderId(), deliverymin, orderDetails.getUserId(), json, new RetrofitHelper.RetrofitCallback() {
                             @Override
                             public void onResponse(String response) {
                                 btn_accept.setVisibility(View.VISIBLE);
@@ -679,6 +700,45 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
     }
 
     private void setUpData() {
+
+        if (orderDetails.getOrderType().equalsIgnoreCase(Constants.ORDER_TYPE_SERVICE)) {
+            ll_order_delivery_time.setVisibility(View.GONE);
+        } else {
+            if (orderDetails.getOrderStatus() != Constants.STATUS_CANCEL && orderDetails.getOrderStatus() != Constants.STATUS_COMPLETE &&
+                    orderDetails.getOrderStatus() != Constants.STATUS_OUT_FOR_DELIVERY && orderDetails.getOrderStatus() != Constants.STATUS_REJECTED &&
+                    orderDetails.getOrderStatus() != Constants.STATUS_AUTO_CANCEL && orderDetails.getOrderStatus() != Constants.STATUS_AUTO_EXPIRED) {
+
+                if (orderDetails.getRemainingSeconds() > 0) {
+                    long millisUntilFinished = orderDetails.getRemainingSeconds() * 1000;
+
+                    new CountDownTimer(millisUntilFinished, 1000) {
+
+                        public void onTick(long millisUntilFinished) {
+                            tv_delivery_time_left.setText("" + String.format("%d: %02d",
+                                    TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished),
+                                    TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) -
+                                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))));
+                        }
+
+                        public void onFinish() {
+                            tv_delivery_time_left.setText("Time Up!");
+                        }
+
+                    }.start();
+
+                    tv_delivery_time.setText(orderDetails.getDeliveryMinutes() + " min");
+                } else if (orderDetails.getOrderStatus() == Constants.STATUS_NEW_ORDER) {
+                    tv_delivery_time.setText("45 mins");
+                    tv_delivery_time_left.setText("---");
+                }
+
+                ll_order_delivery_time.setVisibility(View.VISIBLE);
+            } else {
+                ll_order_delivery_time.setVisibility(View.GONE);
+            }
+
+        }
+
         header_quantity.setVisibility(View.GONE);
         if (orderDetails.getOrderType().equalsIgnoreCase(Constants.ORDER_TYPE_SERVICE)) {
             header_shopping_list.setText(getString(R.string.service_requested));
@@ -934,7 +994,8 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
         }
     }
 
-    private void updateDeliveryReview(final ReviewAdapter.ReviewHolder reviewHolder, AssistedUserModel.Review deliveryReview) {
+    private void updateDeliveryReview(
+            final ReviewAdapter.ReviewHolder reviewHolder, AssistedUserModel.Review deliveryReview) {
 
         reviewHolder.mReview.setText(deliveryReview.getUserName());
         reviewHolder.mUser.setText(deliveryReview.getFeedback());
@@ -996,7 +1057,8 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                 });
     }
 
-    private void updateAgentLayout(final DeliveryAgentAdapter.DeliveryAgentHolder userHolder, final DeliveryModel model, String serviceId) {
+    private void updateAgentLayout(final DeliveryAgentAdapter.DeliveryAgentHolder userHolder,
+                                   final DeliveryModel model, String serviceId) {
         userHolder.mUserName.setText(model.getName());
 
         Double rating = 0.0;
@@ -1133,6 +1195,11 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
     }
 
     public void changeButtonStateToApproval(int state) {
+
+        if (!orderDetails.getOrderType().equalsIgnoreCase(Constants.ORDER_TYPE_SERVICE))
+            if (state == 1 && !tv_delivery_time.getText().toString().toLowerCase().equalsIgnoreCase("45 mins"))
+                state = 0;
+
         switch (state) {
             case 0:
                 if (orderDetails.getOrderStatus() == Constants.STATUS_NEW_ORDER) {
@@ -1444,7 +1511,8 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
     }
 
     @Override
-    public void onOrderItemQuantityDenominationSelected(int pos, String quantity, String setQuantity) {
+    public void onOrderItemQuantityDenominationSelected(int pos, String quantity, String
+            setQuantity) {
         if (orderDetails != null && orderDetails.getOrderItems() != null &&
                 orderDetails.getOrderItems().size() > 0) {
             final OrderItem orderItem = orderDetails.getOrderItems().get(pos);
@@ -1499,7 +1567,8 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
         }
     }
 
-    private void invokeSuggestionPopUp(final ArrayList<SuggestionSku> skuOptions, final String uid) {
+    private void invokeSuggestionPopUp(final ArrayList<SuggestionSku> skuOptions,
+                                       final String uid) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout.dialog_show_available_sku, null);
@@ -1640,7 +1709,79 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
         mSKUDialog.show();
     }
 
-    private void invokeQuantityPopUp(final String uid, final String quantity, final String setQuantity) {
+    private void invokeDeliveryTimeOptionList() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.dialog_show_available_sku, null);
+
+        Rect displayRectangle = new Rect();
+        Window window = getWindow();
+        window.getDecorView().getWindowVisibleDisplayFrame(displayRectangle);
+
+        dialogView.setMinimumWidth((int) (displayRectangle.width() * 0.9f));
+
+        builder.setView(dialogView);
+        builder.setCancelable(false);
+
+        mSKUDialog = builder.create();
+        mSKUDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        mSKUDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        ArrayList<String> mDisplayList = new ArrayList<>();
+
+        try {
+            JSONArray jArray = AppSession.getInstance(this).getDeliveryTimeList();
+            if (jArray != null) {
+                for (int i = 0; i < jArray.length(); i++) {
+                    mDisplayList.add(jArray.getString(i));
+                }
+            }
+        } catch (JSONException e) {
+            mDisplayList.add("45 mins");
+        }
+
+        RecyclerView recyclerView = (RecyclerView) dialogView.findViewById(R.id.rv_list);
+        LinearLayoutManager llm = new LinearLayoutManager(this);
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(llm);
+        DeliveryDistanceAdapter adapter = new DeliveryDistanceAdapter(mDisplayList, new ItemSelectedInterface() {
+            @Override
+            public void onItemSelected(Object object) {
+
+                tv_delivery_time.setText((String) object);
+                changeButtonStateToApproval(1);
+
+                if (mSKUDialog != null)
+                    mSKUDialog.dismiss();
+
+                if (!tv_delivery_time.getText().toString().toLowerCase().equalsIgnoreCase("45 mins")){
+                    showAlertDialogOfDeliveryTime();
+                }
+
+            }
+        });
+        recyclerView.setAdapter(adapter);
+
+        TextView headerTitle = (TextView) dialogView.findViewById(R.id.header);
+        headerTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mSKUDialog.dismiss();
+            }
+        });
+
+        mSKUDialog.show();
+    }
+
+    private void showAlertDialogOfDeliveryTime() {
+
+        android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
+        YesNoDialogFragment fragment = YesNoDialogFragment.newInstance(true,"Cancel",  "Ok", getString(R.string.delivery_time_message));
+        fragment.show(fm, "YesNoDialogFragment");
+    }
+
+    private void invokeQuantityPopUp(final String uid, final String quantity,
+                                     final String setQuantity) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout.dialog_show_available_sku, null);
@@ -1796,5 +1937,15 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
 
         if (mSKUDialog != null)
             mSKUDialog.dismiss();
+    }
+
+    @Override
+    public void onOptionSelected(boolean isProceed) {
+        if (isProceed) {
+            tv_delivery_time.setText("45 Mins");
+            changeButtonStateToApproval(1);
+        }else{
+
+        }
     }
 }

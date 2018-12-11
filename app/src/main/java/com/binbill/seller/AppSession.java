@@ -15,6 +15,8 @@ import com.binbill.seller.Order.Order;
 import com.binbill.seller.Verification.RejectReasonModel;
 import com.binbill.seller.Verification.VerificationModel;
 
+import org.json.JSONArray;
+
 import java.util.ArrayList;
 
 /**
@@ -43,6 +45,14 @@ public class AppSession {
         INSTANCE = null;
     }
 
+    public void setDeliveryTimeList(JSONArray list) {
+        mAppSessionData.setDeliveryTimeList(list);
+    }
+
+    public JSONArray getDeliveryTimeList() {
+        return mAppSessionData.getDeliveryTimeList();
+    }
+
     private class AppSessionData {
         private UserRegistrationDetails userRegistrationDetails;
         private String mobile;
@@ -62,6 +72,7 @@ public class AppSession {
         private ProfileModel profile;
         private String notificationType;
         private String notificationOrderId;
+        private JSONArray deliveryTimeList;
 
         private void setSellerId(String id) {
             this.sellerId = id;
@@ -155,6 +166,10 @@ public class AppSession {
             return this.mAssistedServiceTypes;
         }
 
+        private JSONArray getDeliveryTimeList() {
+            return deliveryTimeList;
+        }
+
         private void setmAssistedServiceTypes(ArrayList<AssistedUserModel.ServiceType> mAssistedServiceTypes) {
             this.mAssistedServiceTypes = mAssistedServiceTypes;
         }
@@ -206,6 +221,10 @@ public class AppSession {
 
         private String getNotificationOrderId() {
             return notificationOrderId;
+        }
+
+        private void setDeliveryTimeList(JSONArray list) {
+            this.deliveryTimeList = list;
         }
     }
 

@@ -10,9 +10,9 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.binbill.seller.Offers.AddOfferSelectionDialog;
 import com.binbill.seller.R;
 
 /**
@@ -27,6 +27,20 @@ public class YesNoDialogFragment extends DialogFragment {
         Bundle args = new Bundle();
         args.putString("TITLE", title);
         args.putString("HEADER", header);
+        args.putBoolean("IS_ALERT", false);
+        f.setArguments(args);
+
+        return f;
+    }
+
+    public static YesNoDialogFragment newInstance(boolean isAlert, String yesButton, String noButton, String message) {
+        YesNoDialogFragment f = new YesNoDialogFragment();
+        Bundle args = new Bundle();
+        args.putString("YES_BUTTON", yesButton);
+        args.putString("NO_BUTTON", noButton);
+        args.putString("HEADER", "");
+        args.putString("TITLE", message);
+        args.putBoolean("IS_ALERT", isAlert);
         f.setArguments(args);
 
         return f;
@@ -50,6 +64,7 @@ public class YesNoDialogFragment extends DialogFragment {
         TextView title = (TextView) view.findViewById(R.id.title);
         AppButton yesButton = (AppButton) view.findViewById(R.id.btn_yes);
         AppButtonGreyed noButton = (AppButtonGreyed) view.findViewById(R.id.btn_no);
+        LinearLayout headerLayout = (LinearLayout) view.findViewById(R.id.ll_header);
 
 
         if (getArguments() != null) {
@@ -58,6 +73,18 @@ public class YesNoDialogFragment extends DialogFragment {
 
             cancelButton.setText(headerText);
             title.setText(titleText);
+
+            boolean isAlert = getArguments().getBoolean("IS_ALERT");
+            if (isAlert) {
+                String yesButtonText = getArguments().getString("YES_BUTTON");
+                String noButtonText = getArguments().getString("NO_BUTTON");
+
+                yesButton.setText(yesButtonText);
+                noButton.setText(noButtonText);
+
+                cancelButton.setVisibility(View.GONE);
+                headerLayout.setVisibility(View.GONE);
+            }
         }
 
         cancelButton.setOnClickListener(new View.OnClickListener() {

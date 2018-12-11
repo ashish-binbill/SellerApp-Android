@@ -1033,7 +1033,7 @@ public class RetrofitHelper {
         });
     }
 
-    public void sendOrderModificationCall(String orderId, String userId, String list, final RetrofitCallback retrofitCallback) {
+    public void sendOrderModificationCall(String orderId, String deliveryMinutes, String userId, String list, final RetrofitCallback retrofitCallback) {
         RetrofitApiInterface apiService =
                 RetrofitHelper.getClient(mContext).create(RetrofitApiInterface.class);
 
@@ -1046,6 +1046,7 @@ public class RetrofitHelper {
             e.printStackTrace();
         }
         map.put("user_id", userId);
+        map.put("delivery_minutes", deliveryMinutes);
 
         Call<JsonObject> call = apiService.sendOrderForApproval(AppSession.getInstance(mContext).getSellerId(), orderId, map);
         call.enqueue(new Callback<JsonObject>() {
