@@ -59,6 +59,9 @@ public interface RetrofitApiInterface {
     @GET(Constants.GET_OFFERS)
     Call<JsonObject> fetchOffers(@Path(value = "id", encoded = true) String identifier);
 
+    @GET(Constants.GET_SUGGESTED_OFFERS)
+    Call<JsonObject> fetchSuggestedOffers(@Path(value = "seller_id", encoded = true) String identifier, @Path(value = "offer_type", encoded = true) int offerType);
+
     @GET(Constants.GET_OFFERS)
     Call<JsonObject> fetchBarcodeOffers(@Path(value = "id", encoded = true) String identifier, @Query(value = "on_sku", encoded = true) boolean isTrue);
 
@@ -67,6 +70,15 @@ public interface RetrofitApiInterface {
 
     @DELETE(Constants.DELETE_OFFER_BY_ID)
     Call<JsonObject> deleteOffer(@Path(value = "seller_id", encoded = true) String identifier, @Path(value = "id", encoded = true) String offerId);
+
+    @DELETE(Constants.DELETE_SUGGESTED_OFFER_BY_ID)
+    Call<JsonObject> deleteSuggestedOffer(@Path(value = "seller_id", encoded = true) String identifier, @Path(value = "offer_type", encoded = true) int offerType, @Path(value = "id", encoded = true) String offerId);
+
+    @PUT(Constants.LINK_OFFER_WITH_SELLER)
+    Call<JsonObject> linkOfferWithSeller(@Path(value = "seller_id", encoded = true) String identifier, @Path(value = "offer_type", encoded = true) int offerType, @Path(value = "id", encoded = true) String offerId);
+
+    @POST(Constants.SELLER_NEED_THIS_ITEM)
+    Call<JsonObject> sellerNeedThisItem(@Path(value = "seller_id", encoded = true) String identifier, @Path(value = "offer_type", encoded = true) int offerType, @Path(value = "id", encoded = true) String offerId);
 
     @GET(Constants.FETCH_USERS_FOR_SELLER)
     Call<JsonObject> fetchUsers(@Path(value = "seller_id", encoded = true) String identifier, @Query(value = "offer_id", encoded = true) String offerId, @Query(value = "is_linked_offers", encoded = true) String isLinked);
@@ -170,7 +182,7 @@ public interface RetrofitApiInterface {
     Call<JsonObject> fetchCompletedOrders(@Path(value = "seller_id", encoded = true) String sellerId, @Query(value = "page_no", encoded = true) int page);
 
     @GET(Constants.FETCH_COMPLETED_ORDERS)
-    Call<JsonObject> fetchNotRespondedOrders(@Path(value = "seller_id", encoded = true) String sellerId, @Query(value = "status_type", encoded = true) String status,  @Query(value = "page_no", encoded = true) int page);
+    Call<JsonObject> fetchNotRespondedOrders(@Path(value = "seller_id", encoded = true) String sellerId, @Query(value = "status_type", encoded = true) String status, @Query(value = "page_no", encoded = true) int page);
 
     @GET(Constants.FETCH_ORDERS_BY_ID)
     Call<JsonObject> fetchOrderById(@Path(value = "seller_id", encoded = true) String sellerId, @Path(value = "id", encoded = true) String jobId);

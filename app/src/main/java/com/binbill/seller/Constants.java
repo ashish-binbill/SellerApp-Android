@@ -72,6 +72,10 @@ public class Constants {
     public static final String ADD_CREDIT_LIMIT_FOR_USER = "sellers/{seller_id}/users/{customer_id}";
     public static final String SUBSCRIBE_FOR_NOTIFICATION = "sellers/subscribe";
     public static final String GET_SKU_BY_BARCODE = "sellers/sku/{barcode}/item";
+    public static final String GET_SUGGESTED_OFFERS = "sellers/{seller_id}/brands/{offer_type}/offers";
+    public static final String DELETE_SUGGESTED_OFFER_BY_ID = "sellers/{seller_id}/brands/{offer_type}/offers/{id}";
+    public static final String LINK_OFFER_WITH_SELLER = "sellers/{seller_id}/brands/{offer_type}/offers/{id}";
+    public static final String SELLER_NEED_THIS_ITEM = "sellers/{seller_id}/brands/{offer_type}/offers/{id}/request";
 
     public static final int PERMISSION_READ_SMS = 100;
     public static final int PERMISSION_CAMERA = 101;
@@ -191,6 +195,15 @@ public class Constants {
     public static final int TYPE_LOADING = 1;
     public static final int ORDER_PAGE_SIZE = 10;
     public static final int CUSTOMER_PAGE_SIZE = 5;
-    public static final int TYPE_NORMAL_OFFER = 1;
-    public static final int TYPE_BARCODE_OFFER = 2;
+    public static final String OFFER_TYPE = "OFFER_TYPE";
+
+    public static final int OFFER_TYPE_NEW_PRODUCT= 0;
+    public static final int OFFER_TYPE_DISCOUNTED = 1;
+    public static final int OFFER_TYPE_BOGO = 2;
+    public static final int OFFER_TYPE_EXTRA = 3;
+    public static final int OFFER_TYPE_GENERAL= 4;
+    public static final int TYPE_BARCODE_OFFER = 5;
+    public static final String ADD_OFFER_TO_SELLER = "ADD_OFFER_TO_SELLER";
+    public static final String NEED_THIS_ITEM = "NEED_THIS_ITEM";
+
 }

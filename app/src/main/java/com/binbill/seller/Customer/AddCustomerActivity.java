@@ -90,7 +90,7 @@ public class AddCustomerActivity extends BaseActivity implements UserAdapter.Car
                     String text = editable.toString().trim();
                     int length = text.length();
 
-                    if (length >= 5) {
+                    if (length == 10) {
                         makeFetchUserCallToLink(text);
                     } else {
                         tv_no_data.setVisibility(View.VISIBLE);

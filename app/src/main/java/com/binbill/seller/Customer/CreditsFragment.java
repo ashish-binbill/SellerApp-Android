@@ -277,7 +277,7 @@ public class CreditsFragment extends Fragment {
             else if (!Utility.isEmpty(userModel.getUserEmail()))
                 userName = userModel.getUserEmail();
             else
-                userName = userModel.getUserMobile();
+                userName = Utility.getMaskedNumber(userModel.getUserMobile());
         }
 
         if (!Utility.isEmpty(userName))

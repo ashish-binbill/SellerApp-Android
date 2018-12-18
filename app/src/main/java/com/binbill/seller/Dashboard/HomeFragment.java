@@ -19,6 +19,8 @@ import com.binbill.seller.AppSession;
 import com.binbill.seller.Constants;
 import com.binbill.seller.Model.DashboardModel;
 import com.binbill.seller.Offers.OfferActivity_;
+import com.binbill.seller.Offers.SuggestedOffersActivity;
+import com.binbill.seller.Offers.SuggestedOffersActivity_;
 import com.binbill.seller.R;
 import com.binbill.seller.Utility;
 
@@ -97,6 +99,14 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(getActivity(), OfferActivity_.class));
+            }
+        });
+
+        CardView suggestedOffers = (CardView) view.findViewById(R.id.suggested_offers);
+        suggestedOffers.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getActivity(), SuggestedOffersActivity_.class));
             }
         });
 

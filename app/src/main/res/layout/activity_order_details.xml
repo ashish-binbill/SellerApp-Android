@@ -222,6 +222,7 @@
                             android:orientation="vertical">
 
                             <TextView
+                                android:id="@+id/tv_delivery_time_header"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="sans-serif-medium"
@@ -360,6 +361,42 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/dimen_15dp"
                     android:visibility="gone" />
+
+                <LinearLayout
+                    android:id="@+id/ll_discount_layout"
+                    android:layout_width="match_parent"
+                    android:layout_marginLeft="@dimen/dimen_10dp"
+                    android:layout_marginRight="@dimen/dimen_10dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimen_15dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="sans-serif-medium"
+                        android:text="@string/total_discount"
+                        android:textColor="@color/text_44"
+                        android:textSize="@dimen/dimen_14dp" />
+
+                    <com.binbill.seller.CustomViews.PrefixEditText
+                        android:id="@+id/et_discount_total_amount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/dimen_40dp"
+                        android:layout_marginLeft="@dimen/dimen_5dp"
+                        android:background="@drawable/edittext_bg_order"
+                        android:hint="E.g 100"
+                        android:inputType="numberDecimal"
+                        android:minWidth="@dimen/dimen_120dp"
+                        android:paddingLeft="@dimen/dimen_10dp"
+                        android:paddingRight="@dimen/dimen_10dp"
+                        android:textColor="@color/text_77"
+                        android:textColorHint="@color/text_77_80"
+                        android:textSize="@dimen/dimen_14dp"
+                        app:prefix_string="@string/rupee_sign" />
+
+                </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/ll_bill_layout"

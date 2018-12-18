@@ -192,6 +192,24 @@ public class Utility {
             return String.format("%s", d);
     }
 
+    public static String getMaskedNumber(String mobile) {
+        if (!TextUtils.isEmpty(mobile)) {
+            if (mobile.length() == 10) {
+                StringBuilder stringBuilder = new StringBuilder();
+                stringBuilder.append(mobile.subSequence(0, 2));
+
+                for (int i = 0; i < mobile.length() - 4; i++)
+                    stringBuilder.append("*");
+                stringBuilder.append(mobile.subSequence((mobile.length() - 2), mobile.length()));
+                return stringBuilder.toString();
+            } else {
+                return "";
+            }
+        } else {
+            return "";
+        }
+    }
+
     public static String getFormattedDate(int type, String dateTime, int dateFormat) {
 
         String formattedDate = null;

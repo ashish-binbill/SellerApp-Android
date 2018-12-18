@@ -1,7 +1,6 @@
 package com.binbill.seller.Offers;
 
 import com.binbill.seller.Model.FileItem;
-import com.binbill.seller.Order.OrderItem;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
@@ -13,12 +12,64 @@ import java.util.ArrayList;
 
 public class OfferItem implements Serializable {
 
+    /**
+     * {
+     * "id":2,
+     * "offer_type":1,
+     * "title":null,
+     * "description":null,
+     * "sku_measurement_type":1,
+     * "start_date":"2018-12-08",
+     * "end_date":"2019-01-01",
+     * "sku_id":2099,
+     * "brand_id":2851,
+     * "brand_mrp":null,
+     * "excluded_seller_ids":null,
+     * "sku_measurement_id":2429,
+     * "offer_value":20,
+     * "has_image":false,
+     * "sku_title":"Act II Classic Salted",
+     * "brand_title":"Act Ii",
+     * "measurement_value":120,
+     * "measurement_acronym":"gm",
+     * "acronym":"gm",
+     * "mrp":30,
+     * "bar_code":"8901512564306"
+     * }
+     */
     @SerializedName("id")
     String offerId;
+
+    @SerializedName("offer_type")
+    String offerType;
+
     @SerializedName("title")
     String offerTitle;
+
     @SerializedName("description")
     String offerDescription;
+
+    @SerializedName("sku_title")
+    String skuTitle;
+
+    @SerializedName("brand_title")
+    String brandTitle;
+
+    @SerializedName("measurement_value")
+    String measurementValue;
+
+    @SerializedName("acronym")
+    String acronym;
+
+    @SerializedName("mrp")
+    String mrp;
+
+    @SerializedName("sku_measurement_type")
+    String skuMeasurementType;
+
+    @SerializedName("brand_id")
+    String brandId;
+
     @SerializedName("end_date")
     String offerEndDate;
 
@@ -31,17 +82,56 @@ public class OfferItem implements Serializable {
     @SerializedName("sku_id")
     String skuId;
 
+    @SerializedName("has_seller_offer")
+    boolean offerAdded;
+
     @SerializedName("sku_measurement_id")
     String skuMeasurementId;
 
     @SerializedName("offer_discount")
     String offerDiscount;
 
-    @SerializedName("seller_mrp")
-    String sellerMrp;
+    @SerializedName("offer_value")
+    String offerValue;
 
-    public String getSellerMrp() {
-        return sellerMrp;
+    public boolean isOfferAdded() {
+        return offerAdded;
+    }
+
+    public String getOfferType() {
+        return offerType;
+    }
+
+    public String getSkuTitle() {
+        return skuTitle;
+    }
+
+    public String getBrandTitle() {
+        return brandTitle;
+    }
+
+    public String getMeasurementValue() {
+        return measurementValue;
+    }
+
+    public String getAcronym() {
+        return acronym;
+    }
+
+    public String getMrp() {
+        return mrp;
+    }
+
+    public String getSkuMeasurementType() {
+        return skuMeasurementType;
+    }
+
+    public String getBrandId() {
+        return brandId;
+    }
+
+    public String getOfferValue() {
+        return offerValue;
     }
 
     public ArrayList<FileItem> getOfferFiles() {
@@ -80,7 +170,7 @@ public class OfferItem implements Serializable {
         return offerDiscount;
     }
 
-    public class OfferSku implements Serializable{
+    public class OfferSku implements Serializable {
 
         @SerializedName("sku_title")
         String skuTitle;

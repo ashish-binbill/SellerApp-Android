@@ -7,7 +7,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.binbill.seller.Constants;
@@ -38,11 +40,42 @@ public class OfferAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         void onOfferManupulation(int position, String type);
     }
 
+    public static class SuggestedOfferHolder extends RecyclerView.ViewHolder {
+        protected View mRootCard;
+        protected TextView mTitle, mDetails, mOfferAlreadyAdded, mExpiry, mDiscountedPrice, mMRP, mDiscount, mStockLastTitle;
+        protected ImageView deleteOffer;
+        protected Button mAddToOffer, mNeedThisItem;
+        protected ImageView mImage;
+        protected LinearLayout mDiscountLayout, mBtnLayout;
+
+        public SuggestedOfferHolder(View view) {
+            super(view);
+            mRootCard = view;
+            mTitle = (TextView) view.findViewById(R.id.tv_offer_name);
+            mDetails = (TextView) view.findViewById(R.id.tv_view_details);
+            mExpiry = (TextView) view.findViewById(R.id.tv_offer_expiry);
+            mImage = (ImageView) view.findViewById(R.id.iv_offer);
+            deleteOffer = (ImageView) view.findViewById(R.id.iv_offer_delete);
+            mDiscountedPrice = (TextView) view.findViewById(R.id.tv_offer_discounted_price);
+            mDiscount = (TextView) view.findViewById(R.id.tv_offer_discount);
+            mMRP = (TextView) view.findViewById(R.id.tv_offer_mrp);
+            mStockLastTitle = (TextView) view.findViewById(R.id.tv_stock_last);
+            mDiscountLayout = (LinearLayout) view.findViewById(R.id.ll_discount);
+            mOfferAlreadyAdded = (TextView) view.findViewById(R.id.tv_offer_already_added);
+
+            mAddToOffer = (Button) view.findViewById(R.id.btn_add_to_offer);
+            mNeedThisItem = (Button) view.findViewById(R.id.btn_need_this_item);
+            mBtnLayout = (LinearLayout) view.findViewById(R.id.ll_btn_layout);
+        }
+    }
+
     public static class OfferHolder extends RecyclerView.ViewHolder {
         protected View mRootCard;
-        protected TextView mTitle, mDescription, mExpiry;
-        protected ImageView addUser, editOffer, deleteOffer;
+        protected TextView mTitle, mDescription, mExpiry, mOfferAlreadyAdded;
+        protected ImageView deleteOffer;
         protected PhotoView mImage;
+        protected Button mAddToOffer, mNeedThisItem;
+        protected LinearLayout mBtnLayout;
 
         public OfferHolder(View view) {
             super(view);
@@ -51,9 +84,12 @@ public class OfferAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             mDescription = (TextView) view.findViewById(R.id.tv_offer_description);
             mExpiry = (TextView) view.findViewById(R.id.tv_offer_expiry);
             mImage = (PhotoView) view.findViewById(R.id.iv_offer);
-            addUser = (ImageView) view.findViewById(R.id.iv_offer_add_user);
-            editOffer = (ImageView) view.findViewById(R.id.iv_offer_edit);
             deleteOffer = (ImageView) view.findViewById(R.id.iv_offer_delete);
+            mOfferAlreadyAdded = (TextView) view.findViewById(R.id.tv_offer_already_added);
+
+            mAddToOffer = (Button) view.findViewById(R.id.btn_add_to_offer);
+            mNeedThisItem = (Button) view.findViewById(R.id.btn_need_this_item);
+            mBtnLayout = (LinearLayout) view.findViewById(R.id.ll_btn_layout);
         }
     }
 
@@ -94,7 +130,13 @@ public class OfferAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = null;
-        if (offerType == Constants.TYPE_NORMAL_OFFER) {
+        if (offerType == Constants.OFFER_TYPE_NEW_PRODUCT || offerType == Constants.OFFER_TYPE_DISCOUNTED || offerType == Constants.OFFER_TYPE_BOGO ||
+                offerType == Constants.OFFER_TYPE_EXTRA) {
+            itemView = LayoutInflater.
+                    from(parent.getContext()).
+                    inflate(R.layout.row_suggested_offer_item, parent, false);
+            return new SuggestedOfferHolder(itemView);
+        } else if (offerType == Constants.OFFER_TYPE_GENERAL) {
             itemView = LayoutInflater.
                     from(parent.getContext()).
                     inflate(R.layout.row_offer_item, parent, false);
@@ -109,10 +151,13 @@ public class OfferAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        if (offerType == Constants.TYPE_NORMAL_OFFER)
+        if (offerType == Constants.OFFER_TYPE_GENERAL)
             onBindNormalOfferViewHolder(holder, position);
         else if (offerType == Constants.TYPE_BARCODE_OFFER)
             onBindBarCodeOfferViewHolder(holder, position);
+        else if (offerType == Constants.OFFER_TYPE_NEW_PRODUCT || offerType == Constants.OFFER_TYPE_DISCOUNTED || offerType == Constants.OFFER_TYPE_BOGO ||
+                offerType == Constants.OFFER_TYPE_EXTRA)
+            onBindSuggestedOfferViewHolder(holder, position);
     }
 
     public void onBindNormalOfferViewHolder(RecyclerView.ViewHolder holder, final int position) {
@@ -147,25 +192,52 @@ public class OfferAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 .placeholder(ContextCompat.getDrawable(offerHolder.mDescription.getContext(), R.drawable.ic_default_offer_image))
                 .into(offerHolder.mImage);
 
-        offerHolder.addUser.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mListener != null)
-                    mListener.onOfferManupulation(position, Constants.ADD_USER_FOR_OFFER);
-            }
-        });
-        offerHolder.editOffer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mListener != null)
-                    mListener.onOfferManupulation(position, Constants.EDIT_OFFER);
-            }
-        });
+//        offerHolder.addUser.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                if (mListener != null)
+//                    mListener.onOfferManupulation(position, Constants.ADD_USER_FOR_OFFER);
+//            }
+//        });
+//        offerHolder.editOffer.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                if (mListener != null)
+//                    mListener.onOfferManupulation(position, Constants.EDIT_OFFER);
+//            }
+//        });
+
+        if (model.isOfferAdded()) {
+            offerHolder.mNeedThisItem.setVisibility(View.GONE);
+            offerHolder.mAddToOffer.setVisibility(View.GONE);
+            offerHolder.mOfferAlreadyAdded.setVisibility(View.VISIBLE);
+        } else {
+            offerHolder.mNeedThisItem.setVisibility(View.VISIBLE);
+            offerHolder.mAddToOffer.setVisibility(View.VISIBLE);
+            offerHolder.mOfferAlreadyAdded.setVisibility(View.GONE);
+        }
+
         offerHolder.deleteOffer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (mListener != null)
                     mListener.onOfferManupulation(position, Constants.DELETE_OFFER);
+            }
+        });
+
+        offerHolder.mAddToOffer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mListener != null)
+                    mListener.onOfferManupulation(position, Constants.ADD_OFFER_TO_SELLER);
+            }
+        });
+
+        offerHolder.mNeedThisItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mListener != null)
+                    mListener.onOfferManupulation(position, Constants.NEED_THIS_ITEM);
             }
         });
     }
@@ -204,6 +276,87 @@ public class OfferAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             public void onClick(View view) {
                 if (mListener != null)
                     mListener.onOfferManupulation(position, Constants.DELETE_OFFER);
+            }
+        });
+    }
+
+    public void onBindSuggestedOfferViewHolder(RecyclerView.ViewHolder holder, final int position) {
+
+        final SuggestedOfferHolder offerHolder = (SuggestedOfferHolder) holder;
+
+        final OfferItem offerItem = mList.get(position);
+
+        String rupee = offerHolder.mTitle.getContext().getString(R.string.rupee_sign);
+        offerHolder.mTitle.setText(offerItem.getSkuTitle());
+        offerHolder.mMRP.setText("MRP " + rupee + offerItem.getMrp());
+
+        if (offerType == Constants.OFFER_TYPE_DISCOUNTED) {
+            offerHolder.mDiscountedPrice.setText("PRICE " + rupee + offerItem.getOfferValue());
+            offerHolder.mDiscountedPrice.setVisibility(View.VISIBLE);
+            try {
+                double mrp = Double.parseDouble(offerItem.getMrp());
+                double discountedPrice = Double.parseDouble(offerItem.getOfferValue());
+
+                double percentage = (mrp - discountedPrice) / mrp * 100;
+                offerHolder.mDiscount.setText("(" + Utility.showDoubleString(percentage) + "% Off)");
+                offerHolder.mDiscount.setVisibility(View.VISIBLE);
+            } catch (Exception e) {
+                offerHolder.mDiscount.setVisibility(View.GONE);
+            }
+            offerHolder.mStockLastTitle.setVisibility(View.VISIBLE);
+            offerHolder.mDiscountLayout.setVisibility(View.VISIBLE);
+        } else {
+            offerHolder.mDiscountedPrice.setVisibility(View.GONE);
+            offerHolder.mDiscount.setVisibility(View.GONE);
+            offerHolder.mStockLastTitle.setVisibility(View.GONE);
+
+            offerHolder.mDiscountLayout.setVisibility(View.GONE);
+        }
+
+        if (offerType == Constants.OFFER_TYPE_NEW_PRODUCT) {
+            offerHolder.mExpiry.setVisibility(View.GONE);
+        }else
+            offerHolder.mExpiry.setVisibility(View.VISIBLE);
+
+        offerHolder.mExpiry.setText("Expires on: " + Utility.getFormattedDate(14, offerItem.getOfferEndDate(), 1));
+
+        String imageUrl = Constants.BASE_URL + "skus/" + offerItem.getSkuId() + "/measurements/" + offerItem.getSkuMeasurementId() + "/images";
+        Picasso.get()
+                .load(imageUrl)
+                .config(Bitmap.Config.RGB_565)
+                .placeholder(ContextCompat.getDrawable(offerHolder.mImage.getContext(), R.drawable.ic_placeholder_sku))
+                .memoryPolicy(MemoryPolicy.NO_CACHE)
+                .into(offerHolder.mImage);
+
+        offerHolder.deleteOffer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mListener != null)
+                    mListener.onOfferManupulation(position, Constants.DELETE_OFFER);
+            }
+        });
+
+        if (offerItem.isOfferAdded()) {
+            offerHolder.mBtnLayout.setVisibility(View.GONE);
+            offerHolder.mOfferAlreadyAdded.setVisibility(View.VISIBLE);
+        } else {
+            offerHolder.mBtnLayout.setVisibility(View.VISIBLE);
+            offerHolder.mOfferAlreadyAdded.setVisibility(View.GONE);
+        }
+
+        offerHolder.mAddToOffer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mListener != null)
+                    mListener.onOfferManupulation(position, Constants.ADD_OFFER_TO_SELLER);
+            }
+        });
+
+        offerHolder.mNeedThisItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mListener != null)
+                    mListener.onOfferManupulation(position, Constants.NEED_THIS_ITEM);
             }
         });
     }

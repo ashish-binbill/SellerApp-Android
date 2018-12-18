@@ -1,6 +1,5 @@
 package com.binbill.seller.Offers;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.binbill.seller.AppSession;
@@ -40,13 +40,17 @@ public class NormalOfferFragment extends Fragment implements OfferAdapter.OfferM
     private ArrayList<OfferItem> mNormalOfferList;
     private String mOfferIdToDelete = "";
     private Button noDataButton;
+    private int offerType = 1;
+
+    private RelativeLayout loaderLayout;
 
     public NormalOfferFragment() {
     }
 
-    public static NormalOfferFragment newInstance() {
+    public static NormalOfferFragment newInstance(int offerType) {
         NormalOfferFragment fragment = new NormalOfferFragment();
         Bundle args = new Bundle();
+        args.putInt(Constants.OFFER_TYPE, offerType);
         fragment.setArguments(args);
         return fragment;
     }
@@ -54,6 +58,8 @@ public class NormalOfferFragment extends Fragment implements OfferAdapter.OfferM
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        offerType = getArguments().getInt(Constants.OFFER_TYPE);
     }
 
     @Override
@@ -77,8 +83,9 @@ public class NormalOfferFragment extends Fragment implements OfferAdapter.OfferM
         noDataLayout = (LinearLayout) view.findViewById(R.id.no_data_layout);
 
         noDataButton = (AppButton) noDataLayout.findViewById(R.id.btn_no_data);
-        noDataButton.setVisibility(View.VISIBLE);
+        noDataButton.setVisibility(View.GONE);
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.sl_pull_to_refresh);
+        loaderLayout = (RelativeLayout) view.findViewById(R.id.just_sec_layout);
 
         setUpListeners();
     }
@@ -91,7 +98,7 @@ public class NormalOfferFragment extends Fragment implements OfferAdapter.OfferM
 
 
         String sellerId = AppSession.getInstance(getActivity()).getSellerId();
-        new RetrofitHelper(getActivity()).fetchOffersForSeller(sellerId, new RetrofitHelper.RetrofitCallback() {
+        new RetrofitHelper(getActivity()).fetchSuggestedOffersForSeller(sellerId, offerType, new RetrofitHelper.RetrofitCallback() {
             @Override
             public void onResponse(String response) {
                 handleResponse(response);
@@ -106,7 +113,7 @@ public class NormalOfferFragment extends Fragment implements OfferAdapter.OfferM
     }
 
     private void handleResponse(String response) {
-
+        swipeRefreshLayout.setRefreshing(false);
         try {
             JSONObject jsonObject = new JSONObject(response);
             if (jsonObject.getBoolean("status")) {
@@ -140,7 +147,7 @@ public class NormalOfferFragment extends Fragment implements OfferAdapter.OfferM
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         offerListView.setLayoutManager(llm);
-        OfferAdapter mAdapter = new OfferAdapter(this, mNormalOfferList ,Constants.TYPE_NORMAL_OFFER);
+        OfferAdapter mAdapter = new OfferAdapter(this, mNormalOfferList, offerType);
         offerListView.setAdapter(mAdapter);
 
         offerListView.setVisibility(View.VISIBLE);
@@ -150,11 +157,13 @@ public class NormalOfferFragment extends Fragment implements OfferAdapter.OfferM
 
     private void showNoOfferLayout() {
         TextView noDataText = (TextView) noDataLayout.findViewById(R.id.tv_no_data);
-        noDataText.setText(getString(R.string.no_offers_added));
+        noDataText.setText(getString(R.string.no_offers));
 
         noDataButton = (Button) noDataLayout.findViewById(R.id.btn_no_data);
         noDataButton.setText(getString(R.string.add_offers));
+        noDataButton.setVisibility(View.GONE);
         noDataLayout.setVisibility(View.VISIBLE);
+
         offerListView.setVisibility(View.GONE);
         shimmerview.setVisibility(View.GONE);
     }
@@ -170,6 +179,7 @@ public class NormalOfferFragment extends Fragment implements OfferAdapter.OfferM
 
                 makeOfferFetchApiCall();
 
+
             }
         });
 
@@ -184,28 +194,60 @@ public class NormalOfferFragment extends Fragment implements OfferAdapter.OfferM
     @Override
     public void onOfferManupulation(int position, String type) {
         switch (type) {
-            case Constants.ADD_USER_FOR_OFFER:
-                Intent addIntent = new Intent(getActivity(), PublishOfferToUserActivity_.class);
-                addIntent.putExtra(Constants.OFFER_ITEM, mNormalOfferList.get(position));
-                addIntent.putExtra(Constants.FLOW_TYPE, Constants.SHOW_LINKED_USERS);
-                startActivity(addIntent);
-                break;
-            case Constants.EDIT_OFFER:
-                Intent intent = new Intent(getActivity(), AddOfferActivity_.class);
-                intent.putExtra(Constants.OFFER_ITEM, mNormalOfferList.get(position));
-                startActivity(intent);
-                break;
             case Constants.DELETE_OFFER:
-
                 mOfferIdToDelete = mNormalOfferList.get(position).getOfferId();
-                ((OfferActivity)getActivity()).showYesNoDialog();
+                ((SuggestedOffersActivity) getActivity()).showYesNoDialog();
+                break;
+            case Constants.ADD_OFFER_TO_SELLER:
+                mOfferIdToDelete = mNormalOfferList.get(position).getOfferId();
+                makeLinkOfferWithSellerApiCall();
+                break;
+            case Constants.NEED_THIS_ITEM:
+                mOfferIdToDelete = mNormalOfferList.get(position).getOfferId();
+                makeNeedThisItemApiCall();
                 break;
         }
     }
 
+    private void makeNeedThisItemApiCall() {
+        loaderLayout.setVisibility(View.VISIBLE);
+        new RetrofitHelper(getActivity()).sellerNeedThisItem(offerType, mOfferIdToDelete, new RetrofitHelper.RetrofitCallback() {
+            @Override
+            public void onResponse(String response) {
+                loaderLayout.setVisibility(View.GONE);
+                ((BaseActivity) getActivity()).showSnackBar(getString(R.string.service_requested_successfully));
+                makeOfferFetchApiCall();
+            }
+
+            @Override
+            public void onErrorResponse() {
+                loaderLayout.setVisibility(View.GONE);
+                ((BaseActivity) getActivity()).showSnackBar(getString(R.string.something_went_wrong));
+            }
+        });
+    }
+
+    private void makeLinkOfferWithSellerApiCall() {
+        loaderLayout.setVisibility(View.VISIBLE);
+        new RetrofitHelper(getActivity()).linkOfferWithSeller(offerType, mOfferIdToDelete, new RetrofitHelper.RetrofitCallback() {
+            @Override
+            public void onResponse(String response) {
+                loaderLayout.setVisibility(View.GONE);
+                ((BaseActivity) getActivity()).showSnackBar(getString(R.string.offer_successfully_added));
+                makeOfferFetchApiCall();
+            }
+
+            @Override
+            public void onErrorResponse() {
+                loaderLayout.setVisibility(View.GONE);
+                ((BaseActivity) getActivity()).showSnackBar(getString(R.string.something_went_wrong));
+            }
+        });
+    }
+
     private void makeDeleteOfferApiCall() {
 
-        new RetrofitHelper(getActivity()).deleteOfferForSeller(mOfferIdToDelete, new RetrofitHelper.RetrofitCallback() {
+        new RetrofitHelper(getActivity()).deleteSuggestedOfferForSeller(offerType, mOfferIdToDelete, new RetrofitHelper.RetrofitCallback() {
             @Override
             public void onResponse(String response) {
                 makeOfferFetchApiCall();

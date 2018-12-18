@@ -102,12 +102,6 @@ public class AddBarCodeOfferActivity extends BaseActivity implements ZXingScanne
     @AfterViews
     public void setUpView() {
 
-        if (getIntent().hasExtra(Constants.OFFER_ITEM)) {
-            mType = EDIT_OFFER;
-            mOfferItem = (OfferItem) getIntent().getSerializableExtra(Constants.OFFER_ITEM);
-            setUpData(mOfferItem);
-        }
-
         ViewGroup contentFrame = (ViewGroup) findViewById(R.id.content_frame);
         mScannerView = new ZXingScannerView(this);
         contentFrame.addView(mScannerView);
@@ -117,6 +111,12 @@ public class AddBarCodeOfferActivity extends BaseActivity implements ZXingScanne
         setUpToolbar();
         setUpListener();
         checkCameraPermission();
+
+        if (getIntent().hasExtra(Constants.OFFER_ITEM)) {
+            mType = EDIT_OFFER;
+            mOfferItem = (OfferItem) getIntent().getSerializableExtra(Constants.OFFER_ITEM);
+            setUpData(mOfferItem);
+        }
     }
 
     private void setUpData(OfferItem offerItem) {

@@ -165,7 +165,7 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 else if (!Utility.isEmpty(userModel.getUserEmail()))
                     orderHolder.mUserName.setText(userModel.getUserEmail());
                 else
-                    orderHolder.mUserName.setText(userModel.getUserMobile());
+                    orderHolder.mUserName.setText(Utility.getMaskedNumber(userModel.getUserMobile()));
             }
 
             orderHolder.mAddress.setText(model.getAddress());

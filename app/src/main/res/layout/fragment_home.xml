@@ -5,307 +5,352 @@
     android:layout_height="match_parent"
     tools:context="com.binbill.seller.Dashboard.HomeFragment">
 
-    <LinearLayout
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
-        <android.support.v7.widget.CardView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:elevation="@dimen/dimen_10dp">
+            android:orientation="vertical">
 
-            <LinearLayout
+            <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/blue_bg_color"
-                android:orientation="vertical"
-                android:padding="@dimen/dimen_16dp">
+                android:elevation="@dimen/dimen_10dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/dimen_90dp"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:id="@+id/ll_transaction"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginRight="@dimen/dimen_10dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/bg_transactions"
-                        android:gravity="bottom"
-                        android:orientation="vertical"
-                        android:padding="@dimen/dimen_10dp">
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/ic_bar_icon" />
-
-                        <TextView
-                            android:id="@+id/transaction_value"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="bottom"
-                            android:layout_marginTop="@dimen/dimen_5dp"
-                            android:ellipsize="end"
-                            android:maxLines="1"
-                            android:singleLine="true"
-                            android:text=""
-                            android:textColor="@color/color_white"
-                            android:textSize="@dimen/dimen_18dp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/total_transaction_value"
-                            android:textColor="@color/color_white"
-                            android:textSize="@dimen/dimen_12dp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/ll_agent_cashback"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="@dimen/dimen_10dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/bg_my_customers"
-                        android:gravity="bottom"
-                        android:orientation="vertical"
-                        android:padding="@dimen/dimen_10dp">
-
-                        <ImageView
-                            android:id="@+id/iv_customer"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/ic_customer_icon" />
-
-                        <TextView
-                            android:id="@+id/customers"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="bottom"
-                            android:layout_marginTop="@dimen/dimen_5dp"
-                            android:text=""
-                            android:textColor="@color/color_white"
-                            android:textSize="@dimen/dimen_18dp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/tv_label_customer"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/my_customers"
-                            android:textColor="@color/color_white"
-                            android:textSize="@dimen/dimen_12dp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/dimen_90dp"
-                    android:layout_marginTop="@dimen/dimen_10dp"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:id="@+id/ll_credit"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginRight="@dimen/dimen_10dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/bg_credit"
-                        android:gravity="bottom"
-                        android:orientation="vertical"
-                        android:padding="@dimen/dimen_10dp">
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/ic_card_icon" />
-
-                        <TextView
-                            android:id="@+id/pending_credit"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="bottom"
-                            android:layout_marginTop="@dimen/dimen_5dp"
-                            android:text=""
-                            android:textColor="@color/color_white"
-                            android:textSize="@dimen/dimen_18dp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/outstanding_credit"
-                            android:textColor="@color/color_white"
-                            android:textSize="@dimen/dimen_12dp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/ll_points"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="@dimen/dimen_10dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/bg_loyalty"
-                        android:gravity="bottom"
-                        android:orientation="vertical"
-                        android:padding="@dimen/dimen_10dp">
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/ic_loyalty_icon" />
-
-                        <TextView
-                            android:id="@+id/loyalty_points"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="bottom"
-                            android:layout_marginTop="@dimen/dimen_2dp"
-                            android:text=""
-                            android:textColor="@color/color_white"
-                            android:textSize="@dimen/dimen_18dp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/loyalty_discount"
-                            android:textColor="@color/color_white"
-                            android:textSize="@dimen/dimen_12dp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/dimen_90dp"
-                    android:layout_marginTop="@dimen/dimen_10dp"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:id="@+id/ll_lost_sales"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginRight="@dimen/dimen_10dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/bg_lost_sales"
-                        android:gravity="bottom"
-                        android:orientation="vertical"
-                        android:padding="@dimen/dimen_10dp">
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/ic_lost_sale" />
-
-                        <TextView
-                            android:id="@+id/tv_lost_sales_value"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="bottom"
-                            android:layout_marginTop="@dimen/dimen_5dp"
-                            android:text=""
-                            android:textColor="@color/color_white"
-                            android:textSize="@dimen/dimen_18dp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/tv_lost_sales"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/lost_sales_count"
-                            android:textColor="@color/color_white"
-                            android:textSize="@dimen/dimen_12dp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:visibility="invisible"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="@dimen/dimen_10dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/bg_loyalty"
-                        android:gravity="bottom"
-                        android:orientation="vertical"
-                        android:padding="@dimen/dimen_10dp">
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/ic_loyalty_icon" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="bottom"
-                            android:layout_marginTop="@dimen/dimen_2dp"
-                            android:text=""
-                            android:textColor="@color/color_white"
-                            android:textSize="@dimen/dimen_18dp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Loyalty Discount"
-                            android:textColor="@color/color_white"
-                            android:textSize="@dimen/dimen_12dp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-                </LinearLayout>
-
-            </LinearLayout>
-
-        </android.support.v7.widget.CardView>
-
-        <android.support.v7.widget.CardView
-            android:id="@+id/manage_offers"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/dimen_10dp"
-            android:layout_marginLeft="@dimen/dimen_20dp"
-            android:layout_marginRight="@dimen/dimen_20dp"
-            android:layout_marginTop="@dimen/dimen_20dp"
-            android:elevation="@dimen/dimen_10dp"
-            app:cardCornerRadius="@dimen/dimen_8dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/f2f2f2"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/dimen_10dp"
-                    android:src="@drawable/ic_offers" />
+                    android:background="@color/blue_bg_color"
+                    android:orientation="vertical"
+                    android:padding="@dimen/dimen_16dp">
 
-                <TextView
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dimen_90dp"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:id="@+id/ll_transaction"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginRight="@dimen/dimen_10dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_transactions"
+                            android:gravity="bottom"
+                            android:orientation="vertical"
+                            android:padding="@dimen/dimen_10dp">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/ic_bar_icon" />
+
+                            <TextView
+                                android:id="@+id/transaction_value"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="bottom"
+                                android:layout_marginTop="@dimen/dimen_5dp"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:singleLine="true"
+                                android:text=""
+                                android:textColor="@color/color_white"
+                                android:textSize="@dimen/dimen_18dp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/total_transaction_value"
+                                android:textColor="@color/color_white"
+                                android:textSize="@dimen/dimen_12dp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/ll_agent_cashback"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="@dimen/dimen_10dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_my_customers"
+                            android:gravity="bottom"
+                            android:orientation="vertical"
+                            android:padding="@dimen/dimen_10dp">
+
+                            <ImageView
+                                android:id="@+id/iv_customer"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/ic_customer_icon" />
+
+                            <TextView
+                                android:id="@+id/customers"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="bottom"
+                                android:layout_marginTop="@dimen/dimen_5dp"
+                                android:text=""
+                                android:textColor="@color/color_white"
+                                android:textSize="@dimen/dimen_18dp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tv_label_customer"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/my_customers"
+                                android:textColor="@color/color_white"
+                                android:textSize="@dimen/dimen_12dp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dimen_90dp"
+                        android:layout_marginTop="@dimen/dimen_10dp"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:id="@+id/ll_credit"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginRight="@dimen/dimen_10dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_credit"
+                            android:gravity="bottom"
+                            android:orientation="vertical"
+                            android:padding="@dimen/dimen_10dp">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/ic_card_icon" />
+
+                            <TextView
+                                android:id="@+id/pending_credit"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="bottom"
+                                android:layout_marginTop="@dimen/dimen_5dp"
+                                android:text=""
+                                android:textColor="@color/color_white"
+                                android:textSize="@dimen/dimen_18dp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/outstanding_credit"
+                                android:textColor="@color/color_white"
+                                android:textSize="@dimen/dimen_12dp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/ll_points"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="@dimen/dimen_10dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_loyalty"
+                            android:gravity="bottom"
+                            android:orientation="vertical"
+                            android:padding="@dimen/dimen_10dp">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/ic_loyalty_icon" />
+
+                            <TextView
+                                android:id="@+id/loyalty_points"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="bottom"
+                                android:layout_marginTop="@dimen/dimen_2dp"
+                                android:text=""
+                                android:textColor="@color/color_white"
+                                android:textSize="@dimen/dimen_18dp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/loyalty_discount"
+                                android:textColor="@color/color_white"
+                                android:textSize="@dimen/dimen_12dp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dimen_90dp"
+                        android:layout_marginTop="@dimen/dimen_10dp"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:id="@+id/ll_lost_sales"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginRight="@dimen/dimen_10dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_lost_sales"
+                            android:gravity="bottom"
+                            android:orientation="vertical"
+                            android:padding="@dimen/dimen_10dp">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/ic_lost_sale" />
+
+                            <TextView
+                                android:id="@+id/tv_lost_sales_value"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="bottom"
+                                android:layout_marginTop="@dimen/dimen_5dp"
+                                android:text=""
+                                android:textColor="@color/color_white"
+                                android:textSize="@dimen/dimen_18dp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tv_lost_sales"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/lost_sales_count"
+                                android:textColor="@color/color_white"
+                                android:textSize="@dimen/dimen_12dp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="@dimen/dimen_10dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_loyalty"
+                            android:gravity="bottom"
+                            android:orientation="vertical"
+                            android:padding="@dimen/dimen_10dp"
+                            android:visibility="invisible">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/ic_loyalty_icon" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="bottom"
+                                android:layout_marginTop="@dimen/dimen_2dp"
+                                android:text=""
+                                android:textColor="@color/color_white"
+                                android:textSize="@dimen/dimen_18dp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Loyalty Discount"
+                                android:textColor="@color/color_white"
+                                android:textSize="@dimen/dimen_12dp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/manage_offers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dimen_10dp"
+                android:layout_marginLeft="@dimen/dimen_20dp"
+                android:layout_marginRight="@dimen/dimen_20dp"
+                android:layout_marginTop="@dimen/dimen_20dp"
+                android:elevation="@dimen/dimen_10dp"
+                app:cardCornerRadius="@dimen/dimen_8dp">
+
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="@dimen/dimen_5dp"
-                    android:fontFamily="sans-serif-medium"
-                    android:gravity="center_vertical"
-                    android:lineSpacingExtra="-10sp"
-                    android:text="@string/manage_offers"
-                    android:textColor="@color/text_44"
-                    android:textSize="20sp" />
+                    android:layout_height="wrap_content"
+                    android:background="@color/f2f2f2"
+                    android:orientation="horizontal">
 
-            </LinearLayout>
-        </android.support.v7.widget.CardView>
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/dimen_10dp"
+                        android:src="@drawable/ic_offers" />
 
-    </LinearLayout>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="@dimen/dimen_5dp"
+                        android:fontFamily="sans-serif-medium"
+                        android:gravity="center_vertical"
+                        android:lineSpacingExtra="-10sp"
+                        android:text="@string/manage_offers"
+                        android:textColor="@color/text_44"
+                        android:textSize="20sp" />
+
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/suggested_offers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dimen_10dp"
+                android:layout_marginLeft="@dimen/dimen_20dp"
+                android:layout_marginRight="@dimen/dimen_20dp"
+                android:layout_marginTop="@dimen/dimen_10dp"
+                android:elevation="@dimen/dimen_10dp"
+                app:cardCornerRadius="@dimen/dimen_8dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/f2f2f2"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/dimen_10dp"
+                        android:src="@drawable/ic_offers_blue" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="@dimen/dimen_5dp"
+                        android:fontFamily="sans-serif-medium"
+                        android:gravity="center_vertical"
+                        android:lineSpacingExtra="-10sp"
+                        android:text="@string/suggested_offers"
+                        android:textColor="@color/text_44"
+                        android:textSize="20sp" />
+
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+        </LinearLayout>
+
+
+    </android.support.v4.widget.NestedScrollView>
 
 
 </FrameLayout>

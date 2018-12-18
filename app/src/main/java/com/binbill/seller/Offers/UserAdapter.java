@@ -245,7 +245,7 @@ public class UserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             else if (!Utility.isEmpty(model.getUserEmail()))
                 userHolder.mUserName.setText(model.getUserEmail());
             else
-                userHolder.mUserName.setText(model.getUserMobile());
+                userHolder.mUserName.setText(Utility.getMaskedNumber(model.getUserMobile()));
 
             userHolder.mUserTransactions.setText(model.getTransactionCount());
             userHolder.mUserCredit.setText(userHolder.mUserCredit.getContext().getString(R.string.rupee_sign) + " " + model.getUserCredit());
@@ -375,7 +375,7 @@ public class UserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         else if (!Utility.isEmpty(model.getUserEmail()))
             userHolder.mUserName.setText(model.getUserEmail());
         else
-            userHolder.mUserName.setText(model.getUserMobile());
+            userHolder.mUserName.setText(Utility.getMaskedNumber(model.getUserMobile()));
 
 
         int transactionCount = 0;

@@ -19,6 +19,8 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -101,7 +103,7 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
     ImageView iv_user_image, header_quantity;
 
     @ViewById
-    TextView tv_delivery_time_left, tv_delivery_time;
+    TextView tv_delivery_time_left, tv_delivery_time, tv_delivery_time_header;
 
     @ViewById
     TextView tv_start_time_header, tv_end_time_header, tv_time_elapsed_header, tv_delivery_header_fmcg, tv_delivery_header_service;
@@ -109,7 +111,7 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
     RecyclerView rv_shopping_list;
 
     @ViewById
-    LinearLayout shimmer_view_container, ll_order_delivery_time, ll_offer_layout, ll_user_action, ll_bill_layout, start_time, end_time, time_elapsed, ll_amount_entry, ll_call_customer;
+    LinearLayout shimmer_view_container, ll_discount_layout, ll_order_delivery_time, ll_offer_layout, ll_user_action, ll_bill_layout, start_time, end_time, time_elapsed, ll_amount_entry, ll_call_customer;
     private Order orderDetails;
 
     @ViewById
@@ -119,7 +121,7 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
     FrameLayout fl_icon_chat;
 
     @ViewById
-    PrefixEditText et_total_amount, et_offered_amount;
+    PrefixEditText et_total_amount, et_offered_amount, et_discount_total_amount;
 
     @ViewById
     TextView tv_delivery_review, tv_seller_review;
@@ -161,6 +163,8 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
     private OrderShoppingListAdapter mAdapter;
     private AlertDialog mSKUDialog;
     private boolean[] mUpdateStateArray;
+    private CountDownTimer autoCancelTimer;
+    private CountDownTimer deliveryTimer;
 
     @AfterViews
     public void setUpView() {
@@ -252,6 +256,23 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
 
     private void setUpListener() {
 
+        et_discount_total_amount.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                setAmountInTotalEditText();
+            }
+        });
+
         tv_delivery_time.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -319,9 +340,14 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                             deliverymin = tv_delivery_time.getText().toString();
                         }
 
+                        String discountAmount = "";
+                        if (!Utility.isEmpty(et_discount_total_amount.getText().toString())) {
+                            discountAmount = et_discount_total_amount.getText().toString().trim();
+                        }
+
                         btn_accept.setVisibility(View.GONE);
                         btn_accept_progress.setVisibility(View.VISIBLE);
-                        new RetrofitHelper(OrderDetailsActivity.this).sendOrderModificationCall(orderDetails.getOrderId(), deliverymin, orderDetails.getUserId(), json, new RetrofitHelper.RetrofitCallback() {
+                        new RetrofitHelper(OrderDetailsActivity.this).sendOrderModificationCall(orderDetails.getOrderId(), deliverymin, orderDetails.getUserId(), json, discountAmount, new RetrofitHelper.RetrofitCallback() {
                             @Override
                             public void onResponse(String response) {
                                 btn_accept.setVisibility(View.VISIBLE);
@@ -352,8 +378,12 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                         }.getType();
                         String json = gson.toJson(updatedList, type);
 
+                        String discountAmount = "";
+                        if (!Utility.isEmpty(et_discount_total_amount.getText().toString())) {
+                            discountAmount = et_discount_total_amount.getText().toString().trim();
+                        }
 
-                        new RetrofitHelper(OrderDetailsActivity.this).sendOrderApprovalCall(orderDetails.getOrderId(), orderDetails.getUserId(), json, new RetrofitHelper.RetrofitCallback() {
+                        new RetrofitHelper(OrderDetailsActivity.this).sendOrderApprovalCall(orderDetails.getOrderId(), orderDetails.getUserId(), json, discountAmount, new RetrofitHelper.RetrofitCallback() {
                             @Override
                             public void onResponse(String response) {
                                 btn_accept.setVisibility(View.VISIBLE);
@@ -406,7 +436,12 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                             totalAmount = et_total_amount.getText().toString().trim();
                         }
 
-                        new RetrofitHelper(OrderDetailsActivity.this).sendOrderOutForDeliveryCall(orderDetails.getOrderId(), orderDetails.getUserId(), json, "", totalAmount, new RetrofitHelper.RetrofitCallback() {
+                        String discountAmount = "";
+                        if (!Utility.isEmpty(et_discount_total_amount.getText().toString())) {
+                            discountAmount = et_discount_total_amount.getText().toString().trim();
+                        }
+
+                        new RetrofitHelper(OrderDetailsActivity.this).sendOrderOutForDeliveryCall(orderDetails.getOrderId(), orderDetails.getUserId(), json, "", totalAmount, discountAmount, new RetrofitHelper.RetrofitCallback() {
                             @Override
                             public void onResponse(String response) {
                                 btn_accept.setVisibility(View.VISIBLE);
@@ -442,7 +477,7 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                         btn_accept_progress.setVisibility(View.VISIBLE);
                         btn_accept.setVisibility(View.GONE);
 
-                        new RetrofitHelper(OrderDetailsActivity.this).sendOrderOutForDeliveryCall(orderDetails.getOrderId(), orderDetails.getUserId(), null, null, null, new RetrofitHelper.RetrofitCallback() {
+                        new RetrofitHelper(OrderDetailsActivity.this).sendOrderOutForDeliveryCall(orderDetails.getOrderId(), orderDetails.getUserId(), null, null, null, null, new RetrofitHelper.RetrofitCallback() {
                             @Override
                             public void onResponse(String response) {
                                 btn_accept.setVisibility(View.VISIBLE);
@@ -514,7 +549,12 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                         totalAmount = et_total_amount.getText().toString().trim();
                     }
 
-                    new RetrofitHelper(OrderDetailsActivity.this).sendOrderOutForDeliveryCall(orderDetails.getOrderId(), orderDetails.getUserId(), json, deliveryId, totalAmount, new RetrofitHelper.RetrofitCallback() {
+                    String discountAmount = "";
+                    if (!Utility.isEmpty(et_discount_total_amount.getText().toString())) {
+                        discountAmount = et_discount_total_amount.getText().toString().trim();
+                    }
+
+                    new RetrofitHelper(OrderDetailsActivity.this).sendOrderOutForDeliveryCall(orderDetails.getOrderId(), orderDetails.getUserId(), json, deliveryId, totalAmount, discountAmount, new RetrofitHelper.RetrofitCallback() {
                         @Override
                         public void onResponse(String response) {
                             btn_accept.setVisibility(View.VISIBLE);
@@ -701,7 +741,15 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
 
     private void setUpData() {
 
-        if (orderDetails.getOrderType().equalsIgnoreCase(Constants.ORDER_TYPE_SERVICE)) {
+        if (autoCancelTimer != null) {
+            autoCancelTimer.cancel();
+        }
+
+        if (deliveryTimer != null) {
+            deliveryTimer.cancel();
+        }
+
+        if (orderDetails.getOrderType().equalsIgnoreCase(Constants.ORDER_TYPE_SERVICE) || orderDetails.isCollectAtStore()) {
             ll_order_delivery_time.setVisibility(View.GONE);
         } else {
             if (orderDetails.getOrderStatus() != Constants.STATUS_CANCEL && orderDetails.getOrderStatus() != Constants.STATUS_COMPLETE &&
@@ -711,7 +759,7 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                 if (orderDetails.getRemainingSeconds() > 0) {
                     long millisUntilFinished = orderDetails.getRemainingSeconds() * 1000;
 
-                    new CountDownTimer(millisUntilFinished, 1000) {
+                    deliveryTimer = new CountDownTimer(millisUntilFinished, 1000) {
 
                         public void onTick(long millisUntilFinished) {
                             tv_delivery_time_left.setText("" + String.format("%d: %02d",
@@ -725,8 +773,29 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                         }
 
                     }.start();
-
+                    tv_delivery_time_header.setText(getString(R.string.order_delivery_time_left));
                     tv_delivery_time.setText(orderDetails.getDeliveryMinutes() + " min");
+                } else if (orderDetails.getAutoCancelRemainingSeconds() > 0) {
+                    long millisUntilFinished = orderDetails.getAutoCancelRemainingSeconds() * 1000;
+
+                    autoCancelTimer = new CountDownTimer(millisUntilFinished, 1000) {
+
+                        public void onTick(long millisUntilFinished) {
+                            tv_delivery_time_left.setText("" + String.format("%d: %02d",
+                                    TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished),
+                                    TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) -
+                                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))));
+                        }
+
+                        public void onFinish() {
+                            tv_delivery_time_left.setText("Time Up!");
+                        }
+
+                    }.start();
+                    tv_delivery_time_header.setText(getString(R.string.response_time_left));
+                    tv_delivery_time.setText(orderDetails.getDeliveryMinutes() + " min");
+                    tv_delivery_time.setText("45 mins");
+
                 } else if (orderDetails.getOrderStatus() == Constants.STATUS_NEW_ORDER) {
                     tv_delivery_time.setText("45 mins");
                     tv_delivery_time_left.setText("---");
@@ -854,9 +923,11 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                     orderDetails.getOrderStatus() == Constants.STATUS_REJECTED || orderDetails.getOrderStatus() == Constants.STATUS_CANCEL) {
                 ll_bill_layout.setVisibility(View.VISIBLE);
                 ll_amount_entry.setVisibility(View.GONE);
+                ll_discount_layout.setVisibility(View.GONE);
             } else {
                 ll_amount_entry.setVisibility(View.VISIBLE);
                 ll_bill_layout.setVisibility(View.GONE);
+                ll_discount_layout.setVisibility(View.VISIBLE);
             }
 
             /**
@@ -978,10 +1049,16 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                 }
             }
 
+            if (!Utility.isEmpty(et_discount_total_amount.getText().toString())) {
+                double discountAmount = Double.parseDouble(et_discount_total_amount.getText().toString().trim());
+                offerAmount = offerAmount - discountAmount;
+            }
+
+
             if (orderDetails.getOrderStatus() != Constants.STATUS_CANCEL && orderDetails.getOrderStatus() != Constants.STATUS_COMPLETE &&
                     orderDetails.getOrderStatus() != Constants.STATUS_OUT_FOR_DELIVERY && orderDetails.getOrderStatus() != Constants.STATUS_REJECTED &&
                     orderDetails.getOrderStatus() != Constants.STATUS_AUTO_CANCEL && orderDetails.getOrderStatus() != Constants.STATUS_AUTO_EXPIRED) {
-                if (Double.compare(totalAmount, offerAmount) != 0 && Utility.isValueNonZero(String.valueOf(offerAmount))) {
+                if (Double.compare(totalAmount, offerAmount) > 0 && Utility.isValueNonZero(String.valueOf(offerAmount))) {
                     ll_offer_layout.setVisibility(View.VISIBLE);
                     et_offered_amount.setText(Utility.showDoubleString(offerAmount));
                 } else {
@@ -1196,7 +1273,7 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
 
     public void changeButtonStateToApproval(int state) {
 
-        if (!orderDetails.getOrderType().equalsIgnoreCase(Constants.ORDER_TYPE_SERVICE))
+        if (!orderDetails.getOrderType().equalsIgnoreCase(Constants.ORDER_TYPE_SERVICE) && ll_order_delivery_time.getVisibility() == View.VISIBLE)
             if (state == 1 && !tv_delivery_time.getText().toString().toLowerCase().equalsIgnoreCase("45 mins"))
                 state = 0;
 
@@ -1217,7 +1294,7 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                     ll_user_action.setVisibility(View.VISIBLE);
                 } else
                     ll_user_action.setVisibility(View.GONE);
-                frame_decline.setVisibility(View.VISIBLE);
+                frame_decline.setVisibility(View.GONE);
 
                 if (orderDetails.getOrderType().equalsIgnoreCase(Constants.ORDER_TYPE_SERVICE))
                     btn_accept.setText(getString(R.string.assign));
@@ -1244,6 +1321,7 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
             default:
                 ll_user_action.setVisibility(View.GONE);
                 ll_amount_entry.setVisibility(View.GONE);
+                frame_decline.setVisibility(View.GONE);
                 break;
         }
     }
@@ -1339,7 +1417,7 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                 else if (!Utility.isEmpty(userModel.getUserEmail()))
                     tv_name.setText(userModel.getUserEmail());
                 else
-                    tv_name.setText(userModel.getUserMobile());
+                    tv_name.setText(Utility.getMaskedNumber(userModel.getUserMobile()));
 
 
                 Calendar calendar = Calendar.getInstance();
@@ -1754,7 +1832,7 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                 if (mSKUDialog != null)
                     mSKUDialog.dismiss();
 
-                if (!tv_delivery_time.getText().toString().toLowerCase().equalsIgnoreCase("45 mins")){
+                if (!tv_delivery_time.getText().toString().toLowerCase().equalsIgnoreCase("45 mins")) {
                     showAlertDialogOfDeliveryTime();
                 }
 
@@ -1776,7 +1854,7 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
     private void showAlertDialogOfDeliveryTime() {
 
         android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
-        YesNoDialogFragment fragment = YesNoDialogFragment.newInstance(true,"Cancel",  "Ok", getString(R.string.delivery_time_message));
+        YesNoDialogFragment fragment = YesNoDialogFragment.newInstance(true, "Cancel", "Ok", getString(R.string.delivery_time_message));
         fragment.show(fm, "YesNoDialogFragment");
     }
 
@@ -1944,7 +2022,7 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
         if (isProceed) {
             tv_delivery_time.setText("45 Mins");
             changeButtonStateToApproval(1);
-        }else{
+        } else {
 
         }
     }

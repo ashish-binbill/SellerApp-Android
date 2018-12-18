@@ -70,6 +70,13 @@ public class Order implements Serializable {
     @SerializedName("delivery_minutes")
     String deliveryMinutes;
 
+    @SerializedName("auto_cancel_remaining_seconds")
+    long autoCancelRemainingSeconds;
+
+    public long getAutoCancelRemainingSeconds() {
+        return autoCancelRemainingSeconds;
+    }
+
     public String getDeliveryMinutes() {
         return deliveryMinutes;
     }

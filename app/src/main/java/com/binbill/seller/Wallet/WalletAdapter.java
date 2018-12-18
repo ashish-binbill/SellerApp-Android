@@ -332,6 +332,18 @@ public class WalletAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 walletHolder.userImage.setImageDrawable(ContextCompat.getDrawable(walletHolder.userImage.getContext(), R.drawable.ic_binbill));
 
             }
+
+            if (model.getCashbackSource().equalsIgnoreCase("10")) {
+                /**
+                 * success
+                 */
+                walletHolder.mStatus.setText(walletHolder.mStatus.getContext().getString(R.string.success));
+                walletHolder.mStatus.setBackground(ContextCompat.getDrawable(walletHolder.mStatus.getContext(), R.drawable.verification_tag));
+                walletHolder.mTitle.setText("Late Response Penalty ₹" + model.getAmount());
+
+                walletHolder.userImage.setImageDrawable(ContextCompat.getDrawable(walletHolder.userImage.getContext(), R.drawable.ic_binbill));
+
+            }
         }
     }
 }

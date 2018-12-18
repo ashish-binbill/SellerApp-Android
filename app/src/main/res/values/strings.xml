@@ -100,6 +100,7 @@
     <string name="manage_your_products_categories">Manage Your Products Categories</string>
     <string name="no_offers_added">Simply scan the Offer SKU with the Barcode Scanner to publish it for your customers</string>
     <string name="add_offers">Add Offer</string>
+    <string name="no_offers">No Offers!</string>
     <string name="my_offers">My Offers</string>
     <string name="create_new_offer">Create New Offer</string>
     <string name="update_new_offer">Update Offer</string>
@@ -125,6 +126,7 @@
     <string name="add_users">Add Customer Now</string>
     <string name="publish">Publish</string>
     <string name="offer_published_success">Your offer is successfully published for the selected Customer!</string>
+    <string name="offer_successfully_added">Offer successfully added to your list.</string>
     <string name="offer_published">Offer Published</string>
     <string name="ok">Ok</string>
     <string name="linked_user">Users With The Offer</string>
@@ -258,6 +260,7 @@
     <string name="base_price">₹ Base Price (up to one hour)</string>
     <string name="delivery_agent_added">Agent added successfully</string>
     <string name="service_requested">Service Requested</string>
+    <string name="service_requested_successfully">Request submitted successfully.</string>
     <string name="select_distance">Select Distance</string>
     <string name="provider_assigned">Provider Assigned</string>
     <string name="out_for_service">Out For Service Delivery</string>
@@ -393,5 +396,11 @@
     <string name="response_time_left">Response Time Left</string>
     <string name="delivery_time">Delivery Time</string>
     <string name="delivery_time_message">If you select Delivery Time more than 45 minutes, Home Delivery Incentive, ₹10 will not be valid.</string>
+    <string name="order_delivery_time_left">Order Delivery Time Left</string>
+    <string name="suggested_offers">Suggested Offers</string>
+    <string name="offer_valid_till_stocks_last">Offer Valid till Stocks Last</string>
+    <string name="add_to_your_offers_list">Add to Your Offers List</string>
+    <string name="i_need_this_item">I need this item</string>
+    <string name="total_discount">Total Discount</string>
 
 </resources>
