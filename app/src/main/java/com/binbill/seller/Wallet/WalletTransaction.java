@@ -45,6 +45,13 @@ class WalletTransaction implements Serializable{
     @SerializedName("user_name")
     String userName;
 
+    @SerializedName("mobile_no")
+    String mobile;
+
+    public String getMobile() {
+        return mobile;
+    }
+
     public String getOrderId() {
         return orderId;
     }

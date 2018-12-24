@@ -1,5 +1,6 @@
 package com.binbill.seller.Retrofit;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -17,6 +18,7 @@ import com.binbill.seller.Login.LoginActivity_;
 import com.binbill.seller.MultipartUtility;
 import com.binbill.seller.R;
 import com.binbill.seller.SharedPref;
+import com.binbill.seller.UpgradeHelper;
 import com.binbill.seller.Utility;
 import com.google.gson.JsonObject;
 
@@ -78,12 +80,12 @@ public class RetrofitHelper {
                             if (Utility.isEmpty(authToken)) {
                                 newRequest = request.newBuilder()
                                         .addHeader("Content-Type", "application/json")
-                                        .addHeader("APP_VERSION", Constants.APP_VERSION)
+                                        .addHeader("seller-app-version", Constants.APP_VERSION)
                                         .build();
                             } else {
                                 newRequest = request.newBuilder()
                                         .addHeader("Authorization", authToken)
-                                        .addHeader("APP_VERSION", Constants.APP_VERSION)
+                                        .addHeader("seller-app-version", Constants.APP_VERSION)
                                         .addHeader("Content-Type", "application/json")
                                         .build();
                             }
@@ -128,6 +130,19 @@ public class RetrofitHelper {
                         Intent intent = new Intent(context, LoginActivity_.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         context.startActivity(intent);
+
+                    }
+
+                    try {
+                        JSONObject jsonObject = new JSONObject(bodyString);
+                        if (jsonObject.has("forceUpdate")) {
+                            boolean forceUpdate = jsonObject.getBoolean("forceUpdate");
+                            if (forceUpdate)
+                                UpgradeHelper.invokeUpdateDialog((Activity) context, true);
+                            else
+                                UpgradeHelper.invokeUpdateDialog((Activity) context, false);
+                        }
+                    } catch (JSONException e) {
 
                     }
 
@@ -1047,7 +1062,7 @@ public class RetrofitHelper {
         }
         map.put("user_id", userId);
         map.put("delivery_minutes", deliveryMinutes);
-        if(!Utility.isEmpty(discountAmount))
+        if (!Utility.isEmpty(discountAmount))
             map.put("seller_discount", discountAmount);
 
         Call<JsonObject> call = apiService.sendOrderForApproval(AppSession.getInstance(mContext).getSellerId(), orderId, map);
@@ -1080,7 +1095,7 @@ public class RetrofitHelper {
             map.put("delivery_user_id", deliveryId);
         if (!Utility.isEmpty(totalAmount))
             map.put("total_amount", totalAmount);
-        if(!Utility.isEmpty(discountAmount))
+        if (!Utility.isEmpty(discountAmount))
             map.put("seller_discount", discountAmount);
 
         Call<JsonObject> call = apiService.sendOrderForDelivery(AppSession.getInstance(mContext).getSellerId(), orderID, map);
@@ -1154,7 +1169,7 @@ public class RetrofitHelper {
         HashMap<String, String> map = new HashMap<>();
         map.put("order_details", list);
         map.put("user_id", userId);
-        if(!Utility.isEmpty(discountAmount))
+        if (!Utility.isEmpty(discountAmount))
             map.put("seller_discount", discountAmount);
 
         Call<JsonObject> call = apiService.sendOrderAccepted(AppSession.getInstance(mContext).getSellerId(), orderID, map);
@@ -1248,7 +1263,7 @@ public class RetrofitHelper {
         });
     }
 
-    public void addBarCodeOfferFromSeller(String skuId, String skuMeasurementId, String mrp, String discount, String expiry, String offerId, final RetrofitCallback retrofitCallback) {
+    public void addBarCodeOfferFromSeller(String skuId, String skuMeasurementId, String mrp, String discount, String expiry, String offerId, String brandOfferId, String offerType, final RetrofitCallback retrofitCallback) {
         RetrofitApiInterface apiService =
                 RetrofitHelper.getClient(mContext).create(RetrofitApiInterface.class);
 
@@ -1263,6 +1278,11 @@ public class RetrofitHelper {
         offerObject.put("offer_discount", discount);
         offerObject.put("seller_mrp", mrp);
 
+        if (brandOfferId != null && !Utility.isEmpty(brandOfferId))
+            offerObject.put("brand_offer_id", brandOfferId);
+
+        if (offerType != null && !Utility.isEmpty(offerType))
+            offerObject.put("offer_type", offerType);
 
         if (offerId != null && !Utility.isEmpty(offerId))
             offerObject.put("id", offerId);
@@ -1355,11 +1375,11 @@ public class RetrofitHelper {
         });
     }
 
-    public void fetchBarcodeOffersForSeller(String identifier, final RetrofitCallback retrofitCallback) {
+    public void fetchBarcodeOffersForSeller(String identifier, int offerType, final RetrofitCallback retrofitCallback) {
         RetrofitApiInterface apiService =
                 RetrofitHelper.getClient(mContext).create(RetrofitApiInterface.class);
 
-        Call<JsonObject> call = apiService.fetchBarcodeOffers(identifier, true);
+        Call<JsonObject> call = apiService.fetchBarcodeOffers(identifier, true, offerType);
         call.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
@@ -1446,7 +1466,6 @@ public class RetrofitHelper {
         });
     }
 
-
     public void linkOfferWithSeller(int offerType, String offerId, final RetrofitCallback retrofitCallback) {
         RetrofitApiInterface apiService =
                 RetrofitHelper.getClient(mContext).create(RetrofitApiInterface.class);
@@ -1469,8 +1488,6 @@ public class RetrofitHelper {
             }
         });
     }
-
-
 
     public void fetchUsersForSeller(final RetrofitCallback retrofitCallback, int page) {
         RetrofitApiInterface apiService =

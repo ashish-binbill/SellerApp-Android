@@ -1,5 +1,6 @@
 package com.binbill.seller;
 
+import android.app.Activity;
 import android.app.KeyguardManager;
 import android.content.Context;
 import android.os.Bundle;
@@ -19,11 +20,12 @@ public class BaseActivity extends AppCompatActivity {
     private PowerManager.WakeLock fullWakeLock;
     private PowerManager.WakeLock partialWakeLock;
     private Window wind;
+    private BinBillSeller mMyApp;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        mMyApp = (BinBillSeller) this.getApplicationContext();
         createWakeLocks();
     }
 
@@ -60,10 +62,12 @@ public class BaseActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         BinBillSeller.activityResumed();
-        if(fullWakeLock.isHeld()){
+        mMyApp.setCurrentActivity(this);
+
+        if (fullWakeLock.isHeld()) {
             fullWakeLock.release();
         }
-        if(partialWakeLock.isHeld()){
+        if (partialWakeLock.isHeld()) {
             partialWakeLock.release();
         }
 
@@ -77,10 +81,11 @@ public class BaseActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         BinBillSeller.activityPaused();
+        clearReferences();
         partialWakeLock.acquire();
     }
 
-    protected void createWakeLocks(){
+    protected void createWakeLocks() {
         PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
         fullWakeLock = powerManager.newWakeLock((PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP), "Loneworker - FULL WAKE LOCK");
         partialWakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Loneworker - PARTIAL WAKE LOCK");
@@ -93,8 +98,18 @@ public class BaseActivity extends AppCompatActivity {
         KeyguardManager.KeyguardLock keyguardLock = keyguardManager.newKeyguardLock("TAG");
         keyguardLock.disableKeyguard();
     }
-    
-    
+
+    protected void onDestroy() {
+        clearReferences();
+        super.onDestroy();
+    }
+
+    private void clearReferences() {
+        Activity currActivity = mMyApp.getCurrentActivity();
+        if (this.equals(currActivity))
+            mMyApp.setCurrentActivity(null);
+    }
+
 }
 
 

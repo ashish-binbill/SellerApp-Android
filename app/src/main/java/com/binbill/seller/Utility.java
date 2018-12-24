@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 /**
@@ -215,7 +216,7 @@ public class Utility {
         String formattedDate = null;
         SimpleDateFormat format = null;
         if (dateFormat == 0) {
-            format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+            format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH);
         } else if (dateFormat == 1) {
             format = new SimpleDateFormat("yyyy-MM-dd");
         } else if (dateFormat == 2) {
@@ -522,9 +523,7 @@ public class Utility {
     public static String fetchMobile(Context context) {
 
         if (ContextCompat.checkSelfPermission(context,
-                Manifest.permission.RECEIVE_SMS)
-                == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(context,
-                Manifest.permission.READ_PHONE_STATE)
+                Manifest.permission.GET_ACCOUNTS)
                 == PackageManager.PERMISSION_GRANTED) {
 
             String acname;

@@ -63,7 +63,7 @@ public interface RetrofitApiInterface {
     Call<JsonObject> fetchSuggestedOffers(@Path(value = "seller_id", encoded = true) String identifier, @Path(value = "offer_type", encoded = true) int offerType);
 
     @GET(Constants.GET_OFFERS)
-    Call<JsonObject> fetchBarcodeOffers(@Path(value = "id", encoded = true) String identifier, @Query(value = "on_sku", encoded = true) boolean isTrue);
+    Call<JsonObject> fetchBarcodeOffers(@Path(value = "id", encoded = true) String identifier, @Query(value = "on_sku", encoded = true) boolean isTrue, @Query(value = "offer_type", encoded = true) int offerType);
 
     @PUT(Constants.ADD_OFFER)
     Call<JsonObject> addOffer(@Path(value = "id", encoded = true) String identifier, @Body HashMap<String, String> body);

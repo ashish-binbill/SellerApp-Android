@@ -1,11 +1,9 @@
 package com.binbill.seller.Login;
 
-import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -153,15 +151,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void checkPermission() {
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.RECEIVE_SMS)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.RECEIVE_SMS},
-                    Constants.PERMISSION_READ_SMS);
-        } else {
-            makeSendOTPRequest();
-        }
+        makeSendOTPRequest();
     }
 
     private void makeSendOTPRequest() {

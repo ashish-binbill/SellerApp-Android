@@ -293,7 +293,7 @@
     <string name="available_bbcash">Available BB Cash</string>
     <string name="redeem_via_paytm">Redeem Via Paytm</string>
     <string name="bbcash_transactions">BB Cash Transactions</string>
-    <string name="name_string">Name : %1$s</string>
+    <string name="name_string">User : %1$s</string>
     <string name="received_from_home_delivery">Received from BinBill for Home Delivery</string>
     <string name="received_from_referral">Received from BinBill for Referral</string>
     <string name="received_from_customer">Received from Customer</string>
@@ -379,7 +379,7 @@
     <string name="subscribe_for_notification">Get Notifications</string>
     <string name="successfully_subsribed_for_notification">You have successfully subscribed for receiving notifications on this device</string>
     <string name="enter_barcode">Enter Item Barcode Manually</string>
-    <string name="mrp_autofilled">MRP (Autofilled)</string>
+    <string name="mrp_autofilled">(Autofilled)</string>
     <string name="percentage">%</string>
     <string name="add_discount">Add Discount</string>
     <string name="scan_bar_code">Scan Barcode</string>
@@ -391,7 +391,7 @@
     <string name="incorrect_barcode">Barcode seems to be incorrect.</string>
     <string name="call">Call</string>
     <string name="offered_price">Offered Price: ₹ %1$s (%2$s %% Off)</string>
-    <string name="amount_after_discount">Amount after discount</string>
+    <string name="amount_after_discount">Amount After Discount</string>
     <string name="mrp_disclaimer">* MRP can be edited at the time of Customer Order</string>
     <string name="response_time_left">Response Time Left</string>
     <string name="delivery_time">Delivery Time</string>
@@ -402,5 +402,9 @@
     <string name="add_to_your_offers_list">Add to Your Offers List</string>
     <string name="i_need_this_item">I need this item</string>
     <string name="total_discount">Total Discount</string>
+    <string name="selling_price_disclaimer"><![CDATA[Please ensure that your Selling Price does not exceed the current MRP (Maximum Retail Price). Selling any item above it\'s MRP is an illegal act.]]></string>
+    <string name="you_have_set_loyalty_rule_as">You have set loyalty rule as %2$s Points = ₹ %1$s</string>
+    <string name="dd_mm_yyyy">DD/MM/YYYY</string>
+    <string name="mrp">MRP</string>
 
 </resources>

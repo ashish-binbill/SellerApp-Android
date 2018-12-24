@@ -24,7 +24,7 @@ import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 
-public class SplashActivity extends AppCompatActivity {
+public class SplashActivity extends BaseActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -123,7 +123,32 @@ public class SplashActivity extends AppCompatActivity {
 
 
                                     DashboardModel dashboardModel = new Gson().fromJson(jsonObject.toString(), classType);
+
+                                    if (dashboardModel.getForceUpdate() != null) {
+                                        if (dashboardModel.getForceUpdate().equalsIgnoreCase("TRUE"))
+                                            UpgradeHelper.invokeUpdateDialog(SplashActivity.this, true);
+                                        else if (dashboardModel.getForceUpdate().equalsIgnoreCase("FALSE")) {
+                                            UpgradeHelper.invokeUpdateDialog(SplashActivity.this, false);
+                                        }
+                                    }
+
                                     AppSession.getInstance(SplashActivity.this).setDashboardData(dashboardModel);
+                                    startActivity(intent);
+                                    finish();
+                                } else {
+                                    Type classType = new TypeToken<DashboardModel>() {
+                                    }.getType();
+
+
+                                    DashboardModel dashboardModel = new Gson().fromJson(jsonObject.toString(), classType);
+
+                                    if (dashboardModel.getForceUpdate() != null) {
+                                        if (dashboardModel.getForceUpdate().equalsIgnoreCase("TRUE"))
+                                            UpgradeHelper.invokeUpdateDialog(SplashActivity.this, true);
+                                        else if (dashboardModel.getForceUpdate().equalsIgnoreCase("FALSE"))
+                                            UpgradeHelper.invokeUpdateDialog(SplashActivity.this, false);
+                                    }
+
                                     startActivity(intent);
                                     finish();
                                 }

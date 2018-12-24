@@ -1,5 +1,6 @@
 package com.binbill.seller;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.os.StrictMode;
@@ -70,5 +71,13 @@ public class BinBillSeller extends MultiDexApplication {
     }
 
     private static boolean activityVisible;
+
+    private Activity mCurrentActivity = null;
+    public Activity getCurrentActivity(){
+        return mCurrentActivity;
+    }
+    public void setCurrentActivity(Activity mCurrentActivity){
+        this.mCurrentActivity = mCurrentActivity;
+    }
 
 }

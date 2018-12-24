@@ -67,7 +67,6 @@ public class OfferActivity extends BaseActivity implements YesNoDialogFragment.Y
             tab_strip.setupWithViewPager(view_pager);
         }
 
-        tab_strip.setVisibility(View.GONE);
     }
 
     @Override
@@ -158,10 +157,11 @@ public class OfferActivity extends BaseActivity implements YesNoDialogFragment.Y
     @Override
     public void onOptionSelected(boolean isProceed) {
         Fragment page = (Fragment) mPagerAdapter.instantiateItem(view_pager, view_pager.getCurrentItem());
-        if (view_pager.getCurrentItem() == 0) {
-//            ((NormalOfferFragment) page).onOptionSelected(isProceed);
-//        } else {
-            ((BarCodeOfferFragment) page).onOptionSelected(isProceed);
-        }
+        ((BarCodeOfferFragment) page).onOptionSelected(isProceed);
+    }
+
+    @Override
+    public void onProceedOrder(boolean isApproval, boolean isProceed) {
+        // do nothing
     }
 }

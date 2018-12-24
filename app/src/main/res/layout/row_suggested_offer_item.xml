@@ -15,8 +15,8 @@
 
         <ImageView
             android:id="@+id/iv_offer"
-            android:layout_width="@dimen/dimen_60dp"
-            android:layout_height="@dimen/dimen_60dp"
+            android:layout_width="@dimen/dimen_80dp"
+            android:layout_height="@dimen/dimen_80dp"
             android:layout_marginTop="@dimen/dimen_10dp"
             android:src="@drawable/ic_placeholder_sku" />
 
@@ -32,17 +32,34 @@
                 android:layout_marginBottom="@dimen/dimen_8dp"
                 android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/tv_offer_name"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/dimen_10dp"
-                    android:layout_marginTop="@dimen/dimen_5dp"
                     android:layout_weight="1"
-                    android:fontFamily="sans-serif-medium"
-                    android:text="Baker Street Toast Pita Chips Jalapeno Chips Masala"
-                    android:textColor="@color/text_44"
-                    android:textSize="@dimen/dimen_14dp" />
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_offer_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/dimen_2dp"
+                        android:layout_marginRight="@dimen/dimen_10dp"
+                        android:layout_marginTop="@dimen/dimen_5dp"
+                        android:fontFamily="sans-serif-medium"
+                        android:text="Baker Street Toast Pita Chips Jalapeno Chips Masala"
+                        android:textColor="@color/text_44"
+                        android:textSize="@dimen/dimen_14dp" />
+
+                    <TextView
+                        android:id="@+id/tv_quantity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/dimen_8dp"
+                        android:fontFamily="sans-serif"
+                        android:textColor="@color/text_44"
+                        android:textSize="@dimen/dimen_10dp"
+                        android:textStyle="normal" />
+                </LinearLayout>
 
                 <ImageView
                     android:id="@+id/iv_offer_delete"
@@ -64,8 +81,8 @@
                     android:id="@+id/tv_offer_discounted_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="PRICE Rs100"
                     android:fontFamily="sans-serif-medium"
+                    android:text="PRICE Rs100"
                     android:textColor="@color/text_44"
                     android:textSize="@dimen/dimen_14dp" />
 
@@ -74,8 +91,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/dimen_5dp"
-                    android:text="(10% off)"
                     android:fontFamily="sans-serif-medium"
+                    android:text="(10% off)"
                     android:textColor="@color/colorPrimary"
                     android:textSize="@dimen/dimen_14dp" />
 
@@ -119,55 +136,56 @@
                 android:text="View Details"
                 android:textColor="@color/colorAccent"
                 android:textSize="@dimen/dimen_12dp"
-                android:visibility="gone"
-                android:textStyle="normal" />
+                android:textStyle="normal"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/tv_offer_already_added"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="11sp"
-                android:fontFamily="sans-serif-medium"
-                android:textStyle="normal"
-                android:visibility="gone"
-                android:textColor="@color/color_33c600"
                 android:layout_marginBottom="@dimen/dimen_10dp"
                 android:layout_marginTop="@dimen/dimen_10dp"
+                android:fontFamily="sans-serif-medium"
                 android:text="Added to Your Offer List"
-                />
+                android:textColor="@color/color_33c600"
+                android:textSize="11sp"
+                android:textStyle="normal"
+                android:visibility="gone" />
 
             <LinearLayout
                 android:id="@+id/ll_btn_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:layout_marginBottom="@dimen/dimen_10dp"
-                android:layout_marginTop="@dimen/dimen_10dp">
+                android:layout_marginTop="@dimen/dimen_10dp"
+                android:orientation="horizontal">
 
                 <Button
                     android:id="@+id/btn_add_to_offer"
                     android:layout_width="wrap_content"
-                    android:layout_height="@dimen/dimen_30dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:background="@drawable/rounded_button_cylinder"
-                    android:paddingLeft="@dimen/dimen_10dp"
-                    android:paddingRight="@dimen/dimen_10dp"
+                    android:minHeight="@dimen/dimen_30dp"
+                    android:paddingLeft="@dimen/dimen_5dp"
+                    android:paddingRight="@dimen/dimen_5dp"
                     android:text="@string/add_to_your_offers_list"
                     android:textAllCaps="false"
-                    android:layout_weight="1"
                     android:textColor="@color/white"
                     android:textSize="@dimen/dimen_12dp" />
 
                 <Button
                     android:id="@+id/btn_need_this_item"
                     android:layout_width="wrap_content"
-                    android:layout_height="@dimen/dimen_30dp"
-                    android:background="@drawable/rounded_button_cylinder_stroke"
-                    android:paddingLeft="@dimen/dimen_10dp"
-                    android:paddingRight="@dimen/dimen_10dp"
-                    android:text="@string/i_need_this_item"
-                    android:textAllCaps="false"
+                    android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/dimen_10dp"
                     android:layout_weight="1"
+                    android:background="@drawable/rounded_button_cylinder_stroke"
+                    android:minHeight="@dimen/dimen_30dp"
+                    android:paddingLeft="@dimen/dimen_5dp"
+                    android:paddingRight="@dimen/dimen_5dp"
+                    android:text="@string/i_need_this_item"
+                    android:textAllCaps="false"
                     android:textColor="@color/colorAccent"
                     android:textSize="@dimen/dimen_12dp" />
 

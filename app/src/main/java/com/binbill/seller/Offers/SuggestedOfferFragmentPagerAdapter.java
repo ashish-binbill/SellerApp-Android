@@ -9,7 +9,7 @@ import com.binbill.seller.Constants;
 public class SuggestedOfferFragmentPagerAdapter extends FragmentStatePagerAdapter {
 
     final int PAGE_COUNT = 5;
-    private String tabTitles[] = new String[]{"New Product", "Discount Offers", "BOGO", "Extra Quantity", "General Offers"};
+    private String tabTitles[] = new String[]{"Discount Offers", "BOGO", "Extra Quantity", "New Product", "General Offers"};
 
     public SuggestedOfferFragmentPagerAdapter(FragmentManager fm) {
         super(fm);
@@ -26,13 +26,13 @@ public class SuggestedOfferFragmentPagerAdapter extends FragmentStatePagerAdapte
 
         switch (position) {
             case 0:
-                return NormalOfferFragment.newInstance(Constants.OFFER_TYPE_NEW_PRODUCT);
-            case 1:
                 return NormalOfferFragment.newInstance(Constants.OFFER_TYPE_DISCOUNTED);
-            case 2:
+            case 1:
                 return NormalOfferFragment.newInstance(Constants.OFFER_TYPE_BOGO);
-            case 3:
+            case 2:
                 return NormalOfferFragment.newInstance(Constants.OFFER_TYPE_EXTRA);
+            case 3:
+                return NormalOfferFragment.newInstance(Constants.OFFER_TYPE_NEW_PRODUCT);
             case 4:
                 return NormalOfferFragment.newInstance(Constants.OFFER_TYPE_GENERAL);
 

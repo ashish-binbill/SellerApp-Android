@@ -107,7 +107,14 @@ public class WalletAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                  * By user
                  */
                 walletHolder.mTitle.setText(R.string.received_from_customer);
-                walletHolder.mUserName.setText(walletHolder.mUserName.getContext().getString(R.string.name_string, model.getUserName()));
+
+                String userName;
+                if (!Utility.isEmpty(model.getUserName()))
+                    userName = model.getUserName();
+                else
+                    userName = Utility.getMaskedNumber(model.getMobile());
+
+                walletHolder.mUserName.setText(walletHolder.mUserName.getContext().getString(R.string.name_string, userName));
                 walletHolder.mUserName.setVisibility(View.VISIBLE);
 
                 final String authToken = SharedPref.getString(walletHolder.userImage.getContext(), SharedPref.AUTH_TOKEN);
@@ -177,7 +184,12 @@ public class WalletAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
             } else if (model.getCashbackSource().equalsIgnoreCase("4")) {
                 walletHolder.mTitle.setText(walletHolder.mTitle.getContext().getString(R.string.received_for_order, model.getOrderId()));
-                walletHolder.mUserName.setText(walletHolder.mUserName.getContext().getString(R.string.name_string, model.getUserName()));
+                String userName;
+                if (!Utility.isEmpty(model.getUserName()))
+                    userName = model.getUserName();
+                else
+                    userName = Utility.getMaskedNumber(model.getMobile());
+                walletHolder.mUserName.setText(walletHolder.mUserName.getContext().getString(R.string.name_string, userName));
                 walletHolder.mUserName.setVisibility(View.VISIBLE);
 
                 final String authToken = SharedPref.getString(walletHolder.userImage.getContext(), SharedPref.AUTH_TOKEN);
@@ -229,7 +241,12 @@ public class WalletAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                         });
             } else if (model.getCashbackSource().equalsIgnoreCase("5")) {
                 walletHolder.mTitle.setText(model.getTitle());
-                walletHolder.mUserName.setText(walletHolder.mUserName.getContext().getString(R.string.name_string, model.getUserName()));
+                String userName;
+                if (!Utility.isEmpty(model.getUserName()))
+                    userName = model.getUserName();
+                else
+                    userName = Utility.getMaskedNumber(model.getMobile());
+                walletHolder.mUserName.setText(walletHolder.mUserName.getContext().getString(R.string.name_string, userName));
                 walletHolder.mUserName.setVisibility(View.VISIBLE);
 
                 final String authToken = SharedPref.getString(walletHolder.userImage.getContext(), SharedPref.AUTH_TOKEN);
@@ -279,6 +296,15 @@ public class WalletAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                                 walletHolder.userImage.setImageDrawable(ContextCompat.getDrawable(walletHolder.userImage.getContext(), R.drawable.ic_user));
                             }
                         });
+            } else if (model.getCashbackSource().equalsIgnoreCase("0")) {
+                /**
+                 * Default
+                 */
+                walletHolder.mStatus.setText(walletHolder.mStatus.getContext().getString(R.string.success));
+                walletHolder.mStatus.setBackground(ContextCompat.getDrawable(walletHolder.mStatus.getContext(), R.drawable.verification_tag));
+                walletHolder.mTitle.setText(model.getTitle());
+                walletHolder.mUserName.setVisibility(View.GONE);
+                walletHolder.userImage.setImageDrawable(ContextCompat.getDrawable(walletHolder.userImage.getContext(), R.drawable.ic_binbill));
             }
             walletHolder.mStatus.setVisibility(View.GONE);
         } else {
@@ -340,6 +366,18 @@ public class WalletAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 walletHolder.mStatus.setText(walletHolder.mStatus.getContext().getString(R.string.success));
                 walletHolder.mStatus.setBackground(ContextCompat.getDrawable(walletHolder.mStatus.getContext(), R.drawable.verification_tag));
                 walletHolder.mTitle.setText("Late Response Penalty ₹" + model.getAmount());
+
+                walletHolder.userImage.setImageDrawable(ContextCompat.getDrawable(walletHolder.userImage.getContext(), R.drawable.ic_binbill));
+
+            }
+
+            if (model.getCashbackSource().equalsIgnoreCase("0")) {
+                /**
+                 * Default
+                 */
+                walletHolder.mStatus.setText(walletHolder.mStatus.getContext().getString(R.string.success));
+                walletHolder.mStatus.setBackground(ContextCompat.getDrawable(walletHolder.mStatus.getContext(), R.drawable.verification_tag));
+                walletHolder.mTitle.setText(model.getTitle());
 
                 walletHolder.userImage.setImageDrawable(ContextCompat.getDrawable(walletHolder.userImage.getContext(), R.drawable.ic_binbill));
 

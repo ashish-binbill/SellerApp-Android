@@ -39,6 +39,20 @@
                 android:paddingRight="@dimen/dimen_20dp"
                 android:paddingTop="@dimen/dimen_30dp">
 
+                <TextView
+                    android:id="@+id/loyalty_rules"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="@dimen/dimen_20dp"
+                    android:gravity="center_horizontal"
+                    android:text="@string/you_have_set_loyalty_rule_as"
+                    android:textColor="@color/text_44"
+                    android:textSize="@dimen/dimen_13dp"
+                    android:visibility="gone"
+                    android:textStyle="normal" />
+
                 <EditText
                     android:id="@+id/et_add_credit"
                     android:layout_width="match_parent"
@@ -144,20 +158,20 @@
                         android:layout_height="@dimen/dimen_40dp"
                         android:layout_marginLeft="@dimen/dimen_5dp"
                         android:layout_weight="1"
-                        android:visibility="visible"
                         android:gravity="center"
-                        app:sizeOfText="@dimen/dimen_20dp"
-                        android:text="@string/add_credit" />
+                        android:text="@string/add_credit"
+                        android:visibility="visible"
+                        app:sizeOfText="@dimen/dimen_20dp" />
 
                     <LinearLayout
                         android:id="@+id/btn_yes_progress"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/dimen_40dp"
                         android:layout_below="@id/et_mobile"
-                        android:background="@drawable/rounded_button"
-                        android:gravity="center"
                         android:layout_marginLeft="@dimen/dimen_5dp"
                         android:layout_weight="1"
+                        android:background="@drawable/rounded_button"
+                        android:gravity="center"
                         android:visibility="gone">
 
                         <ProgressBar

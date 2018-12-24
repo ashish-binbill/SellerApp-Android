@@ -49,6 +49,15 @@
                 android:paddingRight="@dimen/dimen_20dp"
                 android:paddingTop="@dimen/dimen_30dp">
 
+                <ImageView
+                    android:id="@+id/image"
+                    android:visibility="gone"
+                    android:layout_width="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/ic_mrp_disclaimer"
+                    android:layout_margin="@dimen/dimen_10dp"
+                    android:layout_height="wrap_content" />
+
                 <TextView
                     android:id="@+id/title"
                     android:layout_width="wrap_content"

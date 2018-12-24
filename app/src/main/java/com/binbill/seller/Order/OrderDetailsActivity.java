@@ -25,6 +25,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -254,6 +255,106 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
         }
     };
 
+    private void onAcceptModifyOrder(boolean isApprovalRequired) {
+        ArrayList<OrderItem> updatedList = mAdapter.getUpdatedOrderList();
+        for (OrderItem orderItem : updatedList) {
+            orderItem.setItemAvailability(orderItem.isUpdateItemAvailable());
+
+            /**
+             * Remove suggestion if any of the 2 items are missing : measurement or title
+             */
+            if (orderItem.getSuggestion() != null) {
+                Suggestion suggestion = orderItem.getSuggestion();
+                if (Utility.isEmpty(suggestion.getItemName()) || Utility.isEmpty(suggestion.getMeasuremenValue())) {
+                    suggestion = null;
+                }
+
+                orderItem.setSuggestion(suggestion);
+            }
+        }
+
+        if (isApprovalRequired) {
+            /**
+             * Modification call
+             */
+            btn_accept_progress.setVisibility(View.VISIBLE);
+            btn_accept.setVisibility(View.GONE);
+
+            Gson gson = new Gson();
+            Type type = new TypeToken<List<OrderItem>>() {
+            }.getType();
+            String json = gson.toJson(updatedList, type);
+
+            String deliverymin = "";
+            if (orderDetails.getOrderType().equalsIgnoreCase(Constants.ORDER_TYPE_FMCG)) {
+                deliverymin = tv_delivery_time.getText().toString();
+            }
+
+            String discountAmount = "";
+            if (!Utility.isEmpty(et_discount_total_amount.getText().toString())) {
+                discountAmount = et_discount_total_amount.getText().toString().trim();
+            }
+
+            btn_accept.setVisibility(View.GONE);
+            btn_accept_progress.setVisibility(View.VISIBLE);
+            new RetrofitHelper(OrderDetailsActivity.this).sendOrderModificationCall(orderDetails.getOrderId(), deliverymin, orderDetails.getUserId(), json, discountAmount, new RetrofitHelper.RetrofitCallback() {
+                @Override
+                public void onResponse(String response) {
+                    btn_accept.setVisibility(View.VISIBLE);
+                    btn_accept_progress.setVisibility(View.GONE);
+                    handleApiResponse(response);
+                }
+
+                @Override
+                public void onErrorResponse() {
+                    btn_accept.setVisibility(View.GONE);
+                    btn_accept_progress.setVisibility(View.VISIBLE);
+                    shimmer_view_container.setVisibility(View.GONE);
+
+                    showSnackBar(getString(R.string.something_went_wrong));
+                    finish();
+                }
+            });
+
+        } else if (!isApprovalRequired) {
+            /**
+             * Approval call
+             */
+            btn_accept_progress.setVisibility(View.VISIBLE);
+            btn_accept.setVisibility(View.GONE);
+
+            Gson gson = new Gson();
+            Type type = new TypeToken<List<OrderItem>>() {
+            }.getType();
+            String json = gson.toJson(updatedList, type);
+
+            String discountAmount = "";
+            if (!Utility.isEmpty(et_discount_total_amount.getText().toString())) {
+                discountAmount = et_discount_total_amount.getText().toString().trim();
+            }
+
+            new RetrofitHelper(OrderDetailsActivity.this).sendOrderApprovalCall(orderDetails.getOrderId(), orderDetails.getUserId(), json, discountAmount, new RetrofitHelper.RetrofitCallback() {
+                @Override
+                public void onResponse(String response) {
+                    btn_accept.setVisibility(View.VISIBLE);
+                    btn_accept_progress.setVisibility(View.GONE);
+                    handleApiResponse(response);
+                }
+
+                @Override
+                public void onErrorResponse() {
+                    btn_accept.setVisibility(View.GONE);
+                    btn_accept_progress.setVisibility(View.VISIBLE);
+                    shimmer_view_container.setVisibility(View.GONE);
+
+                    showSnackBar(getString(R.string.something_went_wrong));
+                    finish();
+                }
+            });
+
+        }
+    }
+
     private void setUpListener() {
 
         et_discount_total_amount.addTextChangedListener(new TextWatcher() {
@@ -277,8 +378,18 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
             @Override
             public void onClick(View view) {
 
-                if (orderDetails != null && orderDetails.getOrderStatus() == Constants.STATUS_NEW_ORDER)
+                if (orderDetails != null && orderDetails.getOrderStatus() == Constants.STATUS_NEW_ORDER && !orderDetails.isModified())
                     invokeDeliveryTimeOptionList();
+            }
+        });
+
+        tv_delivery_time_header.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
+                YesNoDialogFragment fragment = YesNoDialogFragment.newInstance(true, "Ok", orderDetails.getResponseInformation());
+                fragment.show(fm, "YesNoDialogFragment");
             }
         });
 
@@ -323,86 +434,7 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                             orderItem.setSuggestion(suggestion);
                         }
                     }
-                    if (textOnButton.equalsIgnoreCase(getString(R.string.send_for_approval))) {
-                        /**
-                         * Modification call
-                         */
-                        btn_accept_progress.setVisibility(View.VISIBLE);
-                        btn_accept.setVisibility(View.GONE);
-
-                        Gson gson = new Gson();
-                        Type type = new TypeToken<List<OrderItem>>() {
-                        }.getType();
-                        String json = gson.toJson(updatedList, type);
-
-                        String deliverymin = "";
-                        if (orderDetails.getOrderType().equalsIgnoreCase(Constants.ORDER_TYPE_FMCG)) {
-                            deliverymin = tv_delivery_time.getText().toString();
-                        }
-
-                        String discountAmount = "";
-                        if (!Utility.isEmpty(et_discount_total_amount.getText().toString())) {
-                            discountAmount = et_discount_total_amount.getText().toString().trim();
-                        }
-
-                        btn_accept.setVisibility(View.GONE);
-                        btn_accept_progress.setVisibility(View.VISIBLE);
-                        new RetrofitHelper(OrderDetailsActivity.this).sendOrderModificationCall(orderDetails.getOrderId(), deliverymin, orderDetails.getUserId(), json, discountAmount, new RetrofitHelper.RetrofitCallback() {
-                            @Override
-                            public void onResponse(String response) {
-                                btn_accept.setVisibility(View.VISIBLE);
-                                btn_accept_progress.setVisibility(View.GONE);
-                                handleApiResponse(response);
-                            }
-
-                            @Override
-                            public void onErrorResponse() {
-                                btn_accept.setVisibility(View.GONE);
-                                btn_accept_progress.setVisibility(View.VISIBLE);
-                                shimmer_view_container.setVisibility(View.GONE);
-
-                                showSnackBar(getString(R.string.something_went_wrong));
-                                finish();
-                            }
-                        });
-
-                    } else if (textOnButton.equalsIgnoreCase(getString(R.string.accept))) {
-                        /**
-                         * Approval call
-                         */
-                        btn_accept_progress.setVisibility(View.VISIBLE);
-                        btn_accept.setVisibility(View.GONE);
-
-                        Gson gson = new Gson();
-                        Type type = new TypeToken<List<OrderItem>>() {
-                        }.getType();
-                        String json = gson.toJson(updatedList, type);
-
-                        String discountAmount = "";
-                        if (!Utility.isEmpty(et_discount_total_amount.getText().toString())) {
-                            discountAmount = et_discount_total_amount.getText().toString().trim();
-                        }
-
-                        new RetrofitHelper(OrderDetailsActivity.this).sendOrderApprovalCall(orderDetails.getOrderId(), orderDetails.getUserId(), json, discountAmount, new RetrofitHelper.RetrofitCallback() {
-                            @Override
-                            public void onResponse(String response) {
-                                btn_accept.setVisibility(View.VISIBLE);
-                                btn_accept_progress.setVisibility(View.GONE);
-                                handleApiResponse(response);
-                            }
-
-                            @Override
-                            public void onErrorResponse() {
-                                btn_accept.setVisibility(View.GONE);
-                                btn_accept_progress.setVisibility(View.VISIBLE);
-                                shimmer_view_container.setVisibility(View.GONE);
-
-                                showSnackBar(getString(R.string.something_went_wrong));
-                                finish();
-                            }
-                        });
-
-                    } else if (textOnButton.equalsIgnoreCase(getString(R.string.out_for_delivery))) {
+                    if (textOnButton.equalsIgnoreCase(getString(R.string.out_for_delivery))) {
                         /**
                          * Out for delivery call
                          */
@@ -458,6 +490,18 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                                 showSnackBar(getString(R.string.something_went_wrong));
                             }
                         });
+                    } else {
+                        /**
+                         * show confirmation popup
+                         */
+
+                        boolean isApprovalRequired = false;
+                        if (textOnButton.equalsIgnoreCase(getString(R.string.send_for_approval)))
+                            isApprovalRequired = true;
+
+                        android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
+                        YesNoDialogFragment fragment = YesNoDialogFragment.newInstance(true, "Ok", "Cancel", getString(R.string.selling_price_disclaimer), isApprovalRequired);
+                        fragment.show(fm, "YesNoDialogFragment");
                     }
 
                 } else if (orderDetails.getOrderType().equalsIgnoreCase(Constants.ORDER_TYPE_SERVICE)) {
@@ -774,6 +818,8 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
 
                     }.start();
                     tv_delivery_time_header.setText(getString(R.string.order_delivery_time_left));
+                    tv_delivery_time_header.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+                    tv_delivery_time_header.setOnClickListener(null);
                     tv_delivery_time.setText(orderDetails.getDeliveryMinutes() + " min");
                 } else if (orderDetails.getAutoCancelRemainingSeconds() > 0) {
                     long millisUntilFinished = orderDetails.getAutoCancelRemainingSeconds() * 1000;
@@ -797,7 +843,10 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                     tv_delivery_time.setText("45 mins");
 
                 } else if (orderDetails.getOrderStatus() == Constants.STATUS_NEW_ORDER) {
-                    tv_delivery_time.setText("45 mins");
+                    tv_delivery_time_header.setText(getString(R.string.order_delivery_time_left));
+                    tv_delivery_time.setText(orderDetails.getDeliveryMinutes() + " min");
+                    tv_delivery_time_header.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+                    tv_delivery_time_header.setOnClickListener(null);
                     tv_delivery_time_left.setText("---");
                 }
 
@@ -864,6 +913,8 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                 }
             }
 
+            ll_discount_layout.setVisibility(View.GONE);
+
         } else {
 
             /**
@@ -913,6 +964,8 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                 tv_total_amount.setText(getString(R.string.rupee_sign) + " 0");
             }
 
+            if (!Utility.isEmpty(orderDetails.getSellerDiscount()))
+                et_discount_total_amount.setText(orderDetails.getSellerDiscount());
             /**
              * Set edit text
              */
@@ -972,6 +1025,12 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                 cv_seller_review.setVisibility(View.GONE);
             }
         }
+
+        if (orderDetails.getOrderStatus() == Constants.STATUS_COMPLETE || orderDetails.getOrderStatus() == Constants.STATUS_CANCEL ||
+                orderDetails.getOrderStatus() == Constants.STATUS_REJECTED || orderDetails.getOrderStatus() == Constants.STATUS_AUTO_EXPIRED)
+            ll_call_customer.setVisibility(View.GONE);
+        else
+            ll_call_customer.setVisibility(View.VISIBLE);
 
     }
 
@@ -1699,6 +1758,8 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                 addNewLayout.setVisibility(View.VISIBLE);
                 recyclerView.setVisibility(View.GONE);
                 noData.setVisibility(View.GONE);
+
+                mSKUDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
             }
         });
 
@@ -2024,6 +2085,13 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
             changeButtonStateToApproval(1);
         } else {
 
+        }
+    }
+
+    @Override
+    public void onProceedOrder(boolean isApproval, boolean isProceed) {
+        if (isProceed) {
+            onAcceptModifyOrder(isApproval);
         }
     }
 }

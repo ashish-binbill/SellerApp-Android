@@ -85,4 +85,9 @@ public class SuggestedOffersActivity extends BaseActivity implements YesNoDialog
         Fragment page = (Fragment) mPagerAdapter.instantiateItem(view_pager, view_pager.getCurrentItem());
         ((NormalOfferFragment) page).onOptionSelected(isProceed);
     }
+
+    @Override
+    public void onProceedOrder(boolean isApproval, boolean isProceed) {
+        // do nothing
+    }
 }

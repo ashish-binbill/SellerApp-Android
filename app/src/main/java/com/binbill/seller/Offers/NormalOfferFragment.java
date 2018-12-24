@@ -1,5 +1,6 @@
 package com.binbill.seller.Offers;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -178,8 +179,6 @@ public class NormalOfferFragment extends Fragment implements OfferAdapter.OfferM
                 noDataLayout.setVisibility(View.GONE);
 
                 makeOfferFetchApiCall();
-
-
             }
         });
 
@@ -200,7 +199,16 @@ public class NormalOfferFragment extends Fragment implements OfferAdapter.OfferM
                 break;
             case Constants.ADD_OFFER_TO_SELLER:
                 mOfferIdToDelete = mNormalOfferList.get(position).getOfferId();
-                makeLinkOfferWithSellerApiCall();
+
+                OfferItem offerItem = mNormalOfferList.get(position);
+                if (offerType != Constants.OFFER_TYPE_GENERAL) {
+                    Intent intent = new Intent(getActivity(), AddBarCodeOfferActivity_.class);
+                    intent.putExtra(Constants.OFFER_ITEM, offerItem);
+                    intent.putExtra(Constants.OFFER_TYPE, offerType);
+                    startActivity(intent);
+                } else {
+                    makeLinkOfferWithSellerApiCall();
+                }
                 break;
             case Constants.NEED_THIS_ITEM:
                 mOfferIdToDelete = mNormalOfferList.get(position).getOfferId();
@@ -269,5 +277,10 @@ public class NormalOfferFragment extends Fragment implements OfferAdapter.OfferM
  * do nothing
  */
         }
+    }
+
+    @Override
+    public void onProceedOrder(boolean isApproval, boolean isProceed) {
+
     }
 }

@@ -108,7 +108,7 @@ public class OTPLoginActivity extends BaseActivity {
                     Utility.enableButton(OTPLoginActivity.this, btn_submit, false);
             }
         });
-        checkPermission();
+//        checkPermission();
     }
 
     private void checkPermission() {
@@ -245,11 +245,13 @@ public class OTPLoginActivity extends BaseActivity {
 
                 switch (identifier) {
                     case Constants.OTP_LOGIN:
+
                         if (jsonObject.has("authorization") && !jsonObject.isNull("authorization")) {
                             SharedPref.putString(this, SharedPref.AUTH_TOKEN, jsonObject.getString("authorization"));
                         }
 
                         makeUserStateApiCall();
+
                         break;
                     case Constants.GET_USER_STATE:
 
@@ -288,11 +290,11 @@ public class OTPLoginActivity extends BaseActivity {
                                                     UpgradeHelper.invokeUpdateDialog(OTPLoginActivity.this, true);
                                                 else if (dashboardModel.getForceUpdate().equalsIgnoreCase("FALSE"))
                                                     UpgradeHelper.invokeUpdateDialog(OTPLoginActivity.this, false);
-                                            } else {
-                                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                                startActivity(intent);
-                                                finish();
                                             }
+
+                                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                            startActivity(intent);
+                                            finish();
                                         }
                                     } catch (JSONException e) {
                                         finish();

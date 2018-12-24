@@ -12,14 +12,30 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.binbill.seller.Login.OTPLoginActivity;
+
 public class UpgradeHelper {
 
     private static final String DIALOG_VISIBLE = "DIALOG_VISIBLE";
 
-    public static void invokeUpdateDialog(final Activity context, boolean forceUpdate) {
+    public static void invokeUpdateDialog(final Activity context, final boolean forceUpdate) {
+        Activity currentActivity = ((BinBillSeller) context.getApplicationContext()).getCurrentActivity();
+
+        if (!(currentActivity instanceof SplashActivity) && !(currentActivity instanceof OTPLoginActivity)) {
+            context.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    invokeUpdateDialog(context, forceUpdate, true);
+                }
+            });
+        }
+
+    }
+
+    public static void invokeUpdateDialog(final Activity context, boolean forceUpdate, boolean onUIthread) {
 
         boolean isAppDialogShown = false;
-        if(!forceUpdate && SharedPref.getBoolean(context, Constants.UPDATE_POPUP_NOT_NOW_CLICKED))
+        if (!forceUpdate && SharedPref.getBoolean(context, Constants.UPDATE_POPUP_NOT_NOW_CLICKED))
             isAppDialogShown = true;
 
         if (!isAppDialogShown) {
@@ -71,7 +87,8 @@ public class UpgradeHelper {
                 });
             }
 
-            dialog.show();
+            if (!context.isFinishing())
+                dialog.show();
         }
     }
 

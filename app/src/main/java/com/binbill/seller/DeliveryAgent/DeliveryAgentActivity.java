@@ -234,6 +234,11 @@ public class DeliveryAgentActivity extends BaseActivity implements DeliveryAgent
         }
     }
 
+    @Override
+    public void onProceedOrder(boolean isApproval, boolean isProceed) {
+        // do nothing
+    }
+
     private void makeDeleteAgentApiCall() {
         new RetrofitHelper(this).deleteAssistedService(mDeliveryAgentIdToDelete, new RetrofitHelper.RetrofitCallback() {
             @Override

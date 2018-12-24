@@ -64,6 +64,18 @@ public class ApiHelper {
                             else if (dashboardModel.getForceUpdate().equalsIgnoreCase("FALSE"))
                                 UpgradeHelper.invokeUpdateDialog((Activity) context, false);
                         }
+                    }else{
+                        Type classType = new TypeToken<DashboardModel>() {
+                        }.getType();
+
+                        DashboardModel dashboardModel = new Gson().fromJson(jsonObject.toString(), classType);
+
+                        if (dashboardModel.getForceUpdate() != null) {
+                            if (dashboardModel.getForceUpdate().equalsIgnoreCase("TRUE"))
+                                UpgradeHelper.invokeUpdateDialog((Activity) context, true);
+                            else if (dashboardModel.getForceUpdate().equalsIgnoreCase("FALSE"))
+                                UpgradeHelper.invokeUpdateDialog((Activity) context, false);
+                        }
                     }
                 } catch (JSONException e) {
 

@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,10 +20,13 @@ import com.binbill.seller.AppSession;
 import com.binbill.seller.Constants;
 import com.binbill.seller.Model.DashboardModel;
 import com.binbill.seller.Offers.OfferActivity_;
-import com.binbill.seller.Offers.SuggestedOffersActivity;
 import com.binbill.seller.Offers.SuggestedOffersActivity_;
 import com.binbill.seller.R;
 import com.binbill.seller.Utility;
+
+import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class HomeFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
@@ -113,25 +117,25 @@ public class HomeFragment extends Fragment {
         final TextView tvLabelCustomer = (TextView) view.findViewById(R.id.tv_label_customer);
         ImageView ivLabelCustomer = (ImageView) view.findViewById(R.id.iv_customer);
 
-        if(dashboardModel != null)
-        switch (dashboardModel.getSellerType()) {
-            case ASSISTED_ONLY_USER:
-                tvLabelCustomer.setText(getString(R.string.total_agents));
-                if (!Utility.isEmpty(dashboardModel.getAssistedUserCount()))
-                    customerCount.setText(dashboardModel.getAssistedUserCount());
-                else
-                    customerCount.setText("0");
-                ivLabelCustomer.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_customer_icon));
-                break;
-            default:
-                tvLabelCustomer.setText(getString(R.string.cashback_to_users));
-                if (!Utility.isEmpty(dashboardModel.getTotalUserCashback()))
-                    customerCount.setText(getString(R.string.rupee_sign) + " " + dashboardModel.getTotalUserCashback());
-                else
-                    customerCount.setText(getString(R.string.rupee_sign) + " 0");
-                ivLabelCustomer.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_cashback));
-                break;
-        }
+        if (dashboardModel != null)
+            switch (dashboardModel.getSellerType()) {
+                case ASSISTED_ONLY_USER:
+                    tvLabelCustomer.setText(getString(R.string.total_agents));
+                    if (!Utility.isEmpty(dashboardModel.getAssistedUserCount()))
+                        customerCount.setText(dashboardModel.getAssistedUserCount());
+                    else
+                        customerCount.setText("0");
+                    ivLabelCustomer.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_customer_icon));
+                    break;
+                default:
+                    tvLabelCustomer.setText(getString(R.string.cashback_to_users));
+                    if (!Utility.isEmpty(dashboardModel.getTotalUserCashback()))
+                        customerCount.setText(getString(R.string.rupee_sign) + " " + dashboardModel.getTotalUserCashback());
+                    else
+                        customerCount.setText(getString(R.string.rupee_sign) + " 0");
+                    ivLabelCustomer.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_cashback));
+                    break;
+            }
 
         /**
          * Layout listeners

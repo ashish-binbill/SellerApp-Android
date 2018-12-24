@@ -10,10 +10,12 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.binbill.seller.R;
+import com.binbill.seller.Utility;
 
 /**
  * Created by shruti.vig on 8/30/18.
@@ -21,6 +23,7 @@ import com.binbill.seller.R;
 
 public class YesNoDialogFragment extends DialogFragment {
     private YesNoClickInterface listener;
+    private boolean isOrderPrice;
 
     public static YesNoDialogFragment newInstance(String title, String header) {
         YesNoDialogFragment f = new YesNoDialogFragment();
@@ -46,6 +49,34 @@ public class YesNoDialogFragment extends DialogFragment {
         return f;
     }
 
+    public static YesNoDialogFragment newInstance(boolean isAlert, String yesButton, String noButton, String message, boolean isApproval) {
+        YesNoDialogFragment f = new YesNoDialogFragment();
+        Bundle args = new Bundle();
+        args.putString("YES_BUTTON", yesButton);
+        args.putString("NO_BUTTON", noButton);
+        args.putString("HEADER", "");
+        args.putString("TITLE", message);
+        args.putBoolean("IS_ALERT", isAlert);
+        args.putBoolean("IS_ORDER_PRICE_DIALOG", true);
+        args.putBoolean("IS_APPROVAL", isApproval);
+        f.setArguments(args);
+
+        return f;
+    }
+
+    public static YesNoDialogFragment newInstance(boolean isAlert, String yesButton, String message) {
+        YesNoDialogFragment f = new YesNoDialogFragment();
+        Bundle args = new Bundle();
+        args.putString("YES_BUTTON", yesButton);
+        args.putString("NO_BUTTON", "");
+        args.putString("HEADER", "");
+        args.putString("TITLE", message);
+        args.putBoolean("IS_ALERT", isAlert);
+        f.setArguments(args);
+
+        return f;
+    }
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
@@ -63,7 +94,7 @@ public class YesNoDialogFragment extends DialogFragment {
         TextView cancelButton = (TextView) view.findViewById(R.id.header);
         TextView title = (TextView) view.findViewById(R.id.title);
         AppButton yesButton = (AppButton) view.findViewById(R.id.btn_yes);
-        AppButtonGreyed noButton = (AppButtonGreyed) view.findViewById(R.id.btn_no);
+        final AppButtonGreyed noButton = (AppButtonGreyed) view.findViewById(R.id.btn_no);
         LinearLayout headerLayout = (LinearLayout) view.findViewById(R.id.ll_header);
 
 
@@ -80,10 +111,20 @@ public class YesNoDialogFragment extends DialogFragment {
                 String noButtonText = getArguments().getString("NO_BUTTON");
 
                 yesButton.setText(yesButtonText);
-                noButton.setText(noButtonText);
+
+                if (!Utility.isEmpty(noButtonText))
+                    noButton.setText(noButtonText);
+                else
+                    noButton.setVisibility(View.GONE);
 
                 cancelButton.setVisibility(View.GONE);
                 headerLayout.setVisibility(View.GONE);
+
+                isOrderPrice = getArguments().getBoolean("IS_ORDER_PRICE_DIALOG");
+                if (isOrderPrice) {
+                    ImageView imageView = (ImageView) view.findViewById(R.id.image);
+                    imageView.setVisibility(View.VISIBLE);
+                }
             }
         }
 
@@ -97,16 +138,31 @@ public class YesNoDialogFragment extends DialogFragment {
         yesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (listener != null)
-                    listener.onOptionSelected(true);
+
+                if (isOrderPrice) {
+                    if (listener != null)
+                        listener.onProceedOrder(getArguments().getBoolean("IS_APPROVAL"), true);
+                } else {
+                    if (listener != null) {
+                        if (noButton.getVisibility() == View.VISIBLE)
+                            listener.onOptionSelected(true);
+                        else
+                            listener.onOptionSelected(false);
+                    }
+                }
                 dismiss();
             }
         });
         noButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (listener != null)
-                    listener.onOptionSelected(false);
+                if (isOrderPrice) {
+                    if (listener != null)
+                        listener.onProceedOrder(getArguments().getBoolean("IS_APPROVAL"), false);
+                } else {
+                    if (listener != null)
+                        listener.onOptionSelected(false);
+                }
 
                 dismiss();
             }
@@ -127,5 +183,7 @@ public class YesNoDialogFragment extends DialogFragment {
 
     public interface YesNoClickInterface {
         void onOptionSelected(boolean isProceed);
+
+        void onProceedOrder(boolean isApproval, boolean isProceed);
     }
 }

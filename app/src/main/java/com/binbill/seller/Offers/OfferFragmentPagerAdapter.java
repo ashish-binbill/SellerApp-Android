@@ -4,14 +4,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.binbill.seller.Order.ActiveOrderFragment;
-import com.binbill.seller.Order.NotRespondedOrderFragment;
-import com.binbill.seller.Order.PastOrderFragment;
+import com.binbill.seller.Constants;
 
 public class OfferFragmentPagerAdapter extends FragmentStatePagerAdapter {
 
-    final int PAGE_COUNT = 1;
-    private String tabTitles[] = new String[]{"BarCode"};
+    final int PAGE_COUNT = 5;
+    private String tabTitles[] = new String[]{"Discount Offers", "BOGO", "Extra Quantity", "New Product", "General Offers"};
 
     public OfferFragmentPagerAdapter(FragmentManager fm) {
         super(fm);
@@ -28,10 +26,15 @@ public class OfferFragmentPagerAdapter extends FragmentStatePagerAdapter {
 
         switch (position) {
             case 0:
-//                return NormalOfferFragment.newInstance();
-//            case 1:
-                return BarCodeOfferFragment.newInstance();
-
+                return BarCodeOfferFragment.newInstance(Constants.OFFER_TYPE_DISCOUNTED);
+            case 1:
+                return BarCodeOfferFragment.newInstance(Constants.OFFER_TYPE_BOGO);
+            case 2:
+                return BarCodeOfferFragment.newInstance(Constants.OFFER_TYPE_EXTRA);
+            case 3:
+                return BarCodeOfferFragment.newInstance(Constants.OFFER_TYPE_NEW_PRODUCT);
+            case 4:
+                return BarCodeOfferFragment.newInstance(Constants.OFFER_TYPE_GENERAL);
         }
         return null;
 

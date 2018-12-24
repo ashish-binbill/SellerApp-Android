@@ -65,6 +65,7 @@ public class MyCustomerFragment extends Fragment implements UserAdapter.CardInte
     private LinearLayoutManager llm;
     private boolean isCallInProgress = false;
     private int lastPage = 0;
+    private String leftString, rightString;
 
 
     public MyCustomerFragment() {
@@ -198,6 +199,12 @@ public class MyCustomerFragment extends Fragment implements UserAdapter.CardInte
                             AppSession.getInstance(getActivity()).setMyCustomerList(userList);
                             handleResponse();
                         }
+
+                        if (jsonObject.optJSONObject("loyalty_rule") != null) {
+                            leftString = jsonObject.getJSONObject("loyalty_rule").getString("item_value");
+                            rightString = jsonObject.getJSONObject("loyalty_rule").getString("points_per_item");
+                        }
+
                     } else {
                         userListView.setVisibility(View.GONE);
                         shimmerview.setVisibility(View.GONE);
@@ -354,6 +361,12 @@ public class MyCustomerFragment extends Fragment implements UserAdapter.CardInte
         final EditText remarks = (EditText) dialogView.findViewById(R.id.et_add_remarks);
         final TextView charLeft = (TextView) dialogView.findViewById(R.id.tv_char_left);
         final TextView amountError = (TextView) dialogView.findViewById(R.id.tv_error_add_credit);
+        final TextView loyaltyConversion = (TextView) dialogView.findViewById(R.id.loyalty_rules);
+
+        if (type == ADD_POINTS) {
+            loyaltyConversion.setText(getString(R.string.you_have_set_loyalty_rule_as, leftString, rightString));
+            loyaltyConversion.setVisibility(View.VISIBLE);
+        }
 
         remarks.addTextChangedListener(new TextWatcher() {
             @Override

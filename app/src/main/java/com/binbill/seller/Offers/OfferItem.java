@@ -94,6 +94,24 @@ public class OfferItem implements Serializable {
     @SerializedName("offer_value")
     String offerValue;
 
+    @SerializedName("bar_code")
+    String barCodeSuggestedOffer;
+
+    @SerializedName("brand_offer_id")
+    String brandOfferId;
+
+    public String getBrandOfferId() {
+        return brandOfferId;
+    }
+
+    public String getBarCodeSuggestedOffer() {
+        return barCodeSuggestedOffer;
+    }
+
+    public void setOfferEndDate(String offerEndDate) {
+        this.offerEndDate = offerEndDate;
+    }
+
     public boolean isOfferAdded() {
         return offerAdded;
     }

@@ -49,6 +49,9 @@ public class Order implements Serializable {
     @SerializedName("total_amount")
     String totalAmount;
 
+    @SerializedName("seller_discount")
+    String sellerDiscount;
+
     @SerializedName("user_address_detail")
     String address;
 
@@ -72,6 +75,17 @@ public class Order implements Serializable {
 
     @SerializedName("auto_cancel_remaining_seconds")
     long autoCancelRemainingSeconds;
+
+    @SerializedName("response_information")
+    String responseInformation;
+
+    public String getResponseInformation() {
+        return responseInformation;
+    }
+
+    public String getSellerDiscount() {
+        return sellerDiscount;
+    }
 
     public long getAutoCancelRemainingSeconds() {
         return autoCancelRemainingSeconds;

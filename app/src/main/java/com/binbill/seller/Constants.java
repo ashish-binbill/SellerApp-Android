@@ -137,6 +137,7 @@ public class Constants {
     public static final String ADD_USER_FOR_OFFER = "ADD_USER_FOR_OFFER";
     public static final String EDIT_OFFER = "EDIT_OFFER";
     public static final String DELETE_OFFER = "DELETE_OFFER";
+    public static final String ADD_EXPIRY_IN_OFFER = "ADD_EXPIRY_IN_OFFER";
     public static final String OFFER_ITEM = "OFFER_ITEM";
     public static final String FLOW_TYPE = "FLOW_TYPE";
     public static final String SHOW_LINKED_USERS = "SHOW_LINKED_USERS";
@@ -206,4 +207,5 @@ public class Constants {
     public static final String ADD_OFFER_TO_SELLER = "ADD_OFFER_TO_SELLER";
     public static final String NEED_THIS_ITEM = "NEED_THIS_ITEM";
 
+    public static final String BRAND_ID = "BRAND_ID";
 }

@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -87,6 +88,9 @@ public class AddBarCodeOfferActivity extends BaseActivity implements ZXingScanne
     @ViewById
     ImageView iv_reset;
 
+    @ViewById
+    LinearLayout ll_discount_layout;
+
     Calendar mCalendar = Calendar.getInstance();
     private int EDIT_OFFER = 1;
     private int mType = 0;
@@ -120,14 +124,37 @@ public class AddBarCodeOfferActivity extends BaseActivity implements ZXingScanne
     }
 
     private void setUpData(OfferItem offerItem) {
-        et_barcode.setText(offerItem.getSku().getBarCode());
+
+        if (getIntent().hasExtra(Constants.OFFER_TYPE)) {
+            et_barcode.setText(offerItem.getBarCodeSuggestedOffer());
+            et_mrp.setText(offerItem.getMrp());
+            et_expiry_date.setText(Utility.getFormattedDate(12, offerItem.getOfferEndDate(), 1));
+
+            int offerType = getIntent().getIntExtra(Constants.OFFER_TYPE, -1);
+            if (offerType == Constants.OFFER_TYPE_DISCOUNTED) {
+                try {
+                    double mrp = Double.parseDouble(offerItem.getMrp());
+                    double percentage = Double.parseDouble(offerItem.getOfferValue());
+
+                    et_discount.setText(Utility.showDoubleString(percentage));
+                } catch (Exception e) {
+                }
+
+                ll_discount_layout.setVisibility(View.VISIBLE);
+            } else
+                ll_discount_layout.setVisibility(View.GONE);
+
+        } else {
+            et_barcode.setText(offerItem.getSku().getBarCode());
+            et_mrp.setText(offerItem.getSku().getMrp());
+            et_discount.setText(offerItem.getOfferDiscount());
+            ll_discount_layout.setVisibility(View.VISIBLE);
+
+            et_expiry_date.setText(Utility.getFormattedDate(12, offerItem.getOfferEndDate(), 0));
+        }
         et_barcode.setFocusableInTouchMode(false);
         et_barcode.setFocusable(false);
 
-        et_mrp.setText(offerItem.getSku().getMrp());
-        et_discount.setText(offerItem.getOfferDiscount());
-
-        et_expiry_date.setText(Utility.getFormattedDate(12, offerItem.getOfferEndDate(), 0));
         mOfferId = offerItem.getOfferId();
 
         btn_submit.setText(getString(R.string.update));
@@ -144,10 +171,15 @@ public class AddBarCodeOfferActivity extends BaseActivity implements ZXingScanne
                 .memoryPolicy(MemoryPolicy.NO_CACHE)
                 .into(iv_offer);
 
-        tv_item_name.setText(mOfferItem.getSku().getSkuTitle() + " - " + mOfferItem.getSku().getMeasurementValue() + " " + mOfferItem.getSku().getAcronym());
+        if (getIntent().hasExtra(Constants.OFFER_TYPE)) {
+            tv_item_name.setText(mOfferItem.getSkuTitle() + " - " + mOfferItem.getMeasurementValue() + " " + mOfferItem.getAcronym());
+        } else {
+            tv_item_name.setText(mOfferItem.getSku().getSkuTitle() + " - " + mOfferItem.getSku().getMeasurementValue() + " " + mOfferItem.getSku().getAcronym());
+        }
         tv_item_name.setVisibility(View.VISIBLE);
 
         tv_search.setVisibility(View.GONE);
+        enableDisableVerifyButton();
     }
 
     private void checkCameraPermission() {
@@ -408,7 +440,7 @@ public class AddBarCodeOfferActivity extends BaseActivity implements ZXingScanne
          * DISCOUNT
          */
         String discount = et_discount.getText().toString().trim();
-        if (TextUtils.isEmpty(discount)) {
+        if (ll_discount_layout.getVisibility() == View.VISIBLE && TextUtils.isEmpty(discount)) {
             tv_error_discount.setText(getString(R.string.error_field_cannot_be_empty));
             tv_error_discount.setVisibility(View.VISIBLE);
             scroll_view.scrollTo(0, tv_error_discount.getBottom());
@@ -445,7 +477,15 @@ public class AddBarCodeOfferActivity extends BaseActivity implements ZXingScanne
         String expiry = et_expiry_date.getText().toString();
         String mrp = et_mrp.getText().toString();
 
-        new RetrofitHelper(this).addBarCodeOfferFromSeller(skuId, skuMeasurementId, mrp, discount, expiry, mOfferId, new RetrofitHelper.RetrofitCallback() {
+        String brandOfferId = null;
+        String offerType = null;
+        if (getIntent().hasExtra(Constants.OFFER_TYPE)) {
+            brandOfferId = mOfferItem.getOfferId();
+            offerType = String.valueOf(getIntent().getIntExtra(Constants.OFFER_TYPE, 1));
+        }
+
+
+        new RetrofitHelper(this).addBarCodeOfferFromSeller(skuId, skuMeasurementId, mrp, discount, expiry, mOfferId, brandOfferId, offerType, new RetrofitHelper.RetrofitCallback() {
             @Override
             public void onResponse(String response) {
 
@@ -499,7 +539,11 @@ public class AddBarCodeOfferActivity extends BaseActivity implements ZXingScanne
         String discount = et_discount.getText().toString();
         String offerExpiry = et_expiry_date.getText().toString();
 
-        if (!Utility.isEmpty(barcode.trim()) && !Utility.isEmpty(mrp.trim()) && !Utility.isEmpty(discount.trim()) && !Utility.isEmpty(offerExpiry.trim()))
+        boolean discountCheck = true;
+        if(ll_discount_layout.getVisibility() == View.VISIBLE && Utility.isEmpty(discount.trim()))
+            discountCheck = false;
+
+        if (!Utility.isEmpty(barcode.trim()) && !Utility.isEmpty(mrp.trim()) && discountCheck && !Utility.isEmpty(offerExpiry.trim()))
             Utility.enableButton(this, btn_submit, true);
         else
             Utility.enableButton(this, btn_submit, false);

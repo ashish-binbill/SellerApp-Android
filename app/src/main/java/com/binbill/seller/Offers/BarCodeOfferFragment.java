@@ -1,5 +1,6 @@
 package com.binbill.seller.Offers;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -32,7 +34,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Locale;
 
 public class BarCodeOfferFragment extends Fragment implements OfferAdapter.OfferManipulationListener, YesNoDialogFragment.YesNoClickInterface {
 
@@ -42,13 +47,16 @@ public class BarCodeOfferFragment extends Fragment implements OfferAdapter.Offer
     private ArrayList<OfferItem> mBarcodeOfferList;
     private String mOfferIdToDelete = "";
     private Button noDataButton;
+    private int offerType;
+    private OfferAdapter mAdapter;
 
     public BarCodeOfferFragment() {
     }
 
-    public static BarCodeOfferFragment newInstance() {
+    public static BarCodeOfferFragment newInstance(int offerType) {
         BarCodeOfferFragment fragment = new BarCodeOfferFragment();
         Bundle args = new Bundle();
+        args.putInt(Constants.OFFER_TYPE, offerType);
         fragment.setArguments(args);
         return fragment;
     }
@@ -56,6 +64,8 @@ public class BarCodeOfferFragment extends Fragment implements OfferAdapter.Offer
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        offerType = getArguments().getInt(Constants.OFFER_TYPE);
     }
 
     @Override
@@ -97,7 +107,7 @@ public class BarCodeOfferFragment extends Fragment implements OfferAdapter.Offer
 
 
         String sellerId = AppSession.getInstance(getActivity()).getSellerId();
-        new RetrofitHelper(getActivity()).fetchBarcodeOffersForSeller(sellerId, new RetrofitHelper.RetrofitCallback() {
+        new RetrofitHelper(getActivity()).fetchBarcodeOffersForSeller(sellerId, offerType, new RetrofitHelper.RetrofitCallback() {
             @Override
             public void onResponse(String response) {
                 swipeRefreshLayout.setRefreshing(false);
@@ -150,7 +160,10 @@ public class BarCodeOfferFragment extends Fragment implements OfferAdapter.Offer
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         offerListView.setLayoutManager(llm);
-        OfferAdapter mAdapter = new OfferAdapter(this, mBarcodeOfferList, Constants.TYPE_BARCODE_OFFER);
+        if (offerType == Constants.OFFER_TYPE_GENERAL)
+            mAdapter = new OfferAdapter(this, mBarcodeOfferList, Constants.OFFER_TYPE_GENERAL, offerType);
+        else
+            mAdapter = new OfferAdapter(this, mBarcodeOfferList, Constants.TYPE_BARCODE_OFFER, offerType);
         offerListView.setAdapter(mAdapter);
 
         offerListView.setVisibility(View.VISIBLE);
@@ -160,11 +173,17 @@ public class BarCodeOfferFragment extends Fragment implements OfferAdapter.Offer
 
     private void showNoOfferLayout() {
         TextView noDataText = (TextView) noDataLayout.findViewById(R.id.tv_no_data);
-        noDataText.setText(getString(R.string.no_offers_added));
-
         noDataButton = (Button) noDataLayout.findViewById(R.id.btn_no_data);
         noDataButton.setText(getString(R.string.add_offers));
         noDataLayout.setVisibility(View.VISIBLE);
+        if (offerType == Constants.OFFER_TYPE_DISCOUNTED)
+            noDataText.setText(getString(R.string.no_offers_added));
+        else {
+            ImageView noDataImage = (ImageView) noDataLayout.findViewById(R.id.iv_no_data_image);
+            noDataImage.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_uhh_ohh));
+            noDataText.setText(getString(R.string.no_offers));
+            noDataButton.setVisibility(View.GONE);
+        }
         offerListView.setVisibility(View.GONE);
         shimmerview.setVisibility(View.GONE);
     }
@@ -193,6 +212,59 @@ public class BarCodeOfferFragment extends Fragment implements OfferAdapter.Offer
         });
     }
 
+
+    DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
+
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear,
+                              int dayOfMonth) {
+            mCalendar.set(Calendar.YEAR, year);
+            mCalendar.set(Calendar.MONTH, monthOfYear);
+            mCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            updateLabel();
+        }
+
+    };
+
+    private void updateLabel() {
+        if (positionItem > -1) {
+            String saveFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+            SimpleDateFormat sdf = new SimpleDateFormat(saveFormat, Locale.ENGLISH);
+            mBarcodeOfferList.get(positionItem).setOfferEndDate(sdf.format(mCalendar.getTime()));
+            mAdapter.notifyItemChanged(positionItem);
+
+            makeOfferEditCall();
+        }
+    }
+
+    private void makeOfferEditCall() {
+
+        OfferItem mOfferItem = mBarcodeOfferList.get(positionItem);
+        String skuId = mOfferItem.getSkuId();
+        String skuMeasurementId = mOfferItem.getSkuMeasurementId();
+
+        String expiry = mOfferItem.getOfferEndDate();
+
+        String brandOfferId = mOfferItem.getOfferId();
+        String offerType1 = String.valueOf(offerType);
+
+
+        new RetrofitHelper(getActivity()).addBarCodeOfferFromSeller(skuId, skuMeasurementId, null, null, expiry, brandOfferId, brandOfferId, offerType1, new RetrofitHelper.RetrofitCallback() {
+            @Override
+            public void onResponse(String response) {
+
+            }
+
+            @Override
+            public void onErrorResponse() {
+                ((OfferActivity) getActivity()).showSnackBar(getString(R.string.something_went_wrong));
+            }
+        });
+    }
+
+    Calendar mCalendar = Calendar.getInstance();
+    int positionItem = -1;
+
     @Override
     public void onOfferManupulation(int position, String type) {
         switch (type) {
@@ -202,9 +274,18 @@ public class BarCodeOfferFragment extends Fragment implements OfferAdapter.Offer
                 startActivity(intent);
                 break;
             case Constants.DELETE_OFFER:
-
                 mOfferIdToDelete = mBarcodeOfferList.get(position).getOfferId();
                 ((OfferActivity) getActivity()).showYesNoDialog();
+                break;
+            case Constants.ADD_EXPIRY_IN_OFFER:
+                positionItem = position;
+                mOfferIdToDelete = mBarcodeOfferList.get(position).getOfferId();
+                DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), datePickerListener, mCalendar
+                        .get(Calendar.YEAR), mCalendar.get(Calendar.MONTH),
+                        mCalendar.get(Calendar.DAY_OF_MONTH));
+
+                datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+                datePickerDialog.show();
                 break;
         }
     }
@@ -232,5 +313,10 @@ public class BarCodeOfferFragment extends Fragment implements OfferAdapter.Offer
  * do nothing
  */
         }
+    }
+
+    @Override
+    public void onProceedOrder(boolean isApproval, boolean isProceed) {
+
     }
 }

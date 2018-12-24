@@ -70,7 +70,6 @@ import com.binbill.seller.Login.LoginActivity_;
 import com.binbill.seller.Loyalty.LoyaltyRulesActivity_;
 import com.binbill.seller.Model.DashboardModel;
 import com.binbill.seller.Model.MainCategory;
-import com.binbill.seller.Offers.AddBarCodeOfferActivity_;
 import com.binbill.seller.Order.OrderDetailsActivity_;
 import com.binbill.seller.R;
 import com.binbill.seller.Registration.RegistrationResolver;
@@ -531,6 +530,7 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
                     drawer_layout.closeDrawer(GravityCompat.START);
                 just_sec_layout.setVisibility(View.VISIBLE);
                 SharedPref.clearSharedPreferences(DashboardActivity.this, true);
+                SharedPref.removePref(DashboardActivity.this, Constants.UPDATE_POPUP_NOT_NOW_CLICKED);
                 AppSession.setInstanceToNull();
 
                 UserLogoutTask.TaskListener userLogoutTaskListener = new UserLogoutTask.TaskListener() {
@@ -789,102 +789,103 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
         DashboardModel dashboardModel = AppSession.getInstance(this).getDashboardData();
 
         if (dashboardModel == null) {
-            finish();
-            return;
-        }
+            just_sec_layout.setVisibility(View.VISIBLE);
+            ApiHelper.makeDashboardDataCall(this);
+        } else {
 
-        BottomNavigationMenuView menuView = (BottomNavigationMenuView) bottom_navigation.getChildAt(0);
-        for (int i = 0; i < menuView.getChildCount(); i++) {
-            final View iconView = menuView.getChildAt(i).findViewById(android.support.design.R.id.icon);
-            final ViewGroup.LayoutParams layoutParams = iconView.getLayoutParams();
-            final DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-            layoutParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, getResources().getDimension(R.dimen.bottom_navigation_icon_size), displayMetrics);
-            layoutParams.width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, getResources().getDimension(R.dimen.bottom_navigation_icon_size), displayMetrics);
-            iconView.setLayoutParams(layoutParams);
+            BottomNavigationMenuView menuView = (BottomNavigationMenuView) bottom_navigation.getChildAt(0);
+            for (int i = 0; i < menuView.getChildCount(); i++) {
+                final View iconView = menuView.getChildAt(i).findViewById(android.support.design.R.id.icon);
+                final ViewGroup.LayoutParams layoutParams = iconView.getLayoutParams();
+                final DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+                layoutParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, getResources().getDimension(R.dimen.bottom_navigation_icon_size), displayMetrics);
+                layoutParams.width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, getResources().getDimension(R.dimen.bottom_navigation_icon_size), displayMetrics);
+                iconView.setLayoutParams(layoutParams);
 
 //            int padding20 = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, getResources().getDimension(R.dimen.dimen_15dp), displayMetrics);
 //            iconView.setPadding(0, 0, 0, padding20);
-        }
+            }
 
-        sellerType = dashboardModel.getSellerType();
-        AppSession.getInstance(this).setDashboardData(dashboardModel);
-        Menu menu = bottom_navigation.getMenu();
-        switch (sellerType) {
-            case FMCG_ASSISTED_USER_POS:
-                break;
-            case FMCG_ASSISTED_USER_NO_POS:
-                menu.removeItem(R.id.action_verification);
-                break;
-            case FMCG_ONLY_USER_HAS_POS:
-                menu.removeItem(R.id.action_assisted);
-                break;
-            case FMCG_ONLY_USER_NO_POS:
-                menu.removeItem(R.id.action_assisted);
-                menu.removeItem(R.id.action_verification);
-                break;
-            case ASSISTED_ONLY_USER:
-                menu.removeItem(R.id.action_verification);
-                nav_view.findViewById(R.id.tv_manage_delivery_boy).setVisibility(View.GONE);
+            sellerType = dashboardModel.getSellerType();
+            AppSession.getInstance(this).setDashboardData(dashboardModel);
+            Menu menu = bottom_navigation.getMenu();
+            switch (sellerType) {
+                case FMCG_ASSISTED_USER_POS:
+                    break;
+                case FMCG_ASSISTED_USER_NO_POS:
+                    menu.removeItem(R.id.action_verification);
+                    break;
+                case FMCG_ONLY_USER_HAS_POS:
+                    menu.removeItem(R.id.action_assisted);
+                    break;
+                case FMCG_ONLY_USER_NO_POS:
+                    menu.removeItem(R.id.action_assisted);
+                    menu.removeItem(R.id.action_verification);
+                    break;
+                case ASSISTED_ONLY_USER:
+                    menu.removeItem(R.id.action_verification);
+                    nav_view.findViewById(R.id.tv_manage_delivery_boy).setVisibility(View.GONE);
+                    nav_view.findViewById(R.id.ll_sku_management).setVisibility(View.GONE);
+                    break;
+            }
+
+            if (dashboardModel.isCategoryBrandDataManuallyAdded()) {
                 nav_view.findViewById(R.id.ll_sku_management).setVisibility(View.GONE);
-                break;
-        }
+            }
 
-        if (dashboardModel.isCategoryBrandDataManuallyAdded()) {
-            nav_view.findViewById(R.id.ll_sku_management).setVisibility(View.GONE);
-        }
+            bottom_navigation.setOnNavigationItemSelectedListener(
+                    new BottomNavigationView.OnNavigationItemSelectedListener() {
+                        @Override
+                        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                            switch (item.getItemId()) {
+                                case R.id.action_home:
+                                    HomeFragment homeFragment = HomeFragment.newInstance("", "");
+                                    replaceFragment(homeFragment, 0);
+                                    setUpToolbar(getString(R.string.dashboard));
 
-        bottom_navigation.setOnNavigationItemSelectedListener(
-                new BottomNavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.action_home:
-                                HomeFragment homeFragment = HomeFragment.newInstance("", "");
-                                replaceFragment(homeFragment, 0);
-                                setUpToolbar(getString(R.string.dashboard));
+                                    iv_notification.setVisibility(View.INVISIBLE);
+                                    iv_search.setVisibility(View.GONE);
+                                    break;
+                                case R.id.action_verification:
+                                    VerificationFragment verificationFragment = VerificationFragment.newInstance();
+                                    replaceFragment(verificationFragment, 1);
+                                    setUpToolbar(getString(R.string.verification));
 
-                                iv_notification.setVisibility(View.INVISIBLE);
-                                iv_search.setVisibility(View.GONE);
-                                break;
-                            case R.id.action_verification:
-                                VerificationFragment verificationFragment = VerificationFragment.newInstance();
-                                replaceFragment(verificationFragment, 1);
-                                setUpToolbar(getString(R.string.verification));
+                                    iv_notification.setVisibility(View.INVISIBLE);
+                                    iv_search.setVisibility(View.GONE);
+                                    break;
+                                case R.id.action_chat:
+                                    OrderFragment orderFragment = OrderFragment.newInstance(0);
+                                    replaceFragment(orderFragment, 2);
+                                    setUpToolbar(getString(R.string.my_order));
 
-                                iv_notification.setVisibility(View.INVISIBLE);
-                                iv_search.setVisibility(View.GONE);
-                                break;
-                            case R.id.action_chat:
-                                OrderFragment orderFragment = OrderFragment.newInstance(0);
-                                replaceFragment(orderFragment, 2);
-                                setUpToolbar(getString(R.string.my_order));
+                                    iv_notification.setVisibility(View.INVISIBLE);
+                                    iv_search.setVisibility(View.GONE);
+                                    break;
+                                case R.id.action_customers:
+                                    myCustomerFragment = CustomerFragment.newInstance(0);
+                                    replaceFragment(myCustomerFragment, 3);
+                                    setUpToolbar(getString(R.string.my_customers));
 
-                                iv_notification.setVisibility(View.INVISIBLE);
-                                iv_search.setVisibility(View.GONE);
-                                break;
-                            case R.id.action_customers:
-                                myCustomerFragment = CustomerFragment.newInstance(0);
-                                replaceFragment(myCustomerFragment, 3);
-                                setUpToolbar(getString(R.string.my_customers));
+                                    iv_notification.setVisibility(View.VISIBLE);
+                                    iv_notification.setImageDrawable(ContextCompat.getDrawable(DashboardActivity.this, R.drawable.ic_add_offer));
+                                    iv_search.setVisibility(View.VISIBLE);
+                                    break;
+                                case R.id.action_assisted:
+                                    assistedServiceFragment = AssistedServiceFragment.newInstance("", "");
+                                    replaceFragment(assistedServiceFragment, 4);
+                                    setUpToolbar(getString(R.string.assisted_services));
 
-                                iv_notification.setVisibility(View.VISIBLE);
-                                iv_notification.setImageDrawable(ContextCompat.getDrawable(DashboardActivity.this, R.drawable.ic_add_offer));
-                                iv_search.setVisibility(View.VISIBLE);
-                                break;
-                            case R.id.action_assisted:
-                                assistedServiceFragment = AssistedServiceFragment.newInstance("", "");
-                                replaceFragment(assistedServiceFragment, 4);
-                                setUpToolbar(getString(R.string.assisted_services));
+                                    iv_notification.setVisibility(View.VISIBLE);
+                                    iv_notification.setImageDrawable(ContextCompat.getDrawable(DashboardActivity.this, R.drawable.ic_add_offer));
+                                    iv_search.setVisibility(View.VISIBLE);
+                                    break;
 
-                                iv_notification.setVisibility(View.VISIBLE);
-                                iv_notification.setImageDrawable(ContextCompat.getDrawable(DashboardActivity.this, R.drawable.ic_add_offer));
-                                iv_search.setVisibility(View.VISIBLE);
-                                break;
-
+                            }
+                            return true;
                         }
-                        return true;
-                    }
-                });
+                    });
+        }
     }
 
     @Override
@@ -984,6 +985,11 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
         if (bottom_navigation.getSelectedItemId() == R.id.action_assisted) {
             assistedServiceFragment.onOptionSelected(isProceed);
         }
+    }
+
+    @Override
+    public void onProceedOrder(boolean isApproval, boolean isProceed) {
+
     }
 
     @Override

@@ -31,7 +31,6 @@ import com.google.firebase.messaging.RemoteMessage;
 
 import java.util.Map;
 
-import static android.app.Notification.DEFAULT_SOUND;
 import static android.support.v4.app.NotificationCompat.DEFAULT_VIBRATE;
 
 /**
@@ -148,8 +147,8 @@ public class AppFirebaseMessagingService extends FirebaseMessagingService {
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(this, channelId)
                         .setSmallIcon(R.mipmap.ic_launcher_round)
-                        .setContentTitle(title)
-                        .setContentText(messageBody)
+                        .setContentTitle(Html.fromHtml(title))
+                        .setContentText(Html.fromHtml(messageBody))
                         .setAutoCancel(true)
                         .setLargeIcon(icon)
                         .setStyle(new NotificationCompat.BigTextStyle()
