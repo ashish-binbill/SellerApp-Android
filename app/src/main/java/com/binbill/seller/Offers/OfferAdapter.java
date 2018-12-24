@@ -198,6 +198,11 @@ public class OfferAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         offerHolder.mTitle.setText(model.getSkuTitle());
         offerHolder.mMrp.setText("MRP " + model.getMrp());
+        if (!Utility.isEmpty(offerItem.getMeasurementValue()) && !Utility.isEmpty(offerItem.getAcronym())) {
+            offerHolder.mQuantity.setText("(" + offerItem.getMeasurementValue() + " " + offerItem.getAcronym() + ")");
+            offerHolder.mQuantity.setVisibility(View.VISIBLE);
+        } else
+            offerHolder.mQuantity.setVisibility(View.GONE);
 
         try {
             double mrp = Double.parseDouble(model.getMrp());
@@ -419,7 +424,7 @@ public class OfferAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     public static class OfferBarCodeHolder extends RecyclerView.ViewHolder {
         protected View mRootCard;
-        protected TextView mTitle, mMrp, mDiscount, mExpiry, mOfferedMrp;
+        protected TextView mTitle, mMrp, mQuantity, mDiscount, mExpiry, mOfferedMrp;
         protected ImageView editOffer, deleteOffer;
         protected EditText mEnterExpiry;
         protected ImageView mImage;
@@ -436,6 +441,7 @@ public class OfferAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             editOffer = (ImageView) view.findViewById(R.id.iv_offer_edit);
             deleteOffer = (ImageView) view.findViewById(R.id.iv_offer_delete);
             mEnterExpiry = (EditText) view.findViewById(R.id.et_expiry_date);
+            mQuantity = (TextView) view.findViewById(R.id.tv_quantity);
         }
     }
 }
