@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,6 +17,7 @@ import android.support.v7.widget.SearchView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +31,8 @@ import com.binbill.seller.BaseActivity;
 import com.binbill.seller.Constants;
 import com.binbill.seller.CustomViews.AppButton;
 import com.binbill.seller.CustomViews.AppButtonGreyed;
+import com.binbill.seller.CustomViews.SquareAppButton;
+import com.binbill.seller.Dashboard.CustomerFragment;
 import com.binbill.seller.Model.UserModel;
 import com.binbill.seller.Offers.UserAdapter;
 import com.binbill.seller.R;
@@ -37,6 +41,7 @@ import com.binbill.seller.Utility;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import org.aviran.cookiebar2.CookieBar;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -59,8 +64,11 @@ public class InvitedCustomerFragment extends Fragment implements UserAdapter.Car
     private boolean isCallInProgress = false;
     private int lastPage = 0;
 
+    public static InvitedCustomerFragment frag;
+    public static double hideTime = 0.0;
 
     public InvitedCustomerFragment() {
+        frag =this;
     }
 
     public static InvitedCustomerFragment newInstance() {
@@ -121,7 +129,7 @@ public class InvitedCustomerFragment extends Fragment implements UserAdapter.Car
             }
         });
 
-        AppButton addCustomer = noDataLayout.findViewById(R.id.btn_no_data);
+        SquareAppButton addCustomer = noDataLayout.findViewById(R.id.btn_no_data);
         addCustomer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -136,7 +144,7 @@ public class InvitedCustomerFragment extends Fragment implements UserAdapter.Car
         userListView.setVisibility(View.GONE);
         shimmerview.setVisibility(View.VISIBLE);
         noDataLayout.setVisibility(View.GONE);
-
+        CustomerFragment.userList.clear();
         page = 0;
         fetchInvitedCustomers();
     }
@@ -183,6 +191,8 @@ public class InvitedCustomerFragment extends Fragment implements UserAdapter.Car
 
                         if (jsonObject.has("last_page") && !jsonObject.isNull("last_page"))
                             lastPage = jsonObject.optInt("last_page");
+                        if (jsonObject.has("max_notify_hidden_time") && !jsonObject.isNull("max_notify_hidden_time"))
+                            hideTime = jsonObject.optDouble("max_notify_hidden_time");
 
                         if (jsonObject.optJSONArray("result") != null) {
                             JSONArray userArray = jsonObject.getJSONArray("result");
@@ -241,6 +251,8 @@ public class InvitedCustomerFragment extends Fragment implements UserAdapter.Car
             this.mUserList = list;
         else
             this.mUserList.addAll(list);
+            CustomerFragment.userList.addAll(list);
+
         userListView.setHasFixedSize(true);
         llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
@@ -300,6 +312,106 @@ public class InvitedCustomerFragment extends Fragment implements UserAdapter.Car
         UserModel selectedModel = mUserList.get(position);
         invokeAddSettleCreditDialog(ADD_CREDIT, selectedModel.getUserId());
     }
+
+    @Override
+    public void onNotify(int position, String mobileNumber) {
+        String mobile = mobileNumber.trim();
+        if (!Utility.isEmpty(mobile) && isValidMobileNumber(mobile)) {
+            new RetrofitHelper(getActivity()).inviteUser(mobile, new RetrofitHelper.RetrofitCallback() {
+                @Override
+                public void onResponse(String response) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(response);
+                        if (jsonObject.optBoolean("status")) {
+                            invokeSuccessDialog(true);
+                        } else
+                            showSnackBar(getString(R.string.something_went_wrong));
+
+                    } catch (JSONException e) {
+                        showSnackBar(getString(R.string.something_went_wrong));
+                    }
+                }
+
+                @Override
+                public void onErrorResponse() {
+                    showSnackBar(getString(R.string.something_went_wrong));
+                }
+            });
+        }
+    }
+
+    public void showSnackBar(String message) {
+        CookieBar.build(getActivity())
+                .setTitle("")
+                .setLayoutGravity(Gravity.BOTTOM)
+                .setMessage(message)
+                .show();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                CookieBar.dismiss(getActivity());
+            }
+        }, 3000);
+    }
+
+
+    public void invokeSuccessDialog(boolean isInvite) {
+
+        Utility.hideKeyboard(getActivity(), userListView);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.dialog_add_assisted_service, null);
+
+        Rect displayRectangle = new Rect();
+        Window window = getActivity().getWindow();
+        window.getDecorView().getWindowVisibleDisplayFrame(displayRectangle);
+
+        dialogView.setMinimumWidth((int) (displayRectangle.width() * 0.9f));
+
+        builder.setView(dialogView);
+        builder.setCancelable(false);
+
+        final AlertDialog dialog = builder.create();
+        dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+
+        TextView title = (TextView) dialogView.findViewById(R.id.title);
+
+        if (isInvite)
+            title.setText(getString(R.string.invitation_sent));
+        else
+            title.setText(getString(R.string.customer_added_successfully));
+        AppButton yesButton = (AppButton) dialogView.findViewById(R.id.btn_yes);
+
+        yesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (!(getActivity()).isFinishing())
+                    dialog.dismiss();
+
+                if(dialog.isShowing()){
+                    dialog.dismiss();
+                }
+                onResume();
+               // getActivity().onBackPressed();
+            }
+        });
+
+        if (!((getActivity()).isFinishing())) {
+            dialog.show();
+        }
+    }
+
+    public boolean isValidMobileNumber(String mobileStr) {
+        Long mobileNumber = Utility.isValidMobileNumber(mobileStr);
+        return mobileNumber.compareTo(-1L) != 0;
+    }
+
+
 
     @Override
     public void onCustomerAdded(int position) {
@@ -479,4 +591,21 @@ public class InvitedCustomerFragment extends Fragment implements UserAdapter.Car
             mAdapter.getFilter().filter(newText);
         return true;
     }
+
+    public void FireQuery(String text){
+
+        ArrayList<UserModel> list = new ArrayList<>();
+        list.addAll(CustomerFragment.userList);
+        mAdapter = new UserAdapter(Constants.MY_CUSTOMER, list, this, false);
+        if (page != lastPage)
+            mAdapter.setLoadMore(true);
+        else
+            mAdapter.setLoadMore(false);
+        userListView.setAdapter(mAdapter);
+
+        onQueryTextSubmit(text);
+        if (mAdapter != null)
+            mAdapter.getFilter().filter(text);
+    }
+
 }

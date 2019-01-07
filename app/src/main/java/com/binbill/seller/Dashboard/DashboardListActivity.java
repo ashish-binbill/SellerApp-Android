@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.binbill.seller.BaseActivity;
 import com.binbill.seller.Constants;
 import com.binbill.seller.CustomViews.AppButton;
+import com.binbill.seller.CustomViews.SquareAppButton;
 import com.binbill.seller.Model.CreditLoyaltyDashboardModel;
 import com.binbill.seller.R;
 import com.binbill.seller.Retrofit.RetrofitHelper;
@@ -54,7 +55,7 @@ public class DashboardListActivity extends BaseActivity {
     ImageView iv_no_data_image;
 
     @ViewById
-    AppButton btn_no_data;
+    SquareAppButton btn_no_data;
     private int mType;
 
     @AfterViews

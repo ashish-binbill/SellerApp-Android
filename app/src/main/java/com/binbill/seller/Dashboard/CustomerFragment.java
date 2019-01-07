@@ -12,7 +12,10 @@ import android.view.ViewGroup;
 
 import com.binbill.seller.Customer.CustomerPagerAdapter;
 import com.binbill.seller.Customer.InvitedCustomerFragment;
+import com.binbill.seller.Model.UserModel;
 import com.binbill.seller.R;
+
+import java.util.ArrayList;
 
 public class CustomerFragment extends Fragment {
 
@@ -20,8 +23,12 @@ public class CustomerFragment extends Fragment {
     private TabLayout tabStrip;
     private int pageToDisplay = 0;
     private CustomerPagerAdapter mPagerAdapter;
+    public static CustomerFragment fragment;
+
+    public static ArrayList<UserModel> userList = new ArrayList<>();
 
     public CustomerFragment() {
+        fragment = this;
     }
 
     public static CustomerFragment newInstance(int page) {
@@ -80,9 +87,11 @@ public class CustomerFragment extends Fragment {
         Fragment page = (Fragment) mPagerAdapter.instantiateItem(viewPager, viewPager.getCurrentItem());
         if (page != null)
             if (viewPager.getCurrentItem() == 0) {
-                ((MyCustomerFragment) page).showSearchView();
+            CustomerPagerAdapter.positionPager =0;
+               /* ((MyCustomerFragment) page).showSearchView();*/
             } else {
-                ((InvitedCustomerFragment) page).showSearchView();
+            CustomerPagerAdapter.positionPager =1;
+               /* ((InvitedCustomerFragment) page).showSearchView();*/
             }
     }
 }

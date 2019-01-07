@@ -52,7 +52,9 @@ import com.binbill.seller.CustomViews.ReviewAdapter;
 import com.binbill.seller.CustomViews.ReviewsDialogFragment;
 import com.binbill.seller.CustomViews.YesNoDialogFragment;
 import com.binbill.seller.Interface.ItemSelectedInterface;
+import com.binbill.seller.Model.SellerDeliveryModel;
 import com.binbill.seller.Model.UserModel;
+import com.binbill.seller.Model.UserRegistrationDetails;
 import com.binbill.seller.R;
 import com.binbill.seller.Retrofit.RetrofitHelper;
 import com.binbill.seller.SharedPref;
@@ -99,7 +101,8 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
     TextView toolbarText;
 
     @ViewById
-    TextView tv_address, tv_date, tv_home_delivery, tv_name, tv_order_status, header_shopping_list, tv_start_time, tv_end_time, tv_time_elapsed, tv_total_amount;
+    TextView tv_address, tv_date, tv_home_delivery, tv_name, tv_order_status, header_shopping_list,
+            tv_start_time, tv_end_time, tv_time_elapsed, tv_total_amount, tv_home_delivery_charges, tv_payable;
     @ViewById
     ImageView iv_user_image, header_quantity;
 
@@ -107,12 +110,16 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
     TextView tv_delivery_time_left, tv_delivery_time, tv_delivery_time_header;
 
     @ViewById
-    TextView tv_start_time_header, tv_end_time_header, tv_time_elapsed_header, tv_delivery_header_fmcg, tv_delivery_header_service;
+    TextView tv_start_time_header, tv_end_time_header, tv_time_elapsed_header, tv_delivery_header_fmcg,
+            tv_delivery_header_service;
     @ViewById
     RecyclerView rv_shopping_list;
 
     @ViewById
-    LinearLayout shimmer_view_container, ll_discount_layout, ll_order_delivery_time, ll_offer_layout, ll_user_action, ll_bill_layout, start_time, end_time, time_elapsed, ll_amount_entry, ll_call_customer;
+    LinearLayout shimmer_view_container, ll_discount_layout, ll_order_delivery_time, ll_offer_layout,
+            ll_user_action, ll_bill_layout, start_time, end_time, time_elapsed, ll_amount_entry,
+            ll_call_customer, lv_free_home, lv_payable;
+
     private Order orderDetails;
 
     @ViewById
@@ -167,17 +174,26 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
     private CountDownTimer autoCancelTimer;
     private CountDownTimer deliveryTimer;
 
+    UserRegistrationDetails userRegistrationDetails;
+    ArrayList<SellerDeliveryModel> deliverCharges;
+    double amtBefore;
+
     @AfterViews
     public void setUpView() {
         setUpToolbar();
 
         if (getIntent() != null && getIntent().hasExtra(Constants.ORDER_ID)) {
             orderId = getIntent().getStringExtra(Constants.ORDER_ID);
+            deliverCharges = (ArrayList<SellerDeliveryModel>)getIntent()
+                    .getSerializableExtra("SellerDeliveryCharges");
+            amtBefore = getIntent().getDoubleExtra("AmtBeforeDelivery",0.0);
         } else
             finish();
 
         setUpListener();
         connectSocket();
+
+        userRegistrationDetails = AppSession.getInstance(this).getUserRegistrationDetails();
     }
 
     private void connectSocket() {
@@ -820,7 +836,13 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                     tv_delivery_time_header.setText(getString(R.string.order_delivery_time_left));
                     tv_delivery_time_header.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
                     tv_delivery_time_header.setOnClickListener(null);
-                    tv_delivery_time.setText(orderDetails.getDeliveryMinutes() + " min");
+                    if(orderDetails.getDeliveryMinutes()!=null &&
+                            !orderDetails.getDeliveryMinutes().equalsIgnoreCase("null")){
+                        tv_delivery_time.setText(orderDetails.getDeliveryMinutes() + " min");
+                    }else{
+                        tv_delivery_time.setText("45" + " mins");
+                    }
+                   // tv_delivery_time.setText(orderDetails.getDeliveryMinutes() + " min");
                 } else if (orderDetails.getAutoCancelRemainingSeconds() > 0) {
                     long millisUntilFinished = orderDetails.getAutoCancelRemainingSeconds() * 1000;
 
@@ -839,12 +861,24 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
 
                     }.start();
                     tv_delivery_time_header.setText(getString(R.string.response_time_left));
-                    tv_delivery_time.setText(orderDetails.getDeliveryMinutes() + " min");
+                    if(orderDetails.getDeliveryMinutes()!=null &&
+                            !orderDetails.getDeliveryMinutes().equalsIgnoreCase("null")){
+                        tv_delivery_time.setText(orderDetails.getDeliveryMinutes() + " min");
+                    }else{
+                        tv_delivery_time.setText("45" + " mins");
+                    }
+                    //tv_delivery_time.setText(orderDetails.getDeliveryMinutes() + " min");
                     tv_delivery_time.setText("45 mins");
 
                 } else if (orderDetails.getOrderStatus() == Constants.STATUS_NEW_ORDER) {
                     tv_delivery_time_header.setText(getString(R.string.order_delivery_time_left));
-                    tv_delivery_time.setText(orderDetails.getDeliveryMinutes() + " min");
+                    if(orderDetails.getDeliveryMinutes()!=null &&
+                            !orderDetails.getDeliveryMinutes().equalsIgnoreCase("null")){
+                        tv_delivery_time.setText(orderDetails.getDeliveryMinutes() + " min");
+                    }else{
+                        tv_delivery_time.setText("45" + " mins");
+                    }
+
                     tv_delivery_time_header.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
                     tv_delivery_time_header.setOnClickListener(null);
                     tv_delivery_time_left.setText("---");
@@ -872,6 +906,7 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
         LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         rv_shopping_list.setLayoutManager(llm);
+      //  rv_shopping_list.getItemAnimator().setSupportsChangeAnimations(false);
 
         mAdapter = new OrderShoppingListAdapter(orderDetails.getOrderType(), orderDetails.getOrderItems(), this, mUpdateStateArray, orderDetails.getOrderStatus(), orderDetails.isModified());
         rv_shopping_list.setAdapter(mAdapter);
@@ -898,11 +933,98 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                     tv_end_time.setText(Utility.getFormattedDate(17, orderItem.getEndDate(), 0));
                     tv_time_elapsed.setText(Utility.getDateDifference(orderItem.getStartDate(), orderItem.getEndDate()));
 
-                    if (!Utility.isEmpty(orderItem.getTotalAmount()))
+                    if (!Utility.isEmpty(orderItem.getTotalAmount())) {
                         tv_total_amount.setText(getString(R.string.rupee_sign) + " " + orderItem.getTotalAmount());
+                        double totAmt = Double.parseDouble(orderItem.getTotalAmount());
+                        /*if(amtBefore!=0.0){
+                            lv_free_home.setVisibility(View.VISIBLE);
+                            tv_home_delivery_charges.setText(getString(R.string.rupee_sign)+" "
+                                    +amtBefore);
+                        }else{
+                            lv_free_home.setVisibility(View.GONE);
+                        }
+                        if(lv_free_home.getVisibility()== View.VISIBLE){
+                            double totalAmt = Double.valueOf(orderItem.getTotalAmount());
+                            String[] splitAmt = tv_home_delivery_charges.getText().toString().split("₹ ");
+                            double homeDeliveryCharges = Double.parseDouble(splitAmt[splitAmt.length-1]);
+                            tv_payable.setText(getString(R.string.rupee_sign)+" "+ (totalAmt));
+                        }else{
+                            lv_payable.setVisibility(View.GONE);
+                        }*/
+                        for(int k= 0; k< deliverCharges.size() ;k++){
+                            Double amount = Double.parseDouble(deliverCharges.get(k).getDelivery_charges());
+                            Double maximumValue = Double.parseDouble(deliverCharges.get(k).getMaximum_order_value());
+                            Double minimumValue = Double.parseDouble(deliverCharges.get(k).getMinimum_order_value());
+                            if(totAmt>= minimumValue && totAmt<maximumValue){
+                                if(amount!=0.0){
+                                  lv_free_home.setVisibility(View.VISIBLE);
+                                    tv_home_delivery_charges.setText(getString(R.string.rupee_sign)+" "
+                                    +amount);
+                                }else{
+                                    lv_free_home.setVisibility(View.GONE);
+                                }
+
+                                if(lv_free_home.getVisibility()== View.VISIBLE){
+                                    double totalAmt = Double.valueOf(orderItem.getTotalAmount());
+                                    String[] splitAmt = tv_home_delivery_charges.getText().toString().split("₹ ");
+                                    double homeDeliveryCharges = Double.parseDouble(splitAmt[splitAmt.length-1]);
+                                    tv_payable.setText(getString(R.string.rupee_sign)+" "+ (totalAmt+homeDeliveryCharges));
+                                }else{
+                                    lv_payable.setVisibility(View.GONE);
+                                }
+                                break;
+                            }
+                        }
+
+
+                       /* if (totAmt < 100.00) {
+                            if (userRegistrationDetails.getIsAmtLess100() != 0) {
+                                tv_home_delivery_charges.setText(getString(R.string.rupee_sign) + " " +
+                                        userRegistrationDetails.getIsAmtLess100());
+                            }else{
+                                lv_free_home.setVisibility(View.GONE);
+                            }
+                        }
+                        if(totAmt >=100.00 && totAmt <300.00){
+                            if (userRegistrationDetails.getIsAmt101_300() != 0) {
+                                tv_home_delivery_charges.setText(getString(R.string.rupee_sign) + " " +
+                                        userRegistrationDetails.getIsAmt101_300());
+                            }else{
+                                lv_free_home.setVisibility(View.GONE);
+                            }
+                        }
+                        if(totAmt >=300.00 && totAmt <500.00){
+                            if (userRegistrationDetails.getIsAmt301_499() != 0) {
+                                tv_home_delivery_charges.setText(getString(R.string.rupee_sign) + " " +
+                                        userRegistrationDetails.getIsAmt301_499());
+                            }else{
+                                lv_free_home.setVisibility(View.GONE);
+                            }
+                        }
+                        if(totAmt >= 500.00){
+                            if (userRegistrationDetails.getIsAmt_500() != 0) {
+                                tv_home_delivery_charges.setText(getString(R.string.rupee_sign) + " " +
+                                        userRegistrationDetails.getIsAmt_500());
+                            }else{
+                                lv_free_home.setVisibility(View.GONE);
+                            }
+                        }
+
+                        if(lv_free_home.getVisibility()== View.VISIBLE){
+                            double totalAmt = Double.valueOf(orderItem.getTotalAmount());
+                            String[] splitAmt = tv_home_delivery_charges.getText().toString().split("₹ ");
+                            double homeDeliveryCharges = Double.parseDouble(splitAmt[splitAmt.length-1]);
+
+                            tv_payable.setText(getString(R.string.rupee_sign)+" "+ (totalAmt+homeDeliveryCharges));
+                        }else{
+                            lv_payable.setVisibility(View.GONE);
+                        }*/
+
+                    }
                     else
                         tv_total_amount.setText(getString(R.string.rupee_sign) + " 0");
-                    ll_bill_layout.setVisibility(View.VISIBLE);
+                        ll_bill_layout.setVisibility(View.VISIBLE);
+                        lv_payable.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -960,6 +1082,103 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
 
             if (!Utility.isEmpty(orderDetails.getTotalAmount())) {
                 tv_total_amount.setText(getString(R.string.rupee_sign) + " " + orderDetails.getTotalAmount());
+
+                if(userRegistrationDetails.isHomeDelivery()){
+                    tv_home_delivery_charges.setText("FREE");
+                }else {
+
+
+                   /* if(amtBefore!=0.0){
+                        lv_free_home.setVisibility(View.VISIBLE);
+                        tv_home_delivery_charges.setText(getString(R.string.rupee_sign)+" "
+                                +amtBefore);
+                    }else{
+                        lv_free_home.setVisibility(View.GONE);
+                    }
+                    if(lv_free_home.getVisibility()== View.VISIBLE){
+                        double totalAmt = Double.valueOf(orderDetails.getTotalAmount());
+                      //  String[] splitAmt = tv_home_delivery_charges.getText().toString().split("₹ ");
+                     //   double homeDeliveryCharges = Double.parseDouble(splitAmt[splitAmt.length-1]);
+                        tv_payable.setText(getString(R.string.rupee_sign)+" "+ (totalAmt));
+                    }else{
+                        lv_payable.setVisibility(View.GONE);
+                    }*/
+
+                    double totAmt = Double.parseDouble(orderDetails.getTotalAmount());
+
+                    try {
+                        for (int k = 0; k < deliverCharges.size(); k++) {
+                            Double amount = Double.parseDouble(deliverCharges.get(k).getDelivery_charges());
+                            Double maximumValue = Double.parseDouble(deliverCharges.get(k).getMaximum_order_value());
+                            Double minimumValue = Double.parseDouble(deliverCharges.get(k).getMinimum_order_value());
+                            if ( totAmt>= minimumValue && totAmt < maximumValue) {
+                                if (amount != 0.0) {
+                                    lv_free_home.setVisibility(View.VISIBLE);
+                                    tv_home_delivery_charges.setText(getString(R.string.rupee_sign) + " "
+                                            + amount);
+                                } else {
+                                    lv_free_home.setVisibility(View.GONE);
+                                }
+
+                                if (lv_free_home.getVisibility() == View.VISIBLE) {
+                                    double totalAmt = Double.valueOf(orderDetails.getTotalAmount());
+                                    String[] splitAmt = tv_home_delivery_charges.getText().toString().split("₹ ");
+                                    double homeDeliveryCharges = Double.parseDouble(splitAmt[splitAmt.length - 1]);
+                                    tv_payable.setText(getString(R.string.rupee_sign) + " " + (totalAmt + homeDeliveryCharges));
+                                } else {
+                                    lv_payable.setVisibility(View.GONE);
+                                }
+                                break;
+                            }
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+
+                /*    if (totAmt < 100.00) {
+                        if (userRegistrationDetails.getIsAmtLess100() != 0) {
+                            tv_home_delivery_charges.setText(getString(R.string.rupee_sign) + " " +
+                                    userRegistrationDetails.getIsAmtLess100());
+                        }else{
+                            lv_free_home.setVisibility(View.GONE);
+                        }
+                    }
+                    if(totAmt >=100.00 && totAmt <300.00){
+                        if (userRegistrationDetails.getIsAmt101_300() != 0) {
+                            tv_home_delivery_charges.setText(getString(R.string.rupee_sign) + " " +
+                                    userRegistrationDetails.getIsAmt101_300());
+                        }else{
+                            lv_free_home.setVisibility(View.GONE);
+                        }
+                    }
+                    if(totAmt >=300.00 && totAmt <500.00){
+                        if (userRegistrationDetails.getIsAmt301_499() != 0) {
+                            tv_home_delivery_charges.setText(getString(R.string.rupee_sign) + " " +
+                                    userRegistrationDetails.getIsAmt301_499());
+                        }else{
+                            lv_free_home.setVisibility(View.GONE);
+                        }
+                    }
+                    if(totAmt >= 500.00){
+                        if (userRegistrationDetails.getIsAmt_500() != 0) {
+                            tv_home_delivery_charges.setText(getString(R.string.rupee_sign) + " " +
+                                    userRegistrationDetails.getIsAmt_500());
+                        }else{
+                            lv_free_home.setVisibility(View.GONE);
+                        }
+                    }
+
+                    if(lv_free_home.getVisibility()== View.VISIBLE){
+                        double totalAmt = Double.valueOf(orderDetails.getTotalAmount());
+                        String[] splitAmt = tv_home_delivery_charges.getText().toString().split("₹ ");
+                        double homeDeliveryCharges = Double.parseDouble(splitAmt[splitAmt.length-1]);
+                        tv_payable.setText(getString(R.string.rupee_sign)+" "+ (totalAmt+homeDeliveryCharges));
+                    }
+                    else{
+                        lv_payable.setVisibility(View.GONE);
+                    }*/
+                }
+
             } else {
                 tv_total_amount.setText(getString(R.string.rupee_sign) + " 0");
             }
@@ -975,11 +1194,13 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                     orderDetails.getOrderStatus() == Constants.STATUS_AUTO_CANCEL || orderDetails.getOrderStatus() == Constants.STATUS_AUTO_EXPIRED ||
                     orderDetails.getOrderStatus() == Constants.STATUS_REJECTED || orderDetails.getOrderStatus() == Constants.STATUS_CANCEL) {
                 ll_bill_layout.setVisibility(View.VISIBLE);
+                lv_payable.setVisibility(View.VISIBLE);
                 ll_amount_entry.setVisibility(View.GONE);
                 ll_discount_layout.setVisibility(View.GONE);
             } else {
                 ll_amount_entry.setVisibility(View.VISIBLE);
                 ll_bill_layout.setVisibility(View.GONE);
+                lv_payable.setVisibility(View.GONE);
                 ll_discount_layout.setVisibility(View.VISIBLE);
             }
 
@@ -1117,16 +1338,30 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
             if (orderDetails.getOrderStatus() != Constants.STATUS_CANCEL && orderDetails.getOrderStatus() != Constants.STATUS_COMPLETE &&
                     orderDetails.getOrderStatus() != Constants.STATUS_OUT_FOR_DELIVERY && orderDetails.getOrderStatus() != Constants.STATUS_REJECTED &&
                     orderDetails.getOrderStatus() != Constants.STATUS_AUTO_CANCEL && orderDetails.getOrderStatus() != Constants.STATUS_AUTO_EXPIRED) {
+                double homeDeliveryCharges = 0.0;
+                try {
+                    String[] splitAmt = tv_home_delivery_charges.getText().toString().split("₹ ");
+                    homeDeliveryCharges = Double.parseDouble(splitAmt[splitAmt.length - 1]);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
                 if (Double.compare(totalAmount, offerAmount) > 0 && Utility.isValueNonZero(String.valueOf(offerAmount))) {
                     ll_offer_layout.setVisibility(View.VISIBLE);
-                    et_offered_amount.setText(Utility.showDoubleString(offerAmount));
+                    et_offered_amount.setText(Utility.showDoubleString(offerAmount+ homeDeliveryCharges));
                 } else {
                     ll_offer_layout.setVisibility(View.GONE);
                 }
             }
 
             Log.d("XYZ", "PRICE: " + Utility.showDoubleString(totalAmount));
-            et_total_amount.setText(Utility.showDoubleString(totalAmount));
+            double homeDeliveryCharges = 0.0;
+            try {
+                String[] splitAmt = tv_home_delivery_charges.getText().toString().split("₹ ");
+                 homeDeliveryCharges = Double.parseDouble(splitAmt[splitAmt.length - 1]);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            et_total_amount.setText(Utility.showDoubleString(totalAmount + homeDeliveryCharges));
         }
     }
 

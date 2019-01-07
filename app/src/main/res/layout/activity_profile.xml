@@ -32,6 +32,13 @@
             android:orientation="vertical"
             android:paddingBottom="@dimen/dimen_20dp">
 
+            <FrameLayout
+                android:id="@+id/frame_lay"
+                android:layout_width="match_parent"
+                android:layout_below="@+id/app_bar_layout"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_height="match_parent">
             <ImageView
                 android:id="@+id/iv_shop_image"
                 android:layout_width="match_parent"
@@ -39,6 +46,18 @@
                 android:minHeight="@dimen/dimen_150dp"
                 android:scaleType="fitXY"
                 android:src="@drawable/default_profile" />
+
+                <ImageButton
+                    android:id="@+id/camBtn"
+                    android:layout_width="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:visibility="visible"
+                    android:layout_gravity="bottom|right"
+                    android:src="@drawable/ic_retake" />
+
+            </FrameLayout>
 
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"

@@ -57,6 +57,7 @@
                     android:inputType="text"
                     android:lineSpacingExtra="-1sp"
                     android:paddingLeft="@dimen/dimen_12dp"
+                    android:editable="false"
                     android:paddingRight="@dimen/dimen_12dp"
                     android:textColor="@color/text_44"
                     android:textColorHint="@color/hint_color"

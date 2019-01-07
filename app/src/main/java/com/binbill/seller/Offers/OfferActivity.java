@@ -50,7 +50,7 @@ public class OfferActivity extends BaseActivity implements YesNoDialogFragment.Y
     public void setUpView() {
         setUpToolbar();
         setUpListeners();
-
+        iv_notification.setVisibility(View.GONE);
         setUpViewPager();
     }
 

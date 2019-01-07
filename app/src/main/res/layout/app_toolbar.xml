@@ -21,7 +21,8 @@
             android:text=""
             android:layout_weight="1"
             android:textColor="#ffffff"
-            android:textSize="@dimen/dimen_18dp" />
+            android:textSize="@dimen/dimen_17dp" />
+
 
         <ImageView
             android:id="@+id/iv_search"

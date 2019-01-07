@@ -109,6 +109,18 @@
             android:textColor="@color/text_44"
             android:textSize="@dimen/dimen_14dp" />
 
+        <TextView
+            android:id="@+id/tv_free_home_delivery"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_home_delivery"
+            android:drawablePadding="@dimen/dimen_15dp"
+            android:fontFamily="sans-serif-medium"
+            android:lineSpacingExtra="1sp"
+            android:padding="@dimen/dimen_15dp"
+            android:text="Set Home Delivery Charges"
+            android:textColor="@color/text_44"
+            android:textSize="@dimen/dimen_14dp" />
 
         <LinearLayout
             android:id="@+id/ll_loyalty"
@@ -232,7 +244,7 @@
             android:lineSpacingExtra="1sp"
             android:padding="@dimen/dimen_15dp"
             android:text="@string/share_app"
-            android:visibility="gone"
+            android:visibility="visible"
             android:textColor="@color/text_44"
             android:textSize="@dimen/dimen_14dp" />
 

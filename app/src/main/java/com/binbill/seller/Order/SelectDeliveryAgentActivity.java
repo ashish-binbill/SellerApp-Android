@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.binbill.seller.BaseActivity;
 import com.binbill.seller.Constants;
 import com.binbill.seller.CustomViews.AppButton;
+import com.binbill.seller.CustomViews.SquareAppButton;
 import com.binbill.seller.R;
 import com.binbill.seller.Retrofit.RetrofitHelper;
 import com.binbill.seller.Utility;
@@ -56,7 +57,10 @@ public class SelectDeliveryAgentActivity extends BaseActivity implements Deliver
     SwipeRefreshLayout sl_pull_to_refresh;
 
     @ViewById
-    AppButton btn_no_data, btn_accept;
+    SquareAppButton btn_no_data;
+
+    @ViewById
+    AppButton btn_accept;
 
     @ViewById
     ProgressBar btn_accept_progress;

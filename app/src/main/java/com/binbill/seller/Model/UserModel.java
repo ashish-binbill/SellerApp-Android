@@ -85,6 +85,12 @@ public class UserModel implements Serializable {
     @SerializedName("created_at")
     String dateTimeOfUserCreation;
 
+    @SerializedName("last_message_date_diff")
+    double notifyTime;
+
+  /*  @SerializedName("max_notify_hidden_time")
+    double timeHidden;
+*/
     public String getDateTimeOfUserCreation() {
         return dateTimeOfUserCreation;
     }
@@ -103,6 +109,9 @@ public class UserModel implements Serializable {
 
     public void setIsCreditAllowed(String isCreditAllowed) {
         this.isCreditAllowed = isCreditAllowed;
+    }
+    public double getNotifyTime() {
+        return notifyTime;
     }
 
     public String getAddress() {
@@ -199,6 +208,9 @@ public class UserModel implements Serializable {
         return gender;
     }
 
+  /*  public double getTimeHidden() {
+        return timeHidden;
+    }*/
     public String getWalletValue() {
         return walletValue;
     }

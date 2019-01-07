@@ -44,7 +44,7 @@ public class RegistrationResolver {
             case "business_details":
                 return 2;
             case "dashboard":
-                return 3;
+                return 5;
         }
 
         return -1;
@@ -160,18 +160,32 @@ public class RegistrationResolver {
              * Registration flow
              */
             case 0:
-                intent = new Intent(context, RegisterActivity_.class);
+                intent = new Intent(context, RegisterLocationActivity_.class);
                 intent.putExtra(Constants.REGISTRATION_INDEX, indexToOpen);
+                /*intent = new Intent(context, UploadShopImageActivity_.class);
+                intent.putExtra(Constants.REGISTRATION_INDEX, indexToOpen);*/
+                /*intent = new Intent(context, BasicDetails2Activity_.class);
+                intent.putExtra(Constants.REGISTRATION_INDEX, indexToOpen);*/
+               /* intent = new Intent(context, MainCategoryActivity_.class);
+                intent.putExtra(Constants.REGISTRATION_INDEX, indexToOpen);*/
+               /* intent = new Intent(context, RegisterLocationActivity_.class);
+                intent.putExtra(Constants.REGISTRATION_INDEX, indexToOpen);*/
+                /*intent = new Intent(context, RegisterActivity_.class);
+                intent.putExtra(Constants.REGISTRATION_INDEX, indexToOpen);*/
                 break;
 
             /**
              * BasicDetails 1
              */
             case 1:
-                intent = new Intent(context, BasicDetails1Activity_.class);
+
+                intent = new Intent(context, RegisterActivity_.class);
                 intent.putExtra(Constants.REGISTRATION_INDEX, indexToOpen);
+                /*intent = new Intent(context, BasicDetails1Activity_.class);
+                intent.putExtra(Constants.REGISTRATION_INDEX, indexToOpen);*/
 
                 break;
+
             /**
              * BasicDetails 2
              */
@@ -179,18 +193,30 @@ public class RegistrationResolver {
                 intent = new Intent(context, BasicDetails2Activity_.class);
                 intent.putExtra(Constants.REGISTRATION_INDEX, indexToOpen);
                 break;
+
+            case 3:
+                intent = new Intent(context, UploadShopImageActivity_.class);
+                intent.putExtra(Constants.REGISTRATION_INDEX, indexToOpen);
+                break;
             /**
              * Business Details
              */
-            case 3:
+            case 4:
+                intent = new Intent(context, BusinessDetailsRegisterActivity_.class);
+                intent.putExtra(Constants.REGISTRATION_INDEX, indexToOpen);
+                break;
+
+            case 5:
                 intent = new Intent(context, BusinessDetailsActivity_.class);
                 intent.putExtra(Constants.REGISTRATION_INDEX, indexToOpen);
                 break;
             /**
              * Dashboard
              */
-            case 4:
+            case 6:
+               // intent = new Intent(context, RegisterActivity_.class);
                 intent = new Intent(context, DashboardActivity_.class);
+                //intent = new Intent(context, UploadShopImageActivity_.class);
                 break;
             /****************************************************************************************************
              ****************************************************************************************************
@@ -200,7 +226,7 @@ public class RegistrationResolver {
             /**
              * Select Services
              */
-            case 5: {
+            case 7: {
                 UserRegistrationDetails userRegistrationDetails = AppSession.getInstance(context).getUserRegistrationDetails();
                 MainCategory mainCategory = userRegistrationDetails.getMainCategory();
 
@@ -227,7 +253,7 @@ public class RegistrationResolver {
                 }
                 break;
             }
-            case 6: {
+            case 8: {
 
                 UserRegistrationDetails userRegistrationDetails = AppSession.getInstance(context).getUserRegistrationDetails();
                 MainCategory mainCategory = userRegistrationDetails.getMainCategory();
@@ -278,7 +304,7 @@ public class RegistrationResolver {
                 }
                 break;
             }
-            case 7: {
+            case 9: {
                 UserRegistrationDetails userRegistrationDetails = AppSession.getInstance(context).getUserRegistrationDetails();
                 ArrayList<String> servicesList = userRegistrationDetails.getAutoEEServices();
 

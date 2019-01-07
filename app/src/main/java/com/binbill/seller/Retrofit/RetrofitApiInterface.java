@@ -41,6 +41,12 @@ public interface RetrofitApiInterface {
     @PUT(Constants.UPDATE_BASIC_DETAILS)
     Call<JsonObject> updateBasicDetails(@Path(value = "id", encoded = true) String identifier, @Body HashMap<String, String> map);
 
+    @PUT(Constants.UPDATE_SELLER_DELIVERY_RULES)
+    Call<JsonObject> updateSetDeliveryRules(@Path(value = "id", encoded = true) String identifier, @Body HashMap<String, String> map);
+
+   @GET(Constants.UPDATE_SELLER_DELIVERY_RULES)
+   Call<JsonObject> fetchDeliveryRules(@Path(value = "id", encoded = true) String identifier);
+
     @GET(Constants.GET_CITY_BY_STATE)
     Call<JsonObject> fetchCityByState(@Path(value = "id", encoded = true) String identifier);
 

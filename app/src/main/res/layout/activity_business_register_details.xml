@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        app:elevation="@dimen/dimen_10dp">
+
+        <include layout="@layout/app_toolbar" />
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/scroll_view"
+        android:layout_width="match_parent"
+        android:layout_below="@id/app_bar_layout"
+        android:layout_height="match_parent"
+        android:paddingBottom="@dimen/dimen_10dp"
+        android:layout_marginBottom="@dimen/dimen_60dp">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/et_business_name"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_55dp"
+        android:background="@drawable/edittext_bg"
+        android:hint="Business Name"
+        android:inputType="textEmailAddress"
+        android:layout_marginTop="@dimen/dimen_35dp"
+        android:layout_marginLeft="@dimen/dimen_20dp"
+        android:layout_marginRight="@dimen/dimen_20dp"
+        android:lineSpacingExtra="-1sp"
+        android:paddingLeft="@dimen/dimen_12dp"
+        android:paddingRight="@dimen/dimen_12dp"
+        android:textColor="@color/text_44"
+        android:textColorHint="@color/hint_color"
+        android:textSize="@dimen/dimen_15dp" />
+
+    <EditText
+        android:id="@+id/et_gstin"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_55dp"
+        android:layout_below="@id/et_business_name"
+        android:background="@drawable/edittext_bg"
+        android:hint="@string/gstin_asterisk"
+        android:inputType="textEmailAddress"
+        android:layout_marginTop="@dimen/dimen_20dp"
+        android:layout_marginLeft="@dimen/dimen_20dp"
+        android:layout_marginRight="@dimen/dimen_20dp"
+        android:lineSpacingExtra="-1sp"
+        android:paddingLeft="@dimen/dimen_12dp"
+        android:paddingRight="@dimen/dimen_12dp"
+        android:textColor="@color/text_44"
+        android:textColorHint="@color/hint_color"
+        android:textSize="@dimen/dimen_15dp" />
+
+    <include
+        android:id="@+id/or"
+        layout="@layout/layout_or"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/et_gstin"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/dimen_10dp" />
+
+    <EditText
+        android:id="@+id/et_pan"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_55dp"
+        android:layout_below="@id/or"
+        android:background="@drawable/edittext_bg"
+        android:hint="@string/pan_number_asterisk"
+        android:inputType="textEmailAddress"
+        android:layout_marginTop="@dimen/dimen_10dp"
+        android:layout_marginLeft="@dimen/dimen_20dp"
+        android:layout_marginRight="@dimen/dimen_20dp"
+        android:lineSpacingExtra="-1sp"
+        android:paddingLeft="@dimen/dimen_12dp"
+        android:paddingRight="@dimen/dimen_12dp"
+        android:textColor="@color/text_44"
+        android:textColorHint="@color/hint_color"
+        android:textSize="@dimen/dimen_15dp" />
+
+    <include
+        android:id="@+id/or1"
+        layout="@layout/layout_or"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/et_pan"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/dimen_10dp" />
+
+    <EditText
+        android:id="@+id/et_adhar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_55dp"
+        android:layout_below="@id/or1"
+        android:background="@drawable/edittext_bg"
+        android:hint="Aadhar No. *"
+        android:inputType="textEmailAddress"
+        android:layout_marginTop="@dimen/dimen_10dp"
+        android:layout_marginLeft="@dimen/dimen_20dp"
+        android:layout_marginRight="@dimen/dimen_20dp"
+        android:lineSpacingExtra="-1sp"
+        android:paddingLeft="@dimen/dimen_12dp"
+        android:paddingRight="@dimen/dimen_12dp"
+        android:textColor="@color/text_44"
+        android:textColorHint="@color/hint_color"
+        android:textSize="@dimen/dimen_15dp" />
+        </RelativeLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+
+
+    <com.binbill.seller.CustomViews.SquareAppButton
+        android:id="@+id/btn_next"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_55dp"
+        android:layout_gravity="bottom"
+        android:layout_marginTop="@dimen/dimen_20dp"
+        android:lineSpacingExtra="-5.5sp"
+        android:text="@string/next"
+        android:layout_alignParentBottom="true"
+        android:textColor="@color/color_white"
+        android:visibility="visible"
+        app:sizeOfText="@dimen/dimen_20dp" />
+</RelativeLayout>

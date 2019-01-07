@@ -27,6 +27,7 @@ import com.binbill.seller.AppSession;
 import com.binbill.seller.BaseActivity;
 import com.binbill.seller.Constants;
 import com.binbill.seller.CustomViews.AppButton;
+import com.binbill.seller.CustomViews.SquareAppButton;
 import com.binbill.seller.Customer.CreditLoyaltyModel;
 import com.binbill.seller.R;
 import com.binbill.seller.Registration.ImagePreviewActivity_;
@@ -107,7 +108,7 @@ public class VerificationFragment extends Fragment implements VerificationAdapte
             }
         });
 
-        AppButton addCustomer = noDataLayout.findViewById(R.id.btn_no_data);
+        SquareAppButton addCustomer = noDataLayout.findViewById(R.id.btn_no_data);
         addCustomer.setVisibility(View.GONE);
 
         ImageView noDataImage = noDataLayout.findViewById(R.id.iv_no_data_image);

@@ -111,33 +111,6 @@ public class OTPLoginActivity extends BaseActivity {
 //        checkPermission();
     }
 
-    private void checkPermission() {
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.RECEIVE_SMS)
-                == PackageManager.PERMISSION_GRANTED) {
-
-            auto_read.setVisibility(View.VISIBLE);
-            isAutoReading = true;
-            SMSReceiver.bindListener(new SMSListener() {
-                @Override
-                public void messageReceived(String messageText) {
-
-                    if (otp_view != null && btn_submit != null && !isSmsReceiverOnReceiveCalled) {
-                        isSmsReceiverOnReceiveCalled = true;
-                        Log.d("Text", messageText);
-                        auto_read.setVisibility(View.GONE);
-
-                        if (messageText.contains("\"")) {
-                            otp_view.setText(messageText.substring(messageText.indexOf("\"") + 1, messageText.lastIndexOf("\"")));
-                        }
-//                        s.callOnClick();
-                        isSmsReceiverOnReceiveCalled = false;
-                    }
-                }
-            });
-
-        }
-    }
 
     @Click(R.id.btn_submit)
     public void onNextClicked(View nextBtn) {
@@ -265,6 +238,10 @@ public class OTPLoginActivity extends BaseActivity {
                         String nextStep = jsonObject.optString("next_step");
                         int currentIndex = RegistrationResolver.getResolvedIndexForNextScreen(nextStep);
 
+                        if(!nextStep.contains("dashboard")){
+                            currentIndex = -1;
+                        }else{
+                        }
                         final Intent intent = RegistrationResolver.getNextIntent(this, currentIndex);
                         if (intent.getComponent().getClassName().contains("Dashboard")) {
                             ApiHelper.fetchAllCustomer(this);

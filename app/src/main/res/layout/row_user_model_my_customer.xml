@@ -51,20 +51,40 @@
                         android:textSize="@dimen/dimen_16dp"
                         android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/tv_user_status"
+                    <FrameLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="end"
-                        android:layout_marginTop="@dimen/dimen_2dp"
-                        android:background="@drawable/verification_tag"
-                        android:paddingBottom="@dimen/dimen_2dp"
-                        android:paddingLeft="@dimen/dimen_5dp"
-                        android:paddingRight="@dimen/dimen_5dp"
-                        android:paddingTop="@dimen/dimen_2dp"
-                        android:text="@string/verified"
-                        android:textColor="@color/color_white"
-                        android:textSize="@dimen/dimen_10dp" />
+                        android:layout_height="wrap_content">
+
+
+                        <TextView
+                            android:id="@+id/tv_user_status"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="end"
+                            android:layout_marginTop="@dimen/dimen_2dp"
+                            android:background="@drawable/verification_tag"
+                            android:paddingBottom="@dimen/dimen_2dp"
+                            android:paddingLeft="@dimen/dimen_5dp"
+                            android:paddingRight="@dimen/dimen_5dp"
+                            android:paddingTop="@dimen/dimen_2dp"
+                            android:text="@string/verified"
+                            android:textColor="@color/color_white"
+                            android:textSize="@dimen/dimen_10dp" />
+
+                        <TextView
+                            android:id="@+id/tv_notify"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="end"
+                            android:clickable="true"
+                            android:layout_marginTop="@dimen/dimen_2dp"
+                            android:drawablePadding="@dimen/dimen_2dp"
+                            android:drawableTop="@drawable/ic_bell_notify"
+                            android:text="Remind"
+                            android:textColor="@color/text_44"
+                            android:textSize="@dimen/dimen_10dp" />
+                    </FrameLayout>
+
 
                 </LinearLayout>
 

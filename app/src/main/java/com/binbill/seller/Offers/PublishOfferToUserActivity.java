@@ -451,6 +451,11 @@ public class PublishOfferToUserActivity extends BaseActivity implements UserAdap
     }
 
     @Override
+    public void onNotify(int position, String mobileNumber) {
+
+    }
+
+    @Override
     public void onCustomerAdded(int position) {
 
     }

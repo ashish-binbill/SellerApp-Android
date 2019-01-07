@@ -23,6 +23,7 @@ import android.widget.TextView;
 import com.binbill.seller.AppSession;
 import com.binbill.seller.BaseActivity;
 import com.binbill.seller.CustomViews.AppButton;
+import com.binbill.seller.CustomViews.SquareAppButton;
 import com.binbill.seller.Dashboard.ProfileModel;
 import com.binbill.seller.R;
 import com.binbill.seller.Retrofit.RetrofitHelper;
@@ -55,7 +56,10 @@ public class WalletActivity extends BaseActivity {
     RecyclerView rv_wallet_txn;
 
     @ViewById
-    AppButton btn_no_data, btn_redeem, btn_confirm;
+    SquareAppButton btn_no_data;
+
+    @ViewById
+    AppButton btn_redeem, btn_confirm;
 
     @ViewById
     LinearLayout shimmer_view_container, no_data_layout, ll_wallet_layout;

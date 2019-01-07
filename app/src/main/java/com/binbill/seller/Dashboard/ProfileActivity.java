@@ -2,9 +2,11 @@ package com.binbill.seller.Dashboard;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -16,8 +18,12 @@ import com.binbill.seller.Model.BusinessDetailsModel;
 import com.binbill.seller.Model.MainCategory;
 import com.binbill.seller.Model.UserRegistrationDetails;
 import com.binbill.seller.R;
+import com.binbill.seller.Registration.BasicDetails2Activity;
+import com.binbill.seller.Registration.BusinessDetailsActivity;
 import com.binbill.seller.Registration.ImagePreviewActivity_;
+import com.binbill.seller.Registration.RegisterLocationActivity;
 import com.binbill.seller.Registration.RegistrationResolver;
+import com.binbill.seller.Registration.UploadShopImageActivity;
 import com.binbill.seller.Retrofit.RetrofitHelper;
 import com.binbill.seller.SharedPref;
 import com.binbill.seller.Utility;
@@ -61,11 +67,16 @@ public class ProfileActivity extends BaseActivity {
     TextView tv_shop_name, tv_pay_online, tv_business_type, tv_shop_address, tv_main_category, tv_open_days, tv_timings, tv_delivery, tv_payment_modes, tv_view_attachment;
 
     @ViewById
+    ImageButton camBtn;
+
+    @ViewById
     TextView tv_other_details, tv_edit_business, tv_basic_details;
     private ProfileModel profileDetails;
 
     @ViewById
     LinearLayout ll_payment_mode, ll_delivery, ll_pay_online;
+
+    public static Uri cameraURI;
 
     @AfterViews
     public void initiateViews() {
@@ -77,7 +88,12 @@ public class ProfileActivity extends BaseActivity {
         UserRegistrationDetails userRegistrationDetails = AppSession.getInstance(this).getUserRegistrationDetails();
 
         tv_shop_name.setText(profileDetails.getName());
-        tv_shop_address.setText(profileDetails.getAddress());
+        if(profileDetails.getAddress()!=null && !profileDetails.getAddress().contains("null")){
+            tv_shop_address.setText(profileDetails.getAddress());
+        }else{
+
+        }
+
 
         if (userRegistrationDetails != null && userRegistrationDetails.getMainCategory() != null)
             tv_main_category.setText(userRegistrationDetails.getMainCategory().getName());
@@ -224,6 +240,12 @@ public class ProfileActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        try{
+            iv_shop_image.setImageURI(cameraURI);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
         makeSellerProfileApiCall();
     }
 
@@ -269,11 +291,27 @@ public class ProfileActivity extends BaseActivity {
         tv_basic_details.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (profileDetails != null) {
-                    Intent intent = RegistrationResolver.getNextIntent(ProfileActivity.this, 0);
-                    intent.putExtra(Constants.PROFILE_MODEL, profileDetails);
-                    startActivity(intent);
-                }
+               /* if (profileDetails != null) {
+
+                }*/
+                Intent intent = RegistrationResolver.getNextIntent(ProfileActivity.this, -1);
+                intent.putExtra(Constants.PROFILE_MODEL, profileDetails);
+                RegisterLocationActivity.isFromProfile = true;
+                startActivity(intent);
+
+            }
+        });
+
+        camBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                /*if (profileDetails != null) {
+
+                }*/
+                Intent intent = RegistrationResolver.getNextIntent(ProfileActivity.this, 2);
+                intent.putExtra(Constants.PROFILE_MODEL, profileDetails);
+                UploadShopImageActivity.isFromProfile = true;
+                startActivity(intent);
 
             }
         });
@@ -284,6 +322,7 @@ public class ProfileActivity extends BaseActivity {
 
                 Intent intent = RegistrationResolver.getNextIntent(ProfileActivity.this, 1);
                 intent.putExtra(Constants.PROFILE_MODEL, profileDetails);
+                BasicDetails2Activity.isFromProfile = true;
                 startActivity(intent);
 
             }
@@ -302,6 +341,7 @@ public class ProfileActivity extends BaseActivity {
                     } else
                         showSnackBar(getString(R.string.no_copies));
                 }
+
             }
         });
 
@@ -309,11 +349,17 @@ public class ProfileActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
 
-                if (profileDetails != null && profileDetails.getSellerDetails() != null && profileDetails.getSellerDetails().getBusinessDetails() != null) {
-                    Intent intent = RegistrationResolver.getNextIntent(ProfileActivity.this, 2);
+               /* if (profileDetails != null && profileDetails.getSellerDetails() != null && profileDetails.getSellerDetails().getBusinessDetails() != null) {
+
+                }*/
+                Intent intent = RegistrationResolver.getNextIntent(ProfileActivity.this, 4);
+                try{
                     intent.putExtra(Constants.BUSINESS_MODEL, profileDetails.getSellerDetails().getBusinessDetails().getBusinessType());
-                    startActivity(intent);
+                }catch (Exception e){
+
                 }
+                BusinessDetailsActivity.isFromProfile = true;
+                startActivity(intent);
             }
         });
     }

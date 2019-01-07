@@ -72,6 +72,7 @@ public class AddCustomerActivity extends BaseActivity implements UserAdapter.Car
     }
 
     private void setUpListener() {
+
         search_view.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -293,6 +294,12 @@ public class AddCustomerActivity extends BaseActivity implements UserAdapter.Car
     public void onAddCredits(int position) {
 
     }
+
+    @Override
+    public void onNotify(int position, String mobileNumber) {
+
+    }
+
 
     @Override
     public void onCustomerAdded(int position) {

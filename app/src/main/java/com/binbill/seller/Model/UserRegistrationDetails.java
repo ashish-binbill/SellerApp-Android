@@ -48,6 +48,33 @@ public class UserRegistrationDetails implements Serializable {
     boolean assisted;
     boolean hasPos;
 
+    String latitude;
+    String longitude;
+    String shop_address;
+    String adhar;
+    String shop_no;
+    String shop_pin;
+    ArrayList<Integer> mainCategoryIds;
+    ArrayList<String> mainCatgoryNames;
+    String storeSize;
+    int staff_no;
+    String sku;
+
+    double isAmtLess100;
+    double isAmt101_300;
+    double isAmt301_499;
+    double isAmt_500;
+    boolean isHomeDeliveryFree;
+
+
+    public boolean isHomeDeliveryFree() {
+        return isHomeDeliveryFree;
+    }
+
+    public void setHomeDeliveryFree(boolean homeDeliveryFree) {
+        isHomeDeliveryFree = homeDeliveryFree;
+    }
+
     public boolean isFmcg() {
         return fmcg;
     }
@@ -78,6 +105,38 @@ public class UserRegistrationDetails implements Serializable {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public double getIsAmtLess100() {
+        return isAmtLess100;
+    }
+
+    public void setIsAmtLess100(double isAmtLess100) {
+        this.isAmtLess100 = isAmtLess100;
+    }
+
+    public double getIsAmt101_300() {
+        return isAmt101_300;
+    }
+
+    public void setIsAmt101_300(double isAmt101_300) {
+        this.isAmt101_300 = isAmt101_300;
+    }
+
+    public double getIsAmt301_499() {
+        return isAmt301_499;
+    }
+
+    public void setIsAmt301_499(double isAmt301_499) {
+        this.isAmt301_499 = isAmt301_499;
+    }
+
+    public double getIsAmt_500() {
+        return isAmt_500;
+    }
+
+    public void setIsAmt_500(double isAmt_500) {
+        this.isAmt_500 = isAmt_500;
     }
 
     public StateCityModel getState() {
@@ -118,6 +177,14 @@ public class UserRegistrationDetails implements Serializable {
 
     public void setFmcgBrandsSelected(HashMap<String, ArrayList<String>> brands){
         this.fmcgBrandsSelected = brands;
+    }
+
+    public String getAdhar() {
+        return adhar;
+    }
+
+    public void setAdhar(String adhar) {
+        this.adhar = adhar;
     }
 
     public HashMap<String, ArrayList<String>> getFmcgBrandsSelected() {
@@ -294,5 +361,85 @@ public class UserRegistrationDetails implements Serializable {
 
     public ArrayList<String> getAutoEEServices() {
         return autoEEServices;
+    }
+
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
+
+    public String getShop_address() {
+        return shop_address;
+    }
+
+    public void setShop_address(String shop_address) {
+        this.shop_address = shop_address;
+    }
+
+    public String getShop_no() {
+        return shop_no;
+    }
+
+    public void setShop_no(String shop_no) {
+        this.shop_no = shop_no;
+    }
+
+    public String getShop_pin() {
+        return shop_pin;
+    }
+
+    public void setShop_pin(String shop_pin) {
+        this.shop_pin = shop_pin;
+    }
+
+    public ArrayList<Integer> getMainCategoryIds() {
+        return mainCategoryIds;
+    }
+
+    public void setMainCategoryIds(ArrayList<Integer> mainCategoryIds) {
+        this.mainCategoryIds = mainCategoryIds;
+    }
+
+    public ArrayList<String> getMainCatgoryNames() {
+        return mainCatgoryNames;
+    }
+
+    public void setMainCatgoryNames(ArrayList<String> mainCatgoryNames) {
+        this.mainCatgoryNames = mainCatgoryNames;
+    }
+
+    public String getStoreSize() {
+        return storeSize;
+    }
+
+    public void setStoreSize(String storeSize) {
+        this.storeSize = storeSize;
+    }
+
+    public int getStaff_no() {
+        return staff_no;
+    }
+
+    public void setStaff_no(int staff_no) {
+        this.staff_no = staff_no;
+    }
+
+    public String getSku() {
+        return sku;
+    }
+
+    public void setSku(String sku) {
+        this.sku = sku;
     }
 }

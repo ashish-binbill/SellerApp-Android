@@ -23,6 +23,7 @@ import com.binbill.seller.AppSession;
 import com.binbill.seller.BaseActivity;
 import com.binbill.seller.Constants;
 import com.binbill.seller.CustomViews.AppButton;
+import com.binbill.seller.Dashboard.ProfileModel;
 import com.binbill.seller.Model.BusinessDetailsModel;
 import com.binbill.seller.Model.DashboardModel;
 import com.binbill.seller.Model.MainCategory;
@@ -52,6 +53,7 @@ public class BusinessDetailsActivity extends BaseActivity implements OptionListF
     private static final int SUCCESS = 1;
     private static final int FAILURE = 2;
     private static final int PENDING = 3;
+    public static boolean isFromProfile;
     @ViewById
     Toolbar toolbar;
 
@@ -69,6 +71,9 @@ public class BusinessDetailsActivity extends BaseActivity implements OptionListF
 
     @ViewById
     FrameLayout container;
+
+    @ViewById(R.id.iv_skip)
+    TextView iv_skip;
 
     @ViewById
     TextView tv_sole_1, tv_sole_2, tv_partner_1, tv_partner_2, tv_partner_3, tv_partner_4, tv_pp_1, tv_pp_2, tv_pp_3, tv_in_1, tv_in_2;
@@ -725,8 +730,24 @@ public class BusinessDetailsActivity extends BaseActivity implements OptionListF
 
         getSupportActionBar().setTitle("");
         toolbarText.setText(getString(R.string.business_details));
+        iv_skip.setVisibility(View.VISIBLE);
     }
 
+    @Click(R.id.iv_skip)
+    public void skipBtn(View v){
+        Utility.hideKeyboard(BusinessDetailsActivity.this, iv_skip);
+
+        btn_submit.setVisibility(View.GONE);
+        btn_submit_progress.setVisibility(View.VISIBLE);
+
+        makeUploadDataToServerCall();
+
+       /* int registrationIndex = getIntent().getIntExtra(Constants.REGISTRATION_INDEX, -1);
+        Intent intent = RegistrationResolver.getNextIntent(BusinessDetailsActivity.this, registrationIndex);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();*/
+    }
 
     @Click(R.id.btn_submit)
     public void onSubmitClicked(View viewRegister) {
@@ -748,8 +769,9 @@ public class BusinessDetailsActivity extends BaseActivity implements OptionListF
          * This API is to fetch categories from server
          */
 
-        if (mEditMode) {
+        if (mEditMode || isFromProfile) {
             finish();
+            isFromProfile = false;
         } else {
             btn_submit.setVisibility(View.VISIBLE);
             btn_submit_progress.setVisibility(View.GONE);

@@ -13,6 +13,7 @@ public class CustomerPagerAdapter extends FragmentStatePagerAdapter {
 
     final int PAGE_COUNT = 2;
     private String tabTitles[] = new String[]{"Connected", "Invited"};
+    public static int positionPager;
 
     public CustomerPagerAdapter(FragmentManager fm) {
         super(fm);
@@ -26,11 +27,12 @@ public class CustomerPagerAdapter extends FragmentStatePagerAdapter {
     @Override
     public Fragment getItem(int position) {
 
-
         switch (position) {
             case 0:
+                positionPager = 0;
                 return MyCustomerFragment.newInstance();
             case 1:
+                positionPager = 1;
                 return InvitedCustomerFragment.newInstance();
         }
         return null;

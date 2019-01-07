@@ -16,6 +16,7 @@ import com.binbill.seller.BaseActivity;
 import com.binbill.seller.Constants;
 import com.binbill.seller.CustomViews.AppButton;
 import com.binbill.seller.CustomViews.ReviewsDialogFragment;
+import com.binbill.seller.CustomViews.SquareAppButton;
 import com.binbill.seller.CustomViews.YesNoDialogFragment;
 import com.binbill.seller.Order.DeliveryAgentAdapter;
 import com.binbill.seller.Order.DeliveryModel;
@@ -58,7 +59,7 @@ public class DeliveryAgentActivity extends BaseActivity implements DeliveryAgent
     SwipeRefreshLayout sl_pull_to_refresh;
 
     @ViewById
-    AppButton btn_no_data;
+    SquareAppButton btn_no_data;
 
     @ViewById
     ImageView iv_notification;

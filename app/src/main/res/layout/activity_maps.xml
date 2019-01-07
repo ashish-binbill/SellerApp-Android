@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        app:elevation="@dimen/dimen_10dp">
+
+        <include layout="@layout/app_toolbar" />
+    </android.support.design.widget.AppBarLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_lay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="100"
+        android:orientation="vertical">
+
+        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_weight="80"
+            android:layout_height="0dp" />
+
+        <TextView
+            android:id="@+id/tv_location"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/dimen_5dp"
+            android:fontFamily="sans-serif"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:layout_weight="10"
+            android:layout_marginLeft="@dimen/dimen_10dp"
+            android:layout_marginRight="@dimen/dimen_10dp"
+            android:text=""
+            android:drawableLeft="@drawable/ic_location_indicator"
+            android:layout_marginBottom="@dimen/dimen_10dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_below="@id/et_share_location"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="@dimen/dimen_15dp"
+            android:textStyle="normal"
+            android:visibility="visible" />
+
+    </LinearLayout>
+
+    <com.binbill.seller.CustomViews.AppButton
+        android:id="@+id/btn_next"
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:layout_height="@dimen/dimen_55dp"
+        android:layout_gravity="bottom"
+        android:layout_marginTop="@dimen/dimen_20dp"
+        android:lineSpacingExtra="-5.5sp"
+        android:text="@string/next"
+        android:layout_alignParentBottom="true"
+        android:textColor="@color/color_white"
+        android:visibility="visible"
+        app:sizeOfText="@dimen/dimen_20dp" />
+
+
+</RelativeLayout>

@@ -251,6 +251,27 @@
                     android:visibility="gone" />
 
                 <EditText
+                    android:id="@+id/et_discount_offer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/dimen_2dp"
+                    android:layout_weight="1"
+                    android:layout_marginTop="@dimen/dimen_20dp"
+                    android:background="@drawable/edittext_bg"
+                    android:padding="@dimen/dimen_14dp"
+                    android:focusable="false"
+                    android:editable="false"
+                    android:drawableRight="@drawable/ic_dropdown"
+                    android:gravity="center_vertical"
+                    android:hint="Select Offers"
+                    android:visibility="gone"
+                    android:inputType="numberDecimal"
+                    android:lineSpacingExtra="-1sp"
+                    android:textColor="@color/text_44"
+                    android:textColorHint="@color/hint_color"
+                    android:textSize="@dimen/dimen_15dp" />
+
+                <EditText
                     android:id="@+id/et_expiry_date"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dimen_55dp"

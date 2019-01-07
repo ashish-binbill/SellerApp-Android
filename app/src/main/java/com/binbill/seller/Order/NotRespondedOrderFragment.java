@@ -20,7 +20,9 @@ import android.widget.TextView;
 import com.binbill.seller.BaseActivity;
 import com.binbill.seller.Constants;
 import com.binbill.seller.CustomViews.AppButton;
+import com.binbill.seller.CustomViews.SquareAppButton;
 import com.binbill.seller.Customer.AddCustomerActivity_;
+import com.binbill.seller.Model.SellerDeliveryModel;
 import com.binbill.seller.R;
 import com.binbill.seller.Retrofit.RetrofitHelper;
 import com.google.gson.Gson;
@@ -45,6 +47,7 @@ public class NotRespondedOrderFragment extends Fragment implements OrderAdapter.
     private LinearLayoutManager llm;
     private boolean isOrderCall = false;
     private int lastPage = 0;
+    private  double AmtBeforeDis;
 
     /**
      * api: past order with query status_type=2
@@ -106,7 +109,7 @@ public class NotRespondedOrderFragment extends Fragment implements OrderAdapter.
         ImageView noDataImage = (ImageView) noDataLayout.findViewById(R.id.iv_no_data_image);
         noDataImage.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_no_data_smile));
 
-        AppButton noDataButton = (AppButton) noDataLayout.findViewById(R.id.btn_no_data);
+        SquareAppButton noDataButton = (SquareAppButton) noDataLayout.findViewById(R.id.btn_no_data);
         noDataButton.setVisibility(View.GONE);
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.sl_pull_to_refresh);
 
@@ -157,7 +160,7 @@ public class NotRespondedOrderFragment extends Fragment implements OrderAdapter.
             }
         });
 
-        AppButton addCustomer = noDataLayout.findViewById(R.id.btn_no_data);
+        SquareAppButton addCustomer = noDataLayout.findViewById(R.id.btn_no_data);
         addCustomer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -184,7 +187,11 @@ public class NotRespondedOrderFragment extends Fragment implements OrderAdapter.
                             JSONArray userArray = jsonObject.getJSONArray("result");
                             Type classType = new TypeToken<ArrayList<Order>>() {
                             }.getType();
-
+                          /*  if(jsonObject.has("before_discount_amount")){
+                                AmtBeforeDis = jsonObject.getDouble("before_discount_amount");
+                            }else{
+                                AmtBeforeDis =0.0;
+                            }*/
                             orderList = new Gson().fromJson(userArray.toString(), classType);
                             handleResponse();
                         }
@@ -278,9 +285,11 @@ public class NotRespondedOrderFragment extends Fragment implements OrderAdapter.
     @Override
     public void onOrderSelected(int pos) {
         Order order = mOrderList.get(pos);
-
+        ArrayList<SellerDeliveryModel> deliverCharges = mOrderList.get(pos).getSellerDeliveryRules();
         Intent intent = new Intent(getActivity(), OrderDetailsActivity_.class);
         intent.putExtra(Constants.ORDER_ID, order.getOrderId());
+        intent.putExtra("SellerDeliveryCharges", deliverCharges);
+        intent.putExtra("AmtBeforeDelivery", order.getAmountBeforeDiscount());
         startActivity(intent);
 
     }

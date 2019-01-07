@@ -17,9 +17,12 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.binbill.seller.AppSession;
 import com.binbill.seller.Constants;
 import com.binbill.seller.CustomViews.AppButton;
+import com.binbill.seller.Customer.CustomerPagerAdapter;
 import com.binbill.seller.Model.UserModel;
+import com.binbill.seller.Model.UserRegistrationDetails;
 import com.binbill.seller.R;
 import com.binbill.seller.Retrofit.RetrofitHelper;
 import com.binbill.seller.SharedPref;
@@ -41,6 +44,8 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.Route;
 
+import static com.binbill.seller.Customer.InvitedCustomerFragment.hideTime;
+
 /**
  * Created by shruti.vig on 8/30/18.
  */
@@ -49,6 +54,8 @@ public class UserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 
     private boolean loadMore = false;
     private ArrayList<UserModel> mList, mFilteredList;
+    public static ArrayList<String> userNotify = new ArrayList<>();
+    int pos;
 
     @Override
     public Filter getFilter() {
@@ -101,6 +108,8 @@ public class UserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         void onAddCredits(int position);
 
         void onCustomerAdded(int position);
+
+        void onNotify(int position , String mobile);
     }
 
     public static class UserHolder extends RecyclerView.ViewHolder {
@@ -137,7 +146,8 @@ public class UserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
     public static class MyCustomerHolder extends RecyclerView.ViewHolder {
         protected View mRootCard;
         protected CardView mCard;
-        protected TextView mUserName, mDate, mUserTransactions, mUserCredit, mUserAddress, mUserPoints, mAddCredits, mAddPoints, mDistance, mStatus;
+        protected TextView mUserName, mDate, mUserTransactions, mUserCredit, mUserAddress,
+                mUserPoints, mAddCredits, mAddPoints, mDistance, mStatus, mNotify;
         protected ImageView userImage;
 
         public MyCustomerHolder(View view) {
@@ -153,6 +163,7 @@ public class UserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             mAddCredits = (TextView) view.findViewById(R.id.tv_add_credit);
             mAddPoints = (TextView) view.findViewById(R.id.tv_add_points);
             mDistance = (TextView) view.findViewById(R.id.tv_distance);
+            mNotify = (TextView) view.findViewById(R.id.tv_notify);
             mStatus = (TextView) view.findViewById(R.id.tv_user_status);
             mDate = (TextView) view.findViewById(R.id.tv_date);
 
@@ -264,9 +275,25 @@ public class UserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 userHolder.mDistance.setVisibility(View.GONE);
 
             if (model.getUserStatusType().equalsIgnoreCase(Constants.ACTIVE)) {
+                if (!Utility.isEmpty(model.getUserDistance())) {
+                    userHolder.mDistance.setText(model.getUserDistance() + " " + model.getDistanceMetric());
+                    userHolder.mDistance.setVisibility(View.VISIBLE);
+
+                } else {
+                    userHolder.mDistance.setVisibility(View.GONE);
+                }
+                userHolder.mNotify.setVisibility(View.GONE);
                 userHolder.mStatus.setVisibility(View.VISIBLE);
-            } else
+            } else {
+                if (!Utility.isEmpty(model.getUserDistance())) {
+                    userHolder.mDistance.setText(model.getUserDistance() + " " + model.getDistanceMetric());
+                    userHolder.mDistance.setVisibility(View.VISIBLE);
+
+                } else {
+                    userHolder.mDistance.setVisibility(View.GONE);
+                }
                 userHolder.mStatus.setVisibility(View.GONE);
+            }
 
             userHolder.mCard.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -346,6 +373,43 @@ public class UserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                         mListener.onAddCredits(position);
                 }
             });
+
+            userHolder.mNotify.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (mListener != null) {
+                        mListener.onNotify(position, model.getUserMobile());
+                        userNotify.add(model.getUserMobile());
+                        userHolder.mNotify.setVisibility(View.INVISIBLE);
+                        pos = CustomerPagerAdapter.positionPager;
+                    }
+                }
+            });
+
+            if(model.getUserStatusType().equalsIgnoreCase("2")){
+                double notifiedTime = model.getNotifyTime();
+
+                if(notifiedTime >=hideTime){
+                    userHolder.mNotify.setVisibility(View.VISIBLE);
+                }else{
+                    userHolder.mNotify.setVisibility(View.INVISIBLE);
+                }
+            }
+
+          /*  if(pos ==1){
+                try {
+                    if (userNotify.size() != 0 && userNotify.get(position).equalsIgnoreCase(model.getUserMobile())) {
+                        userHolder.mNotify.setVisibility(View.INVISIBLE);
+                    }else{
+                        userHolder.mNotify.setVisibility(View.VISIBLE);
+                    }
+                }catch (Exception ex){
+                    ex.printStackTrace();
+                    userHolder.mNotify.setVisibility(View.VISIBLE);
+                }
+            }else{
+                userHolder.mNotify.setVisibility(View.INVISIBLE);
+            }*/
 
             userHolder.mAddPoints.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -476,6 +540,7 @@ public class UserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 }
             });
         }
+
 
         if (model.isLinked()) {
             userHolder.mAddCustomer.setVisibility(View.GONE);

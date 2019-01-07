@@ -86,6 +86,7 @@ public class BasicDetails2Activity extends BaseActivity implements OptionListFra
     private String mMode;
     private String sellerId;
     private ProfileModel.BasicDetails basicDetails;
+    public static boolean isFromProfile;
 
     @AfterViews
     public void initiateViews() {
@@ -323,7 +324,51 @@ public class BasicDetails2Activity extends BaseActivity implements OptionListFra
 
         saveDataInLocalObject();
 
-        HashMap<String, String> map = new HashMap<>();
+        if(isFromProfile){
+            HashMap<String, String> map = new HashMap<>();
+            UserRegistrationDetails userRegistrationDetails = AppSession.getInstance(this).getUserRegistrationDetails();
+
+            if (!Utility.isEmpty(userRegistrationDetails.getShopName()))
+                map.put("seller_name", userRegistrationDetails.getShopName());
+            if (!Utility.isEmpty(userRegistrationDetails.getBusinessName()))
+                map.put("business_name", userRegistrationDetails.getBusinessName());
+            if (!Utility.isEmpty(userRegistrationDetails.getBusinessAddress()))
+                map.put("address", userRegistrationDetails.getBusinessAddress());
+            if (!Utility.isEmpty(userRegistrationDetails.getPincode()))
+                map.put("pincode", userRegistrationDetails.getPincode());
+            if (userRegistrationDetails.getState() != null)
+                map.put("state_id", userRegistrationDetails.getState().getStateId());
+            if (userRegistrationDetails.getCity() != null)
+                map.put("city_id", userRegistrationDetails.getCity().getCityId());
+            if (userRegistrationDetails.getLocality() != null)
+                map.put("locality_id", userRegistrationDetails.getLocality().getLocalityId());
+            if (userRegistrationDetails.getDaysOpen() != null && userRegistrationDetails.getDaysOpen().size() > 0)
+                map.put("shop_open_day", TextUtils.join(",", userRegistrationDetails.getDaysOpen()));
+            map.put("start_time", start_time.getText().toString());
+            map.put("close_time", end_time.getText().toString());
+            map.put("home_delivery", String.valueOf(userRegistrationDetails.isHomeDelivery()));
+            map.put("pay_online", String.valueOf(userRegistrationDetails.isOnlinePayment()));
+            if (!Utility.isEmpty(userRegistrationDetails.getHomeDeliveryDistance()))
+                map.put("home_delivery_remarks", userRegistrationDetails.getHomeDeliveryDistance());
+            if (userRegistrationDetails.getPaymentOptions() != null && userRegistrationDetails.getPaymentOptions().size() > 0)
+                map.put("payment_modes", TextUtils.join(",", userRegistrationDetails.getPaymentOptions()));
+
+
+            new RetrofitHelper(this).updateBasicDetails(userRegistrationDetails.getId(), map, new RetrofitHelper.RetrofitCallback() {
+                @Override
+                public void onResponse(String response) {
+                    handleResponse(response);
+                }
+
+                @Override
+                public void onErrorResponse() {
+                    handleError();
+                }
+            });
+        }else{
+
+        }
+        /*HashMap<String, String> map = new HashMap<>();
         UserRegistrationDetails userRegistrationDetails = AppSession.getInstance(this).getUserRegistrationDetails();
 
         if (!Utility.isEmpty(userRegistrationDetails.getShopName()))
@@ -363,7 +408,7 @@ public class BasicDetails2Activity extends BaseActivity implements OptionListFra
                 handleError();
             }
         });
-
+*/
 
     }
 
@@ -379,8 +424,9 @@ public class BasicDetails2Activity extends BaseActivity implements OptionListFra
             JSONObject jsonObject = new JSONObject(response);
             if (jsonObject.getBoolean("status")) {
 
-                if (mMode == Constants.EDIT_MODE) {
+                if (mMode == Constants.EDIT_MODE || isFromProfile) {
                     finish();
+                    isFromProfile = true;
                 } else {
 
                     int registrationIndex = getIntent().getIntExtra(Constants.REGISTRATION_INDEX, -1);
@@ -444,6 +490,15 @@ public class BasicDetails2Activity extends BaseActivity implements OptionListFra
 
         userRegistrationDetails.setPaymentOptions(paymentModes);
         AppSession.getInstance(this).setUserRegistrationDetails(userRegistrationDetails);
+
+        if(!isFromProfile) {
+            int registrationIndex = getIntent().getIntExtra(Constants.REGISTRATION_INDEX, -1);
+            Intent intent = RegistrationResolver.getNextIntent(this, registrationIndex);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
+        }
+
     }
 
     CheckBox.OnCheckedChangeListener checkBoxCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {

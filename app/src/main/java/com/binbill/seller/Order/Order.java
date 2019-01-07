@@ -1,6 +1,8 @@
 package com.binbill.seller.Order;
 
 import com.binbill.seller.AssistedService.AssistedUserModel;
+import com.binbill.seller.Model.FileItem;
+import com.binbill.seller.Model.SellerDeliveryModel;
 import com.binbill.seller.Model.UserModel;
 import com.google.gson.annotations.SerializedName;
 
@@ -30,6 +32,12 @@ public class Order implements Serializable {
 
     @SerializedName("user")
     UserModel user;
+
+    @SerializedName("before_discount_amount")
+    String amountBeforeDiscount;
+
+    @SerializedName("seller_delivery_rules")
+    ArrayList<SellerDeliveryModel> sellerDeliveryRules;
 
     @SerializedName("is_modified")
     boolean modified;
@@ -147,6 +155,10 @@ public class Order implements Serializable {
         return user;
     }
 
+    public String getAmountBeforeDiscount() {
+        return amountBeforeDiscount;
+    }
+
     public String getOrderId() {
         return orderId;
     }
@@ -165,5 +177,9 @@ public class Order implements Serializable {
 
     public String getUserAddress() {
         return userAddress;
+    }
+
+    public ArrayList<SellerDeliveryModel> getSellerDeliveryRules() {
+        return sellerDeliveryRules;
     }
 }

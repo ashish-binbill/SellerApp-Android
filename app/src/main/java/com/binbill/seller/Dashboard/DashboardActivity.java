@@ -26,6 +26,7 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
@@ -38,6 +39,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -64,12 +66,17 @@ import com.binbill.seller.BuildConfig;
 import com.binbill.seller.Constants;
 import com.binbill.seller.CustomViews.YesNoDialogFragment;
 import com.binbill.seller.Customer.AddCustomerActivity_;
+import com.binbill.seller.Customer.CustomerPagerAdapter;
+import com.binbill.seller.Customer.InvitedCustomerFragment;
 import com.binbill.seller.DeliveryAgent.DeliveryAgentActivity_;
 import com.binbill.seller.FAQ.FaqActivity_;
+import com.binbill.seller.HomeDelivery.SetHomeDeliveryActivity_;
 import com.binbill.seller.Login.LoginActivity_;
 import com.binbill.seller.Loyalty.LoyaltyRulesActivity_;
 import com.binbill.seller.Model.DashboardModel;
 import com.binbill.seller.Model.MainCategory;
+import com.binbill.seller.Model.UserModel;
+import com.binbill.seller.Offers.UserAdapter;
 import com.binbill.seller.Order.OrderDetailsActivity_;
 import com.binbill.seller.R;
 import com.binbill.seller.Registration.RegistrationResolver;
@@ -95,6 +102,7 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import okhttp3.Authenticator;
 import okhttp3.OkHttpClient;
@@ -117,8 +125,9 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
     @ViewById(R.id.toolbar_text)
     TextView toolbarText;
 
-    @ViewById
-    ImageView iv_notification, iv_search;
+  /*  @ViewById
+    ImageView iv_notification, iv_search;*/
+
 
     @ViewById
     FrameLayout container;
@@ -145,11 +154,23 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
     public int sellerType;
     private SwitchCompat sellerAvailability;
 
+    String whichScreen ="Home";
+
+    Menu menuPrepare;
+
     @AfterViews
     public void setUpView() {
         setUpNavigationView();
         setUpListener();
         ApiHelper.getUserSelectedCategories(this);
+
+      //  ImageView imageProfile = nav_view.findViewById(R.id.iv_user_image);
+        iv_user_image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(DashboardActivity.this, ProfileActivity_.class));
+            }
+        });
     }
 
     private void checkNotificationDeeplink() {
@@ -392,18 +413,42 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
         tv_shop_number.setText(model.getContactNo());
 
         TextView wallet = nav_view.findViewById(R.id.wallet_amount);
-        wallet.setText(getString(R.string.rupee_sign) + " " + getString(R.string.wallet_points, model.getCashBack()));
+
+        try {
+            if (model.getCashBack() != null && model.getCashBack().equalsIgnoreCase("")) {
+                wallet.setText(getString(R.string.rupee_sign) + " " + 0
+                        /*getString(R.string.wallet_points, model.getCashBack())*/);
+            } else {
+                wallet.setText(getString(R.string.rupee_sign) + " " + model.getCashBack()
+                        /*getString(R.string.wallet_points, model.getCashBack())*/);
+            }
+        } catch (Exception e) {
+            wallet.setText(getString(R.string.rupee_sign) + " " + 0
+                    /*getString(R.string.wallet_points, model.getCashBack())*/);
+        }
+        /*   wallet.setText(getString(R.string.rupee_sign) + " " + model.getCashBack()
+         *//*getString(R.string.wallet_points, model.getCashBack())*//*);*/
     }
 
     private void setUpListener() {
 
-        TextView manageDelivery = nav_view.findViewById(R.id.tv_manage_delivery_boy);
+        TextView manageDelivery = nav_view.findViewById(R.id.tv_free_home_delivery);
         manageDelivery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (drawer_layout.isDrawerOpen(GravityCompat.START))
                     drawer_layout.closeDrawer(GravityCompat.START);
                 startActivity(new Intent(DashboardActivity.this, DeliveryAgentActivity_.class));
+            }
+        });
+
+        TextView setHomeDelivery = nav_view.findViewById(R.id.tv_free_home_delivery);
+        manageDelivery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (drawer_layout.isDrawerOpen(GravityCompat.START))
+                    drawer_layout.closeDrawer(GravityCompat.START);
+                startActivity(new Intent(DashboardActivity.this, SetHomeDeliveryActivity_.class));
             }
         });
 
@@ -423,7 +468,7 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
             public void onClick(View view) {
                 if (drawer_layout.isDrawerOpen(GravityCompat.START))
                     drawer_layout.closeDrawer(GravityCompat.START);
-                Intent intent = RegistrationResolver.getNextIntent(DashboardActivity.this, 4);
+                Intent intent = RegistrationResolver.getNextIntent(DashboardActivity.this, 6);
                 if (intent != null)
                     startActivity(intent);
             }
@@ -435,7 +480,7 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
             public void onClick(View view) {
                 if (drawer_layout.isDrawerOpen(GravityCompat.START))
                     drawer_layout.closeDrawer(GravityCompat.START);
-                Intent intent = RegistrationResolver.getNextIntent(DashboardActivity.this, 5);
+                Intent intent = RegistrationResolver.getNextIntent(DashboardActivity.this, 7);
                 if (intent != null)
                     startActivity(intent);
             }
@@ -578,6 +623,7 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
             }
         });
 
+
         TextView mobile = nav_view.findViewById(R.id.tv_shop_number);
         mobile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -586,7 +632,7 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
             }
         });
 
-        iv_notification.setOnClickListener(new View.OnClickListener() {
+        /*iv_notification.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 int selectedItem = bottom_navigation.getSelectedItemId();
@@ -605,9 +651,9 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
                         break;
                 }
             }
-        });
+        });*/
 
-        iv_search.setOnClickListener(new View.OnClickListener() {
+       /* iv_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 int selectedItem = bottom_navigation.getSelectedItemId();
@@ -619,6 +665,8 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
                     case R.id.action_chat:
                         break;
                     case R.id.action_customers:
+                      *//*  iv_search.setVisibility(View.GONE);
+                        et_global_search.setVisibility(View.VISIBLE);*//*
                         myCustomerFragment.showSearchView();
                         break;
                     case R.id.action_assisted:
@@ -626,7 +674,7 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
                         break;
                 }
             }
-        });
+        });*/
     }
 
     private void makeSubscribeNetworkCall() {
@@ -655,7 +703,7 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
         final ProfileModel profileModel = AppSession.getInstance(DashboardActivity.this).getSellerProfile();
 
         if (profileModel != null && profileModel.getSellerDetails() != null && profileModel.getSellerDetails().getBasicDetails() != null
-                && profileModel.getSellerDetails().getBasicDetails().getHomeDelivery().equalsIgnoreCase("true")) {
+                && profileModel.getSellerDetails().getBasicDetails().getHomeDelivery() != null && profileModel.getSellerDetails().getBasicDetails().getHomeDelivery().equalsIgnoreCase("true")) {
             sellerAvailability.setChecked(true);
         } else {
             sellerAvailability.setChecked(false);
@@ -778,7 +826,7 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
         HomeFragment homeFragment = HomeFragment.newInstance("", "");
         replaceFragment(homeFragment, 0);
         setUpToolbar(getString(R.string.dashboard));
-        iv_notification.setVisibility(View.INVISIBLE);
+        //   iv_notification.setVisibility(View.INVISIBLE);
 
         bottom_navigation.setSelectedItemId(R.id.action_home);
         /**
@@ -842,43 +890,57 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
                                     HomeFragment homeFragment = HomeFragment.newInstance("", "");
                                     replaceFragment(homeFragment, 0);
                                     setUpToolbar(getString(R.string.dashboard));
+                                    whichScreen = "Home";
+                                    if(CustomerFragment.userList.size()!=0){
+                                        CustomerFragment.userList.clear();
+                                    }
 
-                                    iv_notification.setVisibility(View.INVISIBLE);
-                                    iv_search.setVisibility(View.GONE);
+
+                                    //   iv_notification.setVisibility(View.INVISIBLE);
+                                    //   iv_search.setVisibility(View.GONE);
                                     break;
                                 case R.id.action_verification:
                                     VerificationFragment verificationFragment = VerificationFragment.newInstance();
                                     replaceFragment(verificationFragment, 1);
                                     setUpToolbar(getString(R.string.verification));
-
-                                    iv_notification.setVisibility(View.INVISIBLE);
-                                    iv_search.setVisibility(View.GONE);
+                                    if(CustomerFragment.userList.size()!=0){
+                                        CustomerFragment.userList.clear();
+                                    }
+                                    whichScreen = "Home";
+                                    //  iv_notification.setVisibility(View.INVISIBLE);
+                                    //  iv_search.setVisibility(View.GONE);
                                     break;
                                 case R.id.action_chat:
                                     OrderFragment orderFragment = OrderFragment.newInstance(0);
                                     replaceFragment(orderFragment, 2);
                                     setUpToolbar(getString(R.string.my_order));
-
-                                    iv_notification.setVisibility(View.INVISIBLE);
-                                    iv_search.setVisibility(View.GONE);
+                                    if(CustomerFragment.userList.size()!=0){
+                                        CustomerFragment.userList.clear();
+                                    }
+                                    whichScreen = "Home";
+                                    // iv_notification.setVisibility(View.INVISIBLE);
+                                    //  iv_search.setVisibility(View.GONE);
                                     break;
                                 case R.id.action_customers:
                                     myCustomerFragment = CustomerFragment.newInstance(0);
                                     replaceFragment(myCustomerFragment, 3);
                                     setUpToolbar(getString(R.string.my_customers));
-
-                                    iv_notification.setVisibility(View.VISIBLE);
-                                    iv_notification.setImageDrawable(ContextCompat.getDrawable(DashboardActivity.this, R.drawable.ic_add_offer));
-                                    iv_search.setVisibility(View.VISIBLE);
+                                    whichScreen = "Customer";
+                                    // iv_notification.setVisibility(View.VISIBLE);
+                                    //  iv_notification.setImageDrawable(ContextCompat.getDrawable(DashboardActivity.this, R.drawable.ic_add_offer));
+                                    //  iv_search.setVisibility(View.VISIBLE);
                                     break;
                                 case R.id.action_assisted:
                                     assistedServiceFragment = AssistedServiceFragment.newInstance("", "");
                                     replaceFragment(assistedServiceFragment, 4);
                                     setUpToolbar(getString(R.string.assisted_services));
-
-                                    iv_notification.setVisibility(View.VISIBLE);
-                                    iv_notification.setImageDrawable(ContextCompat.getDrawable(DashboardActivity.this, R.drawable.ic_add_offer));
-                                    iv_search.setVisibility(View.VISIBLE);
+                                    if(CustomerFragment.userList.size()!=0){
+                                        CustomerFragment.userList.clear();
+                                    }
+                                    whichScreen = "Assisted";
+                                    //  iv_notification.setVisibility(View.VISIBLE);
+                                    //  iv_notification.setImageDrawable(ContextCompat.getDrawable(DashboardActivity.this, R.drawable.ic_add_offer));
+                                    //  iv_search.setVisibility(View.VISIBLE);
                                     break;
 
                             }
@@ -956,8 +1018,27 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+
             case android.R.id.home:
                 drawer_layout.openDrawer(GravityCompat.START);
+                return true;
+
+            case R.id.action_add:
+                int selectedItem = bottom_navigation.getSelectedItemId();
+                switch (selectedItem) {
+                    case R.id.action_home:
+                        break;
+                    case R.id.action_verification:
+                        break;
+                    case R.id.action_chat:
+                        break;
+                    case R.id.action_customers:
+                        startActivity(new Intent(DashboardActivity.this, AddCustomerActivity_.class));
+                        break;
+                    case R.id.action_assisted:
+                        startActivity(new Intent(DashboardActivity.this, AddAssistedServiceActivity_.class));
+                        break;
+                }
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -1022,16 +1103,16 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
             replaceFragment(orderFragment, 2);
             setUpToolbar(getString(R.string.my_order));
 
-            iv_notification.setVisibility(View.INVISIBLE);
-            iv_search.setVisibility(View.GONE);
+            //  iv_notification.setVisibility(View.INVISIBLE);
+            //  iv_search.setVisibility(View.GONE);
 
         } else if (position == 2) {
             VerificationFragment verificationFragment = VerificationFragment.newInstance();
             replaceFragment(verificationFragment, 1);
             setUpToolbar(getString(R.string.verification));
 
-            iv_notification.setVisibility(View.INVISIBLE);
-            iv_search.setVisibility(View.GONE);
+            //  iv_notification.setVisibility(View.INVISIBLE);
+            // iv_search.setVisibility(View.GONE);
 
             bottom_navigation.setSelectedItemId(R.id.action_verification);
         } else if (position == 3) {
@@ -1039,9 +1120,9 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
             replaceFragment(myCustomerFragment, 3);
             setUpToolbar(getString(R.string.my_customers));
 
-            iv_notification.setVisibility(View.VISIBLE);
-            iv_notification.setImageDrawable(ContextCompat.getDrawable(DashboardActivity.this, R.drawable.ic_add_offer));
-            iv_search.setVisibility(View.VISIBLE);
+            //  iv_notification.setVisibility(View.VISIBLE);
+            //  iv_notification.setImageDrawable(ContextCompat.getDrawable(DashboardActivity.this, R.drawable.ic_add_offer));
+            //  iv_search.setVisibility(View.VISIBLE);
 
             bottom_navigation.setSelectedItemId(R.id.action_customers);
         } else if (position == 4) {
@@ -1049,11 +1130,80 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
             replaceFragment(assistedServiceFragment, 4);
             setUpToolbar(getString(R.string.assisted_services));
 
-            iv_notification.setVisibility(View.VISIBLE);
-            iv_notification.setImageDrawable(ContextCompat.getDrawable(DashboardActivity.this, R.drawable.ic_add_offer));
-            iv_search.setVisibility(View.VISIBLE);
+            //   iv_notification.setVisibility(View.VISIBLE);
+            //   iv_notification.setImageDrawable(ContextCompat.getDrawable(DashboardActivity.this, R.drawable.ic_add_offer));
+            //   iv_search.setVisibility(View.VISIBLE);
 
             bottom_navigation.setSelectedItemId(R.id.action_assisted);
         }
     }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_app_bar, menu);
+
+
+        MenuItem mSearch = menu.findItem(R.id.action_search);
+        MenuItem mNotification = menu.findItem(R.id.action_notification);
+        MenuItem mAddOffer = menu.findItem(R.id.action_add);
+
+        if(whichScreen.equalsIgnoreCase("Home")){
+            mSearch.setVisible(false);
+            mNotification.setVisible(false);
+            mAddOffer.setVisible(false);
+        }else if (whichScreen.equalsIgnoreCase("Customer")){
+            mNotification.setVisible(false);
+        }else if (whichScreen.equalsIgnoreCase("Assisted")){
+            mNotification.setVisible(false);
+        }
+
+        SearchView mSearchView = (SearchView) mSearch.getActionView();
+        mSearchView.setQueryHint("Search");
+
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+
+                if(newText.equalsIgnoreCase("")){
+                    MyCustomerFragment.frag.onRefreshPage();
+                    InvitedCustomerFragment.frag.onRefreshPage();
+                }else{
+                    if (whichScreen.equalsIgnoreCase("Customer")) {
+                        CustomerFragment.fragment.showSearchView();
+                        int pos = CustomerPagerAdapter.positionPager;
+                        if (pos == 0) {
+                            // InvitedCustomerFragment.frag.isInvited = false;
+                            MyCustomerFragment.frag.FireQuery(newText);
+                        }else if(pos ==1){
+                            //  InvitedCustomerFragment.frag.isInvited = true;
+                            InvitedCustomerFragment.frag.FireQuery(newText);
+                        }
+                    }else if(whichScreen.equalsIgnoreCase("Assisted")){
+                        AssistedServiceFragment.frag.FireQuery(newText);
+                    }
+                }
+
+                return true;
+            }
+        });
+        return super.onCreateOptionsMenu(menu);
+    }
+
+
+    private Fragment getVisibleFragment() {
+        FragmentManager fragmentManager = DashboardActivity.this.getSupportFragmentManager();
+        List<Fragment> fragments = fragmentManager.getFragments();
+        for (Fragment fragment : fragments) {
+            if (fragment != null && fragment.isVisible())
+                return fragment;
+        }
+        return null;
+    }
+
 }

@@ -89,7 +89,14 @@ public class OrderItem implements Serializable {
     @SerializedName("suggestion")
     Suggestion suggestion;
 
+    @SerializedName("offer_title")
+    String offerTitle;
+
     transient String tempOfferPrice ="";
+
+    public String getOfferTitle() {
+        return offerTitle;
+    }
 
     public String getTempOfferPrice() {
         return tempOfferPrice;

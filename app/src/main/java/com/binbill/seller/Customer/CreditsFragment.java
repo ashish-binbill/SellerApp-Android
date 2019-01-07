@@ -29,6 +29,7 @@ import com.binbill.seller.BaseActivity;
 import com.binbill.seller.Constants;
 import com.binbill.seller.CustomViews.AppButton;
 import com.binbill.seller.CustomViews.AppButtonGreyed;
+import com.binbill.seller.CustomViews.SquareAppButton;
 import com.binbill.seller.Model.UserModel;
 import com.binbill.seller.R;
 import com.binbill.seller.Retrofit.RetrofitHelper;
@@ -104,7 +105,7 @@ public class CreditsFragment extends Fragment {
 
         TextView noDataTitle = (TextView) noDataLayout.findViewById(R.id.tv_no_data);
         noDataTitle.setText(getString(R.string.no_credit));
-        AppButton noDataButton = (AppButton) noDataLayout.findViewById(R.id.btn_no_data);
+        SquareAppButton noDataButton = (SquareAppButton) noDataLayout.findViewById(R.id.btn_no_data);
         noDataButton.setVisibility(View.GONE);
         userModel = (UserModel) getArguments().getSerializable(Constants.USER_MODEL);
 

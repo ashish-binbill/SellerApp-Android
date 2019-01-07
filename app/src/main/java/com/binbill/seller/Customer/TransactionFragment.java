@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.binbill.seller.BaseActivity;
 import com.binbill.seller.Constants;
 import com.binbill.seller.CustomViews.AppButton;
+import com.binbill.seller.CustomViews.SquareAppButton;
 import com.binbill.seller.Model.UserModel;
 import com.binbill.seller.R;
 import com.binbill.seller.Registration.ImagePreviewActivity_;
@@ -81,7 +82,7 @@ public class TransactionFragment extends Fragment implements TransactionAdapter.
 
         TextView noDataTitle = (TextView) noDataLayout.findViewById(R.id.tv_no_data);
         noDataTitle.setText(getString(R.string.no_txn));
-        AppButton noDataButton = (AppButton) noDataLayout.findViewById(R.id.btn_no_data);
+        SquareAppButton noDataButton = (SquareAppButton) noDataLayout.findViewById(R.id.btn_no_data);
         noDataButton.setVisibility(View.GONE);
         userModel = (UserModel) getArguments().getSerializable(Constants.USER_MODEL);
 

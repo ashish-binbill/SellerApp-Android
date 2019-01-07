@@ -515,6 +515,50 @@ public class RetrofitHelper {
         });
     }
 
+    public void updateSellerDeliverRules(final String sellerId, final HashMap<String, String> map, final RetrofitHelper.RetrofitCallback retrofitCallback) {
+        RetrofitApiInterface apiService =
+                RetrofitHelper.getClient(mContext).create(RetrofitApiInterface.class);
+        Call<JsonObject> call = apiService.updateSetDeliveryRules(sellerId, map);
+      //  Call<JsonObject> call = apiService.updateSetDeliveryRules(sellerId, map);
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (response.isSuccessful()) {
+                    JsonObject body = response.body();
+                    retrofitCallback.onResponse(body.toString());
+                } else
+                    retrofitCallback.onErrorResponse();
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable throwable) {
+                retrofitCallback.onErrorResponse();
+            }
+        });
+    }
+
+    public void update(final String sellerId, final HashMap<String, String> map, final RetrofitCallback retrofitCallback) {
+        RetrofitApiInterface apiService =
+                RetrofitHelper.getClient(mContext).create(RetrofitApiInterface.class);
+
+        Call<JsonObject> call = apiService.updateBasicDetails(sellerId, map);
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (response.isSuccessful()) {
+                    JsonObject body = response.body();
+                    retrofitCallback.onResponse(body.toString());
+                } else
+                    retrofitCallback.onErrorResponse();
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable throwable) {
+                retrofitCallback.onErrorResponse();
+            }
+        });
+    }
+
     public void deleteOfferForSeller(String offerId, final RetrofitCallback retrofitCallback) {
         RetrofitApiInterface apiService =
                 RetrofitHelper.getClient(mContext).create(RetrofitApiInterface.class);
@@ -543,6 +587,28 @@ public class RetrofitHelper {
                 RetrofitHelper.getClient(mContext).create(RetrofitApiInterface.class);
 
         Call<JsonObject> call = apiService.fetchCityByState(stateId);
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (response.isSuccessful()) {
+                    JsonObject body = response.body();
+                    retrofitCallback.onResponse(body.toString());
+                } else
+                    retrofitCallback.onErrorResponse();
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable throwable) {
+                retrofitCallback.onErrorResponse();
+            }
+        });
+    }
+
+    public void fetchDeliveryRules(final String sellerId, final RetrofitCallback retrofitCallback) {
+        RetrofitApiInterface apiService =
+                RetrofitHelper.getClient(mContext).create(RetrofitApiInterface.class);
+
+        Call<JsonObject> call = apiService.fetchDeliveryRules(sellerId);
         call.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
@@ -1263,7 +1329,10 @@ public class RetrofitHelper {
         });
     }
 
-    public void addBarCodeOfferFromSeller(String skuId, String skuMeasurementId, String mrp, String discount, String expiry, String offerId, String brandOfferId, String offerType, final RetrofitCallback retrofitCallback) {
+    public void addBarCodeOfferFromSeller(String skuId, String skuMeasurementId, String mrp,
+                                          String discount, String expiry, String offerId,
+                                          String brandOfferId, String offerType,
+                                          String title, final RetrofitCallback retrofitCallback) {
         RetrofitApiInterface apiService =
                 RetrofitHelper.getClient(mContext).create(RetrofitApiInterface.class);
 
@@ -1288,6 +1357,8 @@ public class RetrofitHelper {
             offerObject.put("id", offerId);
 
         offerObject.put("end_date", expiry);
+        if (title != null && !Utility.isEmpty(title))
+            offerObject.put("title",title);
 
         Call<JsonObject> call = apiService.addOffer(AppSession.getInstance(mContext).getSellerId(), offerObject);
         call.enqueue(new Callback<JsonObject>() {
@@ -2404,6 +2475,37 @@ public class RetrofitHelper {
                 Toast.makeText(mContext, "Cannot upload file!", Toast.LENGTH_SHORT).show();
             }
         } catch (IOException e) {
+            Toast.makeText(mContext, "Cannot upload file!", Toast.LENGTH_SHORT).show();
+        }
+
+        final String authToken = SharedPref.getString(context, SharedPref.AUTH_TOKEN);
+        new LongOperation(callback).execute(requestURL, charset, filesToUpload, authToken);
+    }
+
+    public void uploadSkuDocuments(Context context, File file , Uri fileUri , RetrofitCallback callback) {
+        ArrayList<File> filesToUpload = new ArrayList<>();
+        final String charset = "UTF-8";
+
+        final String requestURL = Constants.BASE_URL + "sellers/upload/docs";
+
+       String uriString = Utility.getPath(mContext, fileUri);
+
+        try {
+            if (file != null) {
+                File myFile = new File(uriString);
+                long length = myFile.length();
+               // Log.d( "SKU DOC",""+Integer.parseInt(String.valueOf(myFile.length() / 1024)));
+               /* myFile = new Compressor(context)
+                        .setMaxWidth(640)
+                        .setMaxHeight(480)
+                        .setQuality(75)
+                        .setCompressFormat(Bitmap.CompressFormat.JPEG)
+                        .compressToFile(myFile, "BinBill_" + System.currentTimeMillis());*/
+                filesToUpload.add(myFile);
+            } else {
+                Toast.makeText(mContext, "Cannot upload file!", Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
             Toast.makeText(mContext, "Cannot upload file!", Toast.LENGTH_SHORT).show();
         }
 

@@ -142,8 +142,18 @@ public class FMCGRegistrationActivity extends BaseActivity {
 
                         for (int i = 0; i < resultArray.length(); i++) {
                             JSONObject object = resultArray.getJSONObject(i);
-                            FMCGHeaderModel model = new FMCGHeaderModel(object.getString("category_name"), object.getString("category_id"), false);
-                            model.setRefId(object.getString("ref_id"));
+                            FMCGHeaderModel model;
+                            if(object.has("categoryImageUrl")){
+                                 model = new FMCGHeaderModel(object.getString("category_name"),
+                                        object.getString("category_id"), object.getString("categoryImageUrl"),false);
+                                model.setRefId(object.getString("ref_id"));
+                            }else{
+                                model = new FMCGHeaderModel(object.getString("category_name"),
+                                        object.getString("category_id"),false);
+                                model.setRefId(object.getString("ref_id"));
+                            }
+
+
 
                             ArrayList<FMCGChildModel> childList = new ArrayList<>();
 

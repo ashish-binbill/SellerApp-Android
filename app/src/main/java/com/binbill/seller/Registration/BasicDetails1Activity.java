@@ -99,7 +99,7 @@ public class BasicDetails1Activity extends BaseActivity implements OptionListFra
         setUpToolbar();
         setUpListeners();
 
-        et_shop_name.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+    //    et_shop_name.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
         et_business_name.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
 
         et_business_address.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
@@ -110,7 +110,8 @@ public class BasicDetails1Activity extends BaseActivity implements OptionListFra
     }
 
     private void setUpData() {
-        et_shop_name.setText(mProfileModel.getName());
+       // et_shop_name.setText(mProfileModel.getName());
+        et_shop_name.setText(userRegistrationDetails.getShopName());
         et_business_name.setText(mProfileModel.getSellerDetails().getBasicDetails().getBusinessName());
         et_business_address.setText(mProfileModel.getBusinessAddress());
 
@@ -295,7 +296,7 @@ public class BasicDetails1Activity extends BaseActivity implements OptionListFra
             }
         });
 
-        et_shop_name.addTextChangedListener(new TextWatcher() {
+        /*et_shop_name.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -310,7 +311,7 @@ public class BasicDetails1Activity extends BaseActivity implements OptionListFra
             public void afterTextChanged(Editable editable) {
                 enableDisableVerifyButton();
             }
-        });
+        });*/
 
         et_business_name.addTextChangedListener(new TextWatcher() {
             @Override

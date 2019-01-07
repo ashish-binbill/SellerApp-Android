@@ -33,6 +33,13 @@ public class FMCGHeaderModel implements Serializable {
         this.id = id;
     }
 
+    public FMCGHeaderModel(String nameString, String id, String url,boolean selected ){
+        this.name = nameString;
+        this.isShowSelectAll = selected;
+        this.id = id;
+        this.imageUrl = url;
+    }
+
     public String getRefId() {
         return refId;
     }
@@ -63,6 +70,10 @@ public class FMCGHeaderModel implements Serializable {
 
     public String getId() {
         return id;
+    }
+
+    public void setImageUrl(String imageUrl){
+        this.imageUrl = imageUrl;
     }
 
     public String getImageUrl() {

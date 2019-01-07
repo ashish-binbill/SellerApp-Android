@@ -24,6 +24,7 @@ import com.applozic.mobicomkit.api.conversation.database.MessageDatabaseService;
 import com.applozic.mobicomkit.uiwidgets.conversation.ConversationUIService;
 import com.applozic.mobicomkit.uiwidgets.conversation.activity.ConversationActivity;
 import com.binbill.seller.Constants;
+import com.binbill.seller.Model.SellerDeliveryModel;
 import com.binbill.seller.Model.UserModel;
 import com.binbill.seller.R;
 import com.binbill.seller.SharedPref;
@@ -49,6 +50,8 @@ import okhttp3.Route;
 public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private boolean loadMore = false;
+    private ArrayList<Order> mList;
+    private OrderSelectedInterface listener;
 
     public interface OrderSelectedInterface {
         void onOrderSelected(int pos);
@@ -78,9 +81,6 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             mPaymentMode = (ImageView) view.findViewById(R.id.header_quantity);
         }
     }
-
-    private ArrayList<Order> mList;
-    private OrderSelectedInterface listener;
 
     public OrderAdapter(ArrayList<Order> list, OrderSelectedInterface listObject) {
         this.mList = list;
@@ -120,6 +120,8 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
+
+        ArrayList<SellerDeliveryModel> deliverCharges = mList.get(position).getSellerDeliveryRules();
 
         if (getItemViewType(position) == Constants.TYPE_ORDER) {
             final OrderHolder orderHolder = (OrderHolder) holder;
@@ -181,7 +183,33 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             if (!Utility.isEmpty(model.getTotalAmount()) && !model.getTotalAmount().equalsIgnoreCase("0")) {
                 String item = (String) orderHolder.mItemCount.getText();
                 String rupee = orderHolder.mItemCount.getContext().getString(R.string.rupee_sign);
-                orderHolder.mItemCount.setText(item + " | " + rupee + " " + model.getTotalAmount());
+                // calculate delivery charges -
+              //  ArrayList<Double> tempAmt = new ArrayList<>();
+
+                Double modelTotAmount = Double.parseDouble(model.getTotalAmount());
+                orderHolder.mItemCount.setText(item + " | " + rupee + " " +
+                        String.valueOf(modelTotAmount/*+amount*/));
+               /* for(int k= 0; k< deliverCharges.size() ;k++){
+                    Double amount = Double.parseDouble(deliverCharges.get(k).getDelivery_charges());
+                    Double maximumValue = Double.parseDouble(deliverCharges.get(k).getMaximum_order_value());
+                    Double minimumValue = Double.parseDouble(deliverCharges.get(k).getMinimum_order_value());
+                    if(modelTotAmount>= minimumValue && modelTotAmount<maximumValue){
+
+                        break;
+                    }
+                }*/
+
+               /* for(int i = 0; i< tempAmt.size(); i++){
+                    if(tempAmt.get(i)!=0) {
+                        if (modelTotAmount < tempAmt.get(i)) {
+
+                            break;
+                        }
+                    }
+                }*/
+
+
+               // orderHolder.mItemCount.setText(item + " | " + rupee + " " + model.getTotalAmount());
             }
             orderHolder.mDate.setText(Utility.getFormattedDate(9, model.getOrderCreationDate(), 0));
 

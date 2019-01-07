@@ -2,6 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <android.support.v4.widget.SwipeRefreshLayout
@@ -16,7 +17,7 @@
 
             <include layout="@layout/layout_shimmer_holder" />
 
-            <include layout="@layout/layout_no_data" />
+            <include layout="@layout/layout_no_data"/>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rv_order_list"
@@ -53,5 +54,15 @@
             android:secondaryProgress="@color/colorPrimary" />
 
     </RelativeLayout>
+
+    <com.binbill.seller.CustomViews.SquareAppButton
+        android:id="@+id/btn_add_data"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center"
+        android:visibility="gone"
+        app:sizeOfText="@dimen/dimen_20dp"
+        android:layout_marginTop="@dimen/dimen_20dp"
+        android:text="@string/add_new_offer"/>
 
 </FrameLayout>

@@ -20,6 +20,7 @@ import com.binbill.seller.AppSession;
 import com.binbill.seller.BaseActivity;
 import com.binbill.seller.Constants;
 import com.binbill.seller.CustomViews.AppButton;
+import com.binbill.seller.CustomViews.SquareAppButton;
 import com.binbill.seller.CustomViews.YesNoDialogFragment;
 import com.binbill.seller.R;
 import com.binbill.seller.Retrofit.RetrofitHelper;
@@ -83,7 +84,7 @@ public class NormalOfferFragment extends Fragment implements OfferAdapter.OfferM
         shimmerview = (LinearLayout) view.findViewById(R.id.shimmer_view_container);
         noDataLayout = (LinearLayout) view.findViewById(R.id.no_data_layout);
 
-        noDataButton = (AppButton) noDataLayout.findViewById(R.id.btn_no_data);
+        noDataButton = (SquareAppButton) noDataLayout.findViewById(R.id.btn_no_data);
         noDataButton.setVisibility(View.GONE);
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.sl_pull_to_refresh);
         loaderLayout = (RelativeLayout) view.findViewById(R.id.just_sec_layout);

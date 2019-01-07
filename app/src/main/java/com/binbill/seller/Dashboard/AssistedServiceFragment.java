@@ -30,6 +30,7 @@ import com.binbill.seller.BaseActivity;
 import com.binbill.seller.Constants;
 import com.binbill.seller.CustomViews.AppButton;
 import com.binbill.seller.CustomViews.ReviewsDialogFragment;
+import com.binbill.seller.CustomViews.SquareAppButton;
 import com.binbill.seller.CustomViews.YesNoDialogFragment;
 import com.binbill.seller.R;
 import com.binbill.seller.Retrofit.RetrofitHelper;
@@ -62,8 +63,11 @@ public class AssistedServiceFragment extends Fragment implements AssistedService
     private AssistedServiceAdapter mAdapter;
     private SearchView searchView;
 
+    public static AssistedServiceFragment frag;
+
 
     public AssistedServiceFragment() {
+        frag = this;
     }
 
     public static AssistedServiceFragment newInstance(String param1, String param2) {
@@ -164,7 +168,7 @@ public class AssistedServiceFragment extends Fragment implements AssistedService
         TextView noDataText = noDataLayout.findViewById(R.id.tv_no_data);
         noDataText.setText(getString(R.string.please_add_assisted_service));
 
-        AppButton noDataButton = noDataLayout.findViewById(R.id.btn_no_data);
+        SquareAppButton noDataButton = noDataLayout.findViewById(R.id.btn_no_data);
         noDataButton.setText(getString(R.string.add_service_now));
 
         setUpListeners();
@@ -184,7 +188,7 @@ public class AssistedServiceFragment extends Fragment implements AssistedService
             }
         });
 
-        AppButton addCustomer = noDataLayout.findViewById(R.id.btn_no_data);
+        SquareAppButton addCustomer = noDataLayout.findViewById(R.id.btn_no_data);
         addCustomer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -344,6 +348,12 @@ public class AssistedServiceFragment extends Fragment implements AssistedService
         if (!newText.isEmpty() && mAdapter != null)
             mAdapter.getFilter().filter(newText);
         return true;
+    }
+
+    public void FireQuery(String text){
+        onQueryTextSubmit(text);
+        if (mAdapter != null)
+            mAdapter.getFilter().filter(text);
     }
 }
 

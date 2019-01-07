@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/rel_heading"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:weightSum="100"
+        android:layout_height="wrap_content"
+        android:background="@color/appColor">
+        <TextView
+            android:id="@+id/tv_heading"
+            android:layout_width="0dp"
+            android:textColor="@color/white"
+            android:layout_weight="95"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dimen_10dp"
+            android:text="Select Categories You Sell"/>
+
+        <ImageButton
+            android:id="@+id/close_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:layout_weight="5"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="@dimen/dimen_10dp"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/ic_cancel_white"
+            android:layout_toRightOf="@+id/tv_heading"/>
+
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_below="@+id/rel_heading"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="@dimen/dimen_1dp" />
+
+    <LinearLayout
+        android:id="@+id/submit_choices"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:clickable="true"
+        android:orientation="horizontal"
+        android:weightSum="100"
+        android:padding="@dimen/dimen_5dp"
+        android:layout_height="wrap_content"
+        android:background="@color/appColor">
+
+        <TextView
+            android:id="@+id/tv_submit"
+            android:layout_width="match_parent"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:textStyle="normal"
+            android:textSize="@dimen/dimen_20dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dimen_10dp"
+            android:text="@string/submit"/>
+    </LinearLayout>
+
+</LinearLayout>

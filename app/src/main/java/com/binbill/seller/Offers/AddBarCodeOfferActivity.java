@@ -1,7 +1,9 @@
 package com.binbill.seller.Offers;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.media.AudioManager;
@@ -18,6 +20,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -74,7 +77,7 @@ public class AddBarCodeOfferActivity extends BaseActivity implements ZXingScanne
     NestedScrollView scroll_view;
 
     @ViewById
-    EditText et_barcode, et_mrp, et_discount, et_expiry_date;
+    EditText et_barcode, et_mrp, et_discount, et_expiry_date, et_discount_offer;
 
     @ViewById
     ImageView iv_offer, ic_sku_image;
@@ -101,6 +104,7 @@ public class AddBarCodeOfferActivity extends BaseActivity implements ZXingScanne
     private final int BARCODE_STATE_UNVERIFIED = 2;
     private int barCodeStatus = BARCODE_STATE_UNVERIFIED;
     private OfferItem mOfferItem;
+    private int OfferType;
 
 
     @AfterViews
@@ -116,6 +120,13 @@ public class AddBarCodeOfferActivity extends BaseActivity implements ZXingScanne
         setUpListener();
         checkCameraPermission();
 
+        OfferType = getIntent().getIntExtra("OfferType",0);
+        if(OfferType== Constants.OFFER_TYPE_BOGO){
+            ll_discount_layout.setVisibility(View.GONE);
+            et_discount_offer.setVisibility(View.VISIBLE);
+        }else{
+        }
+
         if (getIntent().hasExtra(Constants.OFFER_ITEM)) {
             mType = EDIT_OFFER;
             mOfferItem = (OfferItem) getIntent().getSerializableExtra(Constants.OFFER_ITEM);
@@ -129,8 +140,7 @@ public class AddBarCodeOfferActivity extends BaseActivity implements ZXingScanne
             et_barcode.setText(offerItem.getBarCodeSuggestedOffer());
             et_mrp.setText(offerItem.getMrp());
             et_expiry_date.setText(Utility.getFormattedDate(12, offerItem.getOfferEndDate(), 1));
-
-            int offerType = getIntent().getIntExtra(Constants.OFFER_TYPE, -1);
+            int offerType = OfferType;
             if (offerType == Constants.OFFER_TYPE_DISCOUNTED) {
                 try {
                     double mrp = Double.parseDouble(offerItem.getMrp());
@@ -176,6 +186,17 @@ public class AddBarCodeOfferActivity extends BaseActivity implements ZXingScanne
         } else {
             tv_item_name.setText(mOfferItem.getSku().getSkuTitle() + " - " + mOfferItem.getSku().getMeasurementValue() + " " + mOfferItem.getSku().getAcronym());
         }
+
+        if(getIntent().hasExtra("OfferType")) {
+            OfferType = getIntent().getIntExtra("OfferType",0);
+            String offerVal = String.valueOf(OfferType);
+            if(offerVal.equalsIgnoreCase("2")){
+                et_discount_offer.setVisibility(View.VISIBLE);
+                ll_discount_layout.setVisibility(View.GONE);
+            }
+
+        }
+
         tv_item_name.setVisibility(View.VISIBLE);
 
         tv_search.setVisibility(View.GONE);
@@ -313,6 +334,13 @@ public class AddBarCodeOfferActivity extends BaseActivity implements ZXingScanne
 
     private void setUpListener() {
 
+        et_discount_offer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openBogoOptions();
+            }
+        });
+
         tv_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -349,6 +377,45 @@ public class AddBarCodeOfferActivity extends BaseActivity implements ZXingScanne
             }
         });
 
+    }
+
+    private void openBogoOptions(){
+        AlertDialog.Builder builderSingle = new AlertDialog.Builder(AddBarCodeOfferActivity.this);
+       // builderSingle.setIcon(R.drawable.ic_launcher);
+        builderSingle.setTitle("Select One Option");
+
+        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(AddBarCodeOfferActivity.this, android.R.layout.select_dialog_singlechoice);
+        arrayAdapter.add("Buy One Get One Free");
+        arrayAdapter.add("Buy Two Get One Free");
+        arrayAdapter.add("Buy Three Get One Free");
+        arrayAdapter.add("Buy Three Get Two Free");
+
+        builderSingle.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        builderSingle.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String strName = arrayAdapter.getItem(which);
+                et_discount_offer.setText(strName);
+                AlertDialog.Builder builderInner = new AlertDialog.Builder(AddBarCodeOfferActivity.this);
+                builderInner.setMessage(strName);
+               /* builderInner.setMessage(strName);
+                builderInner.setTitle("Your Selected Item is");*/
+                builderInner.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog,int which) {
+                        dialog.dismiss();
+                    }
+                });
+                builderInner.show();
+            }
+        });
+        builderSingle.show();
     }
 
 
@@ -481,11 +548,15 @@ public class AddBarCodeOfferActivity extends BaseActivity implements ZXingScanne
         String offerType = null;
         if (getIntent().hasExtra(Constants.OFFER_TYPE)) {
             brandOfferId = mOfferItem.getOfferId();
-            offerType = String.valueOf(getIntent().getIntExtra(Constants.OFFER_TYPE, 1));
+           /*String.valueOf(getIntent().getIntExtra(Constants.OFFER_TYPE, 1));*/
+        }
+        offerType = String.valueOf(OfferType);
+        String title = "";
+        if(et_discount_offer.getVisibility()== View.VISIBLE){
+            title = et_discount_offer.getText().toString().trim();
         }
 
-
-        new RetrofitHelper(this).addBarCodeOfferFromSeller(skuId, skuMeasurementId, mrp, discount, expiry, mOfferId, brandOfferId, offerType, new RetrofitHelper.RetrofitCallback() {
+        new RetrofitHelper(this).addBarCodeOfferFromSeller(skuId, skuMeasurementId, mrp, discount, expiry, mOfferId, brandOfferId, offerType, title, new RetrofitHelper.RetrofitCallback() {
             @Override
             public void onResponse(String response) {
 

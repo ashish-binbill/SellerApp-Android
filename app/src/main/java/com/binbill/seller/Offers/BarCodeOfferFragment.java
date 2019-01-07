@@ -23,6 +23,7 @@ import com.binbill.seller.AppSession;
 import com.binbill.seller.BaseActivity;
 import com.binbill.seller.Constants;
 import com.binbill.seller.CustomViews.AppButton;
+import com.binbill.seller.CustomViews.SquareAppButton;
 import com.binbill.seller.CustomViews.YesNoDialogFragment;
 import com.binbill.seller.R;
 import com.binbill.seller.Retrofit.RetrofitHelper;
@@ -47,6 +48,7 @@ public class BarCodeOfferFragment extends Fragment implements OfferAdapter.Offer
     private ArrayList<OfferItem> mBarcodeOfferList;
     private String mOfferIdToDelete = "";
     private Button noDataButton;
+    private Button btnAddData;
     private int offerType;
     private OfferAdapter mAdapter;
 
@@ -64,7 +66,6 @@ public class BarCodeOfferFragment extends Fragment implements OfferAdapter.Offer
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         offerType = getArguments().getInt(Constants.OFFER_TYPE);
     }
 
@@ -88,7 +89,8 @@ public class BarCodeOfferFragment extends Fragment implements OfferAdapter.Offer
         shimmerview = (LinearLayout) view.findViewById(R.id.shimmer_view_container);
         noDataLayout = (LinearLayout) view.findViewById(R.id.no_data_layout);
 
-        noDataButton = (AppButton) noDataLayout.findViewById(R.id.btn_no_data);
+        noDataButton = (SquareAppButton) noDataLayout.findViewById(R.id.btn_no_data);
+        btnAddData = (SquareAppButton) view.findViewById(R.id.btn_add_data);
         noDataButton.setVisibility(View.VISIBLE);
 
         ImageView noDataImage = (ImageView) noDataLayout.findViewById(R.id.iv_no_data_image);
@@ -104,6 +106,7 @@ public class BarCodeOfferFragment extends Fragment implements OfferAdapter.Offer
         shimmerview.setVisibility(View.VISIBLE);
         offerListView.setVisibility(View.GONE);
         noDataLayout.setVisibility(View.GONE);
+        btnAddData.setVisibility(View.VISIBLE);
 
 
         String sellerId = AppSession.getInstance(getActivity()).getSellerId();
@@ -135,6 +138,12 @@ public class BarCodeOfferFragment extends Fragment implements OfferAdapter.Offer
                     JSONArray offerArray = jsonObject.getJSONArray("result");
                     if (offerArray.length() > 0) {
                         setUpOffersInList(offerArray);
+                        if(offerType == Constants.OFFER_TYPE_DISCOUNTED ||
+                                offerType == Constants.OFFER_TYPE_BOGO || offerType == Constants.OFFER_TYPE_GENERAL) {
+                            btnAddData.setVisibility(View.VISIBLE);
+                        }else{
+                            btnAddData.setVisibility(View.GONE);
+                        }
                     } else
                         showNoOfferLayout();
                 }
@@ -172,17 +181,49 @@ public class BarCodeOfferFragment extends Fragment implements OfferAdapter.Offer
     }
 
     private void showNoOfferLayout() {
+        btnAddData.setVisibility(View.GONE);
         TextView noDataText = (TextView) noDataLayout.findViewById(R.id.tv_no_data);
         noDataButton = (Button) noDataLayout.findViewById(R.id.btn_no_data);
-        noDataButton.setText(getString(R.string.add_offers));
+        try {
+            noDataButton.setText(getString(R.string.add_offers));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         noDataLayout.setVisibility(View.VISIBLE);
+        if(offerType == Constants.OFFER_TYPE_DISCOUNTED ||
+                offerType == Constants.OFFER_TYPE_BOGO || offerType == Constants.OFFER_TYPE_GENERAL) {
+            btnAddData.setVisibility(View.VISIBLE);
+        }else{
+            btnAddData.setVisibility(View.GONE);
+            noDataButton.setVisibility(View.GONE);
+        }
         if (offerType == Constants.OFFER_TYPE_DISCOUNTED)
             noDataText.setText(getString(R.string.no_offers_added));
         else {
             ImageView noDataImage = (ImageView) noDataLayout.findViewById(R.id.iv_no_data_image);
-            noDataImage.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_uhh_ohh));
-            noDataText.setText(getString(R.string.no_offers));
-            noDataButton.setVisibility(View.GONE);
+            try {
+                noDataImage.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_uhh_ohh));
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            if(offerType == Constants.OFFER_TYPE_BOGO){
+                btnAddData.setVisibility(View.GONE);
+                noDataButton.setVisibility(View.VISIBLE);
+                noDataText.setText(getString(R.string.bogo_no_offers));
+            }
+            if(offerType == Constants.OFFER_TYPE_EXTRA){
+             //   noDataButton.setVisibility(View.VISIBLE);
+                noDataText.setText(getString(R.string.extra_no_offers));
+            }
+            if(offerType == Constants.OFFER_TYPE_GENERAL) {
+                btnAddData.setVisibility(View.GONE);
+                noDataButton.setVisibility(View.VISIBLE);
+                noDataText.setText(getString(R.string.no_general_offers));
+            }
+            if(offerType == Constants.OFFER_TYPE_NEW_PRODUCT) {
+               // noDataButton.setVisibility(View.VISIBLE);
+                noDataText.setText(getString(R.string.extra_no_offers));
+            }
         }
         offerListView.setVisibility(View.GONE);
         shimmerview.setVisibility(View.GONE);
@@ -202,11 +243,37 @@ public class BarCodeOfferFragment extends Fragment implements OfferAdapter.Offer
             }
         });
 
+        btnAddData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), AddBarCodeOfferActivity_.class);
+                if(offerType == Constants.OFFER_TYPE_BOGO) {
+                    intent.putExtra("OfferType", Constants.OFFER_TYPE_BOGO);
+                }
+                if(offerType == Constants.OFFER_TYPE_GENERAL){
+                    intent.putExtra("OfferType", Constants.OFFER_TYPE_BOGO);
+                }
+                if(offerType == Constants.OFFER_TYPE_DISCOUNTED){
+                    intent.putExtra("OfferType", Constants.OFFER_TYPE_DISCOUNTED);
+                }
+                startActivity(intent);
+            }
+        });
+
         noDataButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 //                ((OfferActivity) getActivity()).invokeAddOfferOptions();
                 Intent intent = new Intent(getActivity(), AddBarCodeOfferActivity_.class);
+                if(offerType == Constants.OFFER_TYPE_BOGO) {
+                    intent.putExtra("OfferType", Constants.OFFER_TYPE_BOGO);
+                }
+                if(offerType == Constants.OFFER_TYPE_GENERAL){
+                    intent.putExtra("OfferType", Constants.OFFER_TYPE_BOGO);
+                }
+                if(offerType == Constants.OFFER_TYPE_DISCOUNTED){
+                    intent.putExtra("OfferType", Constants.OFFER_TYPE_DISCOUNTED);
+                }
                 startActivity(intent);
             }
         });
@@ -246,10 +313,18 @@ public class BarCodeOfferFragment extends Fragment implements OfferAdapter.Offer
         String expiry = mOfferItem.getOfferEndDate();
 
         String brandOfferId = mOfferItem.getOfferId();
-        String offerType1 = String.valueOf(offerType);
+        String offerType1 ="";
+        if(offerType == Constants.OFFER_TYPE_BOGO) {
+            offerType1 = String.valueOf(offerType);
+        }
+        if(offerType == Constants.OFFER_TYPE_GENERAL){
+            offerType1 = String.valueOf(offerType);
+        }
+        if(offerType == Constants.OFFER_TYPE_DISCOUNTED){
+            offerType1 = String.valueOf(offerType);
+        }
 
-
-        new RetrofitHelper(getActivity()).addBarCodeOfferFromSeller(skuId, skuMeasurementId, null, null, expiry, brandOfferId, brandOfferId, offerType1, new RetrofitHelper.RetrofitCallback() {
+        new RetrofitHelper(getActivity()).addBarCodeOfferFromSeller(skuId, skuMeasurementId, null, null, expiry, brandOfferId, brandOfferId, offerType1, null, new RetrofitHelper.RetrofitCallback() {
             @Override
             public void onResponse(String response) {
 
@@ -270,6 +345,15 @@ public class BarCodeOfferFragment extends Fragment implements OfferAdapter.Offer
         switch (type) {
             case Constants.EDIT_OFFER:
                 Intent intent = new Intent(getActivity(), AddBarCodeOfferActivity_.class);
+                if(offerType == Constants.OFFER_TYPE_BOGO) {
+                    intent.putExtra("OfferType", Constants.OFFER_TYPE_BOGO);
+                }
+                if(offerType == Constants.OFFER_TYPE_GENERAL){
+                    intent.putExtra("OfferType", Constants.OFFER_TYPE_BOGO);
+                }
+                if(offerType == Constants.OFFER_TYPE_DISCOUNTED){
+                    intent.putExtra("OfferType", Constants.OFFER_TYPE_DISCOUNTED);
+                }
                 intent.putExtra(Constants.OFFER_ITEM, mBarcodeOfferList.get(position));
                 startActivity(intent);
                 break;

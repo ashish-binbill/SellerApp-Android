@@ -243,7 +243,11 @@ public class OrderShoppingListAdapter extends RecyclerView.Adapter<RecyclerView.
 
             setSkuImage(model, orderHolder);
 
-            orderHolder.mItemName.setText(model.getItemTitle());
+            if(model.getOfferTitle()!=null) {
+                orderHolder.mItemName.setText(model.getItemTitle() + " (" + model.getOfferTitle() +" )");
+            }else{
+                orderHolder.mItemName.setText(model.getItemTitle());
+            }
             orderHolder.mQuantity.setText(" x " + model.getQuantity() + " Nos.");
 
             if (skuModel != null) {
