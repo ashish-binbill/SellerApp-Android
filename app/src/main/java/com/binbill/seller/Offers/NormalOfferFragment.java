@@ -159,7 +159,17 @@ public class NormalOfferFragment extends Fragment implements OfferAdapter.OfferM
 
     private void showNoOfferLayout() {
         TextView noDataText = (TextView) noDataLayout.findViewById(R.id.tv_no_data);
-        noDataText.setText(getString(R.string.no_offers));
+        if(offerType == Constants.OFFER_TYPE_DISCOUNTED){
+            noDataText.setText(getString(R.string.no_offers));
+        }else if(offerType == Constants.OFFER_TYPE_BOGO){
+            noDataText.setText(getString(R.string.no_offers));
+        }else if(offerType == Constants.OFFER_TYPE_EXTRA){
+            noDataText.setText(getString(R.string.no_offers));
+        }else if (offerType == Constants.OFFER_TYPE_NEW_PRODUCT){
+            noDataText.setText(getString(R.string.no_offers));
+        }else if (offerType == Constants.OFFER_TYPE_GENERAL){
+            noDataText.setText(getString(R.string.no_offers));
+        }
 
         noDataButton = (Button) noDataLayout.findViewById(R.id.btn_no_data);
         noDataButton.setText(getString(R.string.add_offers));

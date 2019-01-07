@@ -13,7 +13,7 @@
         android:layout_marginTop="@dimen/dimen_15dp"
         android:fontFamily="sans-serif-light"
         android:lineSpacingExtra="13.5sp"
-        android:text="@string/manage_categories"
+        android:text=""
         android:textColor="@color/text_44"
         android:textSize="@dimen/dimen_14dp" />
 

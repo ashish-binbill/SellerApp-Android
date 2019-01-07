@@ -127,8 +127,8 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
     @ViewById(R.id.toolbar_text)
     TextView toolbarText;
 
-    @ViewById(R.id.tv_dynamicId)
-    TextView tv_dynamicId;
+   /* @ViewById(R.id.tv_dynamicId)
+    TextView tv_dynamicId;*/
 
   /*  @ViewById
     ImageView iv_notification, iv_search;*/
@@ -163,6 +163,9 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
 
     String whichScreen ="Home";
 
+    String[] items = {"Manage Vegetables", "Manage Exotic Vegetables",
+            "Manage Fruits", "Manage Exotic Fruits", "Manage Herbs/ Spices/ Other"};
+
     Menu menuPrepare;
 
     @AfterViews
@@ -178,6 +181,8 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
                 startActivity(new Intent(DashboardActivity.this, ProfileActivity_.class));
             }
         });
+
+
     }
 
     private void checkNotificationDeeplink() {
@@ -956,7 +961,11 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
                     });
         }
 
-
+        for(int i = 0; i < 5 ; i++){
+            TextView tv = (TextView) getLayoutInflater().inflate(R.layout.layout_textview_dynamic, null);
+            dynamicLayout.addView(tv);
+            tv.setText(items[i]);
+        }
 
 
     }
