@@ -176,16 +176,22 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
 
     UserRegistrationDetails userRegistrationDetails;
     ArrayList<SellerDeliveryModel> deliverCharges;
-    double amtBefore;
+    ArrayList<SellerDeliveryModel> deliverCharges1;
+    public static double amtBefore;
 
     @AfterViews
     public void setUpView() {
         setUpToolbar();
+        deliverCharges1 = new ArrayList<>();
 
         if (getIntent() != null && getIntent().hasExtra(Constants.ORDER_ID)) {
             orderId = getIntent().getStringExtra(Constants.ORDER_ID);
             deliverCharges = (ArrayList<SellerDeliveryModel>)getIntent()
                     .getSerializableExtra("SellerDeliveryCharges");
+            if(deliverCharges == null){
+              //  deliverCharges1 = orderDetails.getSellerDeliveryRules();
+                deliverCharges = ActiveOrderFragment.deliverCharges1;
+            }
             amtBefore = getIntent().getDoubleExtra("AmtBeforeDelivery",0.0);
         } else
             finish();

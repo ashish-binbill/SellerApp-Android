@@ -54,6 +54,7 @@ public class ActiveOrderFragment extends Fragment implements OrderAdapter.OrderS
     private boolean isOrderCall = false;
     private int lastPage = 0;
     private  double AmtBeforeDis;
+    public static ArrayList<SellerDeliveryModel> deliverCharges1 = new ArrayList<>();
 
     public ActiveOrderFragment() {
     }
@@ -312,6 +313,13 @@ public class ActiveOrderFragment extends Fragment implements OrderAdapter.OrderS
         orderListView.setVisibility(View.VISIBLE);
         shimmerview.setVisibility(View.GONE);
         noDataLayout.setVisibility(View.GONE);
+
+        deliverCharges1 .addAll(mOrderList.get(0).getSellerDeliveryRules());
+        try {
+            OrderDetailsActivity.amtBefore = Double.parseDouble(mOrderList.get(0).getAmountBeforeDiscount());
+        }catch (Exception e){
+            OrderDetailsActivity.amtBefore =0.0;
+        }
     }
 
     @Override
@@ -327,6 +335,7 @@ public class ActiveOrderFragment extends Fragment implements OrderAdapter.OrderS
         intent.putExtra(Constants.ORDER_ID, order.getOrderId());
         intent.putExtra("SellerDeliveryCharges", deliverCharges);
         intent.putExtra("AmtBeforeDelivery", order.getAmountBeforeDiscount());
+        deliverCharges1.clear();
         startActivity(intent);
 
     }
