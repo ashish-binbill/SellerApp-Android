@@ -42,6 +42,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
@@ -119,15 +120,21 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
     private static final int FMCG_ONLY_USER_HAS_POS = 2;
     private static final int FMCG_ONLY_USER_NO_POS = 3;
     private static final int ASSISTED_ONLY_USER = 4;
+
     @ViewById
     Toolbar toolbar;
 
     @ViewById(R.id.toolbar_text)
     TextView toolbarText;
 
+    @ViewById(R.id.tv_dynamicId)
+    TextView tv_dynamicId;
+
   /*  @ViewById
     ImageView iv_notification, iv_search;*/
 
+    @ViewById(R.id.dynamic_lay)
+    LinearLayout dynamicLayout;
 
     @ViewById
     FrameLayout container;
@@ -948,6 +955,10 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
                         }
                     });
         }
+
+
+
+
     }
 
     @Override

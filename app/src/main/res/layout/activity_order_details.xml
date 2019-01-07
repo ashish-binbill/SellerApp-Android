@@ -560,7 +560,7 @@
                         android:layout_weight="1"
                         android:layout_marginRight="@dimen/dimen_10dp"
                         android:fontFamily="sans-serif-medium"
-                        android:gravity="end"
+                        android:gravity="center"
                         android:text=""
                         android:textColor="@color/color_999999"
                         android:textSize="@dimen/dimen_10dp" />

@@ -112,6 +112,8 @@ public class SetHomeDeliveryActivity extends BaseActivity {
                     et_amt_less_100.setFocusableInTouchMode(true);
                     et_amt_301_499.setFocusableInTouchMode(true);
                     et_amt_500.setFocusableInTouchMode(true);
+                    switchState = simpleSwitch.isChecked();
+                    userRegistrationDetails.setHomeDelivery(switchState);
                 }
             }
         });
