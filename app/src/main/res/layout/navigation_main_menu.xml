@@ -75,14 +75,14 @@
                 android:id="@+id/tv_manage_fruits_vegetables"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawablePadding="@dimen/dimen_20dp"
+                android:drawablePadding="@dimen/dimen_5dp"
                 android:drawableRight="@drawable/ic_manage_hamburger"
                 android:layout_marginLeft="@dimen/dimen_60dp"
                 android:layout_marginTop="@dimen/dimen_15dp"
-                android:visibility="gone"
+                android:visibility="visible"
                 android:fontFamily="sans-serif-light"
                 android:lineSpacingExtra="13.5sp"
-                android:text="@string/manage_categories"
+                android:text="@string/manage_fruits"
                 android:textColor="@color/text_44"
                 android:textSize="@dimen/dimen_14dp" />
 
