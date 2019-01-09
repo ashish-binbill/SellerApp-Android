@@ -133,9 +133,6 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
   /*  @ViewById
     ImageView iv_notification, iv_search;*/
 
-    @ViewById(R.id.dynamic_lay)
-    LinearLayout dynamicLayout;
-
     @ViewById
     FrameLayout container;
 
@@ -960,12 +957,32 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
                         }
                     });
         }
+        View.OnClickListener btnClickListener = new View.OnClickListener() {
 
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(v.getContext(),""+ v.getTag(),
+                        Toast.LENGTH_SHORT).show();
+            }
+
+        };
+
+        TextView tv= null;
         for(int i = 0; i < 5 ; i++){
-            TextView tv = (TextView) getLayoutInflater().inflate(R.layout.layout_textview_dynamic, null);
-            dynamicLayout.addView(tv);
+
+            LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(
+                    Context.LAYOUT_INFLATER_SERVICE);
+            View view = inflater.inflate(R.layout.layout_textview_dynamic, null);
+            LinearLayout dynamicLayout =  nav_view.findViewById(R.id.dynamic_lay);
+            dynamicLayout.setVisibility(View.VISIBLE);
+            tv = (TextView) view.findViewById(R.id.tv_dynamicId);
             tv.setText(items[i]);
+            tv.setTag(items[i]);
+            tv.setOnClickListener(btnClickListener);
+            dynamicLayout.addView(view);
+
         }
+
 
 
     }

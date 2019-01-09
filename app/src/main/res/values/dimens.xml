@@ -40,6 +40,7 @@
     <dimen name="dimen_9dp">9dp</dimen>
     <dimen name="dimen_1dp">1dp</dimen>
     <dimen name="dimen_110dp">110dp</dimen>
+    <dimen name="dimen_113dp">113dp</dimen>
     <dimen name="dimen_140dp">140dp</dimen>
     <dimen name="dimen_180dp">180dp</dimen>
     <dimen name="dimen_200dp">200dp</dimen>
@@ -53,5 +54,10 @@
     <dimen name="bottom_navigation_icon_size">8dp</dimen>
     <dimen name="dimen_300dp">300dp</dimen>
     <dimen name="dimen_350dp">350dp</dimen>
+    <dimen name="dimen_450dp">450dp</dimen>
+    <dimen name="dimen_470dp">470dp</dimen>
+    <dimen name="dimen_480dp">480dp</dimen>
+    <dimen name="dimen_485dp">485dp</dimen>
+    <dimen name="dimen_490dp">490dp</dimen>
 
 </resources>
