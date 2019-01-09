@@ -188,7 +188,7 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
                 Double modelTotAmount = Double.parseDouble(model.getTotalAmount());
                 orderHolder.mItemCount.setText(item + " | " + rupee + " " +
-                        String.valueOf(modelTotAmount/*+amount*/));
+                        String.format("%.2f",modelTotAmount/*+amount*/));
                /* for(int k= 0; k< deliverCharges.size() ;k++){
                     Double amount = Double.parseDouble(deliverCharges.get(k).getDelivery_charges());
                     Double maximumValue = Double.parseDouble(deliverCharges.get(k).getMaximum_order_value());

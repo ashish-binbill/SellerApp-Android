@@ -97,6 +97,7 @@ public class AddOfferActivity extends BaseActivity implements BottomSheetHelper.
     private Uri cameraFileUri;
     private int EDIT_OFFER = 1;
     private int mType = 0;
+    private int OfferType;
 
     @AfterViews
     public void setUpView() {
@@ -116,6 +117,8 @@ public class AddOfferActivity extends BaseActivity implements BottomSheetHelper.
         enableDisableVerifyButton();
         setUpToolbar();
         setUpListener();
+
+        OfferType = getIntent().getIntExtra("OfferType",0);
     }
 
     private void setUpData(OfferItem offer) {
@@ -413,7 +416,7 @@ public class AddOfferActivity extends BaseActivity implements BottomSheetHelper.
         if (mType == EDIT_OFFER)
             fileDetailsJson = null;
 
-        new RetrofitHelper(this).addOfferFromSeller(title, description, expiry, fileDetailsJson == null ? null : fileDetailsJson.toString(), mOfferId, new RetrofitHelper.RetrofitCallback() {
+        new RetrofitHelper(this).addOfferFromSeller(title, description, expiry, fileDetailsJson == null ? null : fileDetailsJson.toString(), mOfferId,  OfferType, new RetrofitHelper.RetrofitCallback() {
             @Override
             public void onResponse(String response) {
 

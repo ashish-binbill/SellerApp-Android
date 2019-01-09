@@ -195,9 +195,15 @@ public class OfferAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         final OfferItem.OfferSku model = mList.get(position).getSku();
         final OfferItem offerItem = mList.get(position);
+        try {
+            offerHolder.mTitle.setText(model.getSkuTitle());
+            offerHolder.mMrp.setText("MRP " + model.getMrp());
+        }catch (Exception e){
+            e.printStackTrace();
+            offerHolder.mTitle.setText("0.0");
+            offerHolder.mMrp.setText("MRP " + "0.0");
+        }
 
-        offerHolder.mTitle.setText(model.getSkuTitle());
-        offerHolder.mMrp.setText("MRP " + model.getMrp());
         if (!Utility.isEmpty(offerItem.getMeasurementValue()) && !Utility.isEmpty(offerItem.getAcronym())) {
             offerHolder.mQuantity.setText("(" + offerItem.getMeasurementValue() + " " + offerItem.getAcronym() + ")");
             offerHolder.mQuantity.setVisibility(View.VISIBLE);

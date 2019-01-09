@@ -159,7 +159,24 @@ public class NormalOfferFragment extends Fragment implements OfferAdapter.OfferM
 
     private void showNoOfferLayout() {
         TextView noDataText = (TextView) noDataLayout.findViewById(R.id.tv_no_data);
-        noDataText.setText(getString(R.string.no_offers));
+
+        if(offerType == (Constants.OFFER_TYPE_DISCOUNTED)){
+            noDataText.setText("These are Suggested Discount Offers that you can promote " +
+                    "to your customers. Currently, there are no Suggested Discount Offers.");
+        }else if(offerType == (Constants.OFFER_TYPE_BOGO)){
+            noDataText.setText("These are Suggested BOGO Offers that you can promote to your " +
+                    "customers. Currently, there are no Suggested BOGO Offers.");
+        }else if(offerType == (Constants.OFFER_TYPE_EXTRA)){
+            noDataText.setText("These are Suggested Extra Quantity Offers that you can promote to" +
+                    " your customers. Currently, there are no Suggested Extra Quantity Offers.");
+        }else if(offerType == (Constants.OFFER_TYPE_NEW_PRODUCT)){
+            noDataText.setText("These are Suggested New Products that you can promote to" +
+                    " your customers. Currently, there are no New Products.");
+        }else if(offerType == (Constants.OFFER_TYPE_GENERAL)){
+            noDataText.setText("These are Suggested General Offers that you can promote to" +
+                    " your customers. Currently, there are no New Products.");
+        }
+       // noDataText.setText(getString(R.string.no_offers));
 
         noDataButton = (Button) noDataLayout.findViewById(R.id.btn_no_data);
         noDataButton.setText(getString(R.string.add_offers));
@@ -206,6 +223,7 @@ public class NormalOfferFragment extends Fragment implements OfferAdapter.OfferM
                     Intent intent = new Intent(getActivity(), AddBarCodeOfferActivity_.class);
                     intent.putExtra(Constants.OFFER_ITEM, offerItem);
                     intent.putExtra(Constants.OFFER_TYPE, offerType);
+                    intent.putExtra("OfferType", offerType);
                     startActivity(intent);
                 } else {
                     makeLinkOfferWithSellerApiCall();

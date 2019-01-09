@@ -22,6 +22,7 @@ import com.binbill.seller.BaseActivity;
 import com.binbill.seller.Constants;
 import com.binbill.seller.CustomViews.AppButton;
 import com.binbill.seller.CustomViews.AppButtonGreyed;
+import com.binbill.seller.CustomViews.SquareAppButton;
 import com.binbill.seller.Model.UserModel;
 import com.binbill.seller.R;
 import com.binbill.seller.Retrofit.RetrofitHelper;
@@ -65,7 +66,7 @@ public class PublishOfferToUserActivity extends BaseActivity implements UserAdap
     CheckBox cb_select_all;
 
     @ViewById
-    AppButton btn_no_data;
+    SquareAppButton btn_no_data;
     private ArrayList<UserModel> mUserList;
 
     @ViewById

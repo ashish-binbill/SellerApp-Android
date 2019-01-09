@@ -287,7 +287,7 @@
     <string name="total_credits_colon">Credits Added : </string>
     <string name="redeemed_points">Points Settled : </string>
     <string name="total_points_colon">Points Added: </string>
-    <string name="total_amount">Total M.R.P.</string>
+    <string name="total_amount">Total M.R.P. (Including Delivery)</string>
     <string name="base_price_value">Base Price: ₹ %1$s (up to one hour)</string>
     <string name="additional_price_value">*₹ %1$s each additional 30 Min.</string>
     <string name="customer_added_successfully">Customer added successfully</string>

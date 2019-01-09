@@ -290,6 +290,7 @@ public class NotRespondedOrderFragment extends Fragment implements OrderAdapter.
         intent.putExtra(Constants.ORDER_ID, order.getOrderId());
         intent.putExtra("SellerDeliveryCharges", deliverCharges);
         intent.putExtra("AmtBeforeDelivery", order.getAmountBeforeDiscount());
+        OrderDetailsActivity.isCollectStore = order.isCollectAtStore();
         startActivity(intent);
 
     }

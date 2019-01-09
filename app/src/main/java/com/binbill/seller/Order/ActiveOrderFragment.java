@@ -315,6 +315,7 @@ public class ActiveOrderFragment extends Fragment implements OrderAdapter.OrderS
         noDataLayout.setVisibility(View.GONE);
 
         deliverCharges1 .addAll(mOrderList.get(0).getSellerDeliveryRules());
+        OrderDetailsActivity.isCollectStore = mOrderList.get(0).isCollectAtStore();
         try {
             OrderDetailsActivity.amtBefore = Double.parseDouble(mOrderList.get(0).getAmountBeforeDiscount());
         }catch (Exception e){
@@ -335,6 +336,7 @@ public class ActiveOrderFragment extends Fragment implements OrderAdapter.OrderS
         intent.putExtra(Constants.ORDER_ID, order.getOrderId());
         intent.putExtra("SellerDeliveryCharges", deliverCharges);
         intent.putExtra("AmtBeforeDelivery", order.getAmountBeforeDiscount());
+        OrderDetailsActivity.isCollectStore = order.isCollectAtStore();
         deliverCharges1.clear();
         startActivity(intent);
 

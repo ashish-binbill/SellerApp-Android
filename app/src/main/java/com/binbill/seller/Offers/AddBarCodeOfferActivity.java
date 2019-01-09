@@ -125,6 +125,7 @@ public class AddBarCodeOfferActivity extends BaseActivity implements ZXingScanne
             ll_discount_layout.setVisibility(View.GONE);
             et_discount_offer.setVisibility(View.VISIBLE);
         }else{
+            ll_discount_layout.setVisibility(View.VISIBLE);
         }
 
         if (getIntent().hasExtra(Constants.OFFER_ITEM)) {

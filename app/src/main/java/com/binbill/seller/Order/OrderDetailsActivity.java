@@ -178,6 +178,7 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
     ArrayList<SellerDeliveryModel> deliverCharges;
     ArrayList<SellerDeliveryModel> deliverCharges1;
     public static double amtBefore;
+    public static boolean isCollectStore;
 
     @AfterViews
     public void setUpView() {
@@ -940,7 +941,8 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                     tv_time_elapsed.setText(Utility.getDateDifference(orderItem.getStartDate(), orderItem.getEndDate()));
 
                     if (!Utility.isEmpty(orderItem.getTotalAmount())) {
-                        tv_total_amount.setText(getString(R.string.rupee_sign) + " " + orderItem.getTotalAmount());
+                        tv_total_amount.setText(getString(R.string.rupee_sign) + " " +
+                                String.format("%.2f", Double.parseDouble(orderItem.getTotalAmount())));
                         double totAmt = Double.parseDouble(orderItem.getTotalAmount());
                         /*if(amtBefore!=0.0){
                             lv_free_home.setVisibility(View.VISIBLE);
@@ -962,10 +964,10 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                             Double maximumValue = Double.parseDouble(deliverCharges.get(k).getMaximum_order_value());
                             Double minimumValue = Double.parseDouble(deliverCharges.get(k).getMinimum_order_value());
                             if(totAmt>= minimumValue && totAmt<maximumValue){
-                                if(amount!=0.0){
+                                if(amount!=0.0 && !isCollectStore){
                                   lv_free_home.setVisibility(View.VISIBLE);
                                     tv_home_delivery_charges.setText(getString(R.string.rupee_sign)+" "
-                                    +amount);
+                                    + String.format("%.2f",amount));
                                 }else{
                                     lv_free_home.setVisibility(View.GONE);
                                 }
@@ -974,9 +976,11 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                                     double totalAmt = Double.valueOf(orderItem.getTotalAmount());
                                     String[] splitAmt = tv_home_delivery_charges.getText().toString().split("₹ ");
                                     double homeDeliveryCharges = Double.parseDouble(splitAmt[splitAmt.length-1]);
-                                    tv_payable.setText(getString(R.string.rupee_sign)+" "+ (totalAmt+homeDeliveryCharges));
+                                    tv_payable.setText(getString(R.string.rupee_sign)+" "+ String.format("%.2f", (totalAmt+homeDeliveryCharges)));
                                 }else{
-                                    lv_payable.setVisibility(View.GONE);
+                                    double totalAmt = Double.valueOf(orderItem.getTotalAmount());
+                                    tv_payable.setText(getString(R.string.rupee_sign)+" "+ String.format("%.2f", totalAmt));
+                                  //  lv_payable.setVisibility(View.GONE);
                                 }
                                 break;
                             }
@@ -1087,8 +1091,8 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
             v_divider.setVisibility(View.GONE);
 
             if (!Utility.isEmpty(orderDetails.getTotalAmount())) {
-                tv_total_amount.setText(getString(R.string.rupee_sign) + " " + orderDetails.getTotalAmount());
-
+                tv_total_amount.setText(getString(R.string.rupee_sign) + " " +
+                        String.format("%.2f",Double.parseDouble(orderDetails.getTotalAmount())));
                 if(userRegistrationDetails.isHomeDelivery()){
                     tv_home_delivery_charges.setText("FREE");
                 }else {
@@ -1118,10 +1122,10 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                             Double maximumValue = Double.parseDouble(deliverCharges.get(k).getMaximum_order_value());
                             Double minimumValue = Double.parseDouble(deliverCharges.get(k).getMinimum_order_value());
                             if ( totAmt>= minimumValue && totAmt < maximumValue) {
-                                if (amount != 0.0) {
+                                if (amount != 0.0 && !isCollectStore) {
                                     lv_free_home.setVisibility(View.VISIBLE);
                                     tv_home_delivery_charges.setText(getString(R.string.rupee_sign) + " "
-                                            + amount);
+                                            + String.format("%.2f", amount));
                                 } else {
                                     lv_free_home.setVisibility(View.GONE);
                                 }
@@ -1130,9 +1134,13 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
                                     double totalAmt = Double.valueOf(orderDetails.getTotalAmount());
                                     String[] splitAmt = tv_home_delivery_charges.getText().toString().split("₹ ");
                                     double homeDeliveryCharges = Double.parseDouble(splitAmt[splitAmt.length - 1]);
-                                    tv_payable.setText(getString(R.string.rupee_sign) + " " + (totalAmt + homeDeliveryCharges));
+                                    tv_payable.setText(getString(R.string.rupee_sign) + " " + String.format("%.2f",
+                                            (totalAmt + homeDeliveryCharges)));
                                 } else {
-                                    lv_payable.setVisibility(View.GONE);
+                                    double totalAmt = Double.valueOf(orderDetails.getTotalAmount());
+                                    tv_payable.setText(getString(R.string.rupee_sign) + " " + String.format("%.2f",
+                                            totalAmt));
+                                  //  lv_payable.setVisibility(View.GONE);
                                 }
                                 break;
                             }
@@ -1367,7 +1375,13 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
             }catch (Exception e){
                 e.printStackTrace();
             }
-            et_total_amount.setText(Utility.showDoubleString(totalAmount + homeDeliveryCharges));
+            if(!isCollectStore) {
+                lv_free_home.setVisibility(View.VISIBLE);
+                et_total_amount.setText(Utility.showDoubleString(totalAmount + homeDeliveryCharges));
+            }else{
+                lv_free_home.setVisibility(View.GONE);
+                et_total_amount.setText(Utility.showDoubleString(totalAmount));
+            }
         }
     }
 

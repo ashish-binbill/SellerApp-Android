@@ -1379,7 +1379,7 @@ public class RetrofitHelper {
     }
 
 
-    public void addOfferFromSeller(String title, String description, String expiry, String fileUploadDetails, String offerId, final RetrofitCallback retrofitCallback) {
+    public void addOfferFromSeller(String title, String description, String expiry, String fileUploadDetails, String offerId, int offertype, final RetrofitCallback retrofitCallback) {
         RetrofitApiInterface apiService =
                 RetrofitHelper.getClient(mContext).create(RetrofitApiInterface.class);
 
@@ -1391,6 +1391,7 @@ public class RetrofitHelper {
         offerObject.put("title", title);
         offerObject.put("description", description);
         offerObject.put("start_date", sdf.format(calendar.getTime()));
+        offerObject.put("offer_type", String.valueOf(offertype));
 
         if (offerId != null && !Utility.isEmpty(offerId))
             offerObject.put("id", offerId);
@@ -1431,6 +1432,7 @@ public class RetrofitHelper {
         Call<JsonObject> call = apiService.fetchOffers(identifier);
         call.enqueue(new Callback<JsonObject>() {
             @Override
+
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 if (response.isSuccessful()) {
                     JsonObject body = response.body();

@@ -38,7 +38,7 @@ public class BinBillSeller extends MultiDexApplication {
         StrictMode.setVmPolicy(builder.build());
 
         FirebaseApp.initializeApp(this);
-        Fabric.with(this, new Crashlytics());
+      //  Fabric.with(this, new Crashlytics());
     }
 
     public static Socket getSocket(Context context) {

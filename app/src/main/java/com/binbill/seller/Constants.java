@@ -15,7 +15,8 @@ public class Constants {
 /*
     smitha.ravindran@indusind.com
 */
-    public static final String BASE_URL = "https://seller-stage.binbill.com/";
+    //public static final String BASE_URL = "https://seller-stage.binbill.com/";
+    public static final String BASE_URL = "https://seller.binbill.com/";
     public static final String BASE_URL_IMAGE = "https://seller-stage.binbill.com";
     public static final String APP_VERSION = "1";
     public static final String GET_OTP_FOR_USER_LOGIN = "sellers/getotp";

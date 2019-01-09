@@ -213,7 +213,8 @@ public class BarCodeOfferFragment extends Fragment implements OfferAdapter.Offer
             }
             if(offerType == Constants.OFFER_TYPE_EXTRA){
              //   noDataButton.setVisibility(View.VISIBLE);
-                noDataText.setText(getString(R.string.extra_no_offers));
+                noDataText.setText("Simply Add an Extra Quantity " +
+                        "Offer here to publish it for your customers.");
             }
             if(offerType == Constants.OFFER_TYPE_GENERAL) {
                 btnAddData.setVisibility(View.GONE);
@@ -222,7 +223,8 @@ public class BarCodeOfferFragment extends Fragment implements OfferAdapter.Offer
             }
             if(offerType == Constants.OFFER_TYPE_NEW_PRODUCT) {
                // noDataButton.setVisibility(View.VISIBLE);
-                noDataText.setText(getString(R.string.extra_no_offers));
+                noDataText.setText("Simply Add a New Product" +
+                        " here to publish it for your customers.");
             }
         }
         offerListView.setVisibility(View.GONE);
@@ -246,17 +248,20 @@ public class BarCodeOfferFragment extends Fragment implements OfferAdapter.Offer
         btnAddData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), AddBarCodeOfferActivity_.class);
-                if(offerType == Constants.OFFER_TYPE_BOGO) {
-                    intent.putExtra("OfferType", Constants.OFFER_TYPE_BOGO);
-                }
                 if(offerType == Constants.OFFER_TYPE_GENERAL){
-                    intent.putExtra("OfferType", Constants.OFFER_TYPE_BOGO);
+                    Intent intentOffer = new Intent(getActivity(), AddOfferActivity_.class);
+                    intentOffer.putExtra("OfferType", Constants.OFFER_TYPE_GENERAL);
+                    startActivity(intentOffer);
+                }else{
+                    Intent intent = new Intent(getActivity(), AddBarCodeOfferActivity_.class);
+                    if(offerType == Constants.OFFER_TYPE_BOGO) {
+                        intent.putExtra("OfferType", Constants.OFFER_TYPE_BOGO);
+                    }
+                    if(offerType == Constants.OFFER_TYPE_DISCOUNTED){
+                        intent.putExtra("OfferType", Constants.OFFER_TYPE_DISCOUNTED);
+                    }
+                    startActivity(intent);
                 }
-                if(offerType == Constants.OFFER_TYPE_DISCOUNTED){
-                    intent.putExtra("OfferType", Constants.OFFER_TYPE_DISCOUNTED);
-                }
-                startActivity(intent);
             }
         });
 
@@ -264,7 +269,21 @@ public class BarCodeOfferFragment extends Fragment implements OfferAdapter.Offer
             @Override
             public void onClick(View view) {
 //                ((OfferActivity) getActivity()).invokeAddOfferOptions();
-                Intent intent = new Intent(getActivity(), AddBarCodeOfferActivity_.class);
+                if(offerType == Constants.OFFER_TYPE_GENERAL){
+                    Intent intentOffer = new Intent(getActivity(), AddOfferActivity_.class);
+                    intentOffer.putExtra("OfferType", Constants.OFFER_TYPE_GENERAL);
+                    startActivity(intentOffer);
+                }else{
+                    Intent intent = new Intent(getActivity(), AddBarCodeOfferActivity_.class);
+                    if(offerType == Constants.OFFER_TYPE_BOGO) {
+                        intent.putExtra("OfferType", Constants.OFFER_TYPE_BOGO);
+                    }
+                    if(offerType == Constants.OFFER_TYPE_DISCOUNTED){
+                        intent.putExtra("OfferType", Constants.OFFER_TYPE_DISCOUNTED);
+                    }
+                    startActivity(intent);
+                }
+               /* Intent intent = new Intent(getActivity(), AddBarCodeOfferActivity_.class);
                 if(offerType == Constants.OFFER_TYPE_BOGO) {
                     intent.putExtra("OfferType", Constants.OFFER_TYPE_BOGO);
                 }
@@ -274,7 +293,7 @@ public class BarCodeOfferFragment extends Fragment implements OfferAdapter.Offer
                 if(offerType == Constants.OFFER_TYPE_DISCOUNTED){
                     intent.putExtra("OfferType", Constants.OFFER_TYPE_DISCOUNTED);
                 }
-                startActivity(intent);
+                startActivity(intent);*/
             }
         });
     }
@@ -344,18 +363,23 @@ public class BarCodeOfferFragment extends Fragment implements OfferAdapter.Offer
     public void onOfferManupulation(int position, String type) {
         switch (type) {
             case Constants.EDIT_OFFER:
-                Intent intent = new Intent(getActivity(), AddBarCodeOfferActivity_.class);
-                if(offerType == Constants.OFFER_TYPE_BOGO) {
-                    intent.putExtra("OfferType", Constants.OFFER_TYPE_BOGO);
-                }
                 if(offerType == Constants.OFFER_TYPE_GENERAL){
-                    intent.putExtra("OfferType", Constants.OFFER_TYPE_BOGO);
+                    Intent intent = new Intent(getActivity(), AddBarCodeOfferActivity_.class);
+                    intent.putExtra("OfferType", Constants.OFFER_TYPE_GENERAL);
+                    intent.putExtra(Constants.OFFER_ITEM, mBarcodeOfferList.get(position));
+                    startActivity(intent);
+                }else{
+                    Intent intent = new Intent(getActivity(), AddBarCodeOfferActivity_.class);
+                    if(offerType == Constants.OFFER_TYPE_BOGO) {
+                        intent.putExtra("OfferType", Constants.OFFER_TYPE_BOGO);
+                    }
+                    if(offerType == Constants.OFFER_TYPE_DISCOUNTED){
+                        intent.putExtra("OfferType", Constants.OFFER_TYPE_DISCOUNTED);
+                    }
+                    intent.putExtra(Constants.OFFER_ITEM, mBarcodeOfferList.get(position));
+                    startActivity(intent);
                 }
-                if(offerType == Constants.OFFER_TYPE_DISCOUNTED){
-                    intent.putExtra("OfferType", Constants.OFFER_TYPE_DISCOUNTED);
-                }
-                intent.putExtra(Constants.OFFER_ITEM, mBarcodeOfferList.get(position));
-                startActivity(intent);
+
                 break;
             case Constants.DELETE_OFFER:
                 mOfferIdToDelete = mBarcodeOfferList.get(position).getOfferId();
