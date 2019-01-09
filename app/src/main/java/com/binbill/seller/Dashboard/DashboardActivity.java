@@ -961,8 +961,11 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
 
             @Override
             public void onClick(View v) {
-                Toast.makeText(v.getContext(),""+ v.getTag(),
-                        Toast.LENGTH_SHORT).show();
+              /*  Toast.makeText(v.getContext(),""+ v.getTag(),
+                        Toast.LENGTH_SHORT).show();*/
+              Intent i = new Intent(DashboardActivity.this, ManageFruitsVegActivity_.class);
+              i.putExtra("Title", ""+ v.getTag());
+              startActivity(i);
             }
 
         };
