@@ -432,7 +432,7 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
 
     private void setUpListener() {
 
-        TextView manageDelivery = nav_view.findViewById(R.id.tv_free_home_delivery);
+        TextView manageDelivery = nav_view.findViewById(R.id.tv_manage_delivery_boy);
         manageDelivery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -443,7 +443,7 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
         });
 
         TextView setHomeDelivery = nav_view.findViewById(R.id.tv_free_home_delivery);
-        manageDelivery.setOnClickListener(new View.OnClickListener() {
+        setHomeDelivery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (drawer_layout.isDrawerOpen(GravityCompat.START))

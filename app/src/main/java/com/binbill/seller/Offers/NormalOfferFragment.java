@@ -174,7 +174,7 @@ public class NormalOfferFragment extends Fragment implements OfferAdapter.OfferM
                     " your customers. Currently, there are no New Products.");
         }else if(offerType == (Constants.OFFER_TYPE_GENERAL)){
             noDataText.setText("These are Suggested General Offers that you can promote to" +
-                    " your customers. Currently, there are no New Products.");
+                    " your customers. Currently, there are no Suggested General Offers.");
         }
        // noDataText.setText(getString(R.string.no_offers));
 
