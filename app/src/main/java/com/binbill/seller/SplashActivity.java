@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -13,16 +12,19 @@ import android.widget.Toast;
 import com.binbill.seller.APIHelper.ApiHelper;
 import com.binbill.seller.Login.LandingActivity_;
 import com.binbill.seller.Model.DashboardModel;
+import com.binbill.seller.Model.FruitsVeg;
 import com.binbill.seller.Model.UserRegistrationDetails;
 import com.binbill.seller.Registration.RegistrationResolver;
 import com.binbill.seller.Retrofit.RetrofitHelper;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 
 public class SplashActivity extends BaseActivity {
 
@@ -40,7 +42,9 @@ public class SplashActivity extends BaseActivity {
 
         setUpFlow();
 
-        PowerManager.WakeLock screenOn = ((PowerManager) getSystemService(POWER_SERVICE)).newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "example");
+        PowerManager.WakeLock screenOn = ((PowerManager) getSystemService(POWER_SERVICE))
+                .newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK |
+                        PowerManager.ACQUIRE_CAUSES_WAKEUP, "example");
         if (screenOn.isHeld())
             screenOn.release();
 
@@ -93,14 +97,25 @@ public class SplashActivity extends BaseActivity {
                 UserRegistrationDetails userRegistrationDetails = AppSession.getInstance(SplashActivity.this).getUserRegistrationDetails();
                 userRegistrationDetails.setAssisted(jsonObject.optBoolean("is_assisted"));
                 userRegistrationDetails.setFmcg(jsonObject.optBoolean("is_fmcg"));
+                userRegistrationDetails.setFruitsCategoryId(jsonObject.getInt("fruit_veg_category_id"));
 
-                AppSession.getInstance(SplashActivity.this).setDeliveryTimeList(jsonObject.getJSONArray("delivery_intervals"));
+                AppSession.getInstance(SplashActivity.this).setDeliveryTimeList(
+                        jsonObject.getJSONArray("delivery_intervals"));
 
                 AppSession.getInstance(SplashActivity.this).setUserRegistrationDetails(userRegistrationDetails);
 
+
+                if (jsonObject.optJSONArray("fruit_veg_categories") != null) {
+                    JSONArray fruitVegArray = jsonObject.getJSONArray("fruit_veg_categories");
+                    Type classType = new TypeToken<ArrayList<FruitsVeg>>() {
+                    }.getType();
+
+                    ArrayList<FruitsVeg> userList = new Gson().fromJson(fruitVegArray.toString(), classType);
+                    AppSession.getInstance(this).setFruitsVegList(userList);
+                }
+
                 RegistrationResolver.parseAndSaveData(this, jsonObject.toString());
                 String nextStep = jsonObject.optString("next_step");
-
 
                 int currentIndex = RegistrationResolver.getResolvedIndexForNextScreen(nextStep);
 

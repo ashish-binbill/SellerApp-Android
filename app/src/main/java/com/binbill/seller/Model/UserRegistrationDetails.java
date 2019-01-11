@@ -15,6 +15,7 @@ public class UserRegistrationDetails implements Serializable {
     String pan;
     String gstin;
     String id;
+    int fruitsCategoryId;
 
     String shopName;
     String businessName;
@@ -40,6 +41,7 @@ public class UserRegistrationDetails implements Serializable {
     HashMap<FMCGHeaderModel, ArrayList<String>> nonASCBrandsSelected;
     ArrayList<String> ASCCategoriesSelected;
     ArrayList<String> ASCBrandsSelected;
+    ArrayList<String> fruitVegs;
 
     HashMap<String, ArrayList<String>> fmcgCategoriesSelected;
     private HashMap<String, ArrayList<String>> fmcgBrandsSelected;
@@ -73,6 +75,14 @@ public class UserRegistrationDetails implements Serializable {
 
     public void setHomeDeliveryFree(boolean homeDeliveryFree) {
         isHomeDeliveryFree = homeDeliveryFree;
+    }
+
+    public int getFruitsCategoryId() {
+        return fruitsCategoryId;
+    }
+
+    public void setFruitsCategoryId(int fruitsCategoryId) {
+        this.fruitsCategoryId = fruitsCategoryId;
     }
 
     public boolean isFmcg() {

@@ -7,7 +7,9 @@ import com.binbill.seller.Dashboard.ProfileModel;
 import com.binbill.seller.Model.BusinessDetailsModel;
 import com.binbill.seller.Model.DashboardModel;
 import com.binbill.seller.Model.FMCGHeaderModel;
+import com.binbill.seller.Model.FruitsVeg;
 import com.binbill.seller.Model.MainCategory;
+import com.binbill.seller.Model.SkuItem;
 import com.binbill.seller.Model.StateCityModel;
 import com.binbill.seller.Model.UserModel;
 import com.binbill.seller.Model.UserRegistrationDetails;
@@ -57,6 +59,8 @@ public class AppSession {
         private UserRegistrationDetails userRegistrationDetails;
         private String mobile;
         private ArrayList<MainCategory> mainCategoryList;
+        private ArrayList<FruitsVeg> fruitsVegList;
+        private ArrayList<SkuItem> skuItemList;
         private ArrayList<MainCategory> paymentModes;
         private ArrayList<StateCityModel> stateList;
         private ArrayList<BusinessDetailsModel> businessDetails;
@@ -149,6 +153,23 @@ public class AppSession {
         private void setMyCustomerList(ArrayList<UserModel> list) {
             this.myCustomerList = list;
         }
+
+        private void setFruitsVegList(ArrayList<FruitsVeg> list) {
+            this.fruitsVegList = list;
+        }
+
+        private ArrayList<FruitsVeg> getFruitsVegList() {
+            return fruitsVegList;
+        }
+
+        private void setSkuItemList(ArrayList<SkuItem> list) {
+            this.skuItemList = list;
+        }
+
+        private ArrayList<SkuItem> getSkuItemList() {
+            return skuItemList;
+        }
+
 
         private ArrayList<UserModel> getMyCustomerList() {
             return myCustomerList;
@@ -313,8 +334,23 @@ public class AppSession {
         mAppSessionData.setMyCustomerList(userModel);
     }
 
+    public void setFruitsVegList(ArrayList<FruitsVeg> userModel) {
+        mAppSessionData.setFruitsVegList(userModel);
+    }
+
+    public void setSkuItemList(ArrayList<SkuItem> userModel) {
+        mAppSessionData.setSkuItemList(userModel);
+    }
+    public ArrayList<SkuItem> getSkuItemList() {
+        return mAppSessionData.getSkuItemList();
+    }
+
     public ArrayList<UserModel> getMyCustomerList() {
         return mAppSessionData.getMyCustomerList();
+    }
+
+    public ArrayList<FruitsVeg> getFruitsVegList() {
+        return mAppSessionData.getFruitsVegList();
     }
 
     public void setAssistedServiceList(ArrayList<AssistedUserModel> userModel) {

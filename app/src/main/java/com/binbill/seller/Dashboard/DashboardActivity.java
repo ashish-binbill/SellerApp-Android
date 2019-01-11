@@ -75,6 +75,7 @@ import com.binbill.seller.HomeDelivery.SetHomeDeliveryActivity_;
 import com.binbill.seller.Login.LoginActivity_;
 import com.binbill.seller.Loyalty.LoyaltyRulesActivity_;
 import com.binbill.seller.Model.DashboardModel;
+import com.binbill.seller.Model.FruitsVeg;
 import com.binbill.seller.Model.MainCategory;
 import com.binbill.seller.Model.UserModel;
 import com.binbill.seller.Offers.UserAdapter;
@@ -160,8 +161,6 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
 
     String whichScreen ="Home";
 
-    String[] items = {"Manage Vegetables", "Manage Exotic Vegetables",
-            "Manage Fruits", "Manage Exotic Fruits", "Manage Herbs/ Spices/ Other"};
 
     Menu menuPrepare;
 
@@ -961,17 +960,20 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
 
             @Override
             public void onClick(View v) {
-              /*  Toast.makeText(v.getContext(),""+ v.getTag(),
+               /* Toast.makeText(v.getContext(),""+ v.getTag() +"-"+ v.getId(),
                         Toast.LENGTH_SHORT).show();*/
               Intent i = new Intent(DashboardActivity.this, ManageFruitsVegActivity_.class);
-              i.putExtra("Title", ""+ v.getTag());
+              i.putExtra("Id",  String.valueOf(v.getId()));
+              i.putExtra("Title",  ""+v.getTag());
               startActivity(i);
             }
 
         };
 
         TextView tv= null;
-        for(int i = 0; i < 5 ; i++){
+        ArrayList<FruitsVeg> list = new ArrayList<>();
+        list = AppSession.getInstance(this).getFruitsVegList();
+        for(int i = 0; i < list.size() ; i++){
 
             LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(
                     Context.LAYOUT_INFLATER_SERVICE);
@@ -979,8 +981,10 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
             LinearLayout dynamicLayout =  nav_view.findViewById(R.id.dynamic_lay);
             dynamicLayout.setVisibility(View.VISIBLE);
             tv = (TextView) view.findViewById(R.id.tv_dynamicId);
-            tv.setText(items[i]);
-            tv.setTag(items[i]);
+
+            tv.setText(list.get(i).getName());
+            tv.setTag(list.get(i).getName());
+            tv.setId(list.get(i).getId());
             tv.setOnClickListener(btnClickListener);
             dynamicLayout.addView(view);
 

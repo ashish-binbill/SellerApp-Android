@@ -52,7 +52,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginRight="@dimen/dimen_10dp"
                 android:button="@drawable/category_selector"
-                android:visibility="visible" />
+                android:visibility="gone" />
 
         </RelativeLayout>
 
@@ -77,11 +77,13 @@
 
             <EditText
                 android:id="@+id/et_quantity"
-                android:layout_width="@dimen/dimen_113dp"
-                android:layout_height="@dimen/dimen_55dp"
+                android:layout_width="143dp"
+                android:layout_height="57dp"
                 android:layout_below="@id/tv_quantity"
-                android:layout_marginTop="@dimen/dimen_3dp"
+                android:layout_alignParentLeft="true"
+                android:layout_marginTop="2dp"
                 android:background="@drawable/edittext_bg"
+                android:gravity="center|left"
                 android:inputType="numberDecimal"
                 android:lineSpacingExtra="-1sp"
                 android:paddingLeft="@dimen/dimen_12dp"
@@ -94,8 +96,12 @@
                 android:id="@+id/tv_mrp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dimen_10dp"
+                android:layout_above="@+id/et_quantity"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="@dimen/dimen_8dp"                android:layout_marginRight="86dp"
+                android:layout_marginBottom="-1dp"
                 android:layout_toRightOf="@+id/et_quantity"
+                android:gravity="center"
                 android:text="MRP"
                 android:textColor="#999999"
                 android:textSize="@dimen/dimen_15dp"
@@ -103,11 +109,12 @@
 
             <EditText
                 android:id="@+id/et_mrp"
-                android:layout_width="@dimen/dimen_113dp"
-                android:layout_height="@dimen/dimen_55dp"
+                android:layout_width="147dp"
+                android:layout_height="57dp"
                 android:layout_below="@id/tv_quantity"
-                android:layout_marginLeft="@dimen/dimen_12dp"
-                android:layout_marginTop="@dimen/dimen_3dp"
+                android:layout_marginLeft="@dimen/dimen_30dp"
+                android:layout_marginRight="@dimen/dimen_10dp"
+                android:layout_marginTop="2dp"
                 android:layout_toRightOf="@+id/et_quantity"
                 android:background="@drawable/edittext_bg"
                 android:inputType="numberDecimal"
@@ -127,7 +134,8 @@
                 android:text="Discount"
                 android:textColor="#999999"
                 android:textSize="@dimen/dimen_15dp"
-                android:textStyle="normal" />
+                android:textStyle="normal"
+                android:visibility="gone" />
 
             <EditText
                 android:id="@+id/et_discount"
@@ -145,7 +153,8 @@
                 android:paddingRight="@dimen/dimen_12dp"
                 android:textColor="@color/text_44"
                 android:textColorHint="@color/hint_color"
-                android:textSize="@dimen/dimen_15dp" />
+                android:textSize="@dimen/dimen_15dp"
+                android:visibility="gone" />
 
         </RelativeLayout>
 
