@@ -207,6 +207,8 @@
     <string name="no_copies">No Bill is attached</string>
     <string name="sku_management">SKU Management</string>
     <string name="manage_categories"> -   Manage Categories</string>
+    <string name="heading_categories">Select Product categories you sell</string>
+    <string name="manage_fruits"> -   Manage Fruits &amp; Vegetables</string>
     <string name="manage_brands"> -   Manage Brands</string>
     <string name="manage_sku"> -   Manage SKUs</string>
     <string name="delivery_agents">Delivery Agents</string>

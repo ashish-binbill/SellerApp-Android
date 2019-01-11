@@ -159,7 +159,6 @@ public class NormalOfferFragment extends Fragment implements OfferAdapter.OfferM
 
     private void showNoOfferLayout() {
         TextView noDataText = (TextView) noDataLayout.findViewById(R.id.tv_no_data);
-
         if(offerType == (Constants.OFFER_TYPE_DISCOUNTED)){
             noDataText.setText("These are Suggested Discount Offers that you can promote " +
                     "to your customers. Currently, there are no Suggested Discount Offers.");

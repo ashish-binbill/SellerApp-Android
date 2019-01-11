@@ -9,6 +9,7 @@ import com.binbill.seller.Constants;
 import com.binbill.seller.Dashboard.DashboardActivity_;
 import com.binbill.seller.Model.BusinessDetailsModel;
 import com.binbill.seller.Model.FMCGHeaderModel;
+import com.binbill.seller.Model.FruitsVeg;
 import com.binbill.seller.Model.MainCategory;
 import com.binbill.seller.Model.StateCityModel;
 import com.binbill.seller.Model.UserRegistrationDetails;
@@ -114,6 +115,7 @@ public class RegistrationResolver {
             ArrayList<StateCityModel> states = new Gson().fromJson(stateArray.toString(), classType);
             AppSession.getInstance(context).setStateList(states);
 
+
             /**
              * Categories
              */
@@ -125,6 +127,8 @@ public class RegistrationResolver {
                 ArrayList<FMCGHeaderModel> categories = new Gson().fromJson(categoriesData.toString(), classType);
                 AppSession.getInstance(context).setCategories(categories);
             }
+
+
 
             /**
              * Assisted service types

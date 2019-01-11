@@ -98,6 +98,11 @@ public interface RetrofitApiInterface {
     @GET(Constants.FETCH_USERS_FOR_SELLER)
     Call<JsonObject> fetchUsersToAdd(@Path(value = "seller_id", encoded = true) String identifier, @Query(value = "mobile_no", encoded = true) String mobile);
 
+    @GET(Constants.MANAGE_FRUITS_VEG)
+    Call<JsonObject> fetchFruitsVegList(@Path(value = "seller_id", encoded = true) String identifier,
+                                        @Query(value = "main_category_id", encoded = true) int mainCategoryId,
+                                        @Query(value = "category_id", encoded = true) int categoryId);
+
     @PUT(Constants.FETCH_USERS_FOR_SELLER)
     Call<JsonObject> inviteUser(@Path(value = "seller_id", encoded = true) String identifier, @Body HashMap<String, String> body);
 

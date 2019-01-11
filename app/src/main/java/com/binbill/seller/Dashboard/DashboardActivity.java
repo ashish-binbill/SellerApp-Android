@@ -42,6 +42,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
@@ -74,6 +75,7 @@ import com.binbill.seller.HomeDelivery.SetHomeDeliveryActivity_;
 import com.binbill.seller.Login.LoginActivity_;
 import com.binbill.seller.Loyalty.LoyaltyRulesActivity_;
 import com.binbill.seller.Model.DashboardModel;
+import com.binbill.seller.Model.FruitsVeg;
 import com.binbill.seller.Model.MainCategory;
 import com.binbill.seller.Model.UserModel;
 import com.binbill.seller.Offers.UserAdapter;
@@ -119,15 +121,18 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
     private static final int FMCG_ONLY_USER_HAS_POS = 2;
     private static final int FMCG_ONLY_USER_NO_POS = 3;
     private static final int ASSISTED_ONLY_USER = 4;
+
     @ViewById
     Toolbar toolbar;
 
     @ViewById(R.id.toolbar_text)
     TextView toolbarText;
 
+   /* @ViewById(R.id.tv_dynamicId)
+    TextView tv_dynamicId;*/
+
   /*  @ViewById
     ImageView iv_notification, iv_search;*/
-
 
     @ViewById
     FrameLayout container;
@@ -156,6 +161,7 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
 
     String whichScreen ="Home";
 
+
     Menu menuPrepare;
 
     @AfterViews
@@ -171,6 +177,8 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
                 startActivity(new Intent(DashboardActivity.this, ProfileActivity_.class));
             }
         });
+
+
     }
 
     private void checkNotificationDeeplink() {
@@ -948,6 +956,42 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
                         }
                     });
         }
+        View.OnClickListener btnClickListener = new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+               /* Toast.makeText(v.getContext(),""+ v.getTag() +"-"+ v.getId(),
+                        Toast.LENGTH_SHORT).show();*/
+              Intent i = new Intent(DashboardActivity.this, ManageFruitsVegActivity_.class);
+              i.putExtra("Id",  String.valueOf(v.getId()));
+              i.putExtra("Title",  ""+v.getTag());
+              startActivity(i);
+            }
+
+        };
+
+        TextView tv= null;
+        ArrayList<FruitsVeg> list = new ArrayList<>();
+        list = AppSession.getInstance(this).getFruitsVegList();
+        for(int i = 0; i < list.size() ; i++){
+
+            LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(
+                    Context.LAYOUT_INFLATER_SERVICE);
+            View view = inflater.inflate(R.layout.layout_textview_dynamic, null);
+            LinearLayout dynamicLayout =  nav_view.findViewById(R.id.dynamic_lay);
+            dynamicLayout.setVisibility(View.VISIBLE);
+            tv = (TextView) view.findViewById(R.id.tv_dynamicId);
+
+            tv.setText(list.get(i).getName());
+            tv.setTag(list.get(i).getName());
+            tv.setId(list.get(i).getId());
+            tv.setOnClickListener(btnClickListener);
+            dynamicLayout.addView(view);
+
+        }
+
+
+
     }
 
     @Override
