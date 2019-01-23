@@ -1377,6 +1377,8 @@ public class OrderDetailsActivity extends BaseActivity implements OrderShoppingL
             }
             if(!isCollectStore) {
                 lv_free_home.setVisibility(View.VISIBLE);
+                tv_home_delivery_charges.setText(getString(R.string.rupee_sign) + " "
+                        + String.format("%.2f", homeDeliveryCharges));
                 et_total_amount.setText(Utility.showDoubleString(totalAmount + homeDeliveryCharges));
             }else{
                 lv_free_home.setVisibility(View.GONE);
