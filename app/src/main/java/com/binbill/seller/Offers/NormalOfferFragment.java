@@ -8,13 +8,17 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import com.binbill.seller.AppSession;
 import com.binbill.seller.BaseActivity;
@@ -22,6 +26,9 @@ import com.binbill.seller.Constants;
 import com.binbill.seller.CustomViews.AppButton;
 import com.binbill.seller.CustomViews.SquareAppButton;
 import com.binbill.seller.CustomViews.YesNoDialogFragment;
+import com.binbill.seller.Dashboard.CustomerFragment;
+import com.binbill.seller.Dashboard.MyCustomerFragment;
+import com.binbill.seller.Model.UserModel;
 import com.binbill.seller.R;
 import com.binbill.seller.Retrofit.RetrofitHelper;
 import com.google.gson.Gson;
@@ -34,19 +41,25 @@ import org.json.JSONObject;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
-public class NormalOfferFragment extends Fragment implements OfferAdapter.OfferManipulationListener, YesNoDialogFragment.YesNoClickInterface {
+public class NormalOfferFragment extends Fragment implements OfferAdapter.OfferManipulationListener,
+        YesNoDialogFragment.YesNoClickInterface, SearchView.OnQueryTextListener {
 
     private RecyclerView offerListView;
-    private LinearLayout shimmerview, noDataLayout;
+    private LinearLayout shimmerview, noDataLayout, mainLinear;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private ArrayList<OfferItem> mNormalOfferList;
+    public ArrayList<OfferItem> mNormalOfferList = new ArrayList<>();
     private String mOfferIdToDelete = "";
     private Button noDataButton;
     private int offerType = 1;
-
+    OfferAdapter mAdapter;
     private RelativeLayout loaderLayout;
+    private TextView tv_offer_switch_text;
+    private Switch simpleSwitch;
+    boolean isFirstTimeLaunch;
+    public static NormalOfferFragment frag;
 
     public NormalOfferFragment() {
+        frag = this;
     }
 
     public static NormalOfferFragment newInstance(int offerType) {
@@ -73,7 +86,10 @@ public class NormalOfferFragment extends Fragment implements OfferAdapter.OfferM
     @Override
     public void onResume() {
         super.onResume();
-        makeOfferFetchApiCall();
+        if(!isFirstTimeLaunch){
+            makeOfferFetchApiCall();
+        }
+
     }
 
     @Override
@@ -83,19 +99,46 @@ public class NormalOfferFragment extends Fragment implements OfferAdapter.OfferM
         offerListView = (RecyclerView) view.findViewById(R.id.rv_order_list);
         shimmerview = (LinearLayout) view.findViewById(R.id.shimmer_view_container);
         noDataLayout = (LinearLayout) view.findViewById(R.id.no_data_layout);
+        mainLinear = (LinearLayout) view.findViewById(R.id.mainLinear);
+        mainLinear.setVisibility(View.VISIBLE);
 
         noDataButton = (SquareAppButton) noDataLayout.findViewById(R.id.btn_no_data);
         noDataButton.setVisibility(View.GONE);
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.sl_pull_to_refresh);
         loaderLayout = (RelativeLayout) view.findViewById(R.id.just_sec_layout);
+        tv_offer_switch_text = (TextView) view.findViewById(R.id.tv_offer_switch_text);
+        simpleSwitch = (Switch) view.findViewById(R.id.simpleSwitch);
+
+        simpleSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    tv_offer_switch_text.setText("Add Offers");
+                    FireQuery("false");
+                }else{
+                    tv_offer_switch_text.setText("All Offers");
+                    isFirstTimeLaunch = true;
+                    if(isFirstTimeLaunch){
+                        makeOfferFetchApiCall();
+                    }
+                }
+            }
+        });
 
         setUpListeners();
+    }
+
+    public void FireQuery(String text){
+
+        onQueryTextSubmit(text);
+        if (mAdapter != null)
+            mAdapter.getFilter().filter(text);
     }
 
     private void makeOfferFetchApiCall() {
 
         shimmerview.setVisibility(View.VISIBLE);
         offerListView.setVisibility(View.GONE);
+        mainLinear.setVisibility(View.GONE);
         noDataLayout.setVisibility(View.GONE);
 
 
@@ -149,31 +192,42 @@ public class NormalOfferFragment extends Fragment implements OfferAdapter.OfferM
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         offerListView.setLayoutManager(llm);
-        OfferAdapter mAdapter = new OfferAdapter(this, mNormalOfferList, offerType);
+        mAdapter = new OfferAdapter(this, mNormalOfferList, offerType);
         offerListView.setAdapter(mAdapter);
 
         offerListView.setVisibility(View.VISIBLE);
+        mainLinear.setVisibility(View.VISIBLE);
         shimmerview.setVisibility(View.GONE);
         noDataLayout.setVisibility(View.GONE);
+
+        if(mainLinear.getVisibility()== View.VISIBLE){
+            if(simpleSwitch.isChecked()){
+                tv_offer_switch_text.setText("Add Offers");
+                FireQuery("false");
+            }else{
+                tv_offer_switch_text.setText("All Offers");
+               isFirstTimeLaunch = true;
+            }
+        }
     }
 
     private void showNoOfferLayout() {
         TextView noDataText = (TextView) noDataLayout.findViewById(R.id.tv_no_data);
         if(offerType == (Constants.OFFER_TYPE_DISCOUNTED)){
             noDataText.setText("These are Suggested Discount Offers that you can promote " +
-                    "to your customers. Currently, there are no Suggested Discount Offers.");
+                    "to your customers. Currently, there are no Discount Offers.");
         }else if(offerType == (Constants.OFFER_TYPE_BOGO)){
             noDataText.setText("These are Suggested BOGO Offers that you can promote to your " +
-                    "customers. Currently, there are no Suggested BOGO Offers.");
+                    "customers. Currently, there are no BOGO Offers.");
         }else if(offerType == (Constants.OFFER_TYPE_EXTRA)){
             noDataText.setText("These are Suggested Extra Quantity Offers that you can promote to" +
-                    " your customers. Currently, there are no Suggested Extra Quantity Offers.");
+                    " your customers. Currently, there are no Extra Quantity Offers.");
         }else if(offerType == (Constants.OFFER_TYPE_NEW_PRODUCT)){
             noDataText.setText("These are Suggested New Products that you can promote to" +
                     " your customers. Currently, there are no New Products.");
         }else if(offerType == (Constants.OFFER_TYPE_GENERAL)){
             noDataText.setText("These are Suggested General Offers that you can promote to" +
-                    " your customers. Currently, there are no Suggested General Offers.");
+                    " your customers. Currently, there are no General Offers.");
         }
        // noDataText.setText(getString(R.string.no_offers));
 
@@ -183,6 +237,7 @@ public class NormalOfferFragment extends Fragment implements OfferAdapter.OfferM
         noDataLayout.setVisibility(View.VISIBLE);
 
         offerListView.setVisibility(View.GONE);
+        mainLinear.setVisibility(View.GONE);
         shimmerview.setVisibility(View.GONE);
     }
 
@@ -192,6 +247,7 @@ public class NormalOfferFragment extends Fragment implements OfferAdapter.OfferM
             public void onRefresh() {
 
                 offerListView.setVisibility(View.GONE);
+                mainLinear.setVisibility(View.GONE);
                 shimmerview.setVisibility(View.VISIBLE);
                 noDataLayout.setVisibility(View.GONE);
 
@@ -211,25 +267,26 @@ public class NormalOfferFragment extends Fragment implements OfferAdapter.OfferM
     public void onOfferManupulation(int position, String type) {
         switch (type) {
             case Constants.DELETE_OFFER:
-                mOfferIdToDelete = mNormalOfferList.get(position).getOfferId();
+                mOfferIdToDelete = mAdapter.mFilteredList.get(position).getOfferId();
                 ((SuggestedOffersActivity) getActivity()).showYesNoDialog();
                 break;
             case Constants.ADD_OFFER_TO_SELLER:
-                mOfferIdToDelete = mNormalOfferList.get(position).getOfferId();
+                mOfferIdToDelete = mAdapter.mFilteredList.get(position).getOfferId();
 
-                OfferItem offerItem = mNormalOfferList.get(position);
+                OfferItem offerItem = mAdapter.mFilteredList.get(position);
                 if (offerType != Constants.OFFER_TYPE_GENERAL) {
                     Intent intent = new Intent(getActivity(), AddBarCodeOfferActivity_.class);
                     intent.putExtra(Constants.OFFER_ITEM, offerItem);
                     intent.putExtra(Constants.OFFER_TYPE, offerType);
                     intent.putExtra("OfferType", offerType);
+                    intent.putExtra("hasEdit", "true1");
                     startActivity(intent);
                 } else {
                     makeLinkOfferWithSellerApiCall();
                 }
                 break;
             case Constants.NEED_THIS_ITEM:
-                mOfferIdToDelete = mNormalOfferList.get(position).getOfferId();
+                mOfferIdToDelete = mAdapter.mFilteredList.get(position).getOfferId();
                 makeNeedThisItemApiCall();
                 break;
         }
@@ -300,5 +357,30 @@ public class NormalOfferFragment extends Fragment implements OfferAdapter.OfferM
     @Override
     public void onProceedOrder(boolean isApproval, boolean isProceed) {
 
+    }
+
+
+    @Override
+    public boolean onQueryTextSubmit(String s) {
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        if (mAdapter != null)
+            mAdapter.getFilter().filter(newText);
+        return true;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        simpleSwitch.setChecked(false);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        isFirstTimeLaunch = false;
     }
 }

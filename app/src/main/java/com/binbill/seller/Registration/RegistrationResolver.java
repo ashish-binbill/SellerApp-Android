@@ -218,7 +218,7 @@ public class RegistrationResolver {
              * Dashboard
              */
             case 6:
-               // intent = new Intent(context, RegisterActivity_.class);
+               // intent = new Intent(context, MainCategoryActivity_.class);
                 intent = new Intent(context, DashboardActivity_.class);
                 //intent = new Intent(context, UploadShopImageActivity_.class);
                 break;

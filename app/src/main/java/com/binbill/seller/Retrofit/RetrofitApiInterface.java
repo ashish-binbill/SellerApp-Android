@@ -44,8 +44,11 @@ public interface RetrofitApiInterface {
     @PUT(Constants.UPDATE_SELLER_DELIVERY_RULES)
     Call<JsonObject> updateSetDeliveryRules(@Path(value = "id", encoded = true) String identifier, @Body HashMap<String, String> map);
 
-   @GET(Constants.UPDATE_SELLER_DELIVERY_RULES)
-   Call<JsonObject> fetchDeliveryRules(@Path(value = "id", encoded = true) String identifier);
+    @PUT(Constants.UPDATE_FRUITS_VEG)
+    Call<JsonObject> updateFruitsVeg(@Path(value = "id", encoded = true) String identifier, @Body HashMap<String, String> map);
+
+    @GET(Constants.UPDATE_SELLER_DELIVERY_RULES)
+    Call<JsonObject> fetchDeliveryRules(@Path(value = "id", encoded = true) String identifier);
 
     @GET(Constants.GET_CITY_BY_STATE)
     Call<JsonObject> fetchCityByState(@Path(value = "id", encoded = true) String identifier);
@@ -90,13 +93,25 @@ public interface RetrofitApiInterface {
     Call<JsonObject> fetchUsers(@Path(value = "seller_id", encoded = true) String identifier, @Query(value = "offer_id", encoded = true) String offerId, @Query(value = "is_linked_offers", encoded = true) String isLinked);
 
     @GET(Constants.FETCH_USERS_FOR_SELLER)
-    Call<JsonObject> fetchCustomers(@Path(value = "seller_id", encoded = true) String identifier, @Query(value = "linked_only", encoded = true) String isLinked, @Query(value = "user_status_type", encoded = true) String statusType, @Query(value = "page_no", encoded = true) int page);
+    Call<JsonObject> fetchCustomers(@Path(value = "seller_id", encoded = true) String identifier,
+                                    @Query(value = "linked_only", encoded = true) String isLinked,
+                                    @Query(value = "user_status_type", encoded = true) String statusType,
+                                    @Query(value = "page_no", encoded = true) int page);
 
     @PUT(Constants.PUBLISH_OFFERS_TO_USERS)
-    Call<JsonObject> publishOfferToUsers(@Path(value = "seller_id", encoded = true) String identifier, @Path(value = "id", encoded = true) String offerId, @Body HashMap<String, String> body);
+    Call<JsonObject> publishOfferToUsers(@Path(value = "seller_id", encoded = true) String identifier,
+                                         @Path(value = "id", encoded = true) String offerId,
+                                         @Body HashMap<String, String> body);
 
     @GET(Constants.FETCH_USERS_FOR_SELLER)
-    Call<JsonObject> fetchUsersToAdd(@Path(value = "seller_id", encoded = true) String identifier, @Query(value = "mobile_no", encoded = true) String mobile);
+    Call<JsonObject> fetchUsersToAdd(@Path(value = "seller_id", encoded = true) String identifier,
+                                     @Query(value = "mobile_no", encoded = true) String mobile);
+
+    @GET(Constants.FETCH_USERS_FOR_SELLER)
+    Call<JsonObject> searchUsers(@Path(value = "seller_id", encoded = true) String identifier,
+                                 @Query(value = "search_value", encoded = true) String value,
+                                 @Query(value = "mobile_no", encoded = true) String mobile,
+                                 @Query(value = "linked_only", encoded = true) String isLinked);
 
     @GET(Constants.MANAGE_FRUITS_VEG)
     Call<JsonObject> fetchFruitsVegList(@Path(value = "seller_id", encoded = true) String identifier,
@@ -104,10 +119,12 @@ public interface RetrofitApiInterface {
                                         @Query(value = "category_id", encoded = true) int categoryId);
 
     @PUT(Constants.FETCH_USERS_FOR_SELLER)
-    Call<JsonObject> inviteUser(@Path(value = "seller_id", encoded = true) String identifier, @Body HashMap<String, String> body);
+    Call<JsonObject> inviteUser(@Path(value = "seller_id", encoded = true) String identifier,
+                                @Body HashMap<String, String> body);
 
     @PUT(Constants.LINK_USER_WITH_SELLER)
-    Call<JsonObject> linkUser(@Path(value = "seller_id", encoded = true) String identifier, @Path(value = "id", encoded = true) String userId);
+    Call<JsonObject> linkUser(@Path(value = "seller_id", encoded = true) String identifier,
+                              @Path(value = "id", encoded = true) String userId);
 
     @GET(Constants.FETCH_ASSISTED_SERVICE)
     Call<JsonObject> fetchAssistedService(@Path(value = "seller_id", encoded = true) String identifier);

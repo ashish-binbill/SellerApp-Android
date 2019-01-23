@@ -29,6 +29,8 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
@@ -59,6 +61,7 @@ import com.applozic.mobicomkit.api.account.user.UserLoginTask;
 import com.applozic.mobicomkit.api.account.user.UserLogoutTask;
 import com.applozic.mobicomkit.uiwidgets.ApplozicSetting;
 import com.binbill.seller.APIHelper.ApiHelper;
+import com.binbill.seller.Adapter.ManageFruitVegAdapter;
 import com.binbill.seller.AppSession;
 import com.binbill.seller.AssistedService.AddAssistedServiceActivity_;
 import com.binbill.seller.AssistedService.AdditionalServiceDialogFragment;
@@ -105,6 +108,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import okhttp3.Authenticator;
 import okhttp3.OkHttpClient;
@@ -159,10 +163,11 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
     public int sellerType;
     private SwitchCompat sellerAvailability;
 
-    String whichScreen ="Home";
+    String whichScreen = "Home";
+    public static boolean isCollapsed;
+    ArrayList<FruitsVeg> list = new ArrayList<>();
 
-
-    Menu menuPrepare;
+    ArrayList<FruitsVeg> mlist = new ArrayList<>();
 
     @AfterViews
     public void setUpView() {
@@ -170,7 +175,7 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
         setUpListener();
         ApiHelper.getUserSelectedCategories(this);
 
-      //  ImageView imageProfile = nav_view.findViewById(R.id.iv_user_image);
+        //  ImageView imageProfile = nav_view.findViewById(R.id.iv_user_image);
         iv_user_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -360,6 +365,14 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
             checkNotificationDeeplink();
             AppSession.getInstance(this).setNotificationIntent(null);
         }
+        mlist = new ArrayList<>();
+        list = AppSession.getInstance(this).getFruitsVegList();
+        try {
+            ManageFruitVegAdapter.itemChange_ids.clear();
+            ManageFruitVegAdapter.valueChange_ids.clear();
+        } catch (Exception e) {
+
+        }
     }
 
     private void setUpHamburger() {
@@ -381,7 +394,7 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
                 RelativeLayout.LayoutParams.MATCH_PARENT
         );
 
-        int margin = Utility.convertDPtoPx(this, 10);
+        int margin = Utility.convertDPtoPx(this, 28);
         params.setMargins(-margin, -margin, -margin, -margin);
         iv_user_image.setLayoutParams(params);
 
@@ -413,7 +426,8 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
                         params.setMargins(margins, margins, margins, margins);
                         iv_user_image.setLayoutParams(params);
 
-                        iv_user_image.setImageDrawable(ContextCompat.getDrawable(DashboardActivity.this, R.drawable.ic_user));
+                        iv_user_image.setImageDrawable(ContextCompat.getDrawable(DashboardActivity.this,
+                                R.drawable.ic_user));
                     }
                 });
 
@@ -479,6 +493,24 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
                 Intent intent = RegistrationResolver.getNextIntent(DashboardActivity.this, 6);
                 if (intent != null)
                     startActivity(intent);
+            }
+        });
+
+        final TextView manageFruitVegCategory = nav_view.findViewById(R.id.tv_manage_fruits_vegetables);
+        manageFruitVegCategory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!isCollapsed) {
+                    setupManageFruitsVegetables();
+                    manageFruitVegCategory.setCompoundDrawablesWithIntrinsicBounds
+                            (0, 0, R.drawable.ic_minify, 0);
+                } else {
+                    setupManageFruitsVegetables();
+                    manageFruitVegCategory.setCompoundDrawablesWithIntrinsicBounds
+                            (0, 0, R.drawable.ic_manage_hamburger, 0);
+                    //  isCollapsed = true;
+                }
+                // isCollapsed = true;
             }
         });
 
@@ -899,7 +931,7 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
                                     replaceFragment(homeFragment, 0);
                                     setUpToolbar(getString(R.string.dashboard));
                                     whichScreen = "Home";
-                                    if(CustomerFragment.userList.size()!=0){
+                                    if (CustomerFragment.userList.size() != 0) {
                                         CustomerFragment.userList.clear();
                                     }
 
@@ -911,7 +943,7 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
                                     VerificationFragment verificationFragment = VerificationFragment.newInstance();
                                     replaceFragment(verificationFragment, 1);
                                     setUpToolbar(getString(R.string.verification));
-                                    if(CustomerFragment.userList.size()!=0){
+                                    if (CustomerFragment.userList.size() != 0) {
                                         CustomerFragment.userList.clear();
                                     }
                                     whichScreen = "Home";
@@ -922,7 +954,7 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
                                     OrderFragment orderFragment = OrderFragment.newInstance(0);
                                     replaceFragment(orderFragment, 2);
                                     setUpToolbar(getString(R.string.my_order));
-                                    if(CustomerFragment.userList.size()!=0){
+                                    if (CustomerFragment.userList.size() != 0) {
                                         CustomerFragment.userList.clear();
                                     }
                                     whichScreen = "Home";
@@ -942,7 +974,7 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
                                     assistedServiceFragment = AssistedServiceFragment.newInstance("", "");
                                     replaceFragment(assistedServiceFragment, 4);
                                     setUpToolbar(getString(R.string.assisted_services));
-                                    if(CustomerFragment.userList.size()!=0){
+                                    if (CustomerFragment.userList.size() != 0) {
                                         CustomerFragment.userList.clear();
                                     }
                                     whichScreen = "Assisted";
@@ -956,42 +988,52 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
                         }
                     });
         }
+
+        //  setupManageFruitsVegetables();
+    }
+
+    private void setupManageFruitsVegetables() {
+
         View.OnClickListener btnClickListener = new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                /* Toast.makeText(v.getContext(),""+ v.getTag() +"-"+ v.getId(),
                         Toast.LENGTH_SHORT).show();*/
-              Intent i = new Intent(DashboardActivity.this, ManageFruitsVegActivity_.class);
-              i.putExtra("Id",  String.valueOf(v.getId()));
-              i.putExtra("Title",  ""+v.getTag());
-              startActivity(i);
+                Intent i = new Intent(DashboardActivity.this, ManageFruitsVegActivity_.class);
+                i.putExtra("Id", String.valueOf(v.getId()));
+                i.putExtra("Title", "" + v.getTag());
+                startActivity(i);
             }
 
         };
-
-        TextView tv= null;
-        ArrayList<FruitsVeg> list = new ArrayList<>();
-        list = AppSession.getInstance(this).getFruitsVegList();
-        for(int i = 0; i < list.size() ; i++){
-
-            LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(
-                    Context.LAYOUT_INFLATER_SERVICE);
-            View view = inflater.inflate(R.layout.layout_textview_dynamic, null);
-            LinearLayout dynamicLayout =  nav_view.findViewById(R.id.dynamic_lay);
-            dynamicLayout.setVisibility(View.VISIBLE);
-            tv = (TextView) view.findViewById(R.id.tv_dynamicId);
-
-            tv.setText(list.get(i).getName());
-            tv.setTag(list.get(i).getName());
-            tv.setId(list.get(i).getId());
-            tv.setOnClickListener(btnClickListener);
-            dynamicLayout.addView(view);
-
+        //ArrayList<FruitsVeg> list = null;
+        LinearLayout dynamicLayout = nav_view.findViewById(R.id.dynamic_lay);
+        if (!isCollapsed && list != null) {
+            TextView tv = null;
+            list = AppSession.getInstance(this).getFruitsVegList();
+            mlist.clear();
+            mlist.addAll(list);
+            for (int i = 0; i < mlist.size(); i++) {
+                LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(
+                        Context.LAYOUT_INFLATER_SERVICE);
+                View view = inflater.inflate(R.layout.layout_textview_dynamic, null);
+                //dynamicLayout = nav_view.findViewById(R.id.dynamic_lay);
+                dynamicLayout.setVisibility(View.VISIBLE);
+                tv = (TextView) view.findViewById(R.id.tv_dynamicId);
+                tv.setText(mlist.get(i).getName());
+                tv.setTag(mlist.get(i).getName());
+                tv.setId(mlist.get(i).getId());
+                tv.setOnClickListener(btnClickListener);
+                dynamicLayout.addView(view);
+            }
+            isCollapsed = true;
+        } else {
+            mlist.clear();
+            dynamicLayout.setVisibility(View.GONE);
+            dynamicLayout.removeAllViews();
+            isCollapsed = false;
         }
-
-
-
     }
 
     @Override
@@ -1192,17 +1234,32 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
         MenuItem mNotification = menu.findItem(R.id.action_notification);
         MenuItem mAddOffer = menu.findItem(R.id.action_add);
 
-        if(whichScreen.equalsIgnoreCase("Home")){
+        if (whichScreen.equalsIgnoreCase("Home")) {
             mSearch.setVisible(false);
             mNotification.setVisible(false);
             mAddOffer.setVisible(false);
-        }else if (whichScreen.equalsIgnoreCase("Customer")){
+        } else if (whichScreen.equalsIgnoreCase("Customer")) {
             mNotification.setVisible(false);
-        }else if (whichScreen.equalsIgnoreCase("Assisted")){
+        } else if (whichScreen.equalsIgnoreCase("Assisted")) {
             mNotification.setVisible(false);
         }
+        InputFilter filter = new InputFilter() {
+            @Override
+            public CharSequence filter(CharSequence source, int start, int end, Spanned dest,
+                                       int dstart, int dend) {
+                for (int i = start; i < end; ++i) {
+                    if (!Pattern.compile("[ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890 ]*")
+                            .matcher(String.valueOf(source.charAt(i))).matches()) {
+                        return "";
+                    }
+                }
 
+                return null;
+            }
+        };
         SearchView mSearchView = (SearchView) mSearch.getActionView();
+        TextView searchText = (TextView) mSearchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
+        searchText.setFilters(new InputFilter[]{filter, new InputFilter.LengthFilter(10)});
         mSearchView.setQueryHint("Search");
 
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -1214,21 +1271,27 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
             @Override
             public boolean onQueryTextChange(String newText) {
 
-                if(newText.equalsIgnoreCase("")){
+                if (newText.equalsIgnoreCase("")) {
                     MyCustomerFragment.frag.onRefreshPage();
                     InvitedCustomerFragment.frag.onRefreshPage();
-                }else{
+                } else {
                     if (whichScreen.equalsIgnoreCase("Customer")) {
                         CustomerFragment.fragment.showSearchView();
                         int pos = CustomerPagerAdapter.positionPager;
+                        String myString = newText;
                         if (pos == 0) {
                             // InvitedCustomerFragment.frag.isInvited = false;
-                            MyCustomerFragment.frag.FireQuery(newText);
-                        }else if(pos ==1){
+                            //MyCustomerFragment.frag.FireQuery(newText);
+                            if (newText.length() >= 3) {
+                                MyCustomerFragment.frag.searchCustomersGlobally(newText.trim());
+                            }
+                        } else if (pos == 1) {
                             //  InvitedCustomerFragment.frag.isInvited = true;
-                            InvitedCustomerFragment.frag.FireQuery(newText);
+                            if (newText.length() >= 3) {
+                                InvitedCustomerFragment.frag.searchCustomersGlobally(newText.trim());
+                            }
                         }
-                    }else if(whichScreen.equalsIgnoreCase("Assisted")){
+                    } else if (whichScreen.equalsIgnoreCase("Assisted")) {
                         AssistedServiceFragment.frag.FireQuery(newText);
                     }
                 }

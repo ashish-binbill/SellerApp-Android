@@ -15,6 +15,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
@@ -73,6 +74,7 @@ public class MyCustomerFragment extends Fragment implements UserAdapter.CardInte
     private int lastPage = 0;
     private String leftString, rightString;
     public static MyCustomerFragment frag;
+    boolean isSearchUsed = false;
 
     public MyCustomerFragment() {
         frag = this;
@@ -183,7 +185,7 @@ public class MyCustomerFragment extends Fragment implements UserAdapter.CardInte
     }
 
 
-    private void fetchCustomers() {
+    public void fetchCustomers() {
 
         isCallInProgress = true;
         ApiHelper.fetchAllCustomer(getActivity(), new RetrofitHelper.RetrofitCallback() {
@@ -248,7 +250,25 @@ public class MyCustomerFragment extends Fragment implements UserAdapter.CardInte
     private void handleResponse() {
         ArrayList<UserModel> userList = AppSession.getInstance(getActivity()).getMyCustomerList();
         if (userList != null && userList.size() > 0) {
-            setUpData(userList);
+            if(isSearchUsed){
+                this.mUserList.clear();
+                this.mUserList.addAll(userList);
+                CustomerFragment.userList.clear();
+                CustomerFragment.userList.addAll(userList);
+                userListView.setHasFixedSize(true);
+                llm = new LinearLayoutManager(getActivity());
+                llm.setOrientation(LinearLayoutManager.VERTICAL);
+                userListView.setLayoutManager(llm);
+                mAdapter = new UserAdapter(Constants.MY_CUSTOMER, mUserList, this, false);
+                userListView.setAdapter(mAdapter);
+               // userListView.addOnScrollListener(OnScrollListener);
+                userListView.setVisibility(View.VISIBLE);
+                shimmerview.setVisibility(View.GONE);
+                noDataLayout.setVisibility(View.GONE);
+            }else{
+                setUpData(userList);
+            }
+
         } else {
             userListView.setVisibility(View.GONE);
             shimmerview.setVisibility(View.GONE);
@@ -599,24 +619,98 @@ public class MyCustomerFragment extends Fragment implements UserAdapter.CardInte
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        if (mAdapter != null)
-            mAdapter.getFilter().filter(newText);
+       /* if (mAdapter != null)
+            mAdapter.getFilter().filter(newText);*/
+
+       // searchCustomersGlobally(newText);
         return true;
     }
 
+    public void searchCustomersGlobally(String text){
+
+        boolean digitsOnly = TextUtils.isDigitsOnly(text);
+
+        String mobile = "";
+        String name ="";
+
+        if(digitsOnly){
+            mobile = text.trim();
+        }else {
+            name = text.trim();
+        }
+
+        ApiHelper.SearchAllCustomer(getActivity(), new RetrofitHelper.RetrofitCallback() {
+            @Override
+            public void onResponse(String response) {
+              //  isCallInProgress = false;
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    if (jsonObject.getBoolean("status")) {
+                        isSearchUsed = true;
+                      /*  if (jsonObject.has("last_page") && !jsonObject.isNull("last_page"))
+                            lastPage = jsonObject.optInt("last_page");*/
+
+                        if (jsonObject.optJSONArray("result") != null) {
+                            JSONArray userArray = jsonObject.getJSONArray("result");
+                            Type classType = new TypeToken<ArrayList<UserModel>>() {
+                            }.getType();
+
+                            ArrayList<UserModel> userList = new Gson().fromJson(userArray.toString(), classType);
+                            AppSession.getInstance(getActivity()).setMyCustomerList(userList);
+                            handleResponse();
+                        }
+
+                        if (jsonObject.optJSONObject("loyalty_rule") != null) {
+                            leftString = jsonObject.getJSONObject("loyalty_rule").getString("item_value");
+                            rightString = jsonObject.getJSONObject("loyalty_rule").getString("points_per_item");
+                        }
+
+                    } else {
+                        userListView.setVisibility(View.GONE);
+                        shimmerview.setVisibility(View.GONE);
+                        noDataLayout.setVisibility(View.VISIBLE);
+                        if (isAdded())
+                            ((BaseActivity) getActivity()).showSnackBar(getString(R.string.something_went_wrong));
+                    }
+                } catch (JSONException e) {
+                    userListView.setVisibility(View.GONE);
+                    shimmerview.setVisibility(View.GONE);
+                    noDataLayout.setVisibility(View.VISIBLE);
+                    if (isAdded())
+                        ((BaseActivity) getActivity()).showSnackBar(getString(R.string.something_went_wrong));
+                }
+
+                swipeRefreshLayout.setRefreshing(false);
+            }
+
+            @Override
+            public void onErrorResponse() {
+
+                userListView.setVisibility(View.GONE);
+                shimmerview.setVisibility(View.GONE);
+                noDataLayout.setVisibility(View.VISIBLE);
+
+                if (isAdded())
+                    ((BaseActivity) getActivity()).showSnackBar(getString(R.string.something_went_wrong));
+                swipeRefreshLayout.setRefreshing(false);
+
+            }
+        }, name, mobile,"true");
+    }
+
     public void FireQuery(String text){
-        ArrayList<UserModel> list = new ArrayList<>();
+       /* ArrayList<UserModel> list = new ArrayList<>();
         list.addAll(CustomerFragment.userList);
         mAdapter = new UserAdapter(Constants.MY_CUSTOMER, list, this, false);
         if (page != lastPage)
             mAdapter.setLoadMore(true);
         else
             mAdapter.setLoadMore(false);
-        userListView.setAdapter(mAdapter);
+        userListView.setAdapter(mAdapter);*/
 
         onQueryTextSubmit(text);
-        if (mAdapter != null)
-            mAdapter.getFilter().filter(text);
+       /* if (mAdapter != null)
+            mAdapter.getFilter().filter(text);*/
     }
 }
 

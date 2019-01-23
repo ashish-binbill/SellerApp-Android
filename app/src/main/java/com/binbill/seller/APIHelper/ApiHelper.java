@@ -89,8 +89,14 @@ public class ApiHelper {
         });
     }
 
-    public static void fetchAllCustomer(final Context context, RetrofitHelper.RetrofitCallback retrofitCallback, int page) {
+    public static void fetchAllCustomer(final Context context, RetrofitHelper.RetrofitCallback
+            retrofitCallback, int page) {
         new RetrofitHelper(context).fetchUsersForSeller(retrofitCallback, page);
+    }
+
+    public static void SearchAllCustomer(final Context context, RetrofitHelper.RetrofitCallback
+            retrofitCallback, String text , String Number, String isLinked) {
+        new RetrofitHelper(context).searchUsers(retrofitCallback, text, Number, isLinked);
     }
 
     public static void fetchInvitedCustomer(final Context context, RetrofitHelper.RetrofitCallback retrofitCallback, int page) {

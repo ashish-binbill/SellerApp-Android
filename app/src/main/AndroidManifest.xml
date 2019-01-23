@@ -12,6 +12,10 @@
         android:required="false" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <uses-permission android:name="android.permission.FLASHLIGHT"/>
+    <uses-permission android:name="android.permission.HARDWARE_TEST" />
+
     <uses-permission
         android:name="android.permission.CAMERA"
         android:required="false" />

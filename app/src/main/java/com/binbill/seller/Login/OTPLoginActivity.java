@@ -21,6 +21,7 @@ import com.binbill.seller.BaseActivity;
 import com.binbill.seller.Constants;
 import com.binbill.seller.CustomViews.AppButton;
 import com.binbill.seller.Model.DashboardModel;
+import com.binbill.seller.Model.FruitsVeg;
 import com.binbill.seller.Model.UserRegistrationDetails;
 import com.binbill.seller.R;
 import com.binbill.seller.Registration.RegistrationResolver;
@@ -37,10 +38,12 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 @EActivity(R.layout.activity_otp_login)
@@ -231,9 +234,17 @@ public class OTPLoginActivity extends BaseActivity {
                         UserRegistrationDetails userRegistrationDetails = AppSession.getInstance(OTPLoginActivity.this).getUserRegistrationDetails();
                         userRegistrationDetails.setAssisted(jsonObject.optBoolean("is_assisted"));
                         userRegistrationDetails.setFmcg(jsonObject.optBoolean("is_fmcg"));
+                        userRegistrationDetails.setFruitsCategoryId(jsonObject.getInt("fruit_veg_category_id"));
 
                         AppSession.getInstance(OTPLoginActivity.this).setUserRegistrationDetails(userRegistrationDetails);
+                        if (jsonObject.optJSONArray("fruit_veg_categories") != null) {
+                            JSONArray fruitVegArray = jsonObject.getJSONArray("fruit_veg_categories");
+                            Type classType = new TypeToken<ArrayList<FruitsVeg>>() {
+                            }.getType();
 
+                            ArrayList<FruitsVeg> userList = new Gson().fromJson(fruitVegArray.toString(), classType);
+                            AppSession.getInstance(this).setFruitsVegList(userList);
+                        }
                         RegistrationResolver.parseAndSaveData(this, jsonObject.toString());
                         String nextStep = jsonObject.optString("next_step");
                         int currentIndex = RegistrationResolver.getResolvedIndexForNextScreen(nextStep);

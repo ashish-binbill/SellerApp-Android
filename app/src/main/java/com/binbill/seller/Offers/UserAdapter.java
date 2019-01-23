@@ -73,11 +73,13 @@ public class UserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                     ArrayList<UserModel> filteredList = new ArrayList<>();
 
                     for (UserModel listItem : mList) {
-                        if (!Utility.isEmpty(listItem.getUserName()) && listItem.getUserName().toLowerCase().contains(charString.toLowerCase())) {
+                        if (!Utility.isEmpty(listItem.getUserName()) && listItem.getUserName()
+                                .toLowerCase().contains(charString.toLowerCase())) {
                             filteredList.add(listItem);
                         }
 
-                        if (!Utility.isEmpty(listItem.getUserMobile()) && listItem.getUserMobile().contains(charString)) {
+                        if (!Utility.isEmpty(listItem.getUserMobile()) &&
+                                listItem.getUserMobile().contains(charString)) {
                             filteredList.add(listItem);
                         }
                     }

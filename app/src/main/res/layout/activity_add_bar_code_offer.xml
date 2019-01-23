@@ -35,23 +35,37 @@
             <RelativeLayout
                 android:id="@+id/rl_bar_code_scanner"
                 android:layout_width="match_parent"
-                android:visibility="visible"
-                android:layout_height="@dimen/dimen_300dp">
+                android:layout_height="@dimen/dimen_300dp"
+                android:visibility="visible">
 
                 <FrameLayout
                     android:id="@+id/content_frame"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
                     android:background="@android:color/black" />
 
                 <ImageView
-                    android:id="@+id/iv_reset"
+                android:id="@+id/iv_reset"
+                android:layout_width="@dimen/dimen_30dp"
+                android:layout_height="@dimen/dimen_30dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="@dimen/dimen_15dp"
+                android:layout_marginRight="@dimen/dimen_15dp"
+                android:src="@drawable/ic_refresh" />
+
+                <ImageView
+                    android:id="@+id/iv_flash"
                     android:layout_width="@dimen/dimen_30dp"
                     android:layout_height="@dimen/dimen_30dp"
                     android:layout_alignParentRight="true"
-                    android:layout_marginRight="@dimen/dimen_15dp"
+                    android:clickable="true"
+                    android:layout_alignParentBottom="true"
                     android:layout_marginTop="@dimen/dimen_15dp"
-                    android:src="@drawable/ic_refresh" />
+                    android:layout_marginRight="@dimen/dimen_15dp"
+                    android:layout_marginBottom="@dimen/dimen_15dp"
+                    android:src="@drawable/ic_large_flash" />
 
                 <TextView
                     android:id="@+id/scan_text"
@@ -76,20 +90,20 @@
                 <ImageView
                     android:id="@+id/iv_offer"
                     android:layout_width="@dimen/dimen_120dp"
-                    android:layout_marginTop="@dimen/dimen_10dp"
                     android:layout_height="@dimen/dimen_120dp"
                     android:layout_gravity="center"
-                    android:visibility="gone"
-                    android:src="@drawable/ic_placeholder_sku" />
+                    android:layout_marginTop="@dimen/dimen_10dp"
+                    android:src="@drawable/ic_placeholder_sku"
+                    android:visibility="gone" />
 
 
                 <ImageView
                     android:id="@+id/ic_sku_image"
                     android:layout_width="@dimen/dimen_80dp"
-                    android:layout_gravity="center"
-                    android:visibility="gone"
                     android:layout_height="@dimen/dimen_80dp"
-                    android:src="@drawable/ic_placeholder_sku" />
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_placeholder_sku"
+                    android:visibility="gone" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -195,13 +209,13 @@
 
                     <EditText
                         android:id="@+id/et_discount"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginRight="@dimen/dimen_10dp"
                         android:layout_weight="1"
                         android:background="@null"
                         android:gravity="center_vertical"
-                        android:hint="@string/add_discount"
+                        android:hint="@string/add_discount_percent"
                         android:inputType="numberDecimal"
                         android:lineSpacingExtra="-1sp"
                         android:maxLength="5"
@@ -216,6 +230,52 @@
                         android:layout_height="wrap_content"
                         android:layout_marginRight="@dimen/dimen_10dp"
                         android:text="@string/percentage"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/dimen_15dp" />
+
+
+                </LinearLayout>
+
+                <include
+                    android:id="@+id/or"
+                    layout="@layout/layout_or"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/et_gstin"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/dimen_15dp" />
+
+                <LinearLayout
+                    android:id="@+id/ll_discount_layout_mrp"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dimen_45dp"
+                    android:layout_marginTop="@dimen/dimen_20dp"
+                    android:background="@drawable/edittext_bg"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/et_discount_mrp"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="@dimen/dimen_10dp"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:gravity="center_vertical"
+                        android:hint="@string/add_discount_inr"
+                        android:inputType="numberDecimal"
+                        android:lineSpacingExtra="-1sp"
+                        android:maxLength="5"
+                        android:paddingLeft="@dimen/dimen_12dp"
+                        android:paddingRight="@dimen/dimen_12dp"
+                        android:textColor="@color/text_44"
+                        android:textColorHint="@color/hint_color"
+                        android:textSize="@dimen/dimen_15dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/dimen_10dp"
+                        android:text="@string/rupee_sign"
                         android:textColor="@color/black"
                         android:textSize="@dimen/dimen_15dp" />
 
@@ -254,22 +314,22 @@
                     android:id="@+id/et_discount_offer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimen_20dp"
                     android:layout_marginRight="@dimen/dimen_2dp"
                     android:layout_weight="1"
-                    android:layout_marginTop="@dimen/dimen_20dp"
                     android:background="@drawable/edittext_bg"
-                    android:padding="@dimen/dimen_14dp"
-                    android:focusable="false"
-                    android:editable="false"
                     android:drawableRight="@drawable/ic_dropdown"
+                    android:editable="false"
+                    android:focusable="false"
                     android:gravity="center_vertical"
                     android:hint="Select Offers"
-                    android:visibility="gone"
                     android:inputType="numberDecimal"
                     android:lineSpacingExtra="-1sp"
+                    android:padding="@dimen/dimen_14dp"
                     android:textColor="@color/text_44"
                     android:textColorHint="@color/hint_color"
-                    android:textSize="@dimen/dimen_15dp" />
+                    android:textSize="@dimen/dimen_15dp"
+                    android:visibility="gone" />
 
                 <EditText
                     android:id="@+id/et_expiry_date"

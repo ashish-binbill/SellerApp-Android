@@ -14,11 +14,10 @@
 
         <RelativeLayout
             android:id="@+id/rel"
+            android:layout_marginLeft="@dimen/dimen_10dp"
+            android:layout_marginRight="@dimen/dimen_10dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/dimen_10dp"
-            android:paddingTop="@dimen/dimen_24dp"
-            android:paddingBottom="@dimen/dimen_24dp">
+            android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/iv_item"
@@ -61,15 +60,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/rel"
-            android:paddingLeft="@dimen/dimen_10dp"
-            android:paddingTop="@dimen/dimen_10dp"
-            android:paddingBottom="@dimen/dimen_24dp">
+            android:layout_marginLeft="@dimen/dimen_10dp"
+            android:layout_marginRight="@dimen/dimen_10dp">
 
             <TextView
                 android:id="@+id/tv_quantity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dimen_1dp"
+                android:layout_marginLeft="@dimen/dimen_5dp"
                 android:text="Quantity"
                 android:textColor="#999999"
                 android:textSize="@dimen/dimen_15dp"
@@ -77,11 +75,13 @@
 
             <EditText
                 android:id="@+id/et_quantity"
-                android:layout_width="143dp"
+                android:layout_width="147dp"
                 android:layout_height="57dp"
                 android:layout_below="@id/tv_quantity"
                 android:layout_alignParentLeft="true"
                 android:layout_marginTop="2dp"
+                android:layout_marginLeft="@dimen/dimen_5dp"
+                android:layout_marginBottom="@dimen/dimen_10dp"
                 android:background="@drawable/edittext_bg"
                 android:gravity="center|left"
                 android:editable="false"
@@ -101,7 +101,7 @@
                 android:layout_above="@+id/et_quantity"
                 android:layout_alignParentRight="true"
                 android:layout_marginLeft="@dimen/dimen_8dp"
-                android:layout_marginRight="86dp"
+                android:layout_marginRight="@dimen/dimen_100dp"
                 android:layout_marginBottom="-1dp"
                 android:layout_toRightOf="@+id/et_quantity"
                 android:gravity="center"
@@ -110,14 +110,17 @@
                 android:textSize="@dimen/dimen_15dp"
                 android:textStyle="normal" />
 
-            <EditText
+            <com.binbill.seller.CustomViews.PrefixEditText
                 android:id="@+id/et_mrp"
-                android:layout_width="147dp"
+                android:layout_width="177dp"
                 android:layout_height="57dp"
                 android:layout_below="@id/tv_quantity"
-                android:layout_marginLeft="@dimen/dimen_30dp"
-                android:layout_marginRight="@dimen/dimen_10dp"
+                android:layout_marginLeft="@dimen/dimen_10dp"
+                android:layout_marginRight="@dimen/dimen_5dp"
                 android:layout_marginTop="2dp"
+                android:layout_marginBottom="@dimen/dimen_10dp"
+                android:focusableInTouchMode="true"
+                card_view:prefix_string="@string/rupee_sign"
                 android:layout_toRightOf="@+id/et_quantity"
                 android:background="@drawable/edittext_bg"
                 android:inputType="numberDecimal"

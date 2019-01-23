@@ -7,7 +7,7 @@ import java.io.Serializable;
 public class SkuMeasurement implements Serializable {
 
     @SerializedName("id")
-    String title;
+    String id;
 
     @SerializedName("measurement_value")
     String measurementValue;
@@ -24,8 +24,8 @@ public class SkuMeasurement implements Serializable {
     @SerializedName("sku_id")
     String sku_id;
 
-    public String getTitle() {
-        return title;
+    public String getId() {
+        return id;
     }
 
     public String getMeasurementValue() {

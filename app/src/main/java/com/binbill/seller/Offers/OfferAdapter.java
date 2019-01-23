@@ -10,11 +10,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.binbill.seller.Constants;
+import com.binbill.seller.Model.UserModel;
 import com.binbill.seller.R;
 import com.binbill.seller.SharedPref;
 import com.binbill.seller.Utility;
@@ -32,20 +35,76 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.Route;
 
+import static com.binbill.seller.Offers.NormalOfferFragment.frag;
+
 /**
  * Created by shruti.vig on 8/29/18.
  */
 
-public class OfferAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class OfferAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements Filterable {
 
     private final OfferManipulationListener mListener;
-    private ArrayList<OfferItem> mList;
+    public ArrayList<OfferItem> mList,  mFilteredList= new ArrayList<>();
     private int offerType, offerSubType = -1;
+
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
+
+                String charString = charSequence.toString();
+                boolean isAdded = Boolean.parseBoolean(charString);
+
+                if (charString.isEmpty()) {
+                    //mFilteredList.addAll(mList);
+                } else {
+                    mFilteredList.clear();
+                    ArrayList<OfferItem> filteredList = new ArrayList<>();
+                    filteredList.clear();
+                    for (OfferItem listItem : mList) {
+                        if (listItem.isOfferAdded()== isAdded) {
+                            filteredList.add(listItem);
+                        }else{
+                           // filteredList.add(listItem);
+                        }
+                    }
+
+                    mFilteredList.addAll(filteredList);
+                }
+
+                FilterResults filterResults = new FilterResults();
+                filterResults.values = mFilteredList;
+                frag.mNormalOfferList.clear();
+                frag.mNormalOfferList.addAll(mFilteredList);
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+              //  mFilteredList.clear();
+                mFilteredList = (ArrayList<OfferItem>) filterResults.values;
+              //  frag.mNormalOfferList = mFilteredList;
+                notifyDataSetChanged();
+            }
+        };
+    }
+
 
     public OfferAdapter(OfferManipulationListener listener, ArrayList<OfferItem> list, int type) {
         this.mList = list;
         this.mListener = listener;
         this.offerType = type;
+        mFilteredList.addAll(list);
+        try {
+            if (frag.mNormalOfferList != null) {
+                frag.mNormalOfferList.clear();
+                frag.mNormalOfferList.addAll(mFilteredList);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     public OfferAdapter(OfferManipulationListener listener, ArrayList<OfferItem> list, int type, int subType) {
@@ -53,11 +112,24 @@ public class OfferAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         this.mListener = listener;
         this.offerType = type;
         this.offerSubType = subType;
+        mFilteredList.addAll(list);
+        try {
+            if (frag.mNormalOfferList != null) {
+                frag.mNormalOfferList.clear();
+                frag.mNormalOfferList.addAll(mFilteredList);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
+
 
     @Override
     public int getItemCount() {
-        return mList.size();
+        if (mFilteredList == null)
+            return 0;
+        return mFilteredList.size();
+       // return mList.size();
     }
 
     @Override
@@ -98,7 +170,7 @@ public class OfferAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         final OfferHolder offerHolder = (OfferHolder) holder;
 
-        final OfferItem model = mList.get(position);
+        final OfferItem model = mFilteredList.get(position);
 
         offerHolder.mTitle.setText(model.getOfferTitle());
         offerHolder.mDescription.setText(model.getOfferDescription());
@@ -193,8 +265,8 @@ public class OfferAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         final OfferBarCodeHolder offerHolder = (OfferBarCodeHolder) holder;
 
-        final OfferItem.OfferSku model = mList.get(position).getSku();
-        final OfferItem offerItem = mList.get(position);
+        final OfferItem.OfferSku model = mFilteredList.get(position).getSku();
+        final OfferItem offerItem = mFilteredList.get(position);
         try {
             offerHolder.mTitle.setText(model.getSkuTitle());
             offerHolder.mMrp.setText("MRP " + model.getMrp());
@@ -284,7 +356,7 @@ public class OfferAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         final SuggestedOfferHolder offerHolder = (SuggestedOfferHolder) holder;
 
-        final OfferItem offerItem = mList.get(position);
+        final OfferItem offerItem = mFilteredList.get(position);
 
         String rupee = offerHolder.mTitle.getContext().getString(R.string.rupee_sign);
         offerHolder.mTitle.setText(offerItem.getSkuTitle());

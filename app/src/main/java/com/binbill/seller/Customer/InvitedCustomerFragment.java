@@ -15,6 +15,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
@@ -27,6 +28,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.binbill.seller.APIHelper.ApiHelper;
+import com.binbill.seller.AppSession;
 import com.binbill.seller.BaseActivity;
 import com.binbill.seller.Constants;
 import com.binbill.seller.CustomViews.AppButton;
@@ -62,13 +64,14 @@ public class InvitedCustomerFragment extends Fragment implements UserAdapter.Car
     private int page = 0;
     private LinearLayoutManager llm;
     private boolean isCallInProgress = false;
+    boolean isSearchUsed = false;
     private int lastPage = 0;
 
     public static InvitedCustomerFragment frag;
     public static double hideTime = 0.0;
 
     public InvitedCustomerFragment() {
-        frag =this;
+        frag = this;
     }
 
     public static InvitedCustomerFragment newInstance() {
@@ -179,7 +182,7 @@ public class InvitedCustomerFragment extends Fragment implements UserAdapter.Car
     }
 
 
-    private void fetchInvitedCustomers() {
+    public void fetchInvitedCustomers() {
         isCallInProgress = true;
         ApiHelper.fetchInvitedCustomer(getActivity(), new RetrofitHelper.RetrofitCallback() {
             @Override
@@ -188,7 +191,7 @@ public class InvitedCustomerFragment extends Fragment implements UserAdapter.Car
                 try {
                     JSONObject jsonObject = new JSONObject(response);
                     if (jsonObject.getBoolean("status")) {
-
+                            isSearchUsed = true;
                         if (jsonObject.has("last_page") && !jsonObject.isNull("last_page"))
                             lastPage = jsonObject.optInt("last_page");
                         if (jsonObject.has("max_notify_hidden_time") && !jsonObject.isNull("max_notify_hidden_time"))
@@ -237,7 +240,27 @@ public class InvitedCustomerFragment extends Fragment implements UserAdapter.Car
 
     private void handleResponse(ArrayList<UserModel> userList) {
         if (userList != null && userList.size() > 0) {
-            setUpData(userList);
+            if (isSearchUsed && mUserList!=null) {
+                this.mUserList.clear();
+                this.mUserList.addAll(userList);
+                CustomerFragment.userList.clear();
+                CustomerFragment.userList.addAll(userList);
+
+                userListView.setHasFixedSize(true);
+                llm = new LinearLayoutManager(getActivity());
+                llm.setOrientation(LinearLayoutManager.VERTICAL);
+                userListView.setLayoutManager(llm);
+                mAdapter = new UserAdapter(Constants.MY_CUSTOMER, mUserList, this, false);
+                mAdapter.setLoadMore(false);
+                userListView.setAdapter(mAdapter);
+                userListView.addOnScrollListener(OnScrollListener);
+                userListView.setVisibility(View.VISIBLE);
+                shimmerview.setVisibility(View.GONE);
+                noDataLayout.setVisibility(View.GONE);
+
+            } else {
+                setUpData(userList);
+            }
         } else {
             userListView.setVisibility(View.GONE);
             shimmerview.setVisibility(View.GONE);
@@ -251,7 +274,7 @@ public class InvitedCustomerFragment extends Fragment implements UserAdapter.Car
             this.mUserList = list;
         else
             this.mUserList.addAll(list);
-            CustomerFragment.userList.addAll(list);
+        CustomerFragment.userList.addAll(list);
 
         userListView.setHasFixedSize(true);
         llm = new LinearLayoutManager(getActivity());
@@ -393,11 +416,11 @@ public class InvitedCustomerFragment extends Fragment implements UserAdapter.Car
                 if (!(getActivity()).isFinishing())
                     dialog.dismiss();
 
-                if(dialog.isShowing()){
+                if (dialog.isShowing()) {
                     dialog.dismiss();
                 }
                 onResume();
-               // getActivity().onBackPressed();
+                // getActivity().onBackPressed();
             }
         });
 
@@ -410,7 +433,6 @@ public class InvitedCustomerFragment extends Fragment implements UserAdapter.Car
         Long mobileNumber = Utility.isValidMobileNumber(mobileStr);
         return mobileNumber.compareTo(-1L) != 0;
     }
-
 
 
     @Override
@@ -587,14 +609,14 @@ public class InvitedCustomerFragment extends Fragment implements UserAdapter.Car
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        if (mAdapter != null)
-            mAdapter.getFilter().filter(newText);
+       /* if (mAdapter != null)
+            mAdapter.getFilter().filter(newText);*/
         return true;
     }
 
-    public void FireQuery(String text){
+    public void FireQuery(String text) {
 
-        ArrayList<UserModel> list = new ArrayList<>();
+       /* ArrayList<UserModel> list = new ArrayList<>();
         list.addAll(CustomerFragment.userList);
         mAdapter = new UserAdapter(Constants.MY_CUSTOMER, list, this, false);
         if (page != lastPage)
@@ -605,7 +627,75 @@ public class InvitedCustomerFragment extends Fragment implements UserAdapter.Car
 
         onQueryTextSubmit(text);
         if (mAdapter != null)
-            mAdapter.getFilter().filter(text);
+            mAdapter.getFilter().filter(text);*/
+    }
+
+
+    public void searchCustomersGlobally(String text) {
+
+        boolean digitsOnly = TextUtils.isDigitsOnly(text);
+
+        String mobile = "";
+        String name ="";
+
+        if(digitsOnly){
+            mobile = text.trim();
+        }else {
+            name = text.trim();
+        }
+
+        ApiHelper.SearchAllCustomer(getActivity(), new RetrofitHelper.RetrofitCallback() {
+            @Override
+            public void onResponse(String response) {
+                isCallInProgress = false;
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    if (jsonObject.getBoolean("status")) {
+
+                        if (jsonObject.has("last_page") && !jsonObject.isNull("last_page"))
+                            lastPage = jsonObject.optInt("last_page");
+                        if (jsonObject.has("max_notify_hidden_time") && !jsonObject.isNull("max_notify_hidden_time"))
+                            hideTime = jsonObject.optDouble("max_notify_hidden_time");
+
+                        if (jsonObject.optJSONArray("result") != null) {
+                            JSONArray userArray = jsonObject.getJSONArray("result");
+                            Type classType = new TypeToken<ArrayList<UserModel>>() {
+                            }.getType();
+
+                            ArrayList<UserModel> userList = new Gson().fromJson(userArray.toString(), classType);
+                            handleResponse(userList);
+                        }
+                    } else {
+                        userListView.setVisibility(View.GONE);
+                        shimmerview.setVisibility(View.GONE);
+                        noDataLayout.setVisibility(View.VISIBLE);
+                        if (isAdded())
+                            ((BaseActivity) getActivity()).showSnackBar(getString(R.string.something_went_wrong));
+                    }
+                } catch (JSONException e) {
+                    userListView.setVisibility(View.GONE);
+                    shimmerview.setVisibility(View.GONE);
+                    noDataLayout.setVisibility(View.VISIBLE);
+                    if (isAdded())
+                        ((BaseActivity) getActivity()).showSnackBar(getString(R.string.something_went_wrong));
+                }
+
+                swipeRefreshLayout.setRefreshing(false);
+            }
+
+            @Override
+            public void onErrorResponse() {
+
+                userListView.setVisibility(View.GONE);
+                shimmerview.setVisibility(View.GONE);
+                noDataLayout.setVisibility(View.VISIBLE);
+
+                if (isAdded())
+                    ((BaseActivity) getActivity()).showSnackBar(getString(R.string.something_went_wrong));
+                swipeRefreshLayout.setRefreshing(false);
+
+            }
+        }, name, mobile, "true");
     }
 
 }

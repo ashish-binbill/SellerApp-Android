@@ -537,6 +537,28 @@ public class RetrofitHelper {
         });
     }
 
+    public void updateFruitsVeg(final String sellerId, final HashMap<String, String> map, final RetrofitHelper.RetrofitCallback retrofitCallback) {
+        RetrofitApiInterface apiService =
+                RetrofitHelper.getClient(mContext).create(RetrofitApiInterface.class);
+        Call<JsonObject> call = apiService.updateFruitsVeg(sellerId, map);
+        //  Call<JsonObject> call = apiService.updateSetDeliveryRules(sellerId, map);
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (response.isSuccessful()) {
+                    JsonObject body = response.body();
+                    retrofitCallback.onResponse(body.toString());
+                } else
+                    retrofitCallback.onErrorResponse();
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable throwable) {
+                retrofitCallback.onErrorResponse();
+            }
+        });
+    }
+
     public void update(final String sellerId, final HashMap<String, String> map, final RetrofitCallback retrofitCallback) {
         RetrofitApiInterface apiService =
                 RetrofitHelper.getClient(mContext).create(RetrofitApiInterface.class);
@@ -1566,7 +1588,31 @@ public class RetrofitHelper {
         RetrofitApiInterface apiService =
                 RetrofitHelper.getClient(mContext).create(RetrofitApiInterface.class);
 
-        Call<JsonObject> call = apiService.fetchCustomers(AppSession.getInstance(mContext).getSellerId(), String.valueOf(true), "1", page);
+        Call<JsonObject> call = apiService.fetchCustomers(AppSession.getInstance(mContext).getSellerId(),
+                String.valueOf(true), "1", page);
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (response.isSuccessful()) {
+                    JsonObject body = response.body();
+                    retrofitCallback.onResponse(body.toString());
+                } else
+                    retrofitCallback.onErrorResponse();
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable throwable) {
+                retrofitCallback.onErrorResponse();
+            }
+        });
+    }
+
+    public void searchUsers(final RetrofitCallback retrofitCallback, String name, String Number, String islinked) {
+        RetrofitApiInterface apiService =
+                RetrofitHelper.getClient(mContext).create(RetrofitApiInterface.class);
+
+        Call<JsonObject> call = apiService.searchUsers(AppSession.getInstance(mContext).getSellerId(),
+                name, Number, islinked);
         call.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
@@ -1588,7 +1634,8 @@ public class RetrofitHelper {
         RetrofitApiInterface apiService =
                 RetrofitHelper.getClient(mContext).create(RetrofitApiInterface.class);
 
-        Call<JsonObject> call = apiService.fetchCustomers(AppSession.getInstance(mContext).getSellerId(), String.valueOf(true), "2", page);
+        Call<JsonObject> call = apiService.fetchCustomers(AppSession.getInstance(mContext).getSellerId(),
+                String.valueOf(true), "2", page);
         call.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
@@ -1743,6 +1790,7 @@ public class RetrofitHelper {
             }
         });
     }
+
 
     public void fetchFruitsVeg(int mainCategoryId, int categoryId, final RetrofitCallback retrofitCallback) {
         RetrofitApiInterface apiService =

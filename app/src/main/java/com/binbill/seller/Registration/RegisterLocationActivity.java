@@ -97,16 +97,16 @@ public class RegisterLocationActivity extends BaseActivity {
                     map.put("seller_name", userRegistrationDetails.getShopName());
                 if (!Utility.isEmpty(userRegistrationDetails.getBusinessName()))
                     map.put("business_name", userRegistrationDetails.getBusinessName());
-                if (!Utility.isEmpty(userRegistrationDetails.getBusinessAddress()))
-                    map.put("address", userRegistrationDetails.getBusinessAddress());
+                if (!Utility.isEmpty(userRegistrationDetails.getShop_address()))
+                    map.put("address", userRegistrationDetails.getShop_address());
                 if (!Utility.isEmpty(userRegistrationDetails.getPincode()))
                     map.put("pincode", userRegistrationDetails.getPincode());
-                if (userRegistrationDetails.getState() != null)
+                /*if (userRegistrationDetails.getState() != null)
                     map.put("state_id", userRegistrationDetails.getState().getStateId());
                 if (userRegistrationDetails.getCity() != null)
                     map.put("city_id", userRegistrationDetails.getCity().getCityId());
                 if (userRegistrationDetails.getLocality() != null)
-                    map.put("locality_id", userRegistrationDetails.getLocality().getLocalityId());
+                    map.put("locality_id", userRegistrationDetails.getLocality().getLocalityId());*/
                 if (userRegistrationDetails.getDaysOpen() != null && userRegistrationDetails.getDaysOpen().size() > 0)
                     map.put("shop_open_day", TextUtils.join(",", userRegistrationDetails.getDaysOpen()));
                 if (!Utility.isEmpty(userRegistrationDetails.getHomeDeliveryDistance()))

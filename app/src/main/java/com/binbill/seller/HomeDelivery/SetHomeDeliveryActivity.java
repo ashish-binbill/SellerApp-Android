@@ -488,7 +488,7 @@ public class SetHomeDeliveryActivity extends BaseActivity {
                     isFirstTimeLaunched = false;
                 //showSnackBar(getString(R.string.success));
               //  onResume();
-              //  finish();
+               finish();
             } else
                 handleError();
         } catch (JSONException e) {

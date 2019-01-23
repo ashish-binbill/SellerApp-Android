@@ -5,7 +5,13 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -153,6 +159,12 @@ public class UploadShopImageActivity extends BaseActivity {
             if (resultCode == RESULT_OK) {
                 try {
                     ProfileActivity.cameraURI = cameraFileUri.get(0);
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(),
+                            cameraFileUri.get(0));
+
+                    Bitmap resized = Bitmap.createScaledBitmap(bitmap, 500, 500, true);
+                    Bitmap conv_bm = getRoundedRectBitmap(resized, 500);
+                    iv_uploadImage.setImageBitmap(conv_bm);
                  //  iv_uploadImage.setImageURI(cameraFileUri.get(0));
                     textViewUpload.setVisibility(View.GONE);
                   //  Bitmap bitmap = BitmapFactory.decodeFile(cameraFileUri.get(0));
@@ -208,6 +220,29 @@ public class UploadShopImageActivity extends BaseActivity {
                // cameraFileUri.remove(cameraFileUri.size() - 1);
             }
         }
+    }
+
+    public static Bitmap getRoundedRectBitmap(Bitmap bitmap, int pixels) {
+        Bitmap result = null;
+        try {
+            result = Bitmap.createBitmap(500, 500, Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(result);
+
+            int color = 0xff424242;
+            Paint paint = new Paint();
+            Rect rect = new Rect(0, 0, 500, 500);
+
+            paint.setAntiAlias(true);
+            canvas.drawARGB(0, 0, 0, 0);
+            paint.setColor(color);
+            canvas.drawCircle(250, 250, 240, paint);
+            paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+            canvas.drawBitmap(bitmap, rect, rect, paint);
+
+        } catch (NullPointerException e) {
+        } catch (OutOfMemoryError o) {
+        }
+        return result;
     }
 
 }

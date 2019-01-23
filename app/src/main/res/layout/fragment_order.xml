@@ -5,9 +5,44 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+    <LinearLayout
+        android:id="@+id/mainLinear"
+        android:layout_width="match_parent"
+        android:background="#dcf4ff"
+        android:padding="@dimen/dimen_15dp"
+        android:visibility="gone"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/tv_offer_switch_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginLeft="@dimen/dimen_5dp"
+            android:fontFamily="sans-serif"
+            android:text="Hide Added Offers"
+            android:layout_below="@id/et_email"
+            android:textColor="#444444"
+            android:textSize="@dimen/dimen_14dp"
+            android:layout_gravity="center"
+            android:textStyle="normal"
+            android:visibility="visible" />
+
+        <Switch
+            android:id="@+id/simpleSwitch"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center"
+            android:checked="false"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/sl_pull_to_refresh"
         android:layout_width="match_parent"
+        android:layout_below="@+id/mainLinear"
         android:layout_height="wrap_content">
 
         <FrameLayout
@@ -23,13 +58,17 @@
                 android:id="@+id/rv_order_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/dimen_10dp"
+                android:layout_marginRight="@dimen/dimen_10dp"
+                android:layout_marginLeft="@dimen/dimen_10dp"
+                android:layout_marginBottom="@dimen/dimen_10dp"
+                android:layout_marginTop="@dimen/dimen_10dp"
                 android:layout_weight="1"
                 android:visibility="visible" />
 
         </FrameLayout>
     </android.support.v4.widget.SwipeRefreshLayout>
 
+    </RelativeLayout>
     <RelativeLayout
         android:id="@+id/just_sec_layout"
         android:layout_width="match_parent"

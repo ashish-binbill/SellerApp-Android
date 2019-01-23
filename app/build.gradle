@@ -23,8 +23,9 @@ android {
         applicationId "com.binbill.seller"
         minSdkVersion 19
         targetSdkVersion 27
-        versionCode 4
-        versionName "1.7.2"
+        versionCode 456
+        versionName "1.7.79"
+        resConfigs "en"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -42,7 +43,13 @@ android {
             minifyEnabled true
             debuggable false
             signingConfig signingConfigs.config
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            //=================================================================//
+            jniDebuggable false
+            renderscriptDebuggable false
+            pseudoLocalesEnabled false
+            zipAlignEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), "proguard-rules.pro"
+            //  proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
     productFlavors {

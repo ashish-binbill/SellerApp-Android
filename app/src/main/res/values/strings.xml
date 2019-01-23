@@ -397,6 +397,8 @@
     <string name="mrp_autofilled">(Autofilled)</string>
     <string name="percentage">%</string>
     <string name="add_discount">Add Discount</string>
+    <string name="add_discount_inr">Add Discount in ₹</string>
+    <string name="add_discount_percent">Add Discount in %</string>
     <string name="scan_bar_code">Scan Barcode</string>
     <string name="create_normal_offer">Create General\nOffer</string>
     <string name="create_barcode_offer">Create Barcode\nOffer</string>

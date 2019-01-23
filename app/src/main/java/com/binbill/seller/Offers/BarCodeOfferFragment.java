@@ -367,14 +367,17 @@ public class BarCodeOfferFragment extends Fragment implements OfferAdapter.Offer
                     Intent intent = new Intent(getActivity(), AddBarCodeOfferActivity_.class);
                     intent.putExtra("OfferType", Constants.OFFER_TYPE_GENERAL);
                     intent.putExtra(Constants.OFFER_ITEM, mBarcodeOfferList.get(position));
+                    intent.putExtra("hasEdit","true");
                     startActivity(intent);
                 }else{
                     Intent intent = new Intent(getActivity(), AddBarCodeOfferActivity_.class);
                     if(offerType == Constants.OFFER_TYPE_BOGO) {
                         intent.putExtra("OfferType", Constants.OFFER_TYPE_BOGO);
+                        intent.putExtra("hasEdit","true");
                     }
                     if(offerType == Constants.OFFER_TYPE_DISCOUNTED){
                         intent.putExtra("OfferType", Constants.OFFER_TYPE_DISCOUNTED);
+                        intent.putExtra("hasEdit","true");
                     }
                     intent.putExtra(Constants.OFFER_ITEM, mBarcodeOfferList.get(position));
                     startActivity(intent);
