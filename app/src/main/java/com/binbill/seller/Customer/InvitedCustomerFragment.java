@@ -169,7 +169,9 @@ public class InvitedCustomerFragment extends Fragment implements UserAdapter.Car
             if (!isCallInProgress && page < lastPage && (visibleItemCount + firstVisibleItemPosition) >= (totalItemCount)
                     && firstVisibleItemPosition >= 0
                     && totalItemCount >= Constants.CUSTOMER_PAGE_SIZE) {
-                loadMoreItems();
+                if(!isSearchUsed){
+                    loadMoreItems();
+                }
                 Log.d("SHRUTI", visibleItemCount + " " + totalItemCount + " " +
                         firstVisibleItemPosition);
             }
@@ -191,7 +193,7 @@ public class InvitedCustomerFragment extends Fragment implements UserAdapter.Car
                 try {
                     JSONObject jsonObject = new JSONObject(response);
                     if (jsonObject.getBoolean("status")) {
-                            isSearchUsed = true;
+                        isSearchUsed = false;
                         if (jsonObject.has("last_page") && !jsonObject.isNull("last_page"))
                             lastPage = jsonObject.optInt("last_page");
                         if (jsonObject.has("max_notify_hidden_time") && !jsonObject.isNull("max_notify_hidden_time"))
@@ -651,7 +653,7 @@ public class InvitedCustomerFragment extends Fragment implements UserAdapter.Car
                 try {
                     JSONObject jsonObject = new JSONObject(response);
                     if (jsonObject.getBoolean("status")) {
-
+                        isSearchUsed = true;
                         if (jsonObject.has("last_page") && !jsonObject.isNull("last_page"))
                             lastPage = jsonObject.optInt("last_page");
                         if (jsonObject.has("max_notify_hidden_time") && !jsonObject.isNull("max_notify_hidden_time"))

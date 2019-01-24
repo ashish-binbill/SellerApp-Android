@@ -52,6 +52,7 @@ public class PastOrderFragment extends Fragment implements OrderAdapter.OrderSel
     private boolean isOrderCall = false;
     private int lastPage = 0;
     private  double AmtBeforeDis;
+    public static ArrayList<SellerDeliveryModel> deliverCharges1 = new ArrayList<>();
 
     public PastOrderFragment() {
     }
@@ -273,6 +274,15 @@ public class PastOrderFragment extends Fragment implements OrderAdapter.OrderSel
         orderListView.setVisibility(View.VISIBLE);
         shimmerview.setVisibility(View.GONE);
         noDataLayout.setVisibility(View.GONE);
+
+        deliverCharges1 .addAll(mOrderList.get(0).getSellerDeliveryRules());
+        OrderDetailsActivity.isCollectStore = mOrderList.get(0).isCollectAtStore();
+        try {
+            OrderDetailsActivity.amtBefore = Double.parseDouble(mOrderList.get(0).getAmountBeforeDiscount());
+        }catch (Exception e){
+            OrderDetailsActivity.amtBefore =0.0;
+        }
+
     }
 
     @Override
@@ -288,6 +298,8 @@ public class PastOrderFragment extends Fragment implements OrderAdapter.OrderSel
         intent.putExtra(Constants.ORDER_ID, order.getOrderId());
         intent.putExtra("SellerDeliveryCharges", deliverCharges);
         intent.putExtra("AmtBeforeDelivery", order.getAmountBeforeDiscount());
+        OrderDetailsActivity.isCollectStore = order.isCollectAtStore();
+        deliverCharges1.clear();
         startActivity(intent);
 
     }

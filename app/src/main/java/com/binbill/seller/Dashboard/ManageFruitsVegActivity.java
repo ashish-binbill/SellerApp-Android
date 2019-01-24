@@ -35,6 +35,7 @@ import org.json.JSONTokener;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 @EActivity(R.layout.activity_manage_fruits_veg)
 public class ManageFruitsVegActivity extends BaseActivity {
@@ -139,6 +140,7 @@ public class ManageFruitsVegActivity extends BaseActivity {
         for (int p = 0; p < ManageFruitVegAdapter.posEdit.size(); p++) {
             int positionCheck = ManageFruitVegAdapter.posEdit.get(p);
             ArrayList<SkuMeasurement> detailsArray = skuList.get(positionCheck).getSkuMeasurements();
+           // ArrayList<SkuMeasurement> detailsArray = new ArrayList<>();
             String value = "";
             String MrpValue = "";
             String valueCheck = "";
@@ -172,8 +174,16 @@ public class ManageFruitsVegActivity extends BaseActivity {
                 JSONObject jsonObject = new JSONObject();
                 try {
 
+                    // ============ logic modified ========================//
 
-                    if (valueCheck.equalsIgnoreCase(detailsArray.get(l).getId())) {
+                    jsonObject.put("sku_id",
+                            Integer.parseInt(detailsArray.get(l).getSku_id()));
+                    jsonObject.put("sku_measurement_id",
+                            Integer.parseInt(detailsArray.get(l).getId()));
+                    jsonObject.put("seller_mrp", Integer.parseInt(MrpValue));
+                    fruit_veg.put(jsonObject);
+
+                    /*if (valueCheck.equalsIgnoreCase(detailsArray.get(l).getId())) {
                         try {
                             jsonObject.put("sku_id",
                                     Integer.parseInt(detailsArray.get(l).getSku_id()));
@@ -222,7 +232,7 @@ public class ManageFruitsVegActivity extends BaseActivity {
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                    }
+                    }*/
                 } catch (Exception e) {
 
 
@@ -323,23 +333,54 @@ public class ManageFruitsVegActivity extends BaseActivity {
                             JSONObject jsonObject = new JSONObject(response);
                             if (jsonObject.getBoolean("status")) {
 
-                                if (jsonObject.optJSONObject("result") != null) {
+                                if (jsonObject.optJSONArray("result") != null) {
                                     ManageFruitVegAdapter.itemChange_ids.clear();
                                     ManageFruitVegAdapter.valueChange_ids.clear();
                                     ManageFruitVegAdapter.posEdit.clear();
                                     ManageFruitVegAdapter.hasFocused = true;
-                                    JSONObject jObject = jsonObject.getJSONObject("result");
-                                    JSONArray skuArray = jObject.getJSONArray("sku_items");
+                                    // JSONObject jObject = jsonObject.getJSONObject("result");
+                                    JSONArray skuArray = jsonObject.getJSONArray("result");
                                     Type classType = new TypeToken<ArrayList<SkuItem>>() {
                                     }.getType();
+                                    for(int i =0; i< skuArray.length(); i++){
+                                        JSONObject skuMeasure = skuArray.getJSONObject(i).getJSONObject("sku_measurement");
+                                        JSONObject objectTemp = new JSONObject();
+                                        objectTemp.put("id", skuMeasure.getString("id"));
+                                        objectTemp.put("measurement_value", skuMeasure.getString("measurement_value"));
+                                        objectTemp.put("mrp", skuMeasure.getString("mrp"));
+                                        objectTemp.put("title",skuArray.getJSONObject(i).getString("title"));
+                                        objectTemp.put("id_main",skuArray.getJSONObject(i).getString("id"));
+                                        objectTemp.put("main_category_id",
+                                                skuArray.getJSONObject(i).getString("main_category_id"));
+
+                                        objectTemp.put("measurement_acronym",
+                                                skuMeasure.getString("measurement_acronym"));
+                                        objectTemp.put("offer_discount", skuMeasure.getString("offer_discount"));
+                                        objectTemp.put("sku_id", skuMeasure.getString("sku_id"));
+                                        //JSONObject removeElement = skuArray.getJSONObject(i).get("sku_measurement")
+                                        JSONArray js=new JSONArray();
+                                        js.put(objectTemp);
+                                        JSONObject obj2 = new JSONObject();
+                                        obj2.put("sku_measurements", js);
+                                        skuArray.put(i,obj2);
+                                    }
 
                                     ArrayList<SkuItem> skuList = new Gson().fromJson(skuArray.toString(), classType);
                                     AppSession.getInstance(ManageFruitsVegActivity.this).setSkuItemList(skuList);
                                     handleResponse();
+                                } else {
+                                    shimmer_view_container.setVisibility(View.GONE);
+                                    rv_fruits_veg_list.setVisibility(View.GONE);
+                                    no_data_layout.setVisibility(View.VISIBLE);
+                                    swipeRefreshLayout.setRefreshing(false);
                                 }
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
+                            shimmer_view_container.setVisibility(View.GONE);
+                            rv_fruits_veg_list.setVisibility(View.GONE);
+                            no_data_layout.setVisibility(View.VISIBLE);
+                            swipeRefreshLayout.setRefreshing(false);
                         }
                     }
 
@@ -380,7 +421,7 @@ public class ManageFruitsVegActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-       // ManageFruitVegAdapter.hasFocused = false;
+        // ManageFruitVegAdapter.hasFocused = false;
         ManageFruitVegAdapter.itemChange_ids.clear();
         ManageFruitVegAdapter.valueChange_ids.clear();
         ManageFruitVegAdapter.posEdit.clear();

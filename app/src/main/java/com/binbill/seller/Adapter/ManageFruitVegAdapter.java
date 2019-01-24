@@ -67,10 +67,11 @@ public class ManageFruitVegAdapter extends
         for (int i = 0; i < stList.size(); i++) {
             try {
                 ArrayList<SkuMeasurement> detailsArray = stList.get(i).getSkuMeasurements();
+               // ArrayList<SkuMeasurement> detailsArray = new ArrayList<>();
                 if (ManageFruitsVegActivity.isOthers) {
                     mDataset[i] = detailsArray.get(0).getMrp();
                 } else {
-                    mDataset[i] = detailsArray.get(1).getMrp();
+                    mDataset[i] = detailsArray.get(0).getMrp();
                 }
             }catch (Exception ex){
                 ex.printStackTrace();
@@ -98,13 +99,15 @@ public class ManageFruitVegAdapter extends
         final int pos = position;
 
         ArrayList<SkuMeasurement> details = stList.get(pos).getSkuMeasurements();
-        viewHolder.tv_item.setText(stList.get(pos).getTitle());
+        //ArrayList<SkuMeasurement> details = new ArrayList<>();
+        viewHolder.tv_item.setText(details.get(0).getTitle());
+
         if(ManageFruitsVegActivity.isOthers){
             viewHolder.et_quantity.setText(details.get(0).getMeasurementValue() + " " + details
                     .get(0).getMeasurementAcronym());
         }else{
-            viewHolder.et_quantity.setText(details.get(1).getMeasurementValue() + " " + details
-                    .get(1).getMeasurementAcronym());
+            viewHolder.et_quantity.setText(details.get(0).getMeasurementValue() + " " + details
+                    .get(0).getMeasurementAcronym());
         }
 
 
@@ -125,7 +128,8 @@ public class ManageFruitVegAdapter extends
         Picasso picasso = new Picasso.Builder(act)
                 .downloader(new OkHttp3Downloader(okHttpClient))
                 .build();
-        picasso.load(Constants.BASE_URL_IMAGE + "/skus/" + stList.get(pos).getId() + "/images")
+        picasso.load(Constants.BASE_URL_IMAGE + "/skus/" + details.get(0).getSku_id()
+                    +"/measurements/"+details.get(0).getId()+ "/images")
                 .config(Bitmap.Config.RGB_565)
                 .memoryPolicy(MemoryPolicy.NO_CACHE)
                 .into(viewHolder.iv_item, new Callback() {
@@ -165,17 +169,18 @@ public class ManageFruitVegAdapter extends
                 if (hasFocus) {
                     hasFocused = false;
                     ArrayList<SkuMeasurement> details = stList.get(pos).getSkuMeasurements();
+                   // ArrayList<SkuMeasurement> details = new ArrayList<>();
                     if (ManageFruitsVegActivity.isOthers) {
                         if (!idRedundant.equalsIgnoreCase(details.get(0).getId())) {
                             posEdit.add(pos);
                         }
-                        idRedundant = details.get(1).getId();
+                        idRedundant = details.get(0).getId();
                     }
                     else {
-                        if (!idRedundant.equalsIgnoreCase(details.get(1).getId())) {
+                        if (!idRedundant.equalsIgnoreCase(details.get(0).getId())) {
                             posEdit.add(pos);
                         }
-                        idRedundant = details.get(1).getId();
+                        idRedundant = details.get(0).getId();
                     }
 
                     //===========================================================================//
@@ -281,20 +286,21 @@ public class ManageFruitVegAdapter extends
             if (!hasFocused) {
                 hasFocused = false;
                 ArrayList<SkuMeasurement> details = stList.get(positions).getSkuMeasurements();
+              //  ArrayList<SkuMeasurement> details = new ArrayList<>();
                 HashMap<String, String> hmapValue = new HashMap<>();
                 HashMap<String, String> hmap = new HashMap<>();
 
                 if (ManageFruitsVegActivity.isOthers) {
-                    hmap.put(stList.get(positions).getId(), details.get(0).getId());
-                    hmapValue.put(stList.get(positions).getId(), mDataset[positions]);
+                    hmap.put(details.get(0).getId_main(), details.get(0).getId());
+                    hmapValue.put(details.get(0).getId_main(), mDataset[positions]);
                     itemChange_ids.add(hmap);
                     valueChange_ids.add(hmapValue);
                     UpdateValues value = new UpdateValues(hmap,hmapValue);
                     value.removeDuplicateElements();
                     value.arrangeCorrectData(hmap,hmapValue);
                 }else {
-                    hmap.put(stList.get(positions).getId(), details.get(1).getId());
-                    hmapValue.put(stList.get(positions).getId(), mDataset[positions]);
+                    hmap.put(details.get(0).getId_main(), details.get(0).getId());
+                    hmapValue.put(details.get(0).getId_main(), mDataset[positions]);
                     itemChange_ids.add(hmap);
                     valueChange_ids.add(hmapValue);
                     UpdateValues value = new UpdateValues(hmap,hmapValue);

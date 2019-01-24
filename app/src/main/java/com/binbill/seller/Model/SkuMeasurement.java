@@ -12,6 +12,12 @@ public class SkuMeasurement implements Serializable {
     @SerializedName("measurement_value")
     String measurementValue;
 
+    @SerializedName("title")
+    String title;
+
+    @SerializedName("main_category_id")
+    String main_category_id;
+
     @SerializedName("mrp")
     String mrp;
 
@@ -24,12 +30,20 @@ public class SkuMeasurement implements Serializable {
     @SerializedName("sku_id")
     String sku_id;
 
+
+    @SerializedName("id_main")
+    String id_main;
+
     public String getId() {
         return id;
     }
 
     public String getMeasurementValue() {
         return measurementValue;
+    }
+
+    public String getId_main() {
+        return id_main;
     }
 
     public String getMrp() {
@@ -46,6 +60,14 @@ public class SkuMeasurement implements Serializable {
 
     public String getSku_id() {
         return sku_id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getMain_category_id() {
+        return main_category_id;
     }
 
 }

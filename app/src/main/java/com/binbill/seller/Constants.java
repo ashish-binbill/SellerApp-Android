@@ -15,10 +15,10 @@ public class Constants {
 /*
     smitha.ravindran@indusind.com
 */
-    public static final String BASE_URL = "https://seller-stage.binbill.com/";
-  //  public static final String BASE_URL = "https://seller.binbill.com/";
-    public static final String BASE_URL_IMAGE = "https://seller-stage.binbill.com";
-    public static final String APP_VERSION = "10702";
+   // public static final String BASE_URL = "https://seller-stage.binbill.com/";
+    public static final String BASE_URL = "https://seller.binbill.com/";
+    public static final String BASE_URL_IMAGE = "https://seller.binbill.com";
+    public static final String APP_VERSION = "10703";
     public static final String GET_OTP_FOR_USER_LOGIN = "sellers/getotp";
     public static final String VERIFY_OTP_FOR_USER_LOGIN = "sellers/validate";
     public static final String UPDATE_PAN_OR_GSTIN = "sellers/init";
@@ -28,7 +28,8 @@ public class Constants {
     public static final String UPDATE_BASIC_DETAILS = "/sellers/{id}/basic";
     public static final String UPDATE_SELLER_DELIVERY_RULES = "/sellers/{id}/delivery/rules";
     public static final String UPDATE_FRUITS_VEG = "/sellers/{id}/fruitveg";
-    public static final String  MANAGE_FRUITS_VEG= "/sellers/{seller_id}/sku/list";
+   // public static final String  MANAGE_FRUITS_VEG= "/sellers/{seller_id}/sku/list";
+    public static final String  MANAGE_FRUITS_VEG= "/sellers/{seller_id}/fruitveg/list";
     public static final String GET_CITY_BY_STATE = "states/{id}/cities";
     public static final String GET_LOCALITY_BY_CITY_STATE = "states/{id}/cities/{city_id}/localities";
     public static final String GET_CATEGORIES = "sellers/categories";

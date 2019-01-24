@@ -172,7 +172,9 @@ public class MyCustomerFragment extends Fragment implements UserAdapter.CardInte
             if (!isCallInProgress && page < lastPage && (visibleItemCount + firstVisibleItemPosition) >= (totalItemCount)
                     && firstVisibleItemPosition >= 0
                     && totalItemCount >= Constants.CUSTOMER_PAGE_SIZE) {
-                loadMoreItems();
+                if(!isSearchUsed){
+                    loadMoreItems();
+                }
                 Log.d("SHRUTI", visibleItemCount + " " + totalItemCount + " " +
                         firstVisibleItemPosition);
             }
@@ -195,7 +197,7 @@ public class MyCustomerFragment extends Fragment implements UserAdapter.CardInte
                 try {
                     JSONObject jsonObject = new JSONObject(response);
                     if (jsonObject.getBoolean("status")) {
-
+                        isSearchUsed = false;
                         if (jsonObject.has("last_page") && !jsonObject.isNull("last_page"))
                             lastPage = jsonObject.optInt("last_page");
 

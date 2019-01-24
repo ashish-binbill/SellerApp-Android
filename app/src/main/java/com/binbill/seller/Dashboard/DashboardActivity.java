@@ -162,11 +162,10 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
     private CustomerFragment myCustomerFragment;
     public int sellerType;
     private SwitchCompat sellerAvailability;
-
     String whichScreen = "Home";
     public static boolean isCollapsed;
     ArrayList<FruitsVeg> list = new ArrayList<>();
-
+    SearchView mSearchView;
     ArrayList<FruitsVeg> mlist = new ArrayList<>();
 
     @AfterViews
@@ -373,6 +372,8 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
         } catch (Exception e) {
 
         }
+        if(mSearchView!=null)
+            mSearchView.onActionViewExpanded();
     }
 
     private void setUpHamburger() {
@@ -1257,7 +1258,8 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
                 return null;
             }
         };
-        SearchView mSearchView = (SearchView) mSearch.getActionView();
+
+        mSearchView = (SearchView) mSearch.getActionView();
         TextView searchText = (TextView) mSearchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
         searchText.setFilters(new InputFilter[]{filter, new InputFilter.LengthFilter(10)});
         mSearchView.setQueryHint("Search");
@@ -1271,35 +1273,48 @@ public class DashboardActivity extends BaseActivity implements YesNoDialogFragme
             @Override
             public boolean onQueryTextChange(String newText) {
 
-                if (newText.equalsIgnoreCase("")) {
-                    MyCustomerFragment.frag.onRefreshPage();
-                    InvitedCustomerFragment.frag.onRefreshPage();
-                } else {
-                    if (whichScreen.equalsIgnoreCase("Customer")) {
-                        CustomerFragment.fragment.showSearchView();
-                        int pos = CustomerPagerAdapter.positionPager;
-                        String myString = newText;
-                        if (pos == 0) {
-                            // InvitedCustomerFragment.frag.isInvited = false;
-                            //MyCustomerFragment.frag.FireQuery(newText);
-                            if (newText.length() >= 3) {
-                                MyCustomerFragment.frag.searchCustomersGlobally(newText.trim());
+                try {
+                    if (newText.equalsIgnoreCase("")) {
+                        MyCustomerFragment.frag.onRefreshPage();
+                        InvitedCustomerFragment.frag.onRefreshPage();
+                    } else {
+                        if (whichScreen.equalsIgnoreCase("Customer")) {
+                            CustomerFragment.fragment.showSearchView();
+                            int pos = CustomerPagerAdapter.positionPager;
+                            String myString = newText;
+                            if (pos == 0) {
+                                // InvitedCustomerFragment.frag.isInvited = false;
+                                //MyCustomerFragment.frag.FireQuery(newText);
+                                if (newText.length() >= 3) {
+                                    MyCustomerFragment.frag.searchCustomersGlobally(newText.trim());
+                                }
+                            } else if (pos == 1) {
+                                //  InvitedCustomerFragment.frag.isInvited = true;
+                                if (newText.length() >= 3) {
+                                    InvitedCustomerFragment.frag.searchCustomersGlobally(newText.trim());
+                                }
                             }
-                        } else if (pos == 1) {
-                            //  InvitedCustomerFragment.frag.isInvited = true;
-                            if (newText.length() >= 3) {
-                                InvitedCustomerFragment.frag.searchCustomersGlobally(newText.trim());
-                            }
+                        } else if (whichScreen.equalsIgnoreCase("Assisted")) {
+                            AssistedServiceFragment.frag.FireQuery(newText);
                         }
-                    } else if (whichScreen.equalsIgnoreCase("Assisted")) {
-                        AssistedServiceFragment.frag.FireQuery(newText);
                     }
+                }catch (Exception e){
+                    e.printStackTrace();
                 }
 
                 return true;
             }
         });
         return super.onCreateOptionsMenu(menu);
+    }
+
+
+    @Override
+    protected void onPause() {
+        //toolbar.collapseActionView();
+        mSearchView.onActionViewCollapsed();
+
+        super.onPause();
     }
 
 

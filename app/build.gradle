@@ -23,8 +23,8 @@ android {
         applicationId "com.binbill.seller"
         minSdkVersion 19
         targetSdkVersion 27
-        versionCode 456
-        versionName "1.7.79"
+        versionCode 5
+        versionName "1.7.3"
         resConfigs "en"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
