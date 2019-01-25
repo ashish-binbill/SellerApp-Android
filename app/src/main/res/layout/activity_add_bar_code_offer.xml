@@ -236,6 +236,12 @@
 
                 </LinearLayout>
 
+                <LinearLayout
+                    android:id="@+id/support_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
                 <include
                     android:id="@+id/or"
                     layout="@layout/layout_or"
@@ -244,11 +250,13 @@
                     android:layout_below="@id/et_gstin"
                     android:layout_gravity="center"
                     android:layout_marginTop="@dimen/dimen_15dp" />
+                </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/ll_discount_layout_mrp"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dimen_45dp"
+                    android:visibility="gone"
                     android:layout_marginTop="@dimen/dimen_20dp"
                     android:background="@drawable/edittext_bg"
                     android:orientation="horizontal">

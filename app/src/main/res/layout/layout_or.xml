@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:orientation="horizontal"
     android:gravity="center"
+    android:id="@+id/or_tag"
     android:layout_height="match_parent">
 
     <View

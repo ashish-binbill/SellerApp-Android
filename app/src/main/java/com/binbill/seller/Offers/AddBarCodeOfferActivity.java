@@ -97,7 +97,7 @@ public class AddBarCodeOfferActivity extends BaseActivity implements ZXingScanne
     ImageView iv_reset;
 
     @ViewById
-    LinearLayout ll_discount_layout;
+    LinearLayout ll_discount_layout, ll_discount_layout_mrp, support_layout;
 
     Calendar mCalendar = Calendar.getInstance();
     private int EDIT_OFFER = 1;
@@ -170,8 +170,14 @@ public class AddBarCodeOfferActivity extends BaseActivity implements ZXingScanne
         if (OfferType == Constants.OFFER_TYPE_BOGO) {
             ll_discount_layout.setVisibility(View.GONE);
             et_discount_offer.setVisibility(View.VISIBLE);
+            ll_discount_layout_mrp.setVisibility(View.GONE);
+            support_layout.setVisibility(View.GONE);
+           // layout_or.setVisibility(View.GONE);
         } else {
             ll_discount_layout.setVisibility(View.VISIBLE);
+            ll_discount_layout_mrp.setVisibility(View.VISIBLE);
+            support_layout.setVisibility(View.VISIBLE);
+           // layout_or.setVisibility(View.VISIBLE);
         }
 
         if (getIntent().hasExtra(Constants.OFFER_ITEM)) {
@@ -227,14 +233,21 @@ public class AddBarCodeOfferActivity extends BaseActivity implements ZXingScanne
                 }
 
                 ll_discount_layout.setVisibility(View.VISIBLE);
-            } else
+                ll_discount_layout_mrp.setVisibility(View.VISIBLE);
+                support_layout.setVisibility(View.VISIBLE);
+            } else {
                 ll_discount_layout.setVisibility(View.GONE);
+                ll_discount_layout_mrp.setVisibility(View.GONE);
+                support_layout.setVisibility(View.GONE);
+            }
 
         } else {
             et_barcode.setText(offerItem.getSku().getBarCode());
             et_mrp.setText(offerItem.getSku().getMrp());
             et_discount.setText(offerItem.getOfferDiscount());
             ll_discount_layout.setVisibility(View.VISIBLE);
+            ll_discount_layout_mrp.setVisibility(View.VISIBLE);
+            support_layout.setVisibility(View.VISIBLE);
 
             et_expiry_date.setText(Utility.getFormattedDate(12, offerItem.getOfferEndDate(), 0));
         }
